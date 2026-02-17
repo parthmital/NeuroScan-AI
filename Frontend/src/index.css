@@ -1,0 +1,169 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		--background: 210 20% 98%;
+		--foreground: 220 25% 10%;
+
+		--card: 0 0% 100%;
+		--card-foreground: 220 25% 10%;
+
+		--popover: 0 0% 100%;
+		--popover-foreground: 220 25% 10%;
+
+		--primary: 220 65% 18%;
+		--primary-foreground: 210 40% 98%;
+
+		--secondary: 210 15% 93%;
+		--secondary-foreground: 220 25% 20%;
+
+		--muted: 210 15% 95%;
+		--muted-foreground: 215 15% 50%;
+
+		--accent: 185 72% 38%;
+		--accent-foreground: 0 0% 100%;
+
+		--destructive: 0 72% 51%;
+		--destructive-foreground: 0 0% 100%;
+
+		--border: 214 20% 90%;
+		--input: 214 20% 90%;
+		--ring: 185 72% 38%;
+
+		--radius: 0.75rem;
+
+		--medical: 185 72% 38%;
+		--medical-foreground: 0 0% 100%;
+		--medical-light: 185 55% 95%;
+
+		--success: 152 69% 39%;
+		--success-foreground: 0 0% 100%;
+
+		--warning: 38 92% 50%;
+		--warning-foreground: 38 92% 15%;
+
+		--info: 210 92% 55%;
+		--info-foreground: 0 0% 100%;
+
+		--sidebar-background: 220 65% 12%;
+		--sidebar-foreground: 210 20% 85%;
+		--sidebar-primary: 185 72% 45%;
+		--sidebar-primary-foreground: 0 0% 100%;
+		--sidebar-accent: 220 50% 18%;
+		--sidebar-accent-foreground: 210 20% 90%;
+		--sidebar-border: 220 40% 20%;
+		--sidebar-ring: 185 72% 45%;
+
+		--chart-1: 185 72% 38%;
+		--chart-2: 220 65% 18%;
+		--chart-3: 152 69% 39%;
+		--chart-4: 38 92% 50%;
+		--chart-5: 0 72% 51%;
+	}
+
+	.dark {
+		--background: 222 47% 6%;
+		--foreground: 210 20% 92%;
+
+		--card: 222 40% 9%;
+		--card-foreground: 210 20% 92%;
+
+		--popover: 222 40% 9%;
+		--popover-foreground: 210 20% 92%;
+
+		--primary: 185 72% 45%;
+		--primary-foreground: 220 65% 8%;
+
+		--secondary: 220 30% 15%;
+		--secondary-foreground: 210 20% 85%;
+
+		--muted: 220 25% 14%;
+		--muted-foreground: 215 15% 55%;
+
+		--accent: 185 72% 38%;
+		--accent-foreground: 0 0% 100%;
+
+		--destructive: 0 62% 40%;
+		--destructive-foreground: 0 0% 100%;
+
+		--border: 220 25% 18%;
+		--input: 220 25% 18%;
+		--ring: 185 72% 45%;
+
+		--medical: 185 72% 45%;
+		--medical-foreground: 0 0% 100%;
+		--medical-light: 185 40% 15%;
+
+		--success: 152 60% 42%;
+		--success-foreground: 0 0% 100%;
+
+		--warning: 38 85% 55%;
+		--warning-foreground: 38 92% 10%;
+
+		--info: 210 85% 58%;
+		--info-foreground: 0 0% 100%;
+
+		--sidebar-background: 222 50% 5%;
+		--sidebar-foreground: 210 15% 75%;
+		--sidebar-primary: 185 72% 45%;
+		--sidebar-primary-foreground: 0 0% 100%;
+		--sidebar-accent: 222 40% 12%;
+		--sidebar-accent-foreground: 210 15% 85%;
+		--sidebar-border: 222 30% 14%;
+		--sidebar-ring: 185 72% 45%;
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+
+	body {
+		@apply bg-background text-foreground antialiased;
+		font-family:
+			"Plus Jakarta Sans",
+			system-ui,
+			-apple-system,
+			sans-serif;
+	}
+}
+
+@layer utilities {
+	.medical-gradient {
+		background: linear-gradient(
+			135deg,
+			hsl(var(--medical)) 0%,
+			hsl(185 72% 30%) 100%
+		);
+	}
+
+	.sidebar-gradient {
+		background: linear-gradient(
+			180deg,
+			hsl(var(--sidebar-background)) 0%,
+			hsl(220 65% 8%) 100%
+		);
+	}
+
+	.scan-overlay-wt {
+		background-color: hsl(50 100% 50% / 0.4);
+	}
+
+	.scan-overlay-tc {
+		background-color: hsl(0 100% 50% / 0.5);
+	}
+
+	.scan-overlay-et {
+		background-color: hsl(220 100% 60% / 0.6);
+	}
+
+	* {
+		animation: none !important;
+		transition: none !important;
+	}
+}

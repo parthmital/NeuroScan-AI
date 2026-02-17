@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>NeuroScan AI - Advanced MRI Analysis & Tumour Detection</title>
+		<meta
+			name="description"
+			content="NeuroScan AI - Advanced medical imaging platform for MRI analysis, AI-powered tumour detection, classification, and segmentation. Empowering physicians with cutting-edge neuroimaging technology."
+		/>
+		<meta name="author" content="NeuroScan AI" />
+		<meta
+			name="keywords"
+			content="MRI analysis, tumour detection, medical imaging, AI healthcare, neuroimaging, brain scan, radiology, medical AI, tumor segmentation, diagnostic imaging"
+		/>
+
+		<!-- Favicon -->
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+
+		<!-- Open Graph -->
+		<meta
+			property="og:title"
+			content="NeuroScan AI - Advanced MRI Analysis & Tumour Detection"
+		/>
+		<meta
+			property="og:description"
+			content="Advanced medical imaging platform for MRI analysis, AI-powered tumour detection, classification, and segmentation. Empowering physicians with cutting-edge neuroimaging technology."
+		/>
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="/og.png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta
+			property="og:image:alt"
+			content="NeuroScan AI - Advanced MRI Analysis Platform"
+		/>
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta
+			name="twitter:title"
+			content="NeuroScan AI - Advanced MRI Analysis & Tumour Detection"
+		/>
+		<meta
+			name="twitter:description"
+			content="Advanced medical imaging platform for MRI analysis, AI-powered tumour detection, classification, and segmentation."
+		/>
+		<meta name="twitter:image" content="/og.png" />
+
+		<!-- Additional SEO -->
+		<meta
+			name="robots"
+			content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+		/>
+		<meta name="language" content="English" />
+		<meta name="category" content="Healthcare, Medical Technology, AI" />
+		<link rel="canonical" href="http://localhost:3000" />
+
+		<!-- Structured Data -->
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "MedicalWebApplication",
+				"name": "NeuroScan AI",
+				"description": "Advanced medical imaging platform for MRI analysis, AI-powered tumour detection, classification, and segmentation",
+				"url": "http://localhost:3000",
+				"applicationCategory": "HealthApplication",
+				"operatingSystem": "Web Browser",
+				"offers": {
+					"@type": "Offer",
+					"price": "0",
+					"priceCurrency": "USD"
+				},
+				"provider": {
+					"@type": "Organization",
+					"name": "NeuroScan AI",
+					"url": "http://localhost:3000"
+				},
+				"medicalSpecialty": "Radiology",
+				"about": [
+					{
+						"@type": "Thing",
+						"name": "MRI Analysis"
+					},
+					{
+						"@type": "Thing",
+						"name": "Tumour Detection"
+					},
+					{
+						"@type": "Thing",
+						"name": "Medical Imaging"
+					},
+					{
+						"@type": "Thing",
+						"name": "AI Healthcare"
+					}
+				],
+				"audience": {
+					"@type": "Audience",
+					"audienceType": "Physicians, Radiologists, Medical Professionals"
+				}
+			}
+		</script>
+		<script>
+			(function () {
+				try {
+					const theme = localStorage.getItem("theme");
+					if (
+						theme === "dark" ||
+						(!theme &&
+							window.matchMedia("(prefers-color-scheme: dark)").matches)
+					) {
+						document.documentElement.classList.add("dark");
+					} else {
+						document.documentElement.classList.remove("dark");
+					}
+				} catch (e) {
+					console.error("Theme initialization failed:", e);
+				}
+			})();
+		</script>
+	</head>
+
+	<body>
+		<div id="root"></div>
+		<script type="module" src="/src/main.tsx"></script>
+	</body>
+</html>

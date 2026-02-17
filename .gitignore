@@ -1,0 +1,8 @@
+__pycache__/
+.venv/
+*.keras
+*.nii
+*.pth
+*.db
+dist/
+node_modules/
