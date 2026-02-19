@@ -1,6 +1,10 @@
 from sqlmodel import SQLModel, Field, JSON, Column
 from typing import Optional, List, Dict
-from datetime import datetime
+from datetime import datetime, timezone
+
+
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
 
 
 class User(SQLModel, table=True):
@@ -12,7 +16,7 @@ class User(SQLModel, table=True):
     title: Optional[str] = None
     department: Optional[str] = None
     institution: Optional[str] = None
-    createdAt: datetime = Field(default_factory=datetime.utcnow)
+    createdAt: datetime = Field(default_factory=_utcnow)
 
 
 class UserCreate(SQLModel):
@@ -40,8 +44,8 @@ class Scan(SQLModel, table=True):
     status: str
     progress: int = Field(default=0)
     pipelineStep: str = Field(default="queued")
-    results: Optional[Dict] = Field(default=None, sa_column=Column(JSON))
-    createdAt: datetime = Field(default_factory=datetime.utcnow)
+    results: Optional[Dict[str, object]] = Field(default=None, sa_column=Column(JSON))
+    createdAt: datetime = Field(default_factory=_utcnow)
     userId: Optional[int] = Field(default=None, foreign_key="user.id")
 
 

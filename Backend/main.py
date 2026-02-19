@@ -1,10 +1,10 @@
 import os
 import shutil
 import uuid
+import traceback
 import uvicorn
 import cv2
-import numpy as np
-from typing import List, Dict, Optional
+from typing import Any, Dict, List, Optional
 from fastapi import (
     FastAPI,
     UploadFile,
@@ -12,7 +12,6 @@ from fastapi import (
     Form,
     HTTPException,
     Depends,
-    Body,
     Response,
     Query,
 )
@@ -20,14 +19,14 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from sqlmodel import Session, select
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pydantic import BaseModel
 import bcrypt
 from processor import BrainProcessor
 from database import create_db_and_tables, get_session
-from models import Scan, User, UserCreate, UserLogin, ScanUpdate
-import io
+from models import Scan, User, UserCreate, ScanUpdate
 
 UPLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -37,26 +36,28 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login", auto_error=False)
 
 
-def verify_password(plain_password, hashed_password):
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(
         plain_password.encode("utf-8"), hashed_password.encode("utf-8")
     )
 
 
-def get_password_hash(password):
+def get_password_hash(password: str) -> str:
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed.decode("utf-8")
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
+def create_access_token(
+    data: Dict[str, Any], expires_delta: Optional[timedelta] = None
+) -> str:
+    to_encode: Dict[str, Any] = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt: str = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 
@@ -64,7 +65,7 @@ async def get_current_user(
     token: Optional[str] = Depends(oauth2_scheme),
     token_query: Optional[str] = Query(None, alias="token"),
     session: Session = Depends(get_session),
-):
+) -> User:
     credentials_exception = HTTPException(
         status_code=401,
         detail="Could not validate credentials",
@@ -74,8 +75,10 @@ async def get_current_user(
     if not auth_token:
         raise credentials_exception
     try:
-        payload = jwt.decode(auth_token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
+        payload: Dict[str, Any] = jwt.decode(
+            auth_token, SECRET_KEY, algorithms=[ALGORITHM]
+        )
+        username: Optional[str] = payload.get("sub")
         if username is None:
             raise credentials_exception
     except JWTError:
@@ -118,10 +121,14 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
 app.add_middleware(
-    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=False,
 )
-from pydantic import BaseModel
 
 
 class UserUpdate(BaseModel):
@@ -133,7 +140,9 @@ class UserUpdate(BaseModel):
 
 
 @app.post("/api/auth/register")
-async def register(user_data: UserCreate, session: Session = Depends(get_session)):
+async def register(
+    user_data: UserCreate, session: Session = Depends(get_session)
+) -> Dict[str, Any]:
     existing_user = session.exec(
         select(User).where(User.username == user_data.username)
     ).first()
@@ -174,7 +183,7 @@ async def register(user_data: UserCreate, session: Session = Depends(get_session
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     session: Session = Depends(get_session),
-):
+) -> Dict[str, Any]:
     user = session.exec(select(User).where(User.username == form_data.username)).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Incorrect username or password")
@@ -196,7 +205,7 @@ async def login(
 
 
 @app.get("/api/auth/me")
-async def get_me(current_user: User = Depends(get_current_user)):
+async def get_me(current_user: User = Depends(get_current_user)) -> User:
     return current_user
 
 
@@ -205,7 +214,7 @@ async def update_me(
     user_update: UserUpdate,
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
-):
+) -> User:
     if user_update.fullName is not None:
         current_user.fullName = user_update.fullName
     if user_update.email is not None:
@@ -233,10 +242,14 @@ async def update_me(
 async def get_scans(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
-):
-    statement = select(Scan).order_by(Scan.createdAt.desc())
+) -> List[Scan]:
+    statement = (
+        select(Scan)
+        .where(Scan.userId == current_user.id)
+        .order_by(Scan.createdAt.desc())  # type: ignore[arg-type]
+    )
     results = session.exec(statement).all()
-    return results
+    return list(results)
 
 
 @app.get("/api/scans/{scan_id}")
@@ -244,10 +257,12 @@ async def get_scan(
     scan_id: str,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
-):
+) -> Scan:
     scan = session.get(Scan, scan_id)
     if not scan:
         raise HTTPException(status_code=404, detail="Scan not found")
+    if scan.userId != current_user.id:
+        raise HTTPException(status_code=403, detail="Access denied")
     return scan
 
 
@@ -255,10 +270,10 @@ async def get_scan(
 async def process_mri(
     files: List[UploadFile] = File(...),
     patientName: str = Form("Uploaded Scan"),
-    patientId: str = Form(None),
+    patientId: Optional[str] = Form(None),
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
-):
+) -> Scan:
     if not patientId:
         patientId = f"PT-2026-{uuid.uuid4().hex[:4].upper()}"
     if processor.detection_model is None or processor.classification_model is None:
@@ -266,9 +281,11 @@ async def process_mri(
     scan_id = f"scan-{uuid.uuid4().hex[:6]}"
     scan_dir = os.path.join(UPLOAD_DIR, scan_id)
     os.makedirs(scan_dir, exist_ok=True)
-    saved_files = {}
+    saved_files: Dict[str, str] = {}
     try:
         for file in files:
+            if file.filename is None:
+                continue
             file_path = os.path.join(scan_dir, file.filename)
             with open(file_path, "wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
@@ -281,7 +298,7 @@ async def process_mri(
                 saved_files["t2"] = file_path
             elif "T1" in fname_upper:
                 saved_files["t1"] = file_path
-        rep_file = next(
+        rep_file: Optional[str] = next(
             (
                 saved_files.get(m)
                 for m in ["flair", "t1ce", "t2", "t1"]
@@ -295,7 +312,12 @@ async def process_mri(
         prob_tumor = processor.run_detection(image_2d)
         has_tumor = prob_tumor > 0.5
         cls_result = processor.run_classification(image_2d)
-        seg_result = {"tumorVolume": 0, "wtVolume": 0, "tcVolume": 0, "etVolume": 0}
+        seg_result: Dict[str, float] = {
+            "tumorVolume": 0.0,
+            "wtVolume": 0.0,
+            "tcVolume": 0.0,
+            "etVolume": 0.0,
+        }
         if len(saved_files) >= 4:
             try:
                 seg_path = os.path.join(scan_dir, "segmentation.nii")
@@ -334,8 +356,6 @@ async def process_mri(
         session.refresh(new_scan)
         return new_scan
     except Exception as e:
-        import traceback
-
         traceback.print_exc()
         if os.path.exists(scan_dir):
             shutil.rmtree(scan_dir, ignore_errors=True)
@@ -349,10 +369,12 @@ async def get_scan_slice(
     modality: str = "flair",
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
-):
+) -> Response:
     scan = session.get(Scan, scan_id)
     if not scan or not scan.filePaths:
         raise HTTPException(status_code=404, detail="Scan or files not found")
+    if scan.userId != current_user.id:
+        raise HTTPException(status_code=403, detail="Access denied")
     modality = modality.lower()
     if modality not in scan.filePaths:
         modality = list(scan.filePaths.keys())[0]
@@ -376,10 +398,12 @@ async def get_segmentation_slice(
     slice_idx: int,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
-):
+) -> Response:
     scan = session.get(Scan, scan_id)
     if not scan:
         raise HTTPException(status_code=404, detail="Scan not found")
+    if scan.userId != current_user.id:
+        raise HTTPException(status_code=403, detail="Access denied")
     seg_path = os.path.join(UPLOAD_DIR, scan_id, "segmentation.nii")
     if not os.path.exists(seg_path):
         raise HTTPException(status_code=404, detail="Segmentation not found")
@@ -397,26 +421,28 @@ async def download_scan_file(
     key: str,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
-):
+) -> FileResponse:
     scan = session.get(Scan, scan_id)
     if not scan:
         raise HTTPException(status_code=404, detail="Scan not found")
+    if scan.userId != current_user.id:
+        raise HTTPException(status_code=403, detail="Access denied")
 
     key = key.lower()
-    file_path = None
+    file_path: Optional[str] = None
 
     if key == "segmentation":
         file_path = os.path.join(UPLOAD_DIR, scan_id, "segmentation.nii")
     elif scan.filePaths and key in scan.filePaths:
         file_path = os.path.join(UPLOAD_DIR, scan.filePaths[key])
     else:
-        # Try as direct filename within the scan folder for safety
         potential_path = os.path.join(UPLOAD_DIR, scan_id, key)
-        # Prevent directory traversal
-        if os.path.commonpath(
-            [UPLOAD_DIR, potential_path]
-        ) == UPLOAD_DIR and os.path.exists(potential_path):
-            file_path = potential_path
+        real_upload_dir = os.path.realpath(UPLOAD_DIR)
+        real_potential = os.path.realpath(potential_path)
+        if real_potential.startswith(real_upload_dir + os.sep) and os.path.exists(
+            real_potential
+        ):
+            file_path = real_potential
 
     if not file_path or not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
@@ -434,11 +460,13 @@ async def update_scan(
     scan_update: ScanUpdate,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
-):
+) -> Scan:
     scan = session.get(Scan, scan_id)
     if not scan:
         raise HTTPException(status_code=404, detail="Scan not found")
-    scan_data = scan_update.dict(exclude_unset=True)
+    if scan.userId != current_user.id:
+        raise HTTPException(status_code=403, detail="Access denied")
+    scan_data = scan_update.model_dump(exclude_unset=True)
     for key, value in scan_data.items():
         setattr(scan, key, value)
     session.add(scan)
@@ -452,10 +480,12 @@ async def delete_scan(
     scan_id: str,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
-):
+) -> Dict[str, str]:
     scan = session.get(Scan, scan_id)
     if not scan:
         raise HTTPException(status_code=404, detail="Scan not found")
+    if scan.userId != current_user.id:
+        raise HTTPException(status_code=403, detail="Access denied")
     scan_dir = os.path.join(UPLOAD_DIR, scan_id)
     if os.path.exists(scan_dir):
         shutil.rmtree(scan_dir, ignore_errors=True)
