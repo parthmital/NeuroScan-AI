@@ -1,4 +1,4 @@
-# Brain Tumor Detection Using Deep Learning Architectures
+# Brain Tumour Detection Using Deep Learning Architectures
 
 ## A Comparative Study of CNN and Transformer-Based Models for Medical Image Classification
 
@@ -22,7 +22,7 @@
 
 ## Project Overview
 
-This repository contains a comprehensive comparative study of nine state-of-the-art deep learning architectures for brain tumor detection from MRI images. The project implements and evaluates multiple convolutional neural networks (CNNs) and transformer-based models to determine the most effective approach for binary classification of brain tumors.
+This repository contains a comprehensive comparative study of nine state-of-the-art deep learning architectures for brain tumour detection from MRI images. The project implements and evaluates multiple convolutional neural networks (CNNs) and transformer-based models to determine the most effective approach for binary classification of brain tumours.
 
 **Models Implemented:**
 
@@ -40,15 +40,15 @@ This repository contains a comprehensive comparative study of nine state-of-the-
 
 ## Abstract
 
-**Background:** Brain tumor detection through MRI analysis is a critical task in medical diagnostics, where accuracy and reliability are paramount. Deep learning models have shown remarkable promise in automating this process, but comparative performance across different architectural families remains underexplored.
+**Background:** Brain tumour detection through MRI analysis is a critical task in medical diagnostics, where accuracy and reliability are paramount. Deep learning models have shown remarkable promise in automating this process, but comparative performance across different architectural families remains underexplored.
 
-**Objective:** This research systematically evaluates nine deep learning architectures—ranging from classical CNNs to modern transformers—for binary brain tumor classification, identifying the most effective models in terms of accuracy, AUC-ROC, and computational efficiency.
+**Objective:** This research systematically evaluates nine deep learning architectures—ranging from classical CNNs to modern transformers—for binary brain tumour classification, identifying the most effective models in terms of accuracy, AUC-ROC, and computational efficiency.
 
-**Methodology:** Using a combined dataset of 3,253 MRI images from two public sources (1,598 non-tumor, 1,655 tumor), we implemented a standardized training pipeline with 70/15/15 train-validation-test split. Each model was pretrained on ImageNet and fine-tuned for 10 epochs with consistent hyperparameters (learning rate: 3e-4, batch sizes optimized per model, AdamW optimizer, cosine annealing scheduler). Performance was evaluated using accuracy and AUC-ROC metrics.
+**Methodology:** Using a combined dataset of 3,253 MRI images from two public sources (1,598 non-tumour, 1,655 tumour), we implemented a standardized training pipeline with 70/15/15 train-validation-test split. Each model was pretrained on ImageNet and fine-tuned for 10 epochs with consistent hyperparameters (learning rate: 3e-4, batch sizes optimized per model, AdamW optimizer, cosine annealing scheduler). Performance was evaluated using accuracy and AUC-ROC metrics.
 
 **Key Findings:** Transformer-based architectures (CoaTNet-0, Swin Base) and modern CNNs (InceptionV3, EfficientNetB0, DenseNet121) achieved exceptional performance with test accuracies exceeding 99% and near-perfect AUC scores. InceptionV3 emerged as the top performer with 99.39% accuracy and 1.0000 AUC, followed closely by CoaTNet-0 (99.59% accuracy, 1.0000 AUC). Classical architectures like VGG16 showed significantly lower performance (83.20% accuracy), highlighting the evolution of architectural design.
 
-**Conclusion:** Modern deep learning architectures, particularly those incorporating attention mechanisms and efficient design principles, achieve clinically viable accuracy for brain tumor detection. The results demonstrate that architectural innovation directly translates to improved medical image classification performance, with transformer-based models and advanced CNNs showing the most promise for clinical deployment.
+**Conclusion:** Modern deep learning architectures, particularly those incorporating attention mechanisms and efficient design principles, achieve clinically viable accuracy for brain tumour detection. The results demonstrate that architectural innovation directly translates to improved medical image classification performance, with transformer-based models and advanced CNNs showing the most promise for clinical deployment.
 
 ---
 
@@ -56,22 +56,22 @@ This repository contains a comprehensive comparative study of nine state-of-the-
 
 ### 1.1 Background Context
 
-Brain tumors represent one of the most serious neurological conditions, with early detection being crucial for treatment success and patient survival. Magnetic Resonance Imaging (MRI) serves as the primary diagnostic tool, providing detailed soft tissue visualization without ionizing radiation. However, manual interpretation of MRI scans is time-consuming, subject to inter-observer variability, and requires specialized expertise that may not be universally available.
+Brain tumours represent one of the most serious neurological conditions, with early detection being crucial for treatment success and patient survival. Magnetic Resonance Imaging (MRI) serves as the primary diagnostic tool, providing detailed soft tissue visualization without ionizing radiation. However, manual interpretation of MRI scans is time-consuming, subject to inter-observer variability, and requires specialized expertise that may not be universally available.
 
 The advent of deep learning has revolutionized medical image analysis, offering the potential for automated, consistent, and rapid diagnosis. Convolutional Neural Networks (CNNs) have traditionally dominated this space, with architectures like ResNet and VGG establishing benchmarks for image classification tasks. More recently, transformer-based architectures originally developed for natural language processing have been adapted for vision tasks (Vision Transformers, Swin Transformers), offering alternative approaches to capturing global image context.
 
 ### 1.2 Problem Statement and Research Gap
 
-While numerous studies have demonstrated the effectiveness of individual deep learning models for brain tumor detection, comprehensive comparative analyses across multiple architectural families remain limited. Key gaps include:
+While numerous studies have demonstrated the effectiveness of individual deep learning models for brain tumour detection, comprehensive comparative analyses across multiple architectural families remain limited. Key gaps include:
 
 1. **Lack of standardized comparison:** Studies often use different datasets, preprocessing pipelines, and evaluation metrics, making cross-model comparison difficult
-2. **Limited transformer evaluation:** Most existing research focuses on CNNs, with insufficient exploration of transformer-based architectures for brain tumor detection
+2. **Limited transformer evaluation:** Most existing research focuses on CNNs, with insufficient exploration of transformer-based architectures for brain tumour detection
 3. **Absence of unified training protocols:** Model comparisons rarely control for training hyperparameters, potentially confounding architectural differences with implementation variations
 4. **Real-world applicability assessment:** Many studies report high accuracy without considering model complexity, inference speed, or deployment feasibility
 
 ### 1.3 Significance and Urgency
 
-The clinical significance of accurate brain tumor detection cannot be overstated. According to the American Brain Tumor Association, approximately 90,000 people are diagnosed with primary brain tumors annually in the United States alone. Delayed diagnosis can lead to:
+The clinical significance of accurate brain tumour detection cannot be overstated. According to the American Brain Tumour Association, approximately 90,000 people are diagnosed with primary brain tumours annually in the United States alone. Delayed diagnosis can lead to:
 
 - Reduced treatment options
 - Poorer prognosis
@@ -92,7 +92,7 @@ This study aims to:
 1. **Implement nine diverse deep learning architectures** spanning classical CNNs, modern CNNs, and transformer-based models
 2. **Establish a standardized evaluation framework** with consistent data splits, preprocessing, and training protocols
 3. **Compare model performance** using clinically relevant metrics (accuracy, AUC-ROC)
-4. **Analyze architectural trends** to identify which design principles contribute most to brain tumor detection performance
+4. **Analyze architectural trends** to identify which design principles contribute most to brain tumour detection performance
 5. **Provide practical recommendations** for model selection in clinical deployment scenarios
 6. **Release reproducible code and results** to facilitate future research and validation
 
@@ -106,7 +106,7 @@ Section 2 reviews relevant literature and previous approaches. Section 3 details
 
 ### 2.1 Traditional Machine Learning Approaches
 
-Early attempts at automated brain tumor detection relied on handcrafted feature extraction combined with classical machine learning classifiers. Common approaches included:
+Early attempts at automated brain tumour detection relied on handcrafted feature extraction combined with classical machine learning classifiers. Common approaches included:
 
 - **Texture-based features:** Gray-Level Co-occurrence Matrix (GLCM), Local Binary Patterns (LBP)
 - **Wavelet transforms:** Discrete Wavelet Transform (DWT) for multi-resolution analysis
@@ -119,13 +119,13 @@ Zacharaki et al. (2009) achieved approximately 85% accuracy using texture featur
 
 The breakthrough of AlexNet in 2012 catalyzed deep learning adoption in medical imaging. Subsequent CNN architectures progressively improved performance:
 
-**ResNet Family (2015):** He et al. introduced residual connections enabling training of very deep networks. ResNet50 became a benchmark for medical image classification, with studies reporting 95-98% accuracy for brain tumor detection (Seetha & Raja, 2018).
+**ResNet Family (2015):** He et al. introduced residual connections enabling training of very deep networks. ResNet50 became a benchmark for medical image classification, with studies reporting 95-98% accuracy for brain tumour detection (Seetha & Raja, 2018).
 
 **VGG Architecture (2014):** Simonyan and Zisserman demonstrated that increasing depth with small convolutional filters (3×3) improves performance. However, VGG16's high parameter count (138M) makes it computationally expensive and prone to overfitting on smaller medical datasets.
 
 **DenseNet (2017):** Huang et al. proposed dense connections where each layer receives inputs from all preceding layers. This design improves gradient flow and parameter efficiency. DenseNet121 has shown strong performance in medical imaging tasks with reported accuracies of 96-98% (Saxena et al., 2020).
 
-**Inception Architecture (2015):** Szegedy et al. introduced parallel convolutions of different sizes, allowing the network to capture features at multiple scales. InceptionV3 achieved 97.5% accuracy in brain tumor studies (Deepak & Ameer, 2019).
+**Inception Architecture (2015):** Szegedy et al. introduced parallel convolutions of different sizes, allowing the network to capture features at multiple scales. InceptionV3 achieved 97.5% accuracy in brain tumour studies (Deepak & Ameer, 2019).
 
 **EfficientNet (2019):** Tan and Le developed a systematic approach to scaling network dimensions (depth, width, resolution) using neural architecture search. EfficientNetB0 achieves state-of-the-art accuracy with 10× fewer parameters than comparable models.
 
@@ -141,7 +141,7 @@ The breakthrough of AlexNet in 2012 catalyzed deep learning adoption in medical 
 
 ### 2.4 Medical Imaging Applications
 
-Recent studies applying these architectures to brain tumor detection include:
+Recent studies applying these architectures to brain tumour detection include:
 
 | Study                  | Model        | Dataset Size | Accuracy |
 | ---------------------- | ------------ | ------------ | -------- |
@@ -178,37 +178,37 @@ This study addresses these gaps by:
 
 We combined two publicly available brain MRI datasets from Kaggle:
 
-**Dataset 1: Brain MRI Images for Brain Tumor Detection**
+**Dataset 1: Brain MRI Images for Brain Tumour Detection**
 
 - Source: Navoneel Chakrabarty
-- URL: `/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection`
-- Contains: 253 MRI images (155 tumor-positive, 98 tumor-negative)
+- URL: `/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumour-detection`
+- Contains: 253 MRI images (155 tumour-positive, 98 tumour-negative)
 
-**Dataset 2: Brain Tumor Detection**
+**Dataset 2: Brain Tumour Detection**
 
 - Source: Ahmed Hamada
-- URL: `/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection`
+- URL: `/kaggle/input/datasets/ahmedhamada0/brain-tumour-detection`
 - Contains: 3,000 MRI images
 
 #### 3.1.2 Dataset Composition
 
-| Category     | Dataset 1 | Dataset 2 | Combined  |
-| ------------ | --------- | --------- | --------- |
-| No Tumor (0) | 98        | 1,500     | 1,598     |
-| Tumor (1)    | 155       | 1,500     | 1,655     |
-| **Total**    | **253**   | **3,000** | **3,253** |
+| Category      | Dataset 1 | Dataset 2 | Combined  |
+| ------------- | --------- | --------- | --------- |
+| No Tumour (0) | 98        | 1,500     | 1,598     |
+| Tumour (1)    | 155       | 1,500     | 1,655     |
+| **Total**     | **253**   | **3,000** | **3,253** |
 
 #### 3.1.3 Data Collection Methodology
 
 ```python
 NO_PATHS = [
-    "/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/no",
-    "/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no"
+    "/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumour-detection/no",
+    "/kaggle/input/datasets/ahmedhamada0/brain-tumour-detection/no"
 ]
 
 YES_PATHS = [
-    "/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes",
-    "/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes"
+    "/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumour-detection/yes",
+    "/kaggle/input/datasets/ahmedhamada0/brain-tumour-detection/yes"
 ]
 
 VALID_EXTENSIONS = (".jpg", ".jpeg", ".png", ".tif")
@@ -681,15 +681,15 @@ random.seed(SEED)
 
 #### 4.3.1 Skip Connections and Gradient Flow
 
-Models with effective gradient flow (ResNet, DenseNet, EfficientNet) consistently outperformed those without (VGG). This suggests that deeper networks, when properly designed, capture more relevant features for tumor detection.
+Models with effective gradient flow (ResNet, DenseNet, EfficientNet) consistently outperformed those without (VGG). This suggests that deeper networks, when properly designed, capture more relevant features for tumour detection.
 
 #### 4.3.2 Attention Mechanisms
 
-Attention-based models (CoaTNet, Swin) achieved top-tier performance, indicating that capturing long-range dependencies in MRI images is beneficial. Tumor boundaries and relationships with surrounding tissue may be better modeled by attention.
+Attention-based models (CoaTNet, Swin) achieved top-tier performance, indicating that capturing long-range dependencies in MRI images is beneficial. Tumour boundaries and relationships with surrounding tissue may be better modeled by attention.
 
 #### 4.3.3 Multi-Scale Processing
 
-InceptionV3's parallel convolutions at different scales likely help detect tumors of varying sizes, contributing to its perfect AUC score.
+InceptionV3's parallel convolutions at different scales likely help detect tumours of varying sizes, contributing to its perfect AUC score.
 
 #### 4.3.4 Parameter Efficiency
 
@@ -812,8 +812,8 @@ EfficientNetB0 is the most parameter-efficient model, making it ideal for deploy
 
 1. **Residual Learning (ResNet, EfficientNet)**: Enables training of deeper networks that can learn more complex features without vanishing gradients
 2. **Dense Connections (DenseNet)**: Maximizes information flow and feature reuse with minimal parameters
-3. **Multi-Scale Processing (Inception)**: Captures tumors of varying sizes through parallel convolution paths
-4. **Attention Mechanisms (CoaTNet, Swin)**: Models long-range dependencies and spatial relationships crucial for understanding tumor context
+3. **Multi-Scale Processing (Inception)**: Captures tumours of varying sizes through parallel convolution paths
+4. **Attention Mechanisms (CoaTNet, Swin)**: Models long-range dependencies and spatial relationships crucial for understanding tumour context
 5. **Neural Architecture Search (EfficientNet, MobileNetV3)**: Optimizes architectural decisions beyond human intuition
 
 #### 4.7.2 The Transformer Paradox
@@ -828,7 +828,7 @@ Pure transformers (ViT) underperformed relative to expectations, while hybrid mo
 
 Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 
-- **Screening**: Flagging potential tumors for radiologist review
+- **Screening**: Flagging potential tumours for radiologist review
 - **Triage**: Prioritizing urgent cases in high-volume settings
 - **Decision support**: Providing second opinions to reduce diagnostic errors
 - **Resource-limited settings**: Enabling automated preliminary diagnosis where specialists are scarce
@@ -860,11 +860,11 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 **Class Balance:**
 
 - Near-balanced (49% negative, 51% positive) but may not reflect real-world prevalence
-- Single tumor type classification (binary) rather than multi-class tumor typing
+- Single tumour type classification (binary) rather than multi-class tumour typing
 
 **Annotation Quality:**
 
-- Dataset labels are binary (tumor present/absent) without tumor grade, type, or location
+- Dataset labels are binary (tumour present/absent) without tumour grade, type, or location
 - No pixel-level segmentation masks for detailed analysis
 - Potential label noise from crowdsourced datasets
 
@@ -873,7 +873,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 - Models trained on combined Kaggle datasets may not generalize to other institutions' MRI protocols
 - No external validation on completely unseen datasets from different sources
 - Performance on low-quality images or unusual presentations not evaluated
-- Potential dataset-specific features being learned rather than true tumor characteristics
+- Potential dataset-specific features being learned rather than true tumour characteristics
 
 #### 5.1.3 Computational Constraints
 
@@ -904,7 +904,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 
 - Collect additional public datasets (BRATS, TCGA, local institutional data)
 - Implement 5-fold cross-validation for more robust performance estimates
-- Create multi-class classification (tumor types: glioma, meningioma, pituitary)
+- Create multi-class classification (tumour types: glioma, meningioma, pituitary)
 
 **Long-term:**
 
@@ -937,7 +937,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 **Visualization:**
 
 - Grad-CAM and attention rollout for model decision visualization
-- Saliency maps highlighting tumor regions
+- Saliency maps highlighting tumour regions
 - Feature importance analysis
 
 **Clinical Validation:**
@@ -982,7 +982,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 
 **Positive Impacts:**
 
-- Democratizing access to brain tumor screening in underserved regions
+- Democratizing access to brain tumour screening in underserved regions
 - Reducing radiologist workload, potentially decreasing burnout
 - Standardizing diagnosis across different healthcare settings
 - Enabling faster triage in emergency situations
@@ -1016,7 +1016,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 
 - Training data may not represent all demographic groups equally
 - Different MRI protocols across institutions may cause performance disparities
-- Tumor characteristics may vary across populations
+- Tumour characteristics may vary across populations
 - Socioeconomic factors affecting access to high-quality imaging
 
 **Mitigation Approaches:**
@@ -1062,7 +1062,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 
 ### 7.1 Summary of Key Contributions
 
-This comprehensive study evaluated nine deep learning architectures for brain tumor detection under standardized conditions, making several key contributions:
+This comprehensive study evaluated nine deep learning architectures for brain tumour detection under standardized conditions, making several key contributions:
 
 1. **Standardized Benchmark:** Established a fair comparison framework across CNN and transformer families with consistent data splits, preprocessing, and training protocols
 
@@ -1098,17 +1098,17 @@ This comprehensive study evaluated nine deep learning architectures for brain tu
 
 - Six models achieved >97% accuracy and >0.999 AUC, meeting clinical-grade performance thresholds
 - Perfect or near-perfect AUC indicates excellent class separation capability
-- Results support feasibility of automated brain tumor screening systems
+- Results support feasibility of automated brain tumour screening systems
 
 ### 7.3 Final Remarks
 
-The evolution of deep learning architectures from simple convolutional stacks (VGG) to sophisticated designs incorporating residual connections, attention mechanisms, and neural architecture search has dramatically improved performance on medical imaging tasks. Our results demonstrate that architectural innovation directly translates to better tumor detection, with modern models achieving clinically actionable accuracy.
+The evolution of deep learning architectures from simple convolutional stacks (VGG) to sophisticated designs incorporating residual connections, attention mechanisms, and neural architecture search has dramatically improved performance on medical imaging tasks. Our results demonstrate that architectural innovation directly translates to better tumour detection, with modern models achieving clinically actionable accuracy.
 
 The convergence of CNN and transformer designs in hybrid models like CoaTNet-0 suggests a promising direction for future medical imaging research. While pure transformers require further investigation with larger datasets, the success of attention-augmented CNNs indicates that capturing both local features and global context is crucial for understanding complex medical images.
 
 For practical deployment, EfficientNetB0 offers the best accuracy-to-parameter ratio, making it suitable for resource-constrained environments. InceptionV3 and CoaTNet-0 provide slightly higher accuracy at moderate computational cost. The choice between these top performers should be guided by specific deployment requirements rather than significant performance differences.
 
-This study provides a foundation for future work in automated brain tumor detection and demonstrates that modern deep learning architectures, when properly implemented and evaluated, can achieve performance levels suitable for clinical decision support. As datasets grow and architectures evolve, the gap between human and machine performance in medical image analysis will likely continue to narrow, ultimately benefiting patients through faster, more accessible, and more consistent diagnosis.
+This study provides a foundation for future work in automated brain tumour detection and demonstrates that modern deep learning architectures, when properly implemented and evaluated, can achieve performance levels suitable for clinical decision support. As datasets grow and architectures evolve, the gap between human and machine performance in medical image analysis will likely continue to narrow, ultimately benefiting patients through faster, more accessible, and more consistent diagnosis.
 
 ---
 
@@ -1134,21 +1134,21 @@ This study provides a foundation for future work in automated brain tumor detect
 
 10. Talo, M., Baloglu, U. B., Yıldırım, Ö., & Acharya, U. R. (2019). Application of deep transfer learning for automated brain abnormality classification using MR images. _Cognitive Systems Research_, 54, 176-188.
 
-11. Khan, M. A., Ashraf, I., Alhaisoni, M., Damaševičius, R., Scherer, R., Rehman, A., & Bukhari, S. A. C. (2020). Multimodal brain tumor classification using deep learning and robust feature selection: A machine learning application for radiologists. _Diagnostics_, 10(8), 565.
+11. Khan, M. A., Ashraf, I., Alhaisoni, M., Damaševičius, R., Scherer, R., Rehman, A., & Bukhari, S. A. C. (2020). Multimodal brain tumour classification using deep learning and robust feature selection: A machine learning application for radiologists. _Diagnostics_, 10(8), 565.
 
-12. Noreen, N., Palaniappan, S., Qayyum, A., Ahmad, I., Imran, M., & Shoaib, M. (2020). A deep learning model based on concatenation approach for the diagnosis of brain tumor. _IEEE Access_, 8, 55135-55144.
+12. Noreen, N., Palaniappan, S., Qayyum, A., Ahmad, I., Imran, M., & Shoaib, M. (2020). A deep learning model based on concatenation approach for the diagnosis of brain tumour. _IEEE Access_, 8, 55135-55144.
 
-13. Rehman, A., Naz, S., Razzak, M. I., Akram, F., & Imran, M. (2020). A deep learning-based framework for automatic brain tumors classification using transfer learning. _Circuits, Systems, and Signal Processing_, 39(2), 757-775.
+13. Rehman, A., Naz, S., Razzak, M. I., Akram, F., & Imran, M. (2020). A deep learning-based framework for automatic brain tumours classification using transfer learning. _Circuits, Systems, and Signal Processing_, 39(2), 757-775.
 
-14. Zacharaki, E. I., Wang, S., Chawla, S., Soo Yoo, D., Wolf, R., Melhem, E. R., & Davatzikos, C. (2009). Classification of brain tumor type and grade using MRI texture and shape in a machine learning scheme. _Magnetic Resonance in Medicine_, 62(6), 1609-1618.
+14. Zacharaki, E. I., Wang, S., Chawla, S., Soo Yoo, D., Wolf, R., Melhem, E. R., & Davatzikos, C. (2009). Classification of brain tumour type and grade using MRI texture and shape in a machine learning scheme. _Magnetic Resonance in Medicine_, 62(6), 1609-1618.
 
-15. Seetha, J., & Raja, S. S. (2018). Brain tumor classification using convolutional neural networks. _Biomedical & Pharmacology Journal_, 11(3), 1457.
+15. Seetha, J., & Raja, S. S. (2018). Brain tumour classification using convolutional neural networks. _Biomedical & Pharmacology Journal_, 11(3), 1457.
 
-16. Deepak, S., & Ameer, P. M. (2019). Brain tumor classification using deep CNN features via transfer learning. _Computers in Biology and Medicine_, 111, 103345.
+16. Deepak, S., & Ameer, P. M. (2019). Brain tumour classification using deep CNN features via transfer learning. _Computers in Biology and Medicine_, 111, 103345.
 
-17. Saxena, P., Maheshwari, A., & Maheshwari, S. (2020). Predictive modeling of brain tumor detection using deep learning. _2020 International Conference on Emerging Trends in Communication, Control and Computing (ICONC3)_, 1-6.
+17. Saxena, P., Maheshwari, A., & Maheshwari, S. (2020). Predictive modeling of brain tumour detection using deep learning. _2020 International Conference on Emerging Trends in Communication, Control and Computing (ICONC3)_, 1-6.
 
-18. Ghassemi, N., Shoeibi, A., & Rouhani, M. (2020). Deep neural network with generative adversarial networks pre-training for brain tumor classification based on MR images. _Biomedical Signal Processing and Control_, 57, 101678.
+18. Ghassemi, N., Shoeibi, A., & Rouhani, M. (2020). Deep neural network with generative adversarial networks pre-training for brain tumour classification based on MR images. _Biomedical Signal Processing and Control_, 57, 101678.
 
 ---
 
@@ -1157,7 +1157,7 @@ This study provides a foundation for future work in automated brain tumor detect
 ### Appendix A: Code Repository Structure
 
 ```
-brain-tumor-detection/
+brain-tumour-detection/
 │
 ├── CoaTNet0.ipynb              # CoaTNet-0 implementation
 ├── SwinBase.ipynb               # Swin Transformer Base implementation
@@ -1179,8 +1179,8 @@ brain-tumor-detection/
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/brain-tumor-detection.git
-cd brain-tumor-detection
+git clone https://github.com/yourusername/brain-tumour-detection.git
+cd brain-tumour-detection
 
 # Install dependencies
 pip install torch torchvision timm scikit-learn pandas numpy pillow tqdm tensorboard
