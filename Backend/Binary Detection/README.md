@@ -32,7 +32,7 @@ This repository contains a comprehensive comparative study of nine state-of-the-
 - EfficientNetB0
 - MobileNetV3-Large
 - InceptionV3
-- ViT-B16 (Vision Transformer)
+- ViT-B/16 (Vision Transformer)
 - Swin Transformer Base
 - CoaTNet-0 (Co-scale Conv-Attentional Network)
 
@@ -133,7 +133,7 @@ The breakthrough of AlexNet in 2012 catalyzed deep learning adoption in medical 
 
 ### 2.3 Attention Mechanisms and Transformers
 
-**Vision Transformer (ViT, 2020):** Dosovitskiy et al. adapted transformer architectures for vision by treating images as sequences of patches. ViT-B16 demonstrated competitive performance with CNNs on large datasets but required extensive pretraining.
+**Vision Transformer (ViT, 2020):** Dosovitskiy et al. adapted transformer architectures for vision by treating images as sequences of patches. ViT-B/16 demonstrated competitive performance with CNNs on large datasets but required extensive pretraining.
 
 **Swin Transformer (2021):** Liu et al. introduced hierarchical transformers with shifted windows, enabling efficient multi-scale processing. Swin Transformers achieved state-of-the-art results on ImageNet and showed promise for medical imaging.
 
@@ -254,7 +254,7 @@ Images were resized to model-specific input dimensions:
 | EfficientNetB0 | 224×224    |
 | MobileNetV3    | 224×224    |
 | InceptionV3    | 299×299    |
-| ViT-B16        | 224×224    |
+| ViT-B/16       | 224×224    |
 | Swin Base      | 224×224    |
 | CoaTNet-0      | 224×224    |
 
@@ -332,7 +332,7 @@ Validation and testing used only resizing, tensor conversion, and normalization.
 
 #### 3.3.3 Transformer-Based Models
 
-**ViT-B16 (Vision Transformer)**
+**ViT-B/16 (Vision Transformer)**
 
 - Architecture: Pure transformer with patch-based image tokenization
 - Key innovation: Applies self-attention directly to image patches
@@ -379,7 +379,7 @@ model.classifier[3] = nn.Linear(model.classifier[3].in_features, 1)
 model.fc = nn.Linear(model.fc.in_features, 1)
 model.AuxLogits.fc = nn.Linear(model.AuxLogits.fc.in_features, 1)
 
-# ViT-B16
+# ViT-B/16
 model.heads = nn.Linear(model.heads.head.in_features, 1)
 
 # Swin Base (via timm)
@@ -415,7 +415,7 @@ model.reset_classifier(num_classes=1)
 | EfficientNetB0 | 256        | 8                         |
 | MobileNetV3    | 256        | 8                         |
 | InceptionV3    | 128        | 17                        |
-| ViT-B16        | 128        | 17                        |
+| ViT-B/16       | 128        | 17                        |
 | Swin Base      | 64         | 35                        |
 | CoaTNet-0      | 64         | 35                        |
 
@@ -546,7 +546,7 @@ random.seed(SEED)
 | **ResNet50**       | **0.9939**    | **0.9999** | 0.9999 (Epoch 6)            |
 | Swin Base          | 0.9816        | 0.9990     | 0.9988 (Epoch 6)            |
 | MobileNetV3        | 0.9139        | 0.9982     | 0.9993 (Epoch 10)           |
-| ViT-B16            | 0.9508        | 0.9861     | 0.9897 (Epoch 10)           |
+| ViT-B/16           | 0.9508        | 0.9861     | 0.9897 (Epoch 10)           |
 | VGG16              | 0.8320        | 0.9247     | 0.9343 (Epoch 10)           |
 
 #### 4.1.2 Detailed Training Progression
@@ -608,7 +608,7 @@ random.seed(SEED)
 - Epoch 10: Train Acc 99.90%, Val AUC 0.9993 ✓ Best
 - Final Test: 91.39% Accuracy, 0.9982 AUC
 
-**ViT-B16**
+**ViT-B/16**
 
 - Epoch 1: Train Acc 60.06%, Val AUC 0.7205
 - Epoch 2: Train Acc 66.13%, Val AUC 0.7977
@@ -663,13 +663,13 @@ random.seed(SEED)
 - InceptionV3's multi-scale processing appears particularly well-suited for medical images
 - MobileNetV3 shows lower accuracy despite high AUC, suggesting calibration issues or threshold sensitivity
 
-#### 4.2.3 Transformer-Based Models (ViT-B16, Swin Base, CoaTNet-0)
+#### 4.2.3 Transformer-Based Models (ViT-B/16, Swin Base, CoaTNet-0)
 
 | Model     | Parameters | Test Accuracy | Test AUC | Observations                          |
 | --------- | ---------- | ------------- | -------- | ------------------------------------- |
 | CoaTNet-0 | ~10M       | 0.9959        | 1.0000   | Excellent performance, hybrid design  |
 | Swin Base | 88M        | 0.9816        | 0.9990   | Strong but requires more epochs       |
-| ViT-B16   | 86M        | 0.9508        | 0.9861   | Lower performance, may need more data |
+| ViT-B/16  | 86M        | 0.9508        | 0.9861   | Lower performance, may need more data |
 
 **Key Insights:**
 
@@ -701,7 +701,7 @@ InceptionV3's parallel convolutions at different scales likely help detect tumor
 | InceptionV3    | 23.9M      | 0.0416% accuracy/M              |
 | ResNet50       | 25.6M      | 0.0388% accuracy/M              |
 | Swin Base      | 88M        | 0.0112% accuracy/M              |
-| ViT-B16        | 86M        | 0.0111% accuracy/M              |
+| ViT-B/16       | 86M        | 0.0111% accuracy/M              |
 | VGG16          | 138M       | 0.0060% accuracy/M              |
 
 EfficientNetB0 is the most parameter-efficient model, making it ideal for deployment scenarios with computational constraints.
@@ -718,7 +718,7 @@ EfficientNetB0 is the most parameter-efficient model, making it ideal for deploy
 | CoaTNet-0      | 7                             | +0.04% accuracy               |
 | Swin Base      | 6                             | -0.06% accuracy               |
 | ResNet50       | 6                             | -0.12% accuracy               |
-| ViT-B16        | 10                            | -0.59% accuracy               |
+| ViT-B/16       | 10                            | -0.59% accuracy               |
 | MobileNetV3    | 10                            | -4.76% accuracy               |
 | VGG16          | 10                            | -4.13% accuracy               |
 
@@ -785,7 +785,7 @@ EfficientNetB0 is the most parameter-efficient model, making it ideal for deploy
 - Training: Early peak suggests potential overfitting
 - Best for: Parameter-sensitive applications
 
-**ViT-B16** (95.08% accuracy, 0.9861 AUC)
+**ViT-B/16** (95.08% accuracy, 0.9861 AUC)
 
 - Strengths: Pure transformer baseline
 - Training: Slow but steady improvement
@@ -1066,7 +1066,7 @@ This comprehensive study evaluated nine deep learning architectures for brain tu
 
 1. **Standardized Benchmark:** Established a fair comparison framework across CNN and transformer families with consistent data splits, preprocessing, and training protocols
 
-2. **Multi-Architecture Analysis:** Evaluated classical CNNs (ResNet50, VGG16, DenseNet121), efficient CNNs (EfficientNetB0, MobileNetV3, InceptionV3), and transformer-based models (ViT-B16, Swin Base, CoaTNet-0)
+2. **Multi-Architecture Analysis:** Evaluated classical CNNs (ResNet50, VGG16, DenseNet121), efficient CNNs (EfficientNetB0, MobileNetV3, InceptionV3), and transformer-based models (ViT-B/16, Swin Base, CoaTNet-0)
 
 3. **Quantitative Performance Comparison:** Provided detailed accuracy and AUC metrics for all models, enabling evidence-based model selection
 
@@ -1081,7 +1081,7 @@ This comprehensive study evaluated nine deep learning architectures for brain tu
 **Performance Hierarchy:**
 
 - **Top Tier (≥99% accuracy):** CoaTNet-0, EfficientNetB0, InceptionV3, ResNet50
-- **Strong Tier (95-98% accuracy):** Swin Base, DenseNet121, ViT-B16
+- **Strong Tier (95-98% accuracy):** Swin Base, DenseNet121, ViT-B/16
 - **Adequate Tier (90-95% accuracy):** MobileNetV3
 - **Underperforming (<90% accuracy):** VGG16
 
@@ -1161,7 +1161,7 @@ brain-tumor-detection/
 │
 ├── CoaTNet0.ipynb              # CoaTNet-0 implementation
 ├── SwinBase.ipynb               # Swin Transformer Base implementation
-├── ViT-B16.ipynb                 # Vision Transformer B/16 implementation
+├── ViT-B/16.ipynb                 # Vision Transformer B/16 implementation
 ├── InceptionV3.ipynb             # InceptionV3 implementation
 ├── MobileNetV3-Large.ipynb       # MobileNetV3-Large implementation
 ├── EfficientNetB0.ipynb          # EfficientNetB0 implementation
@@ -1211,7 +1211,7 @@ batch_sizes = {
     'EfficientNetB0': 256,
     'MobileNetV3': 256,
     'InceptionV3': 128,
-    'ViT-B16': 128,
+    'ViT-B/16': 128,
     'Swin_Base': 64,
     'CoaTNet-0': 64
 }
@@ -1283,7 +1283,7 @@ def run_epoch(loader, training=True):
 | **ResNet50**       | 6     | 0.0069     | 0.9980    | 1.0000    | 0.0166   | 0.9959  | 0.9999  | 0.0190    | 0.9939   | 0.9999   |
 | **Swin Base**      | 6     | 0.1057     | 0.9665    | 0.9914    | 0.0458   | 0.9877  | 0.9988  | 0.0483    | 0.9816   | 0.9990   |
 | **DenseNet121**    | 1     | 0.1653     | 0.9348    | 0.9855    | 0.0547   | 0.9754  | 1.0000  | 0.0610    | 0.9795   | 0.9999   |
-| **ViT-B16**        | 10    | 0.1652     | 0.9430    | 0.9836    | 0.1473   | 0.9344  | 0.9897  | 0.1552    | 0.9508   | 0.9861   |
+| **ViT-B/16**       | 10    | 0.1652     | 0.9430    | 0.9836    | 0.1473   | 0.9344  | 0.9897  | 0.1552    | 0.9508   | 0.9861   |
 | **MobileNetV3**    | 10    | 0.0022     | 0.9990    | 1.0000    | 0.3857   | 0.8934  | 0.9993  | 0.3595    | 0.9139   | 0.9982   |
 | **VGG16**          | 10    | 0.3387     | 0.8467    | 0.9308    | 0.3380   | 0.8443  | 0.9343  | 0.3602    | 0.8320   | 0.9247   |
 
