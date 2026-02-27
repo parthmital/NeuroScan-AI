@@ -22,7 +22,7 @@
 
 ## Project Overview
 
-This repository contains a comprehensive comparative study of 9 state-of-the-art deep learning architectures for brain tumour detection from MRI images. The project implements and evaluates multiple convolutional neural networks (CNNs) and transformer-based models to determine the most effective approach for binary classification of brain tumours.
+This project contains a comprehensive comparative study of 9 state-of-the-art deep learning architectures for brain tumour detection from MRI images. The project implements and evaluates multiple convolutional neural networks (CNNs) and transformer-based models to determine the most effective approach for binary classification of brain tumours.
 
 **Models Implemented:**
 
@@ -108,7 +108,7 @@ Section 2 reviews relevant literature and previous approaches. Section 3 details
 
 Early attempts at automated brain tumour detection relied on handcrafted feature extraction combined with classical machine learning classifiers. Common approaches included:
 
-- **Texture-based features:** Gray-Level Co-occurrence Matrix (GLCM), Local Binary Patterns (LBP)
+- **Texture-based features:** Grey-Level Co-occurrence Matrix (GLCM), Local Binary Patterns (LBP)
 - **Wavelet transforms:** Discrete Wavelet Transform (DWT) for multi-resolution analysis
 - **Morphological features:** Shape, size, and boundary characteristics
 - **Classifiers:** Support Vector Machines (SVM), Random Forests, k-Nearest Neighbors
@@ -868,9 +868,9 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 - No pixel-level segmentation masks for detailed analysis
 - Potential label noise from crowdsourced datasets
 
-#### 5.1.2 Generalization Concerns
+#### 5.1.2 Generalisation Concerns
 
-- Models trained on combined Kaggle datasets may not generalize to other institutions' MRI protocols
+- Models trained on combined Kaggle datasets may not generalise to other institutions' MRI protocols
 - No external validation on completely unseen datasets from different sources
 - Performance on low-quality images or unusual presentations not evaluated
 - Potential dataset-specific features being learned rather than true tumour characteristics
@@ -926,7 +926,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 - Learning rate warmup and cosine annealing with restart
 - Progressive resizing and advanced augmentation (MixUp, CutMix, RandAugment)
 
-**Regularization:**
+**Regularisation:**
 
 - Label smoothing for better calibration
 - Stochastic depth and DropPath for transformer models
@@ -984,7 +984,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 
 - Democratizing access to brain tumour screening in underserved regions
 - Reducing radiologist workload, potentially decreasing burnout
-- Standardizing diagnosis across different healthcare settings
+- Standardising diagnosis across different healthcare settings
 - Enabling faster triage in emergency situations
 
 **Potential Negative Impacts:**
@@ -1005,7 +1005,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 
 **Mitigation Strategies:**
 
-- Clear labeling as "assistive tool" not "diagnostic device"
+- Clear labelling as "assistive tool" not "diagnostic device"
 - Mandatory human oversight requirements
 - Continuous monitoring and validation protocols
 - Confidence thresholds requiring human review for uncertain cases
@@ -1035,7 +1035,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 3. Clear performance specifications and limitations
 4. User training and documentation
 
-**Operational Requirements:**
+**Organisational Requirements:**
 
 1. Human-in-the-loop review for all predictions
 2. Confidence thresholds requiring specialist consultation
@@ -1062,9 +1062,9 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 
 ### 7.1 Summary of Key Contributions
 
-This comprehensive study evaluated 9 deep learning architectures for brain tumour detection under standardized conditions, making several key contributions:
+This comprehensive study evaluated 9 deep learning architectures for brain tumour detection under standardised conditions, making several key contributions:
 
-1. **Standardized Benchmark:** Established a fair comparison framework across CNN and transformer families with consistent data splits, preprocessing, and training protocols
+1. **Standardised Benchmark:** Established a fair comparison framework across CNN and transformer families with consistent data splits, preprocessing, and training protocols
 
 2. **Multi-Architecture Analysis:** Evaluated classical CNNs (ResNet50, VGG16, DenseNet121), efficient CNNs (EfficientNetB0, MobileNetV3, InceptionV3), and transformer-based models (ViT-B/16, Swin Base, CoaTNet-0)
 
@@ -1088,7 +1088,7 @@ This comprehensive study evaluated 9 deep learning architectures for brain tumou
 **Key Observations:**
 
 1. Modern architectures consistently outperform classical designs
-2. Parameter efficiency correlates with generalization (EfficientNetB0: 5.3M parameters, 99.59% accuracy)
+2. Parameter efficiency correlates with generalisation (EfficientNetB0: 5.3M parameters, 99.59% accuracy)
 3. Hybrid convolution-attention models (CoaTNet-0) achieve top performance
 4. Pure transformers may require larger datasets to reach full potential
 5. InceptionV3's multi-scale design is particularly effective for medical images
