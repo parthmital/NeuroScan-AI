@@ -50,10 +50,9 @@
    - 7.3 Final Remarks
 10. [References](#8-references)
 11. [Appendices](#9-appendices)
-    - Appendix A: Code Repository Structure
-    - Appendix B: Hyperparameter Details
-    - Appendix C: Key Functions
-    - Appendix D: Complete Results Table
+    - Appendix A: Hyperparameter Details
+    - Appendix B: Key Functions
+    - Appendix C: Complete Results Table
 
 ---
 
@@ -1191,25 +1190,7 @@ This study provides a foundation for future work in automated brain tumour detec
 
 ## 9. Appendices
 
-### Appendix A: Code Repository Structure
-
-```
-binary-detection/
-│
-├── CoaTNet0.ipynb                # CoaTNet-0 implementation
-├── SwinBase.ipynb                # Swin Transformer Base implementation
-├── ViT-B/16.ipynb                # Vision Transformer B/16 implementation
-├── InceptionV3.ipynb             # InceptionV3 implementation
-├── MobileNetV3-Large.ipynb       # MobileNetV3-Large implementation
-├── EfficientNetB0.ipynb          # EfficientNetB0 implementation
-├── DenseNet121.ipynb             # DenseNet121 implementation
-├── VGG16.ipynb                   # VGG16 implementation
-├── ResNet50.ipynb                # ResNet50 implementation
-│
-├── README.md                     # This documentation
-```
-
-### Appendix B: Hyperparameter Details
+### Appendix A: Hyperparameter Details
 
 ```python
 # Common configuration
@@ -1237,7 +1218,7 @@ batch_sizes = {
 }
 ```
 
-### Appendix C: Key Functions
+### Appendix B: Key Functions
 
 **Dataset Class:**
 
@@ -1293,7 +1274,7 @@ def run_epoch(loader, training=True):
     return total_loss/len(loader), acc, auc
 ```
 
-### Appendix D: Complete Results Table
+### Appendix C: Complete Results Table
 
 | Model              | Epoch | Train Loss | Train Acc | Train AUC | Val Loss | Val Acc | Val AUC | Test Loss | Test Acc | Test AUC |
 | ------------------ | ----- | ---------- | --------- | --------- | -------- | ------- | ------- | --------- | -------- | -------- |
