@@ -22,7 +22,7 @@
 
 ## Project Overview
 
-This repository contains a comprehensive comparative study of nine state-of-the-art deep learning architectures for brain tumour detection from MRI images. The project implements and evaluates multiple convolutional neural networks (CNNs) and transformer-based models to determine the most effective approach for binary classification of brain tumours.
+This repository contains a comprehensive comparative study of 9 state-of-the-art deep learning architectures for brain tumour detection from MRI images. The project implements and evaluates multiple convolutional neural networks (CNNs) and transformer-based models to determine the most effective approach for binary classification of brain tumours.
 
 **Models Implemented:**
 
@@ -42,7 +42,7 @@ This repository contains a comprehensive comparative study of nine state-of-the-
 
 **Background:** Brain tumour detection through MRI analysis is a critical task in medical diagnostics, where accuracy and reliability are paramount. Deep learning models have shown remarkable promise in automating this process, but comparative performance across different architectural families remains underexplored.
 
-**Objective:** This research systematically evaluates nine deep learning architectures, ranging from classical CNNs to modern transformers, for binary brain tumour classification, identifying the most effective models in terms of accuracy, AUC-ROC, and computational efficiency.
+**Objective:** This research systematically evaluates 9 deep learning architectures, ranging from classical CNNs to modern transformers, for binary brain tumour classification, identifying the most effective models in terms of accuracy, AUC-ROC, and computational efficiency.
 
 **Methodology:** Using a combined dataset of 3,253 MRI images from two public sources (1,598 non-tumour, 1,655 tumour), we implemented a standardized training pipeline with 70/15/15 train-validation-test split. Each model was pretrained on ImageNet and fine-tuned for 10 epochs with consistent hyperparameters (learning rate: 3e-4, batch sizes optimized per model, AdamW optimizer, cosine annealing scheduler). Performance was evaluated using accuracy and AUC-ROC metrics.
 
@@ -89,7 +89,7 @@ Automated detection systems that achieve human-level or superhuman accuracy coul
 
 This study aims to:
 
-1. **Implement nine diverse deep learning architectures** spanning classical CNNs, modern CNNs, and transformer-based models
+1. **Implement 9 diverse deep learning architectures** spanning classical CNNs, modern CNNs, and transformer-based models
 2. **Establish a standardized evaluation framework** with consistent data splits, preprocessing, and training protocols
 3. **Compare model performance** using clinically relevant metrics (accuracy, AUC-ROC)
 4. **Analyze architectural trends** to identify which design principles contribute most to brain tumour detection performance
@@ -162,7 +162,7 @@ Despite extensive research, several gaps persist:
 
 This study addresses these gaps by:
 
-- Implementing nine architectures under identical conditions
+- Implementing 9 architectures under identical conditions
 - Using a combined dataset from multiple sources
 - Sharing complete, reproducible code
 - Including both CNN and transformer models
@@ -176,7 +176,7 @@ This study addresses these gaps by:
 
 #### 3.1.1 Data Sources
 
-We combined two publicly available brain MRI datasets from Kaggle:
+We combined 2 publicly available brain MRI datasets from Kaggle:
 
 **Dataset 1: Brain MRI Images for Brain Tumour Detection**
 
@@ -854,7 +854,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 **Size and Diversity:**
 
 - 3,253 images is moderate but may not capture full clinical variability
-- Limited to two public datasets, potentially lacking geographic/demographic diversity
+- Limited to 2 public datasets, potentially lacking geographic/demographic diversity
 - MRI protocols, field strengths, and equipment variations not fully represented
 
 **Class Balance:**
@@ -1062,7 +1062,7 @@ Models achieving >99% accuracy and near-perfect AUC are clinically viable for:
 
 ### 7.1 Summary of Key Contributions
 
-This comprehensive study evaluated nine deep learning architectures for brain tumour detection under standardized conditions, making several key contributions:
+This comprehensive study evaluated 9 deep learning architectures for brain tumour detection under standardized conditions, making several key contributions:
 
 1. **Standardized Benchmark:** Established a fair comparison framework across CNN and transformer families with consistent data splits, preprocessing, and training protocols
 
