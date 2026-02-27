@@ -42,7 +42,7 @@ This repository contains a comprehensive comparative study of nine state-of-the-
 
 **Background:** Brain tumour detection through MRI analysis is a critical task in medical diagnostics, where accuracy and reliability are paramount. Deep learning models have shown remarkable promise in automating this process, but comparative performance across different architectural families remains underexplored.
 
-**Objective:** This research systematically evaluates nine deep learning architectures—ranging from classical CNNs to modern transformers—for binary brain tumour classification, identifying the most effective models in terms of accuracy, AUC-ROC, and computational efficiency.
+**Objective:** This research systematically evaluates nine deep learning architectures, ranging from classical CNNs to modern transformers, for binary brain tumour classification, identifying the most effective models in terms of accuracy, AUC-ROC, and computational efficiency.
 
 **Methodology:** Using a combined dataset of 3,253 MRI images from two public sources (1,598 non-tumour, 1,655 tumour), we implemented a standardized training pipeline with 70/15/15 train-validation-test split. Each model was pretrained on ImageNet and fine-tuned for 10 epochs with consistent hyperparameters (learning rate: 3e-4, batch sizes optimized per model, AdamW optimizer, cosine annealing scheduler). Performance was evaluated using accuracy and AUC-ROC metrics.
 
