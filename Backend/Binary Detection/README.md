@@ -9,14 +9,52 @@
 1. [Project Overview](#project-overview)
 2. [Abstract](#abstract)
 3. [Introduction](#1-introduction)
+   - 1.1 Background Context
+   - 1.2 Problem Statement and Research Gap
+   - 1.3 Significance and Urgency
+   - 1.4 Research Objectives
+   - 1.5 Paper Organization
 4. [Literature Review](#2-literature-review)
+   - 2.1 Traditional Machine Learning Approaches
+   - 2.2 Convolutional Neural Networks
+   - 2.3 Attention Mechanisms and Transformers
+   - 2.4 Medical Imaging Applications
+   - 2.5 Identified Gaps and Study Contribution
 5. [Methods and Materials](#3-methods-and-materials)
+   - 3.1 Dataset and Data Collection
+   - 3.2 Data Preprocessing
+   - 3.3 Model Architectures
+   - 3.4 Training Configuration
+   - 3.5 Evaluation Metrics
+   - 3.6 Experimental Setup
 6. [Results and Discussion](#4-results-and-discussion)
+   - 4.1 Performance Comparison
+   - 4.2 Analysis by Architecture Family
+   - 4.3 Impact of Architectural Design
+   - 4.4 Training Dynamics
+   - 4.5 Comparison with Existing Work
+   - 4.6 Best Model Analysis
+   - 4.7 Discussion of Findings
 7. [Limitations and Future Work](#5-limitations-and-future-work)
+   - 5.1 Limitations
+   - 5.2 Future Work
 8. [Ethical Implications](#6-ethical-implications)
+   - 6.1 Societal Impact
+   - 6.2 Potential Misuse Concerns
+   - 6.3 Fairness and Bias Considerations
+   - 6.4 Responsible Deployment Guidelines
+   - 6.5 Regulatory Considerations
 9. [Conclusion](#7-conclusion)
+   - 7.1 Summary of Key Contributions
+   - 7.2 Main Findings
+   - 7.3 Final Remarks
 10. [References](#8-references)
 11. [Appendices](#9-appendices)
+    - Appendix A: Code Repository Structure
+    - Appendix B: Installation and Usage
+    - Appendix C: Hyperparameter Details
+    - Appendix D: Key Functions
+    - Appendix E: Complete Results Table
 
 ---
 
