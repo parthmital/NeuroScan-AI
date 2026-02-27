@@ -8,15 +8,15 @@
 
 1. [Project Overview](#project-overview)
 2. [Abstract](#abstract)
-3. [1. Introduction](#1-introduction)
-4. [2. Literature Review](#2-literature-review)
-5. [3. Methods and Materials](#3-methods-and-materials)
-6. [4. Results and Discussion](#4-results-and-discussion)
-7. [5. Limitations and Future Work](#5-limitations-and-future-work)
-8. [6. Ethical Implications](#6-ethical-implications)
-9. [7. Conclusion](#7-conclusion)
-10. [8. References](#8-references)
-11. [9. Appendices](#9-appendices)
+3. [Introduction](#1-introduction)
+4. [Literature Review](#2-literature-review)
+5. [Methods and Materials](#3-methods-and-materials)
+6. [Results and Discussion](#4-results-and-discussion)
+7. [Limitations and Future Work](#5-limitations-and-future-work)
+8. [Ethical Implications](#6-ethical-implications)
+9. [Conclusion](#7-conclusion)
+10. [References](#8-references)
+11. [Appendices](#9-appendices)
 
 ---
 
