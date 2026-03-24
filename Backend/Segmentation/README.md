@@ -44,7 +44,7 @@
 
 ## Abstract
 
-Brain tumour segmentation from multimodal MRI scans is a critical task for diagnosis, treatment planning, and disease monitoring. The BraTS (Brain Tumour Segmentation) challenge has become the de facto benchmark for evaluating segmentation algorithms, with recent years witnessing a shift from conventional convolutional neural networks (CNNs) to transformer-based architectures that capture long-range dependencies more effectively. This paper presents a comprehensive comparative analysis of six state-of-the-art 3D segmentation architectures - UNet, nnU-Net, VNet, UNETR, Swin-UNETR, and TransBTS - evaluated on the BraTS 2020 dataset. We implement all models from scratch in PyTorch with consistent preprocessing, training protocols, and evaluation metrics. Our results demonstrate that while transformer-based models show promise, traditional CNN architectures with self-configuring capabilities (nnU-Net) and efficient residual designs (VNet) achieve superior performance with significantly lower computational costs. The standard 3D UNet achieves the highest overall Dice score of 0.7999, followed by nnU-Net (0.7945) and VNet (0.7655), while transformer-based models lag behind due to training complexity and data requirements. This study provides crucial insights for practitioners selecting architectures for medical image segmentation and highlights the importance of architectural efficiency alongside theoretical sophistication.
+Brain tumour segmentation from multimodal MRI scans is a critical task for diagnosis, treatment planning, and disease monitoring. The BraTS (Brain Tumour Segmentation) challenge has become the de facto benchmark for evaluating segmentation algorithms, with recent years witnessing a shift from conventional convolutional neural networks (CNNs) to transformer-based architectures that capture long-range dependencies more effectively. This paper presents a comprehensive comparative analysis of 6 state-of-the-art 3D segmentation architectures - UNet, nnU-Net, VNet, UNETR, Swin-UNETR, and TransBTS - evaluated on the BraTS 2020 dataset. We implement all models from scratch in PyTorch with consistent preprocessing, training protocols, and evaluation metrics. Our results demonstrate that while transformer-based models show promise, traditional CNN architectures with self-configuring capabilities (nnU-Net) and efficient residual designs (VNet) achieve superior performance with significantly lower computational costs. The standard 3D UNet achieves the highest overall Dice score of 0.7999, followed by nnU-Net (0.7945) and VNet (0.7655), while transformer-based models lag behind due to training complexity and data requirements. This study provides crucial insights for practitioners selecting architectures for medical image segmentation and highlights the importance of architectural efficiency alongside theoretical sophistication.
 
 ---
 
@@ -59,7 +59,7 @@ Gliomas are the most common and aggressive primary brain tumours, accounting for
 - **Monitoring**: Tracking disease progression and treatment response
 - **Prognosis**: Predicting patient outcomes based on tumour characteristics
 
-The BraTS (Brain Tumour Segmentation) challenge, established in 2012, has become the premier benchmark for evaluating brain tumour segmentation algorithms. The dataset provides multimodal MRI scans (T1, T1-contrast-enhanced, T2, and FLAIR) along with expert-annotated segmentation masks delineating three tumour sub-regions:
+The BraTS (Brain Tumour Segmentation) challenge, established in 2012, has become the premier benchmark for evaluating brain tumour segmentation algorithms. The dataset provides multimodal MRI scans (T1, T1-contrast-enhanced, T2, and FLAIR) along with expert-annotated segmentation masks delineating 3 tumour sub-regions:
 
 - **Whole Tumour (WT)**: The complete tumour extent, including edema
 - **Tumour Core (TC)**: The solid tumour and necrotic components
@@ -78,7 +78,7 @@ Despite significant advances in deep learning for medical image segmentation, se
 
 This study aims to:
 
-1. **Establish a fair comparison framework**: Implement six representative architectures with identical preprocessing, data splits, and evaluation protocols
+1. **Establish a fair comparison framework**: Implement 6 representative architectures with identical preprocessing, data splits, and evaluation protocols
 2. **Quantify performance differences**: Provide statistically robust comparisons across architectures
 3. **Analyse architectural trade-offs**: Evaluate performance versus computational cost, training time, and parameter count
 4. **Identify optimal approaches**: Guide researchers and practitioners in selecting appropriate architectures for their specific constraints
@@ -103,7 +103,7 @@ The UNet architecture (Ronneberger et al., 2015) revolutionised medical image se
 
 The 3D UNet (Çiçek et al., 2016) extended this architecture to volumetric data by replacing 2D convolutions with 3D counterparts, enabling direct processing of 3D MRI volumes. However, the original 3D UNet suffered from high memory consumption due to the cubic growth of feature maps.
 
-The VNet (Milletari et al., 2016) introduced two key innovations:
+The VNet (Milletari et al., 2016) introduced 2 key innovations:
 
 - **Residual connections**: Allowing deeper networks without gradient degradation
 - **PReLU activations**: Adaptive activation functions that improve gradient flow
@@ -123,7 +123,7 @@ The nnU-Net (Isensee et al., 2021) represented a paradigm shift by automating ar
 
 Vision Transformers (ViT) (Dosovitskiy et al., 2020) demonstrated that pure transformer architectures could match or exceed CNN performance on image classification tasks by modelling long-range dependencies through self-attention mechanisms. This success motivated their extension to medical image segmentation.
 
-**UNETR** (Hatamizadeh et al., 2021) was the first to integrate a ViT encoder with a CNN decoder for 3D segmentation. The encoder splits the volume into non-overlapping patches, linearly projects them into tokens, and processes them through transformer layers. Feature maps at different transformer depths are reshaped and passed to a CNN decoder via skip connections. While UNETR captures global context effectively, it struggles with high-resolution detail preservation and requires large datasets.
+**UNETR** (Hatamizadeh et al., 2021) was the 1st to integrate a ViT encoder with a CNN decoder for 3D segmentation. The encoder splits the volume into non-overlapping patches, linearly projects them into tokens, and processes them through transformer layers. Feature maps at different transformer depths are reshaped and passed to a CNN decoder via skip connections. While UNETR captures global context effectively, it struggles with high-resolution detail preservation and requires large datasets.
 
 **Swin-UNETR** (Hatamizadeh et al., 2022) addressed UNETR's limitations by replacing the standard ViT with a Swin Transformer backbone. The Swin Transformer uses:
 
@@ -147,7 +147,7 @@ Despite the proliferation of architectures, several gaps remain:
 
 Our study addresses these gaps by:
 
-- Implementing all six architectures from scratch in PyTorch with identical preprocessing
+- Implementing all 6 architectures from scratch in PyTorch with identical preprocessing
 - Reporting detailed computational metrics including training time, memory usage, and parameter counts
 - Providing complete code and configuration files for full reproducibility
 - Analysing not just performance but also convergence behaviour, stability, and resource requirements
@@ -168,7 +168,7 @@ We used the BraTS 2020 training dataset, which consists of 369 cases collected f
   - **T1-contrast-enhanced (T1CE)**: Highlights areas of blood-brain barrier breakdown
   - **T2-weighted (T2)**: Visualises edema and tumour infiltration
   - **Fluid-attenuated inversion recovery (FLAIR)**: Suppresses CSF signals, highlighting peritumoral edema
-- **Ground truth segmentation masks** with three labels:
+- **Ground truth segmentation masks** with 3 labels:
   - Label 1: Necrotic and non-enhancing tumour core
   - Label 2: Peritumoral edema
   - Label 4: Enhancing tumour
@@ -217,7 +217,7 @@ The interpolation was performed using PyTorch's `F.interpolate` function, which 
 
 #### 3.2.3 Target Encoding
 
-We converted the multi-class segmentation mask into **three binary masks** for multi-label segmentation:
+We converted the multi-class segmentation mask into **3 binary masks** for multi-label segmentation:
 
 - **Whole Tumour (WT)**: All tumour voxels (labels 1, 2, 4)
 - **Tumour Core (TC)**: Necrotic, non-enhancing, and enhancing tumour (labels 1, 4)
@@ -382,7 +382,7 @@ We compute DSC separately for each tumour region:
 - **DSC_TC**: Tumour core segmentation accuracy
 - **DSC_ET**: Enhancing tumour segmentation accuracy
 
-The mean DSC is the average of these three values.
+The mean DSC is the average of these 3 values.
 
 #### 3.5.3 Loss Values
 
@@ -701,7 +701,7 @@ The poor transformer performance can be attributed to:
 
 ### 7.1 Summary of Contributions
 
-This study provides the first comprehensive, controlled comparison of six major 3D segmentation architectures on the BraTS 2020 dataset. Key contributions include:
+This study provides the 1st comprehensive, controlled comparison of 6 major 3D segmentation architectures on the BraTS 2020 dataset. Key contributions include:
 
 1. **Fair implementation**: All models implemented from scratch in PyTorch with identical preprocessing, data splits, and evaluation protocols
 2. **Comprehensive metrics**: Performance, computational cost, and efficiency comparisons
