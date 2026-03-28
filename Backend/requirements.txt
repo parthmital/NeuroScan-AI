@@ -1,7 +1,6 @@
 fastapi
-uvicorn
+uvicorn[standard]
 python-multipart
-tensorflow
 torch
 torchvision
 opencv-python-headless
@@ -12,3 +11,6 @@ pydantic
 sqlmodel
 python-jose[cryptography]
 bcrypt
+black
+black[jupyter]
+Pillow

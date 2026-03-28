@@ -3,20 +3,18 @@ import cv2
 import numpy as np
 import torch
 import torch.nn as nn
+import logging
 import nibabel  # type: ignore[import-untyped]
 import traceback
 from typing import Any, cast, Dict, List, Optional, Tuple
+from PIL import Image
+from torchvision import transforms
 
-try:
-    from keras.applications import ResNet50  # type: ignore[import-untyped]
-    from keras.applications.resnet50 import preprocess_input  # type: ignore[import-untyped]
-    from keras.models import Sequential, load_model  # type: ignore[import-untyped]
-    from keras.layers import GlobalAveragePooling2D, Dropout, Dense  # type: ignore[import-untyped]
-except ImportError:
-    from tensorflow.keras.applications import ResNet50  # type: ignore[import-untyped,no-redef]
-    from tensorflow.keras.applications.resnet50 import preprocess_input  # type: ignore[import-untyped,no-redef]
-    from tensorflow.keras.models import Sequential, load_model  # type: ignore[import-untyped,no-redef]
-    from tensorflow.keras.layers import GlobalAveragePooling2D, Dropout, Dense  # type: ignore[import-untyped,no-redef]
+# Removed Keras/Tensorflow imports as models are transitioned to PyTorch
+from torchvision.models import efficientnet_b0, EfficientNet_B0_Weights
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
 
 IMG_SIZE: Tuple[int, int] = (224, 224)
 PATCH_SIZE: Tuple[int, int, int] = (128, 128, 128)
@@ -34,112 +32,120 @@ def _nib_nifti1image(data: np.ndarray, affine: np.ndarray) -> Any:
     return nibabel.Nifti1Image(data, affine)  # type: ignore[no-untyped-call]
 
 
-class ConvBlock(nn.Module):
-    def __init__(self, in_channels: int, out_channels: int) -> None:
+class ResBlock(nn.Module):
+    def __init__(self, in_ch: int, out_ch: int, n_convs: int) -> None:
         super().__init__()
-        self.c = nn.Sequential(
-            nn.Conv3d(in_channels, out_channels, 3, 1, 1, bias=False),
-            nn.InstanceNorm3d(out_channels),
-            nn.LeakyReLU(0.01, True),
+        layers = []
+        ch = in_ch
+        for _ in range(n_convs):
+            layers += [
+                nn.Conv3d(ch, out_ch, 3, padding=1, bias=False),
+                nn.InstanceNorm3d(out_ch, affine=True),
+                nn.PReLU(out_ch),
+            ]
+            ch = out_ch
+        self.convs = nn.Sequential(*layers)
+        self.proj = (
+            nn.Conv3d(in_ch, out_ch, 1, bias=False)
+            if in_ch != out_ch
+            else nn.Identity()
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.c(x)  # type: ignore[no-any-return]
+        return self.convs(x) + self.proj(x)  # type: ignore[no-any-return]
 
 
-class nnUNet(nn.Module):
+class VNet3D(nn.Module):
     def __init__(self) -> None:
         super().__init__()
-        f: List[int] = [32, 64, 128, 256]
-        self.e1 = ConvBlock(4, f[0])
-        self.e2 = ConvBlock(f[0], f[1])
-        self.e3 = ConvBlock(f[1], f[2])
-        self.pool = nn.MaxPool3d(2)
-        self.bottleneck = ConvBlock(f[2], f[3])
-        self.u3 = nn.ConvTranspose3d(f[3], f[2], 2, 2)
-        self.u2 = nn.ConvTranspose3d(f[2], f[1], 2, 2)
-        self.u1 = nn.ConvTranspose3d(f[1], f[0], 2, 2)
-        self.d3 = ConvBlock(f[3], f[2])
-        self.d2 = ConvBlock(f[2], f[1])
-        self.d1 = ConvBlock(f[1], f[0])
-        self.out = nn.Conv3d(f[0], 3, 1)
-        self.ds2 = nn.Conv3d(f[1], 3, 1)
-        self.ds3 = nn.Conv3d(f[2], 3, 1)
+        # Encoder
+        self.e1 = ResBlock(4, 16, 1)
+        self.d1 = nn.Conv3d(16, 16, 2, stride=2, bias=False)
+        self.e2 = ResBlock(16, 32, 1)
+        self.d2 = nn.Conv3d(32, 32, 2, stride=2, bias=False)
+        self.e3 = ResBlock(32, 64, 2)
+        self.d3 = nn.Conv3d(64, 64, 2, stride=2, bias=False)
+        # Bottleneck
+        self.b = ResBlock(64, 128, 2)
+        # Decoder
+        self.u3 = nn.ConvTranspose3d(128, 64, 2, 2)
+        self.r3 = ResBlock(128, 64, 2)
+        self.u2 = nn.ConvTranspose3d(64, 32, 2, 2)
+        self.r2 = ResBlock(64, 32, 1)
+        self.u1 = nn.ConvTranspose3d(32, 16, 2, 2)
+        self.r1 = ResBlock(32, 16, 1)
+        # Outputs
+        self.out = nn.Conv3d(16, 3, 1)
+        self.ds2 = nn.Conv3d(32, 3, 1)
+        self.ds3 = nn.Conv3d(64, 3, 1)
 
     def forward(
         self, x: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        s1 = self.e1(x)
-        s2 = self.e2(self.pool(s1))
-        s3 = self.e3(self.pool(s2))
-        b = self.bottleneck(self.pool(s3))
-        d3 = self.d3(torch.cat([self.u3(b), s3], 1))
-        d2 = self.d2(torch.cat([self.u2(d3), s2], 1))
-        d1 = self.d1(torch.cat([self.u1(d2), s1], 1))
-        return self.out(d1), self.ds2(d2), self.ds3(d3)
+        e1 = self.e1(x)
+        e2 = self.e2(self.d1(e1))
+        e3 = self.e3(self.d2(e2))
+        b = self.b(self.d3(e3))
+        d3 = self.r3(torch.cat([self.u3(b), e3], dim=1))
+        d2 = self.r2(torch.cat([self.u2(d3), e2], dim=1))
+        d1 = self.r1(torch.cat([self.u1(d2), e1], dim=1))
+        return self.out(d1), self.ds2(d2), self.ds3(d3)  # type: ignore[return-value]
 
 
 class BrainProcessor:
     def __init__(self) -> None:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.detection_model: Optional[Any] = None
-        self.classification_model: Optional[Any] = None
-        self.segmentation_model: Optional[nnUNet] = None
-        self.classes: List[str] = ["glioma", "meningioma", "notumor", "pituitary"]
+        self.detection_model: Optional[nn.Module] = None
+        self.classification_model: Optional[nn.Module] = None
+        self.segmentation_model: Optional[VNet3D] = None
+        self.classes: List[str] = ["glioma", "meningioma", "pituitary"]
 
-    def _rebuild_classification_model(self) -> Any:
-        base_model: Any = cast(
-            Any,
-            ResNet50(  # type: ignore[arg-type]
-                weights=None,
-                include_top=False,
-                input_shape=(224, 224, 3),
-            ),
-        )
-        model: Any = cast(
-            Any,
-            Sequential(
-                [
-                    base_model,
-                    GlobalAveragePooling2D(name="global_average_pooling2d"),
-                    Dropout(0.5, name="dropout"),
-                    Dense(4, activation="softmax", name="dense"),
-                ]
-            ),
-        )
+    def _get_efficientnet_model(self, num_classes: int) -> nn.Module:
+        model = efficientnet_b0(weights=None)
+        in_features = model.classifier[1].in_features
+        model.classifier[1] = nn.Linear(in_features, num_classes)
         return model
 
     def load_models(
         self, detection_path: str, classification_path: str, segmentation_path: str
     ) -> None:
-        print(f"Loading Detection model from {detection_path}...")
         try:
-            self.detection_model = load_model(detection_path, compile=False)
-            print("Detection model loaded.")
+            self.detection_model = self._get_efficientnet_model(1).to(self.device)
+            state_dict = torch.load(detection_path, map_location=self.device)
+            if any(k.startswith("module.") for k in state_dict.keys()):
+                state_dict = {
+                    k.replace("module.", ""): v for k, v in state_dict.items()
+                }
+            self.detection_model.load_state_dict(state_dict)
+            self.detection_model.eval()
         except Exception as e:
-            print(f"Error loading Detection model: {e}")
-            traceback.print_exc()
+            logger.error(f"Failed to load detection model: {e}")
             raise
-        print(f"Loading Classification model from {classification_path}...")
+
         try:
-            cls_model: Any = self._rebuild_classification_model()
-            cls_model.load_weights(classification_path)
-            self.classification_model = cls_model
-            print("Classification model loaded successfully (rebuilt + weights).")
+            self.classification_model = self._get_efficientnet_model(3).to(self.device)
+            state_dict = torch.load(classification_path, map_location=self.device)
+            if any(k.startswith("module.") for k in state_dict.keys()):
+                state_dict = {
+                    k.replace("module.", ""): v for k, v in state_dict.items()
+                }
+            self.classification_model.load_state_dict(state_dict)
+            self.classification_model.eval()
         except Exception as e:
-            print(f"Error loading Classification model: {e}")
-            traceback.print_exc()
+            logger.error(f"Failed to load classification model: {e}")
             raise
-        print(f"Loading Segmentation model from {segmentation_path}...")
+
         try:
-            self.segmentation_model = nnUNet().to(self.device)
+            self.segmentation_model = VNet3D().to(self.device)
             state_dict = torch.load(segmentation_path, map_location=self.device)
+            if any(k.startswith("module.") for k in state_dict.keys()):
+                state_dict = {
+                    k.replace("module.", ""): v for k, v in state_dict.items()
+                }
             self.segmentation_model.load_state_dict(state_dict)
             self.segmentation_model.eval()
-            print("Segmentation model loaded.")
         except Exception as e:
-            print(f"Error loading Segmentation model: {e}")
-            traceback.print_exc()
+            logger.error(f"Failed to load segmentation model: {e}")
             raise
 
     def crop_brain(self, image: np.ndarray) -> np.ndarray:
@@ -153,14 +159,19 @@ class BrainProcessor:
         x, y, w, h = cv2.boundingRect(c)
         return cv2.resize(image[y : y + h, x : x + w], IMG_SIZE)  # type: ignore[return-value]
 
-    def preprocess_for_tf(self, image: np.ndarray) -> np.ndarray:
+    def preprocess_for_torch(self, image: np.ndarray) -> torch.Tensor:
         cropped = self.crop_brain(image)
         rgb = cv2.cvtColor(cropped, cv2.COLOR_BGR2RGB)
-        result: np.ndarray = cast(
-            np.ndarray,
-            preprocess_input(np.expand_dims(rgb.astype(np.float32), axis=0)),
+        transform = transforms.Compose(
+            [
+                transforms.ToTensor(),
+                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+            ]
         )
-        return result
+        # Using PIL Image to match training transforms exactly
+        pil_img = Image.fromarray(rgb)
+        tensor: torch.Tensor = transform(pil_img).unsqueeze(0).to(self.device)
+        return tensor
 
     def nifti_to_2d(self, path: str) -> np.ndarray:
         img: Any = _nib_load(path)
@@ -211,23 +222,24 @@ class BrainProcessor:
     def run_detection(self, image_data: np.ndarray) -> float:
         if self.detection_model is None:
             raise ValueError("Detection model not loaded")
-        X = self.preprocess_for_tf(image_data)
-        pred: np.ndarray = self.detection_model.predict(X)
-        if pred.shape[1] == 1:
-            return float(pred[0][0])
-        else:
-            return float(pred[0][1])
+        X = self.preprocess_for_torch(image_data)
+        with torch.no_grad():
+            output = self.detection_model(X)
+            prob = torch.sigmoid(output).item()
+            return float(prob)
 
     def run_classification(self, image_data: np.ndarray) -> Dict[str, Any]:
         if self.classification_model is None:
             raise ValueError("Classification model not loaded")
-        X = self.preprocess_for_tf(image_data)
-        preds: np.ndarray = self.classification_model.predict(X)
-        class_idx: int = int(np.argmax(preds[0]))
-        return {
-            "class": self.classes[class_idx],
-            "confidence": float(preds[0][class_idx]),
-        }
+        X = self.preprocess_for_torch(image_data)
+        with torch.no_grad():
+            outputs = self.classification_model(X)
+            probs = torch.softmax(outputs, dim=1).cpu().numpy()[0]
+            class_idx: int = int(np.argmax(probs))
+            return {
+                "class": self.classes[class_idx],
+                "confidence": float(probs[class_idx]),
+            }
 
     def preprocess_modality(self, path: str) -> np.ndarray:
         img: Any = _nib_load(path)
@@ -237,17 +249,16 @@ class BrainProcessor:
             data[mask] = (data[mask] - float(data[mask].mean())) / (
                 float(data[mask].std()) + 1e-08
             )
-        d, h, w = data.shape
-        start_d, start_h, start_w = (d - 128) // 2, (h - 128) // 2, (w - 128) // 2
-        cropped = np.zeros((128, 128, 128), dtype=np.float32)
-        d_src = slice(max(0, start_d), min(d, start_d + 128))
-        h_src = slice(max(0, start_h), min(h, start_h + 128))
-        w_src = slice(max(0, start_w), min(w, start_w + 128))
-        d_dst = slice(max(0, -start_d), min(128, d - start_d))
-        h_dst = slice(max(0, -start_h), min(128, h - start_h))
-        w_dst = slice(max(0, -start_w), min(128, w - start_w))
-        cropped[d_dst, h_dst, w_dst] = data[d_src, h_src, w_src]
-        return cropped
+
+        # Resizing using interpolation to match training logic
+        t = torch.from_numpy(data).unsqueeze(0).unsqueeze(0)
+        t = torch.nn.functional.interpolate(
+            t,
+            size=(128, 128, 128),
+            mode="trilinear",
+            align_corners=False,
+        )
+        return t.squeeze().numpy().astype(np.float32)
 
     def run_segmentation(
         self, modality_paths: Dict[str, str], save_path: Optional[str] = None
@@ -283,32 +294,30 @@ class BrainProcessor:
                 try:
                     ref_img: Any = _nib_load(modality_paths["flair"])
                     ref_shape: Tuple[int, ...] = tuple(ref_img.shape)
-                    d, h, w = int(ref_shape[0]), int(ref_shape[1]), int(ref_shape[2])
                     affine: np.ndarray = np.asarray(ref_img.affine)
-                    seg_mask = np.zeros((d, h, w), dtype=np.uint8)
-                    start_d = (d - 128) // 2
-                    start_h = (h - 128) // 2
-                    start_w = (w - 128) // 2
-                    d_dst = slice(max(0, start_d), min(d, start_d + 128))
-                    h_dst = slice(max(0, start_h), min(h, start_h + 128))
-                    w_dst = slice(max(0, start_w), min(w, start_w + 128))
-                    d_src = slice(max(0, -start_d), min(128, d - start_d))
-                    h_src = slice(max(0, -start_h), min(128, h - start_h))
-                    w_src = slice(max(0, -start_w), min(128, w - start_w))
-                    local_wt = (probs[0, d_src, h_src, w_src] > 0.5).astype(np.uint8)
-                    local_tc = (probs[1, d_src, h_src, w_src] > 0.5).astype(np.uint8)
-                    local_et = (probs[2, d_src, h_src, w_src] > 0.5).astype(np.uint8)
-                    local_seg = np.zeros((128, 128, 128), dtype=np.uint8)
-                    local_seg[local_wt == 1] = 1
-                    local_seg[local_tc == 1] = 2
-                    local_seg[local_et == 1] = 3
-                    seg_mask[d_dst, h_dst, w_dst] = local_seg[d_src, h_src, w_src]
+
+                    # Convert to categorical mask (1, 2, 3)
+                    cat_probs = np.zeros((128, 128, 128), dtype=np.uint8)
+                    cat_probs[probs[0] > 0.5] = 1  # WT
+                    cat_probs[probs[1] > 0.5] = 2  # TC
+                    cat_probs[probs[2] > 0.5] = 3  # ET
+
+                    # Resize back to original shape using nearest
+                    t_mask = (
+                        torch.from_numpy(cat_probs.astype(np.float32))
+                        .unsqueeze(0)
+                        .unsqueeze(0)
+                    )
+                    t_mask = torch.nn.functional.interpolate(
+                        t_mask, size=ref_shape, mode="nearest"
+                    )
+                    seg_mask = t_mask.squeeze().numpy().astype(np.uint8)
+
                     final_path = save_path.replace(".nii.gz", ".nii")
                     _nib_save(_nib_nifti1image(seg_mask, affine), final_path)
                     print(f"Segmentation mask saved to {final_path}")
-                except Exception as e:
-                    print(f"Failed to save segmentation mask: {e}")
-                    traceback.print_exc()
+                except Exception:
+                    pass
             return {
                 "tumorVolume": wt_vol,
                 "wtVolume": wt_vol,

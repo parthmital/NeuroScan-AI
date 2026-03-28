@@ -38,11 +38,12 @@ The system follows a three-tier architecture:
 
 #### 2. **AI Processing Engine** (`processor.py`)
 
-- **Detection Models**: Binary tumour presence detection
-- **Classification Models**: Multi-class tumour type identification
-- **Segmentation Models**: 3D tumour boundary delineation
+- **Detection Models**: EfficientNetB0 for binary tumour presence detection
+- **Classification Models**: EfficientNetB0 for multi-class tumour type identification
+- **Segmentation Models**: VNet3D for 3D tumour boundary delineation
 - **Preprocessing**: NIfTI to 2D conversion, brain cropping, normalisation
-- **Model Loading**: Dynamic model loading with error handling
+- **Model Loading**: Dynamic PyTorch model loading with error handling
+- **Framework**: Fully migrated from TensorFlow/Keras to PyTorch
 
 #### 3. **Database Layer** (`database.py`, `models.py`)
 
@@ -57,35 +58,35 @@ The system follows a three-tier architecture:
 
 ### Binary Detection Models
 
-| Architecture       | Accuracy   | AUC-ROC    | Parameters | Training Time |
-| ------------------ | ---------- | ---------- | ---------- | ------------- |
-| **InceptionV3**    | **99.39%** | **1.0000** | 23.9M      | 20 min        |
-| **CoaTNet-0**      | **99.59%** | **1.0000** | ~10M       | 35 min        |
-| **EfficientNetB0** | **99.59%** | **0.9999** | 5.3M       | 15 min        |
-| **DenseNet121**    | 97.95%     | 0.9999     | 8.0M       | 25 min        |
-| **ResNet50**       | 99.39%     | 0.9999     | 25.6M      | 30 min        |
+| Architecture       | Accuracy   | AUC-ROC    | Parameters | Training Time | Status           |
+| ------------------ | ---------- | ---------- | ---------- | ------------- | ---------------- |
+| **EfficientNetB0** | **99.59%** | **0.9999** | 5.3M       | 15 min        | **Active Model** |
+| InceptionV3        | 99.39%     | 1.0000     | 23.9M      | 20 min        | Available        |
+| CoaTNet-0          | 99.59%     | 1.0000     | ~10M       | 35 min        | Available        |
+| DenseNet121        | 97.95%     | 0.9999     | 8.0M       | 25 min        | Available        |
+| ResNet50           | 99.39%     | 0.9999     | 25.6M      | 30 min        | Available        |
 
 ### Multi-class Classification Models
 
-| Architecture       | Accuracy   | AUC-ROC    | Parameters | Key Strength           |
-| ------------------ | ---------- | ---------- | ---------- | ---------------------- |
-| **InceptionV3**    | **98.58%** | **0.9995** | 27.2M      | Multi-scale processing |
-| **Swin-Base**      | **98.58%** | 0.9993     | 86.7M      | Hierarchical attention |
-| **EfficientNetB0** | 97.59%     | 0.9987     | 5.3M       | Parameter efficiency   |
-| **CoaTNet-0**      | 97.59%     | 0.9990     | ~10M       | Hybrid CNN-Transformer |
-| **ResNet-50**      | 96.60%     | 0.9990     | 25.6M      | Stable training        |
-| **ViT-B/16**       | 89.52%     | 0.9736     | 86.4M      | Pure transformer       |
+| Architecture       | Accuracy   | AUC-ROC    | Parameters | Key Strength           | Status           |
+| ------------------ | ---------- | ---------- | ---------- | ---------------------- | ---------------- |
+| **EfficientNetB0** | **97.59%** | **0.9987** | 5.3M       | Parameter efficiency   | **Active Model** |
+| InceptionV3        | 98.58%     | 0.9995     | 27.2M      | Multi-scale processing | Available        |
+| Swin-Base          | 98.58%     | 0.9993     | 86.7M      | Hierarchical attention | Available        |
+| CoaTNet-0          | 97.59%     | 0.9990     | ~10M       | Hybrid CNN-Transformer | Available        |
+| ResNet-50          | 96.60%     | 0.9990     | 25.6M      | Stable training        | Available        |
+| ViT-B/16           | 89.52%     | 0.9736     | 86.4M      | Pure transformer       | Available        |
 
 ### 3D Segmentation Models
 
-| Architecture   | Mean Dice  | WT Dice | TC Dice | ET Dice | Parameters |
-| -------------- | ---------- | ------- | ------- | ------- | ---------- |
-| **UNet**       | **0.7999** | 0.8647  | 0.7844  | 0.7505  | 5.6M       |
-| **nnU-Net**    | 0.7945     | 0.8569  | 0.7813  | 0.7452  | 16.5M      |
-| **VNet**       | 0.7655     | 0.8541  | 0.7108  | 0.7316  | 1.4M       |
-| **Swin-UNETR** | 0.6568     | 0.8128  | 0.6261  | 0.5314  | 10.7M      |
-| **TransBTS**   | 0.5109     | 0.6383  | 0.4618  | 0.4325  | 35.8M      |
-| **UNETR**      | 0.6234     | 0.7128  | 0.6261  | 0.5314  | 137.6M     |
+| Architecture | Mean Dice  | WT Dice | TC Dice | ET Dice | Parameters | Status           |
+| ------------ | ---------- | ------- | ------- | ------- | ---------- | ---------------- |
+| **VNet**     | **0.7655** | 0.8541  | 0.7108  | 0.7316  | 1.4M       | **Active Model** |
+| UNet         | 0.7999     | 0.8647  | 0.7844  | 0.7505  | 5.6M       | Available        |
+| nnU-Net      | 0.7945     | 0.8569  | 0.7813  | 0.7452  | 16.5M      | Available        |
+| Swin-UNETR   | 0.6568     | 0.8128  | 0.6261  | 0.5314  | 10.7M      | Available        |
+| UNETR        | 0.6234     | 0.7128  | 0.6261  | 0.5314  | 137.6M     | Available        |
+| TransBTS     | 0.5109     | 0.6383  | 0.4618  | 0.4325  | 35.8M      | Available        |
 
 ---
 
@@ -220,12 +221,13 @@ The system follows a three-tier architecture:
 
 ### Model File Requirements
 
-The system expects pre-trained models at these locations:
+The system expects pre-trained PyTorch models at these locations:
 
-- `Detection/ResNet50-Binary-Detection.keras`
-- `Classification/Brain-Tumour-Classification-ResNet50.keras`
-- `Segmentation/BraTS2020_nnU_Net_Segmentation.pth`
-- `Segmentation/BraTS2020_UNETR_Segmentation.pth` # New model added
+- `Binary Detection/EfficientNetB0.pth` - Binary tumour detection model
+- `Classification/EfficientNetB0.pth` - Multi-class tumour classification model
+- `Segmentation/VNet.pth` - 3D tumour segmentation model
+
+**Note**: The system has been transitioned from TensorFlow/Keras to PyTorch models for improved performance and consistency.
 
 ### Database Schema
 
@@ -394,14 +396,17 @@ CREATE TABLE scans (
 
 **Model Architecture Definitions**:
 
+- `ResBlock`: 3D residual block with InstanceNorm and PReLU activation
+- `VNet3D`: Custom 3D VNet implementation for brain tumour segmentation
 - `ConvBlock`: 3D convolutional block with InstanceNorm and LeakyReLU
-- `nnUNet`: Custom 3D UNet implementation for brain tumour segmentation
+- `EfficientNetB0`: Pre-trained EfficientNet model adapted for medical imaging
 
 **BrainProcessor Class**:
 
 - **Device Management**: Automatic GPU/CPU detection
-- **Model Loading**: Dynamic loading of pre-trained models
+- **Model Loading**: Dynamic loading of PyTorch pre-trained models
 - **Preprocessing Pipeline**: NIfTI to 2D conversion, brain cropping, normalisation
+- **Framework Migration**: Complete transition from TensorFlow/Keras to PyTorch
 
 **Core Functions**:
 
@@ -409,14 +414,15 @@ CREATE TABLE scans (
 - `_nib_save()`: Safe NIfTI file saving
 - `nifti_to_2d()`: Convert 3D medical images to 2D for CNN processing
 - `crop_brain()`: Extract brain region from MRI images
-- `preprocess_for_tf()`: TensorFlow-compatible preprocessing
+- `preprocess_for_pytorch()`: PyTorch-compatible preprocessing
 
 **AI Model Capabilities**:
 
-- **Binary Detection**: Tumour presence/absence classification
-- **Multi-class Classification**: Tumour type identification (glioma, meningioma, pituitary)
-- **3D Segmentation**: Volumetric tumour boundary delineation
+- **Binary Detection**: EfficientNetB0-based tumour presence/absence classification
+- **Multi-class Classification**: EfficientNetB0-based tumour type identification (glioma, meningioma, pituitary)
+- **3D Segmentation**: VNet3D-based volumetric tumour boundary delineation
 - **Multi-modal Support**: T1, T1CE, T2, FLAIR MRI sequences
+- **PyTorch Implementation**: All models now use PyTorch for consistency and performance
 
 ---
 

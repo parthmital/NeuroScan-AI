@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, Sun, Contrast } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
 
 interface Overlays {
 	wt: boolean;
@@ -47,21 +48,24 @@ export const VolumeViewer3D = ({
 	const [selectedModality, setSelectedModality] = useState(
 		modalities?.[0] || "FLAIR",
 	);
+	const [brightness, setBrightness] = useState(0);
+	const [contrast, setContrast] = useState(1);
 
 	// Exposed reset camera handle
 	const resetCameraRef = useRef<(() => void) | null>(null);
 
 	// Expose segmentation transfer functions and render window
-	const segCtfunRef = useRef<any>(null);
-	const segOfunRef = useRef<any>(null);
-	const renderWindowRef = useRef<any>(null);
+	const segCtfunRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
+	const segOfunRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
+	const mainCtfunRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
+	const renderWindowRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
 
 	const resetCamera = useCallback(() => {
 		resetCameraRef.current?.();
 	}, []);
 
 	const updateSegmentationOverlays = useCallback(
-		(currentOverlays: Overlays, currentColors: any) => {
+		(currentOverlays: Overlays, currentColors: Record<string, string>) => {
 			if (
 				!segCtfunRef.current ||
 				!segOfunRef.current ||
@@ -94,6 +98,20 @@ export const VolumeViewer3D = ({
 		},
 		[],
 	);
+
+	const updateColorMapping = useCallback((b: number, c: number) => {
+		if (!mainCtfunRef.current || !renderWindowRef.current) return;
+		const ctfun = mainCtfunRef.current;
+
+		const lower = 127.5 - 127.5 / c - b;
+		const upper = 127.5 + 127.5 / c - b;
+
+		ctfun.removeAllPoints();
+		ctfun.addRGBPoint(lower, 0, 0, 0);
+		ctfun.addRGBPoint(upper, 1, 1, 1);
+
+		renderWindowRef.current.render();
+	}, []);
 
 	useEffect(() => {
 		if (!containerRef.current || !scanId) return;
@@ -162,8 +180,9 @@ export const VolumeViewer3D = ({
 
 				const ctfun = vtkColorTransferFunction.newInstance();
 				const ofun = vtkPiecewiseFunction.newInstance();
+				mainCtfunRef.current = ctfun;
 
-				const volProp: any = volume.getProperty();
+				const volProp = volume.getProperty() as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 				volProp.setRGBTransferFunction(0, ctfun);
 				volProp.setScalarOpacity(0, ofun);
 				volProp.setInterpolationTypeToLinear();
@@ -191,7 +210,7 @@ export const VolumeViewer3D = ({
 					updateSegmentationOverlays(overlays, overlayColors);
 				}
 
-				const segProp: any = segVolume.getProperty();
+				const segProp = segVolume.getProperty() as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 				segProp.setRGBTransferFunction(0, segCtfun);
 				segProp.setScalarOpacity(0, segOfun);
 				segProp.setInterpolationTypeToNearest(); // Categorical classes
@@ -218,14 +237,18 @@ export const VolumeViewer3D = ({
 
 						// Re-render and restore interactors
 						renderWindow.render();
-					} catch (_) {}
+					} catch (_) {
+						void 0;
+					}
 				};
 
 				// Handle resize
 				const resizeObserver = new ResizeObserver(() => {
 					try {
 						grw.resize();
-					} catch (_) {}
+					} catch (_) {
+						/* ignore */
+					}
 				});
 				resizeObserver.observe(container);
 
@@ -235,34 +258,53 @@ export const VolumeViewer3D = ({
 					resetCameraRef.current = null;
 					segCtfunRef.current = null;
 					segOfunRef.current = null;
+					mainCtfunRef.current = null;
 					renderWindowRef.current = null;
 					try {
 						volume.delete();
-					} catch (_) {}
+					} catch (_) {
+						/* ignore */
+					}
 					try {
 						mapper.delete();
-					} catch (_) {}
+					} catch (_) {
+						/* ignore */
+					}
 					try {
 						ctfun.delete();
-					} catch (_) {}
+					} catch (_) {
+						/* ignore */
+					}
 					try {
 						ofun.delete();
-					} catch (_) {}
+					} catch (_) {
+						/* ignore */
+					}
 					try {
 						segVolume.delete();
-					} catch (_) {}
+					} catch (_) {
+						/* ignore */
+					}
 					try {
 						segMapper.delete();
-					} catch (_) {}
+					} catch (_) {
+						/* ignore */
+					}
 					try {
 						segCtfun.delete();
-					} catch (_) {}
+					} catch (_) {
+						/* ignore */
+					}
 					try {
 						segOfun.delete();
-					} catch (_) {}
+					} catch (_) {
+						/* ignore */
+					}
 					try {
 						grw.delete();
-					} catch (_) {}
+					} catch (_) {
+						/* ignore */
+					}
 				};
 
 				// -------------------------------------------------------
@@ -383,11 +425,8 @@ export const VolumeViewer3D = ({
 					}
 				}
 
-				// Brain-tissue pure grayscale transfer (matching 2D SliceViewer)
-				ctfun.removeAllPoints();
-				// Strict linear mapping from scalar value (0-255) to RGB (0-1)
-				ctfun.addRGBPoint(0, 0, 0, 0); // Black
-				ctfun.addRGBPoint(255, 1, 1, 1); // White
+				// Brain-tissue pure grayscale transfer
+				updateColorMapping(brightness, contrast);
 
 				// Opacity mapping
 				ofun.removeAllPoints();
@@ -403,6 +442,7 @@ export const VolumeViewer3D = ({
 
 				if (mounted) setIsLoading(false);
 			} catch (err: any) {
+				// eslint-disable-line @typescript-eslint/no-explicit-any
 				console.error("[VolumeViewer3D]", err);
 				if (mounted) {
 					setError(err?.message ?? "Unknown error loading 3D volume.");
@@ -418,7 +458,22 @@ export const VolumeViewer3D = ({
 			cleanupRef.current?.();
 			cleanupRef.current = null;
 		};
-	}, [scanId, selectedModality, hasSegmentation]);
+	}, [
+		scanId,
+		selectedModality,
+		hasSegmentation,
+		brightness,
+		contrast,
+		overlays,
+		overlayColors,
+		updateColorMapping,
+		updateSegmentationOverlays,
+	]);
+
+	// Handle brightness/contrast reactivity
+	useEffect(() => {
+		updateColorMapping(brightness, contrast);
+	}, [brightness, contrast, updateColorMapping]);
 
 	// Handle overlay reactivity dynamically
 	useEffect(() => {
@@ -491,25 +546,52 @@ export const VolumeViewer3D = ({
 				)}
 			</div>
 
-			{/* Modality selector — identical pill style to SliceViewer */}
-			{modalities && modalities.length > 0 && (
-				<div className="flex justify-center gap-2 pt-1">
-					{modalities.map((m) => (
-						<button
-							key={m}
-							onClick={() => setSelectedModality(m)}
-							className={cn(
-								"rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
-								selectedModality === m
-									? "border-medical bg-medical text-medical-foreground shadow-sm"
-									: "border-border bg-card text-muted-foreground hover:border-medical/50 hover:bg-muted/50",
-							)}
-						>
-							{m}
-						</button>
-					))}
+			{/* Modality and Contrast Controls */}
+			<div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
+				{modalities && modalities.length > 0 && (
+					<div className="flex gap-2">
+						{modalities.map((m) => (
+							<button
+								key={m}
+								onClick={() => setSelectedModality(m)}
+								className={cn(
+									"rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
+									selectedModality === m
+										? "border-medical bg-medical text-medical-foreground shadow-sm"
+										: "border-border bg-card text-muted-foreground hover:border-medical/50 hover:bg-muted/50",
+								)}
+							>
+								{m}
+							</button>
+						))}
+					</div>
+				)}
+
+				<div className="flex flex-1 items-center gap-6 px-2 sm:max-w-[320px]">
+					<div className="flex flex-1 items-center gap-2">
+						<Sun className="h-3.5 w-3.5 text-muted-foreground" />
+						<Slider
+							value={[brightness]}
+							onValueChange={([v]) => setBrightness(v)}
+							min={-100}
+							max={100}
+							step={1}
+							className="flex-1"
+						/>
+					</div>
+					<div className="flex flex-1 items-center gap-2">
+						<Contrast className="h-3.5 w-3.5 text-muted-foreground" />
+						<Slider
+							value={[contrast]}
+							onValueChange={([v]) => setContrast(v)}
+							min={0.1}
+							max={2.5}
+							step={0.1}
+							className="flex-1"
+						/>
+					</div>
 				</div>
-			)}
+			</div>
 		</div>
 	);
 };

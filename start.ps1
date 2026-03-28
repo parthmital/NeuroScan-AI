@@ -55,7 +55,7 @@ $Services = @(
     @{ 
         Name = "NeuroScan-Backend"
         Path = "$RootPath\Backend"
-        Cmd = "`"$VenvScripts\python.exe`" -m uvicorn main:app --reload --host 0.0.0.0 --port 8000 2>&1"
+        Cmd = "& `"$VenvScripts\python.exe`" -m uvicorn main:app --reload --host 0.0.0.0 --port 8000 --log-level info 2>&1"
     },
     @{ 
         Name = "NeuroScan-Frontend"
@@ -112,7 +112,7 @@ foreach ($Service in $Services) {
             # For backend, check if requirements are installed
             if ($Cmd -like "*python*") {
                 Write-Host "Checking Python dependencies..." -ForegroundColor Gray
-                & "$VenvScripts\python.exe" -c "import fastapi, uvicorn, tensorflow, torch" 2>$null
+                & "$VenvScripts\python.exe" -c "import fastapi, uvicorn, torch, nibabel, sqlmodel" 2>$null
                 if ($LASTEXITCODE -ne 0) {
                     Write-Host "Installing Python dependencies..." -ForegroundColor Yellow
                     & "$VenvScripts\pip.exe" install -r requirements.txt
@@ -140,16 +140,16 @@ foreach ($Service in $Services) {
 Start-Sleep -Seconds 3
 
 # Automatically open the browser for the frontend
-Write-Host "`nOpening browser at http://localhost:5173..." -ForegroundColor Gray
+Write-Host "`nOpening browser at http://localhost:8080..." -ForegroundColor Gray
 try {
-    Start-Process "http://localhost:5173"
+    Start-Process "http://localhost:8080"
 } catch {
-    Write-Host "Could not open browser automatically. Please navigate to http://localhost:5173" -ForegroundColor Yellow
+    Write-Host "Could not open browser automatically. Please navigate to http://localhost:8080" -ForegroundColor Yellow
 }
 
 Write-Host "`nReady! Combined logs below (Ctrl+C to quit):" -ForegroundColor White
 Write-Host "Backend API: http://localhost:8000" -ForegroundColor Cyan
-Write-Host "Frontend: http://localhost:5173" -ForegroundColor Green
+Write-Host "Frontend: http://localhost:8080" -ForegroundColor Green
 Write-Host "----------------------------------------------------------------------`n"
 
 # Real-time combined output loop with prefixes

@@ -78,7 +78,11 @@ const Login = () => {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<form onSubmit={handleSubmit} className="space-y-5">
+					<form
+						onSubmit={handleSubmit}
+						className="space-y-5"
+						autoComplete="off"
+					>
 						<div className="space-y-2">
 							<Label htmlFor="username">Username</Label>
 							<Input
@@ -88,6 +92,8 @@ const Login = () => {
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
 								required
+								autoComplete="off"
+								spellCheck={false}
 								className="border-border/50 bg-background/50 focus:border-medical/50"
 							/>
 						</div>
@@ -105,6 +111,8 @@ const Login = () => {
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								required
+								autoComplete="new-password"
+								spellCheck={false}
 								className="border-border/50 bg-background/50 focus:border-medical/50"
 							/>
 						</div>

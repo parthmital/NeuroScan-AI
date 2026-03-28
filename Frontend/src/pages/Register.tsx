@@ -102,6 +102,8 @@ const Register = () => {
 									value={formData.fullName}
 									onChange={handleChange}
 									required
+									autoComplete="off"
+									spellCheck={false}
 									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
@@ -114,6 +116,8 @@ const Register = () => {
 									value={formData.email}
 									onChange={handleChange}
 									required
+									autoComplete="off"
+									spellCheck={false}
 									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
@@ -125,6 +129,8 @@ const Register = () => {
 									value={formData.username}
 									onChange={handleChange}
 									required
+									autoComplete="off"
+									spellCheck={false}
 									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
@@ -137,6 +143,8 @@ const Register = () => {
 									value={formData.password}
 									onChange={handleChange}
 									required
+									autoComplete="new-password"
+									spellCheck={false}
 									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
@@ -147,6 +155,8 @@ const Register = () => {
 									placeholder="Chief Radiologist"
 									value={formData.title}
 									onChange={handleChange}
+									autoComplete="off"
+									spellCheck={false}
 									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
@@ -157,6 +167,8 @@ const Register = () => {
 									placeholder="Neuroradiology"
 									value={formData.department}
 									onChange={handleChange}
+									autoComplete="off"
+									spellCheck={false}
 									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>
@@ -167,6 +179,8 @@ const Register = () => {
 									placeholder="General Hospital Center"
 									value={formData.institution}
 									onChange={handleChange}
+									autoComplete="off"
+									spellCheck={false}
 									className="border-border/50 bg-background/50 focus:border-medical/50"
 								/>
 							</div>

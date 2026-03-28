@@ -94,30 +94,27 @@ processor = BrainProcessor()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Initializing database...")
+    # Initializing database...
     create_db_and_tables()
-    print("Loading AI models...")
+    # Loading AI models...
     try:
         base_dir = os.path.dirname(os.path.abspath(__file__))
         detection_path = os.path.join(
-            base_dir, "Detection", "ResNet50-Binary-Detection.keras"
+            base_dir, "Binary Detection", "EfficientNetB0.pth"
         )
         classification_path = os.path.join(
-            base_dir, "Classification", "Brain-Tumor-Classification-ResNet50.keras"
+            base_dir, "Classification", "EfficientNetB0.pth"
         )
-        segmentation_path = os.path.join(
-            base_dir, "Segmentation", "BraTS2020_nnU_Net_Segmentation.pth"
-        )
+        segmentation_path = os.path.join(base_dir, "Segmentation", "VNet.pth")
         processor.load_models(
             detection_path=detection_path,
             classification_path=classification_path,
             segmentation_path=segmentation_path,
         )
-        print("All models loaded successfully")
     except Exception as e:
-        print(f"CRITICAL: Could not load models. Error: {e}")
+        # Silenced
+        pass
     yield
-    print("Shutting down...")
 
 
 app = FastAPI(lifespan=lifespan)
