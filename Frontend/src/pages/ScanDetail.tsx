@@ -37,10 +37,10 @@ const ScanDetail = () => {
 		return saved
 			? JSON.parse(saved)
 			: {
-				wt: "#eab308",
-				tc: "#ef4444",
-				et: "#3b82f6",
-			};
+					wt: "#eab308",
+					tc: "#ef4444",
+					et: "#3b82f6",
+				};
 	});
 
 	if (configLoading || scansLoading || !config) {
