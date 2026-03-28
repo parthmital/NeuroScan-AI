@@ -1,7 +1,8 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, Download, FileText, RotateCcw } from "lucide-react";
+import { ArrowLeft, Download, FileText } from "lucide-react";
 import { useState } from "react";
 import { SliceViewer } from "@/components/scan/SliceViewer";
+import { VolumeViewer3D } from "@/components/scan/VolumeViewer3D";
 import { SegmentationControls } from "@/components/scan/SegmentationControls";
 import { ProcessingPipeline } from "@/components/scan/ProcessingPipeline";
 import { Button } from "@/components/ui/button";
@@ -29,15 +30,17 @@ const ScanDetail = () => {
 		opacity: 0.6,
 	});
 
+	const [viewMode, setViewMode] = useState<"2d" | "3d">("2d");
+
 	const [overlayColors] = useState(() => {
 		const saved = localStorage.getItem("overlayColors");
 		return saved
 			? JSON.parse(saved)
 			: {
-					wt: "#eab308",
-					tc: "#ef4444",
-					et: "#3b82f6",
-				};
+				wt: "#eab308",
+				tc: "#ef4444",
+				et: "#3b82f6",
+			};
 	});
 
 	if (configLoading || scansLoading || !config) {
@@ -141,14 +144,41 @@ const ScanDetail = () => {
 								<h2 className="text-sm font-semibold text-foreground">
 									Scan Visualisation
 								</h2>
+								{/* 2D / 3D view toggle */}
+								<div className="flex gap-1.5">
+									{(["2d", "3d"] as const).map((mode) => (
+										<button
+											key={mode}
+											onClick={() => setViewMode(mode)}
+											className={cn(
+												"rounded-md border px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all",
+												viewMode === mode
+													? "border-medical bg-medical text-medical-foreground shadow-sm"
+													: "border-border bg-card text-muted-foreground hover:border-medical/50 hover:bg-muted/50",
+											)}
+										>
+											{mode}
+										</button>
+									))}
+								</div>
 							</div>
 
-							<SliceViewer
-								scanId={scan.id}
-								modalities={scan.modalities}
-								overlays={overlays}
-								overlayColors={overlayColors}
-							/>
+							{viewMode === "2d" ? (
+								<SliceViewer
+									scanId={scan.id}
+									modalities={scan.modalities}
+									overlays={overlays}
+									overlayColors={overlayColors}
+								/>
+							) : (
+								<VolumeViewer3D
+									scanId={scan.id}
+									modalities={scan.modalities}
+									overlays={overlays}
+									overlayColors={overlayColors}
+									hasSegmentation={!!scan.results?.detected}
+								/>
+							)}
 						</div>
 						<div className="space-y-6">
 							<SegmentationControls
