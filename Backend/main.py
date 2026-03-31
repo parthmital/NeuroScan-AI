@@ -4,7 +4,10 @@ import uuid
 import traceback
 import uvicorn
 import cv2
+from dotenv import load_dotenv
 from typing import Any, Dict, List, Optional
+
+load_dotenv()
 from fastapi import (
     FastAPI,
     UploadFile,
@@ -30,7 +33,7 @@ from models import Scan, User, UserCreate, ScanUpdate
 
 UPLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-SECRET_KEY = "neuroscan-secret-key-change-this-in-production"
+SECRET_KEY = os.getenv("JWT_SECRET", "neuroscan-secret-key-change-this-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login", auto_error=False)
@@ -121,7 +124,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=os.getenv("CORS_ORIGINS", "*").split(","),
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=False,

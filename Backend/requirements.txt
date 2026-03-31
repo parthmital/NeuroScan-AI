@@ -14,3 +14,4 @@ bcrypt
 black
 black[jupyter]
 Pillow
+python-dotenv
