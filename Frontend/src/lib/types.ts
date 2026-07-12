@@ -1,15 +1,8 @@
 export type Modality = "FLAIR" | "T1" | "T1CE" | "T2";
 export type ScanStatus =
-	| "uploading"
-	| "queued"
-	| "processing"
-	| "completed"
-	| "failed";
+	"uploading" | "queued" | "processing" | "completed" | "failed";
 export type PipelineStep =
-	| "detection"
-	| "classification"
-	| "segmentation"
-	| "complete";
+	"detection" | "classification" | "segmentation" | "complete";
 
 export interface ScanResult {
 	detected: boolean;

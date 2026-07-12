@@ -1,11 +1,71 @@
-__pycache__/
-.venv/
-*.keras
-*.nii
-*.pth
-*.db
-*.pdf
-dist/
-node_modules/
-Materials/
+# Local environment
 .env
+.env.*
+!.env.example
+
+# Python backend
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Backend runtime state and uploads
+Backend/*.db
+Backend/*.sqlite
+Backend/*.sqlite3
+Backend/uploads/
+Backend/Input/
+
+# Frontend dependencies, builds, and test output
+Frontend/node_modules/
+Frontend/dist/
+Frontend/build/
+Frontend/.vite/
+Frontend/coverage/
+
+# Package manager and build logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+bun-debug.log*
+
+# MRI, DICOM, and generated medical imaging data
+*.nii
+*.nii.gz
+*.dcm
+*.nrrd
+*.mha
+*.mhd
+
+# Trained model weights and exported ML models
+*.keras
+*.h5
+*.hdf5
+*.pth
+*.pt
+*.ckpt
+*.onnx
+
+# Extra packaged research exports
+Backend/Materials/*.zip
+Backend/Materials/**/*.zip
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
