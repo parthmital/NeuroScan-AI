@@ -57,10 +57,6 @@ bun-debug.log*
 *.ckpt
 *.onnx
 
-# Extra packaged research exports
-Backend/Materials/*.zip
-Backend/Materials/**/*.zip
-
 # OS and editor noise
 .DS_Store
 Thumbs.db
@@ -69,3 +65,4 @@ Desktop.ini
 .idea/
 *.swp
 *.swo
+*.zip
