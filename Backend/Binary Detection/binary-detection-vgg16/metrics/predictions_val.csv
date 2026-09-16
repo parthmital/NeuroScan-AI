@@ -1,0 +1,489 @@
+path,true_label,true_class,pred_label,pred_class,confidence,correct,prob_no_tumor,prob_tumor
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y387.jpg,1,Tumor,1,Tumor,0.9900250434875488,True,0.009974956512451172,0.9900250434875488
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no756.jpg,0,No Tumor,0,No Tumor,0.9701834592088161,True,0.9701834592088161,0.02981654079118392
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no88.jpg,0,No Tumor,0,No Tumor,0.993461175462631,True,0.993461175462631,0.006538824537369023
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y336.jpg,1,Tumor,1,Tumor,0.9537081718444824,True,0.04629182815551758,0.9537081718444824
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no850.jpg,0,No Tumor,0,No Tumor,0.613410234451294,True,0.613410234451294,0.38658976554870605
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y294.jpg,1,Tumor,1,Tumor,0.9132132530212402,True,0.08678674697875977,0.9132132530212402
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/no/35 no.jpg,0,No Tumor,0,No Tumor,0.9376689686886709,True,0.9376689686886709,0.0623310313113291
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no498.jpg,0,No Tumor,0,No Tumor,0.9355823327930097,True,0.9355823327930097,0.06441766720699021
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1180.jpg,0,No Tumor,0,No Tumor,0.9233161944645076,True,0.9233161944645076,0.07668380553549238
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1029.jpg,0,No Tumor,0,No Tumor,0.7358314990997314,True,0.7358314990997314,0.26416850090026855
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y997.jpg,1,Tumor,0,No Tumor,0.7740714434672678,False,0.7740714434672678,0.2259285565327323
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no897.jpg,0,No Tumor,0,No Tumor,0.9984988176425447,True,0.9984988176425447,0.0015011823574553396
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no709.jpg,0,No Tumor,0,No Tumor,0.951142220233149,True,0.951142220233149,0.04885777976685106
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1124.jpg,1,Tumor,1,Tumor,0.934035062789917,True,0.06596493721008301,0.934035062789917
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y670.jpg,1,Tumor,1,Tumor,0.9906600117683411,True,0.009339988231658936,0.9906600117683411
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y508.jpg,1,Tumor,1,Tumor,0.9713473320007324,True,0.028652667999267578,0.9713473320007324
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no397.jpg,0,No Tumor,1,Tumor,0.6298884153366089,False,0.3701115846633911,0.6298884153366089
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1381.jpg,0,No Tumor,0,No Tumor,0.9821512625951225,True,0.9821512625951225,0.017848737404877413
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y452.jpg,1,Tumor,1,Tumor,0.9385759830474854,True,0.06142401695251465,0.9385759830474854
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y204.jpg,1,Tumor,1,Tumor,0.5625970363616943,True,0.43740296363830566,0.5625970363616943
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no372.jpg,0,No Tumor,0,No Tumor,0.9213576179540512,True,0.9213576179540512,0.07864238204594877
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1232.jpg,1,Tumor,1,Tumor,0.8560919761657715,True,0.14390802383422852,0.8560919761657715
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1213.jpg,1,Tumor,1,Tumor,0.9726234674453735,True,0.027376532554626465,0.9726234674453735
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y66.jpg,1,Tumor,1,Tumor,0.8352149128913879,True,0.16478508710861206,0.8352149128913879
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1412.jpg,0,No Tumor,0,No Tumor,0.8027102470801808,True,0.8027102470801808,0.19728975291981926
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y165.JPG,1,Tumor,1,Tumor,0.8992984294891357,True,0.10070157051086426,0.8992984294891357
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y925.jpg,1,Tumor,1,Tumor,0.929568350315094,True,0.070431649684906,0.929568350315094
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no854.jpg,0,No Tumor,0,No Tumor,0.9119668806783903,True,0.9119668806783903,0.08803311932160972
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y279.jpg,1,Tumor,1,Tumor,0.9803186058998108,True,0.01968139410018921,0.9803186058998108
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1457.jpg,1,Tumor,1,Tumor,0.976445734500885,True,0.02355426549911499,0.976445734500885
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/no/42 no.jpg,0,No Tumor,0,No Tumor,0.9684409806596941,True,0.9684409806596941,0.031559019340305944
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1008.jpg,0,No Tumor,0,No Tumor,0.9809125661849976,True,0.9809125661849976,0.01908743381500244
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1185.jpg,1,Tumor,0,No Tumor,0.6119039058685303,False,0.6119039058685303,0.3880960941314697
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no657.jpg,0,No Tumor,0,No Tumor,0.9763105311628136,True,0.9763105311628136,0.023689468837186402
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y52.jpg,1,Tumor,1,Tumor,0.9932550191879272,True,0.006744980812072754,0.9932550191879272
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/no/no 10.jpg,0,No Tumor,0,No Tumor,0.9923043528284231,True,0.9923043528284231,0.007695647171576894
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1486.jpg,0,No Tumor,0,No Tumor,0.5435296893119812,True,0.5435296893119812,0.4564703106880188
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/No18.jpg,0,No Tumor,0,No Tumor,0.6335236430168152,True,0.6335236430168152,0.3664763569831848
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y291.jpg,1,Tumor,1,Tumor,0.9897513389587402,True,0.010248661041259766,0.9897513389587402
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no976.jpg,0,No Tumor,0,No Tumor,0.633183479309082,True,0.633183479309082,0.36681652069091797
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y531.jpg,1,Tumor,1,Tumor,0.9549003839492798,True,0.045099616050720215,0.9549003839492798
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1384.jpg,0,No Tumor,0,No Tumor,0.9745803475379944,True,0.9745803475379944,0.025419652462005615
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no744.jpg,0,No Tumor,0,No Tumor,0.9828232921454009,True,0.9828232921454009,0.017176707854599158
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no764.jpg,0,No Tumor,0,No Tumor,0.9853843303712557,True,0.9853843303712557,0.01461566962874428
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y1.jpg,1,Tumor,1,Tumor,0.9833430051803589,True,0.016656994819641113,0.9833430051803589
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no326.jpg,0,No Tumor,0,No Tumor,0.9779677354620109,True,0.9779677354620109,0.022032264537989107
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y137.jpg,1,Tumor,1,Tumor,0.9822876453399658,True,0.01771235466003418,0.9822876453399658
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y127.jpg,1,Tumor,1,Tumor,0.9712384939193726,True,0.02876150608062744,0.9712384939193726
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no675.jpg,0,No Tumor,0,No Tumor,0.9012274078933342,True,0.9012274078933342,0.09877259210666572
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no770.jpg,0,No Tumor,0,No Tumor,0.994269753199209,True,0.994269753199209,0.005730246800791044
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1180.jpg,1,Tumor,1,Tumor,0.9902915358543396,True,0.0097084641456604,0.9902915358543396
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y253.JPG,1,Tumor,1,Tumor,0.973036527633667,True,0.026963472366333008,0.973036527633667
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1400.jpg,0,No Tumor,0,No Tumor,0.8062431336379519,True,0.8062431336379519,0.1937568663620482
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y93.jpg,1,Tumor,1,Tumor,0.9830850958824158,True,0.01691490411758423,0.9830850958824158
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1227.jpg,0,No Tumor,0,No Tumor,0.9770226296592014,True,0.9770226296592014,0.0229773703407986
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no648.jpg,0,No Tumor,0,No Tumor,0.9912886152770749,True,0.9912886152770749,0.008711384722925151
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y251.jpg,1,Tumor,1,Tumor,0.9550683498382568,True,0.044931650161743164,0.9550683498382568
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1154.jpg,1,Tumor,1,Tumor,0.506206214427948,True,0.493793785572052,0.506206214427948
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y64.jpg,1,Tumor,0,No Tumor,0.6242935657501221,False,0.6242935657501221,0.37570643424987793
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y260.jpg,1,Tumor,1,Tumor,0.9842154383659363,True,0.01578456163406372,0.9842154383659363
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no796.jpg,0,No Tumor,0,No Tumor,0.9757161304009057,True,0.9757161304009057,0.02428386959909429
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no946.jpg,0,No Tumor,0,No Tumor,0.9677167426677412,True,0.9677167426677412,0.03228325733225878
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no314.jpg,0,No Tumor,0,No Tumor,0.9923933277777458,True,0.9923933277777458,0.007606672222254249
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1215.jpg,0,No Tumor,0,No Tumor,0.9906237629184149,True,0.9906237629184149,0.009376237081585106
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no789.jpg,0,No Tumor,1,Tumor,0.5282444357872009,False,0.4717555642127991,0.5282444357872009
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y67.JPG,1,Tumor,0,No Tumor,0.9116527762516505,False,0.9116527762516505,0.08834722374834944
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y246.jpg,1,Tumor,1,Tumor,0.9492005109786987,True,0.05079948902130127,0.9492005109786987
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y545.jpg,1,Tumor,1,Tumor,0.9690324664115906,True,0.030967533588409424,0.9690324664115906
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no129.jpg,0,No Tumor,0,No Tumor,0.7272980809211731,True,0.7272980809211731,0.2727019190788269
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no684.jpg,0,No Tumor,0,No Tumor,0.9139841198921204,True,0.9139841198921204,0.08601588010787964
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y945.jpg,1,Tumor,1,Tumor,0.891999363899231,True,0.10800063610076904,0.891999363899231
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y248.JPG,1,Tumor,1,Tumor,0.9391365647315979,True,0.0608634352684021,0.9391365647315979
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1396.jpg,1,Tumor,1,Tumor,0.879767894744873,True,0.12023210525512695,0.879767894744873
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1009.jpg,1,Tumor,1,Tumor,0.7489036321640015,True,0.25109636783599854,0.7489036321640015
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1477.jpg,1,Tumor,1,Tumor,0.836821436882019,True,0.16317856311798096,0.836821436882019
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1142.jpg,0,No Tumor,0,No Tumor,0.7087168482328401,True,0.7087168482328401,0.29128315176715996
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no926.jpg,0,No Tumor,0,No Tumor,0.8949731855086441,True,0.8949731855086441,0.10502681449135585
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no743.jpg,0,No Tumor,0,No Tumor,0.9048188789960909,True,0.9048188789960909,0.0951811210039091
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1370.jpg,0,No Tumor,0,No Tumor,0.9901782071367646,True,0.9901782071367646,0.009821792863235396
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no578.jpg,0,No Tumor,0,No Tumor,0.9771101602162627,True,0.9771101602162627,0.02288983978373721
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no963.jpg,0,No Tumor,0,No Tumor,0.982355535030365,True,0.982355535030365,0.01764446496963501
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no478.jpg,0,No Tumor,1,Tumor,0.8460696339607239,False,0.15393036603927612,0.8460696339607239
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/no/1 no.jpeg,0,No Tumor,0,No Tumor,0.9333093444499178,True,0.9333093444499178,0.06669065555008219
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y242.JPG,1,Tumor,1,Tumor,0.9207897186279297,True,0.07921028137207031,0.9207897186279297
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y151.jpg,1,Tumor,1,Tumor,0.866245687007904,True,0.13375431299209595,0.866245687007904
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y481.jpg,1,Tumor,1,Tumor,0.9722043871879578,True,0.027795612812042236,0.9722043871879578
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no808.jpg,0,No Tumor,0,No Tumor,0.6724392376076948,True,0.6724392376076948,0.3275607623923052
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no887.jpg,0,No Tumor,0,No Tumor,0.9272316167297334,True,0.9272316167297334,0.07276838327026652
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y676.jpg,1,Tumor,1,Tumor,0.5767803192138672,True,0.4232196807861328,0.5767803192138672
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y427.jpg,1,Tumor,1,Tumor,0.9874721169471741,True,0.012527883052825928,0.9874721169471741
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y593.jpg,1,Tumor,1,Tumor,0.9590777158737183,True,0.04092228412628174,0.9590777158737183
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1334.jpg,1,Tumor,1,Tumor,0.9453993439674377,True,0.054600656032562256,0.9453993439674377
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y19.JPG,1,Tumor,1,Tumor,0.9135223627090454,True,0.08647763729095459,0.9135223627090454
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no450.jpg,0,No Tumor,0,No Tumor,0.7862948179244995,True,0.7862948179244995,0.2137051820755005
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no112.jpg,0,No Tumor,0,No Tumor,0.9873750520789748,True,0.9873750520789748,0.012624947921025208
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y611.jpg,1,Tumor,1,Tumor,0.9788343906402588,True,0.02116560935974121,0.9788343906402588
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no534.jpg,0,No Tumor,1,Tumor,0.842215359210968,False,0.15778464078903198,0.842215359210968
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no134.jpg,0,No Tumor,0,No Tumor,0.7789857503620647,True,0.7789857503620647,0.2210142496379353
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y71.jpg,1,Tumor,1,Tumor,0.9827572107315063,True,0.017242789268493652,0.9827572107315063
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no342.jpg,0,No Tumor,0,No Tumor,0.8432507766261929,True,0.8432507766261929,0.15674922337380717
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y848.jpg,1,Tumor,1,Tumor,0.914290726184845,True,0.08570927381515503,0.914290726184845
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no537.jpg,0,No Tumor,1,Tumor,0.6535692811012268,False,0.3464307188987732,0.6535692811012268
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1278.jpg,1,Tumor,1,Tumor,0.980728805065155,True,0.01927119493484497,0.980728805065155
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1333.jpg,0,No Tumor,0,No Tumor,0.9515039991699457,True,0.9515039991699457,0.04849600083005429
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no495.jpg,0,No Tumor,0,No Tumor,0.9705205902694012,True,0.9705205902694012,0.029479409730598823
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y782.jpg,1,Tumor,1,Tumor,0.798501193523407,True,0.20149880647659302,0.798501193523407
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1491.jpg,0,No Tumor,0,No Tumor,0.9915870224918104,True,0.9915870224918104,0.008412977508189617
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no935.jpg,0,No Tumor,0,No Tumor,0.9936610783329217,True,0.9936610783329217,0.0063389216670783335
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y621.jpg,1,Tumor,1,Tumor,0.8472108244895935,True,0.1527891755104065,0.8472108244895935
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no606.jpg,0,No Tumor,0,No Tumor,0.9147487674337156,True,0.9147487674337156,0.0852512325662844
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no604.jpg,0,No Tumor,0,No Tumor,0.9954615683039789,True,0.9954615683039789,0.004538431696021084
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y9.jpg,1,Tumor,1,Tumor,0.6768335103988647,True,0.32316648960113525,0.6768335103988647
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no236.jpg,0,No Tumor,0,No Tumor,0.9839091264310884,True,0.9839091264310884,0.016090873568911576
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no167.jpg,0,No Tumor,1,Tumor,0.7898827195167542,False,0.21011728048324585,0.7898827195167542
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y467.jpg,1,Tumor,1,Tumor,0.9890975952148438,True,0.01090240478515625,0.9890975952148438
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no330.jpg,0,No Tumor,0,No Tumor,0.8908652133559078,True,0.8908652133559078,0.1091347866440921
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1468.jpg,1,Tumor,0,No Tumor,0.7849791166928279,False,0.7849791166928279,0.21502088330717212
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no631.jpg,0,No Tumor,0,No Tumor,0.9873750520789748,True,0.9873750520789748,0.012624947921025208
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no639.jpg,0,No Tumor,0,No Tumor,0.9840936083050326,True,0.9840936083050326,0.015906391694967433
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1192.jpg,0,No Tumor,0,No Tumor,0.9737446994869476,True,0.9737446994869476,0.026255300513052388
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1300.jpg,0,No Tumor,1,Tumor,0.8460696339607239,False,0.15393036603927612,0.8460696339607239
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y790.jpg,1,Tumor,1,Tumor,0.7481683492660522,True,0.25183165073394775,0.7481683492660522
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no948.jpg,0,No Tumor,0,No Tumor,0.9017477698754353,True,0.9017477698754353,0.09825223012456469
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y586.jpg,1,Tumor,1,Tumor,0.9657707214355469,True,0.034229278564453125,0.9657707214355469
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1287.jpg,1,Tumor,1,Tumor,0.9909096360206604,True,0.0090903639793396,0.9909096360206604
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1037.jpg,1,Tumor,1,Tumor,0.9419752359390259,True,0.05802476406097412,0.9419752359390259
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y827.jpg,1,Tumor,1,Tumor,0.9010533690452576,True,0.09894663095474243,0.9010533690452576
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1215.jpg,1,Tumor,1,Tumor,0.9428234100341797,True,0.05717658996582031,0.9428234100341797
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y661.jpg,1,Tumor,1,Tumor,0.9927951693534851,True,0.007204830646514893,0.9927951693534851
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no40.jpg,0,No Tumor,0,No Tumor,0.9737945849474217,True,0.9737945849474217,0.02620541505257831
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1377.jpg,1,Tumor,1,Tumor,0.9725192785263062,True,0.027480721473693848,0.9725192785263062
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1138.jpg,0,No Tumor,0,No Tumor,0.9329437156460243,True,0.9329437156460243,0.06705628435397572
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no659.jpg,0,No Tumor,0,No Tumor,0.9612438082695007,True,0.9612438082695007,0.03875619173049927
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1149.jpg,0,No Tumor,0,No Tumor,0.9803185912919254,True,0.9803185912919254,0.019681408708074558
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y498.jpg,1,Tumor,1,Tumor,0.9664738178253174,True,0.03352618217468262,0.9664738178253174
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1169.jpg,0,No Tumor,1,Tumor,0.9125920534133911,False,0.08740794658660889,0.9125920534133911
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y28.jpg,1,Tumor,1,Tumor,0.7184956669807434,True,0.2815043330192566,0.7184956669807434
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no99.jpg,0,No Tumor,0,No Tumor,0.9616059804202017,True,0.9616059804202017,0.03839401957979827
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1426.jpg,1,Tumor,1,Tumor,0.849846601486206,True,0.15015339851379395,0.849846601486206
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1401.jpg,0,No Tumor,0,No Tumor,0.985772953567473,True,0.985772953567473,0.014227046432527065
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1223.jpg,0,No Tumor,0,No Tumor,0.995882082776553,True,0.995882082776553,0.004117917223446997
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no136.jpg,0,No Tumor,0,No Tumor,0.9726235125567986,True,0.9726235125567986,0.027376487443201432
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y478.jpg,1,Tumor,1,Tumor,0.988447368144989,True,0.011552631855010986,0.988447368144989
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1278.jpg,0,No Tumor,0,No Tumor,0.9886682463846836,True,0.9886682463846836,0.011331753615316409
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1485.jpg,0,No Tumor,0,No Tumor,0.9643214488673426,True,0.9643214488673426,0.035678551132657395
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1251.jpg,0,No Tumor,0,No Tumor,0.8618873229341608,True,0.8618873229341608,0.1381126770658392
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1335.jpg,1,Tumor,1,Tumor,0.9898303151130676,True,0.010169684886932373,0.9898303151130676
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no694.jpg,0,No Tumor,0,No Tumor,0.986726113483808,True,0.986726113483808,0.013273886516191977
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no105.jpg,0,No Tumor,0,No Tumor,0.7049732418350352,True,0.7049732418350352,0.2950267581649649
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1188.jpg,1,Tumor,1,Tumor,0.9634374976158142,True,0.03656250238418579,0.9634374976158142
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y965.jpg,1,Tumor,1,Tumor,0.9509603977203369,True,0.049039602279663086,0.9509603977203369
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y32.jpg,1,Tumor,1,Tumor,0.9400236010551453,True,0.059976398944854736,0.9400236010551453
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y469.jpg,1,Tumor,0,No Tumor,0.606381893157959,False,0.606381893157959,0.393618106842041
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no458.jpg,0,No Tumor,0,No Tumor,0.5880022224188514,True,0.5880022224188514,0.4119977775811487
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y86.JPG,1,Tumor,1,Tumor,0.9368651509284973,True,0.06313484907150269,0.9368651509284973
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1129.jpg,0,No Tumor,0,No Tumor,0.9541373359501809,True,0.9541373359501809,0.045862664049819084
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1114.jpg,0,No Tumor,0,No Tumor,0.9860979410456302,True,0.9860979410456302,0.013902058954369826
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no428.jpg,0,No Tumor,0,No Tumor,0.9596109318762203,True,0.9596109318762203,0.04038906812377968
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y684.jpg,1,Tumor,1,Tumor,0.9268352389335632,True,0.07316476106643677,0.9268352389335632
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no421.jpg,0,No Tumor,0,No Tumor,0.8707072475341783,True,0.8707072475341783,0.12929275246582173
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no122.jpg,0,No Tumor,0,No Tumor,0.9887987870007877,True,0.9887987870007877,0.011201212999212236
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y194.jpg,1,Tumor,0,No Tumor,0.7849791166928279,False,0.7849791166928279,0.21502088330717212
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no399.jpg,0,No Tumor,0,No Tumor,0.8780007762163704,True,0.8780007762163704,0.1219992237836296
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y645.jpg,1,Tumor,1,Tumor,0.9590777158737183,True,0.04092228412628174,0.9590777158737183
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y300.jpg,1,Tumor,1,Tumor,0.8630456924438477,True,0.13695430755615234,0.8630456924438477
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y342.jpg,1,Tumor,1,Tumor,0.9977916479110718,True,0.0022083520889282227,0.9977916479110718
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no93.jpg,0,No Tumor,0,No Tumor,0.9840936083050326,True,0.9840936083050326,0.015906391694967433
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1404.jpg,1,Tumor,1,Tumor,0.8726732134819031,True,0.12732678651809692,0.8726732134819031
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1480.jpg,1,Tumor,1,Tumor,0.9606574773788452,True,0.039342522621154785,0.9606574773788452
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y274.jpg,1,Tumor,1,Tumor,0.5724837779998779,True,0.42751622200012207,0.5724837779998779
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1086.jpg,1,Tumor,1,Tumor,0.8781053423881531,True,0.12189465761184692,0.8781053423881531
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y709.jpg,1,Tumor,1,Tumor,0.9881309270858765,True,0.011869072914123535,0.9881309270858765
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no354.jpg,0,No Tumor,0,No Tumor,0.7559974676967045,True,0.7559974676967045,0.24400253230329555
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no572.jpg,0,No Tumor,0,No Tumor,0.854277836467656,True,0.854277836467656,0.14572216353234405
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1297.jpg,1,Tumor,0,No Tumor,0.7463239431381226,False,0.7463239431381226,0.25367605686187744
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1043.jpg,0,No Tumor,0,No Tumor,0.9298237035410382,True,0.9298237035410382,0.07017629645896178
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y564.jpg,1,Tumor,1,Tumor,0.9972637891769409,True,0.002736210823059082,0.9972637891769409
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y82.jpg,1,Tumor,0,No Tumor,0.7762839313787808,False,0.7762839313787808,0.22371606862121923
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no859.jpg,0,No Tumor,0,No Tumor,0.9280183773038033,True,0.9280183773038033,0.07198162269619669
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no982.jpg,0,No Tumor,0,No Tumor,0.9906960504346478,True,0.9906960504346478,0.009303949565352137
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no627.jpg,0,No Tumor,0,No Tumor,0.9911526450804925,True,0.9911526450804925,0.0088473549195075
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no526.jpg,0,No Tumor,0,No Tumor,0.9259027380630782,True,0.9259027380630782,0.0740972619369218
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1362.jpg,1,Tumor,1,Tumor,0.836821436882019,True,0.16317856311798096,0.836821436882019
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no408.jpg,0,No Tumor,0,No Tumor,0.9020933114460106,True,0.9020933114460106,0.09790668855398943
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1006.jpg,0,No Tumor,0,No Tumor,0.99333306849623,True,0.99333306849623,0.006666931503769955
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no356.jpg,0,No Tumor,0,No Tumor,0.9217811295522833,True,0.9217811295522833,0.07821887044771664
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no465.jpg,0,No Tumor,0,No Tumor,0.8424747241280891,True,0.8424747241280891,0.15752527587191092
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no187.jpg,0,No Tumor,0,No Tumor,0.9985278104644445,True,0.9985278104644445,0.0014721895355554876
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y474.jpg,1,Tumor,1,Tumor,0.9792749285697937,True,0.0207250714302063,0.9792749285697937
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1427.jpg,1,Tumor,0,No Tumor,0.7610060572624207,False,0.7610060572624207,0.23899394273757935
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y780.jpg,1,Tumor,0,No Tumor,0.7249676205208189,False,0.7249676205208189,0.27503237947918113
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y18.JPG,1,Tumor,1,Tumor,0.851582944393158,True,0.14841705560684204,0.851582944393158
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1484.jpg,0,No Tumor,0,No Tumor,0.9826909047408539,True,0.9826909047408539,0.017309095259146142
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no697.jpg,0,No Tumor,0,No Tumor,0.8838388985681451,True,0.8838388985681451,0.11616110143185482
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y539.jpg,1,Tumor,1,Tumor,0.9655115008354187,True,0.0344884991645813,0.9655115008354187
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1368.jpg,1,Tumor,0,No Tumor,0.787931180359984,False,0.787931180359984,0.21206881964001598
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no494.jpg,0,No Tumor,0,No Tumor,0.9284088015556335,True,0.9284088015556335,0.07159119844436646
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no710.jpg,0,No Tumor,0,No Tumor,0.915808916091919,True,0.915808916091919,0.08419108390808105
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y775.jpg,1,Tumor,1,Tumor,0.987616240978241,True,0.012383759021759033,0.987616240978241
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1434.jpg,0,No Tumor,0,No Tumor,0.9888849863679009,True,0.9888849863679009,0.011115013632099158
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y394.jpg,1,Tumor,1,Tumor,0.9410068988800049,True,0.05899310111999512,0.9410068988800049
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1104.jpg,1,Tumor,1,Tumor,0.9349913001060486,True,0.06500869989395142,0.9349913001060486
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y311.jpg,1,Tumor,1,Tumor,0.9952077269554138,True,0.004792273044586182,0.9952077269554138
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y823.jpg,1,Tumor,0,No Tumor,0.7256486415863037,False,0.7256486415863037,0.2743513584136963
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no822.jpg,0,No Tumor,0,No Tumor,0.9778411315542375,True,0.9778411315542375,0.02215886844576248
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no410.jpg,0,No Tumor,0,No Tumor,0.965641312557151,True,0.965641312557151,0.03435868744284892
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/no/6 no.jpg,0,No Tumor,0,No Tumor,0.9837225400733983,True,0.9837225400733983,0.01627745992660169
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no180.jpg,0,No Tumor,0,No Tumor,0.9794329045948158,True,0.9794329045948158,0.02056709540518418
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1487.jpg,1,Tumor,1,Tumor,0.6776873469352722,True,0.3223126530647278,0.6776873469352722
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no706.jpg,0,No Tumor,0,No Tumor,0.9937344659936778,True,0.9937344659936778,0.0062655340063222905
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no115.jpg,0,No Tumor,0,No Tumor,0.9866748525699589,True,0.9866748525699589,0.01332514743004104
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no711.jpg,0,No Tumor,0,No Tumor,0.9648551524589798,True,0.9648551524589798,0.03514484754102021
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no742.jpg,0,No Tumor,0,No Tumor,0.9244152100887475,True,0.9244152100887475,0.07558478991125249
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no848.jpg,0,No Tumor,1,Tumor,0.7180016040802002,False,0.2819983959197998,0.7180016040802002
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1488.jpg,1,Tumor,0,No Tumor,0.6435533570184303,False,0.6435533570184303,0.3564466429815697
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y909.jpg,1,Tumor,0,No Tumor,0.8390757441520691,False,0.8390757441520691,0.1609242558479309
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y916.jpg,1,Tumor,1,Tumor,0.8271310925483704,True,0.17286890745162964,0.8271310925483704
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no530.jpg,0,No Tumor,0,No Tumor,0.9881766044906204,True,0.9881766044906204,0.011823395509379638
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/No13.jpg,0,No Tumor,0,No Tumor,0.977713814212812,True,0.977713814212812,0.022286185787188023
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no879.jpg,0,No Tumor,0,No Tumor,0.7617157811182109,True,0.7617157811182109,0.23828421888178913
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y131.jpg,1,Tumor,1,Tumor,0.9268352389335632,True,0.07316476106643677,0.9268352389335632
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y713.jpg,1,Tumor,1,Tumor,0.9879926443099976,True,0.012007355690002441,0.9879926443099976
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1063.jpg,1,Tumor,1,Tumor,0.8967949151992798,True,0.10320508480072021,0.8967949151992798
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y192.JPG,1,Tumor,1,Tumor,0.9829546809196472,True,0.017045319080352783,0.9829546809196472
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y225.jpg,1,Tumor,0,No Tumor,0.8611883521080017,False,0.8611883521080017,0.1388116478919983
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no928.jpg,0,No Tumor,0,No Tumor,0.9957020609869065,True,0.9957020609869065,0.004297939013093495
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1083.jpg,0,No Tumor,0,No Tumor,0.985772953567473,True,0.985772953567473,0.014227046432527065
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y46.jpg,1,Tumor,1,Tumor,0.6242935061454773,True,0.3757064938545227,0.6242935061454773
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y75.JPG,1,Tumor,1,Tumor,0.9453993439674377,True,0.054600656032562256,0.9453993439674377
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no101.jpg,0,No Tumor,0,No Tumor,0.9939024378971492,True,0.9939024378971492,0.006097562102850791
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no795.jpg,0,No Tumor,0,No Tumor,0.9675331855942784,True,0.9675331855942784,0.03246681440572164
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y386.jpg,1,Tumor,1,Tumor,0.9767136573791504,True,0.02328634262084961,0.9767136573791504
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1071.jpg,1,Tumor,1,Tumor,0.9712929129600525,True,0.02870708703994751,0.9712929129600525
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1218.jpg,1,Tumor,1,Tumor,0.7500038743019104,True,0.2499961256980896,0.7500038743019104
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no270.jpg,0,No Tumor,0,No Tumor,0.9764905480994792,True,0.9764905480994792,0.02350945190052081
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no8.jpg,0,No Tumor,1,Tumor,0.6713628172874451,False,0.32863718271255493,0.6713628172874451
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1433.jpg,0,No Tumor,0,No Tumor,0.7463239431381226,True,0.7463239431381226,0.25367605686187744
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y194.jpg,1,Tumor,1,Tumor,0.9734434485435486,True,0.026556551456451416,0.9734434485435486
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no725.jpg,0,No Tumor,0,No Tumor,0.876317183457676,True,0.876317183457676,0.12368281654232405
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1411.jpg,0,No Tumor,0,No Tumor,0.9479621754731481,True,0.9479621754731481,0.0520378245268519
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no965.jpg,0,No Tumor,0,No Tumor,0.983533825295928,True,0.983533825295928,0.016466174704071964
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y485.jpg,1,Tumor,1,Tumor,0.9618934392929077,True,0.038106560707092285,0.9618934392929077
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1145.jpg,1,Tumor,1,Tumor,0.8211875557899475,True,0.1788124442100525,0.8211875557899475
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1413.jpg,1,Tumor,1,Tumor,0.9092645049095154,True,0.09073549509048462,0.9092645049095154
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1497.jpg,0,No Tumor,0,No Tumor,0.9904035449728799,True,0.9904035449728799,0.009596455027120109
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no201.jpg,0,No Tumor,0,No Tumor,0.5260384239565856,True,0.5260384239565856,0.4739615760434144
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1101.jpg,1,Tumor,1,Tumor,0.9768466353416443,True,0.023153364658355713,0.9768466353416443
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1456.jpg,0,No Tumor,0,No Tumor,0.9738940850543178,True,0.9738940850543178,0.026105914945682155
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no820.jpg,0,No Tumor,0,No Tumor,0.87987119614982,True,0.87987119614982,0.12012880385017993
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no695.jpg,0,No Tumor,0,No Tumor,0.9434518673501631,True,0.9434518673501631,0.05654813264983695
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y65.JPG,1,Tumor,1,Tumor,0.896251380443573,True,0.103748619556427,0.896251380443573
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y100.jpg,1,Tumor,1,Tumor,0.6307986974716187,True,0.36920130252838135,0.6307986974716187
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y40.JPG,1,Tumor,1,Tumor,0.6473524570465088,True,0.3526475429534912,0.6473524570465088
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1287.jpg,0,No Tumor,0,No Tumor,0.7819972997308582,True,0.7819972997308582,0.21800270026914179
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1050.jpg,0,No Tumor,0,No Tumor,0.8528129458427429,True,0.8528129458427429,0.14718705415725708
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y613.jpg,1,Tumor,1,Tumor,0.9946774244308472,True,0.005322575569152832,0.9946774244308472
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no773.jpg,0,No Tumor,0,No Tumor,0.975576909941335,True,0.975576909941335,0.024423090058665067
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no349.jpg,0,No Tumor,0,No Tumor,0.9649213264906011,True,0.9649213264906011,0.03507867350939889
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y273.jpg,1,Tumor,1,Tumor,0.982355535030365,True,0.01764446496963501,0.982355535030365
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no635.jpg,0,No Tumor,0,No Tumor,0.9890554218391023,True,0.9890554218391023,0.010944578160897611
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1045.jpg,1,Tumor,1,Tumor,0.6577582955360413,True,0.34224170446395874,0.6577582955360413
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y256.JPG,1,Tumor,1,Tumor,0.9424007534980774,True,0.05759924650192261,0.9424007534980774
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no442.jpg,0,No Tumor,0,No Tumor,0.9061560428256681,True,0.9061560428256681,0.0938439571743319
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y106.jpg,1,Tumor,1,Tumor,0.9589241147041321,True,0.04107588529586792,0.9589241147041321
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y779.jpg,1,Tumor,0,No Tumor,0.7481683269688986,False,0.7481683269688986,0.25183167303110143
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y287.jpg,1,Tumor,1,Tumor,0.9585376977920532,True,0.04146230220794678,0.9585376977920532
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y106.jpg,1,Tumor,1,Tumor,0.9775000214576721,True,0.02249997854232788,0.9775000214576721
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y74.jpg,1,Tumor,1,Tumor,0.8312800526618958,True,0.16871994733810425,0.8312800526618958
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no315.jpg,0,No Tumor,0,No Tumor,0.8953398003479809,True,0.8953398003479809,0.10466019965201914
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1191.jpg,0,No Tumor,0,No Tumor,0.8556100130081177,True,0.8556100130081177,0.14438998699188232
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y330.jpg,1,Tumor,1,Tumor,0.9051547646522522,True,0.0948452353477478,0.9051547646522522
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no302.jpg,0,No Tumor,0,No Tumor,0.9868787288117716,True,0.9868787288117716,0.013121271188228343
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y863.jpg,1,Tumor,1,Tumor,0.9164093732833862,True,0.08359062671661377,0.9164093732833862
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1371.jpg,0,No Tumor,0,No Tumor,0.8636218180712787,True,0.8636218180712787,0.13637818192872134
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y491.jpg,1,Tumor,1,Tumor,0.949669361114502,True,0.05033063888549805,0.949669361114502
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1294.jpg,1,Tumor,0,No Tumor,0.9259027380630782,False,0.9259027380630782,0.0740972619369218
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1423.jpg,0,No Tumor,0,No Tumor,0.9763105311628136,True,0.9763105311628136,0.023689468837186402
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1248.jpg,1,Tumor,1,Tumor,0.9903663396835327,True,0.009633660316467285,0.9903663396835327
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no735.jpg,0,No Tumor,0,No Tumor,0.9944880655684363,True,0.9944880655684363,0.005511934431563727
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y619.jpg,1,Tumor,1,Tumor,0.9856076240539551,True,0.014392375946044922,0.9856076240539551
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1164.jpg,1,Tumor,1,Tumor,0.5929023027420044,True,0.4070976972579956,0.5929023027420044
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1110.jpg,1,Tumor,0,No Tumor,0.7643643617630005,False,0.7643643617630005,0.2356356382369995
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no861.jpg,0,No Tumor,0,No Tumor,0.9940659334366261,True,0.9940659334366261,0.005934066563373898
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/no/N20.JPG,0,No Tumor,0,No Tumor,0.7594038844108582,True,0.7594038844108582,0.24059611558914185
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y437.jpg,1,Tumor,1,Tumor,0.9971990585327148,True,0.0028009414672851562,0.9971990585327148
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no481.jpg,0,No Tumor,0,No Tumor,0.8621196489894495,True,0.8621196489894495,0.13788035101055052
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1065.jpg,1,Tumor,1,Tumor,0.8820220232009888,True,0.11797797679901123,0.8820220232009888
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no823.jpg,0,No Tumor,0,No Tumor,0.9594592595019826,True,0.9594592595019826,0.040540740498017376
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y444.jpg,1,Tumor,1,Tumor,0.9885361194610596,True,0.01146388053894043,0.9885361194610596
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y40.jpg,1,Tumor,1,Tumor,0.9510514140129089,True,0.048948585987091064,0.9510514140129089
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1309.jpg,1,Tumor,1,Tumor,0.9459012746810913,True,0.05409872531890869,0.9459012746810913
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no232.jpg,0,No Tumor,0,No Tumor,0.9474783226096131,True,0.9474783226096131,0.05252167739038698
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no4.jpg,0,No Tumor,0,No Tumor,0.8669231404822597,True,0.8669231404822597,0.13307685951774031
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1039.jpg,0,No Tumor,0,No Tumor,0.9898303409249052,True,0.9898303409249052,0.01016965907509481
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y926.jpg,1,Tumor,1,Tumor,0.9446893334388733,True,0.05531066656112671,0.9446893334388733
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no828.jpg,0,No Tumor,0,No Tumor,0.9650533019555118,True,0.9650533019555118,0.034946698044488245
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1298.jpg,0,No Tumor,0,No Tumor,0.9869292157829728,True,0.9869292157829728,0.013070784217027183
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1038.jpg,1,Tumor,1,Tumor,0.9233161807060242,True,0.07668381929397583,0.9233161807060242
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no520.jpg,0,No Tumor,1,Tumor,0.6347697377204895,False,0.3652302622795105,0.6347697377204895
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1353.jpg,0,No Tumor,0,No Tumor,0.9911526450804925,True,0.9911526450804925,0.0088473549195075
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y942.jpg,1,Tumor,1,Tumor,0.5919001698493958,True,0.40809983015060425,0.5919001698493958
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1291.jpg,1,Tumor,1,Tumor,0.9589241147041321,True,0.04107588529586792,0.9589241147041321
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y17.jpg,1,Tumor,1,Tumor,0.9582261443138123,True,0.041773855686187744,0.9582261443138123
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1285.jpg,0,No Tumor,0,No Tumor,0.8712559472211592,True,0.8712559472211592,0.12874405277884085
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1209.jpg,1,Tumor,0,No Tumor,0.7572562468869612,False,0.7572562468869612,0.24274375311303875
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y786.jpg,1,Tumor,1,Tumor,0.8904848694801331,True,0.10951513051986694,0.8904848694801331
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/no/N15.jpg,0,No Tumor,1,Tumor,0.7316341996192932,False,0.2683658003807068,0.7316341996192932
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1345.jpg,0,No Tumor,0,No Tumor,0.9010534085097892,True,0.9010534085097892,0.09894659149021079
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y544.jpg,1,Tumor,0,No Tumor,0.6738358936856953,False,0.6738358936856953,0.32616410631430465
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no417.jpg,0,No Tumor,0,No Tumor,0.8834372627222946,True,0.8834372627222946,0.11656273727770541
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no720.jpg,0,No Tumor,0,No Tumor,0.6006569683355997,True,0.6006569683355997,0.3993430316644003
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1482.jpg,0,No Tumor,0,No Tumor,0.9773275633753635,True,0.9773275633753635,0.022672436624636427
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y776.jpg,1,Tumor,1,Tumor,0.9590010046958923,True,0.040998995304107666,0.9590010046958923
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y422.jpg,1,Tumor,1,Tumor,0.9786719083786011,True,0.021328091621398926,0.9786719083786011
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1048.jpg,0,No Tumor,0,No Tumor,0.7759445674435923,True,0.7759445674435923,0.22405543255640767
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1165.jpg,1,Tumor,1,Tumor,0.8875949382781982,True,0.11240506172180176,0.8875949382781982
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1020.jpg,1,Tumor,1,Tumor,0.9235923886299133,True,0.07640761137008667,0.9235923886299133
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no880.jpg,0,No Tumor,0,No Tumor,0.9772842453622501,True,0.9772842453622501,0.02271575463774983
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y430.jpg,1,Tumor,1,Tumor,0.8394709229469299,True,0.16052907705307007,0.8394709229469299
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no128.jpg,0,No Tumor,0,No Tumor,0.99693658312098,True,0.99693658312098,0.0030634168790199573
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no307.jpg,0,No Tumor,0,No Tumor,0.6561076445547448,True,0.6561076445547448,0.3438923554452552
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1073.jpg,1,Tumor,1,Tumor,0.5172051191329956,True,0.4827948808670044,0.5172051191329956
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y454.jpg,1,Tumor,1,Tumor,0.9223425984382629,True,0.07765740156173706,0.9223425984382629
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y571.jpg,1,Tumor,1,Tumor,0.8556100726127625,True,0.14438992738723755,0.8556100726127625
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no663.jpg,0,No Tumor,0,No Tumor,0.9931228923389801,True,0.9931228923389801,0.006877107661019953
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y556.jpg,1,Tumor,1,Tumor,0.9853842854499817,True,0.01461571455001831,0.9853842854499817
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y47.jpg,1,Tumor,1,Tumor,0.9268352389335632,True,0.07316476106643677,0.9268352389335632
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1087.jpg,1,Tumor,1,Tumor,0.9947799444198608,True,0.00522005558013916,0.9947799444198608
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no107.jpg,0,No Tumor,1,Tumor,0.6436653137207031,False,0.3563346862792969,0.6436653137207031
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no340.jpg,0,No Tumor,0,No Tumor,0.9568766284221661,True,0.9568766284221661,0.0431233715778338
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y608.jpg,1,Tumor,1,Tumor,0.9964619278907776,True,0.003538072109222412,0.9964619278907776
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y901.jpg,1,Tumor,0,No Tumor,0.8127187369358728,False,0.8127187369358728,0.1872812630641272
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y829.jpg,1,Tumor,0,No Tumor,0.671901285648346,False,0.671901285648346,0.32809871435165405
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y851.jpg,1,Tumor,1,Tumor,0.8789390921592712,True,0.12106090784072876,0.8789390921592712
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y61.jpg,1,Tumor,0,No Tumor,0.5785076790603304,False,0.5785076790603304,0.42149232093966965
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y310.jpg,1,Tumor,1,Tumor,0.9625324606895447,True,0.03746753931045532,0.9625324606895447
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no151.jpg,0,No Tumor,0,No Tumor,0.9922444640204617,True,0.9922444640204617,0.00775553597953827
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y25.jpg,1,Tumor,0,No Tumor,0.7664684767494869,False,0.7664684767494869,0.23353152325051313
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y161.JPG,1,Tumor,1,Tumor,0.586641252040863,True,0.41335874795913696,0.586641252040863
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y120.jpg,1,Tumor,1,Tumor,0.5598917007446289,True,0.4401082992553711,0.5598917007446289
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1109.jpg,1,Tumor,1,Tumor,0.9549003839492798,True,0.045099616050720215,0.9549003839492798
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y703.jpg,1,Tumor,1,Tumor,0.8739697337150574,True,0.12603026628494263,0.8739697337150574
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y536.jpg,1,Tumor,1,Tumor,0.989591658115387,True,0.010408341884613037,0.989591658115387
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y758.jpg,1,Tumor,0,No Tumor,0.8891444139991371,False,0.8891444139991371,0.11085558600086282
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1351.jpg,1,Tumor,1,Tumor,0.9078037738800049,True,0.09219622611999512,0.9078037738800049
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no406.jpg,0,No Tumor,0,No Tumor,0.901920682951217,True,0.901920682951217,0.09807931704878298
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y180.jpg,1,Tumor,1,Tumor,0.9071478247642517,True,0.09285217523574829,0.9071478247642517
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y245.jpg,1,Tumor,1,Tumor,0.8933094143867493,True,0.10669058561325073,0.8933094143867493
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/no/45 no.jpg,0,No Tumor,0,No Tumor,0.8429924500880376,True,0.8429924500880376,0.15700754991196245
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1248.jpg,0,No Tumor,0,No Tumor,0.9315870861472624,True,0.9315870861472624,0.06841291385273764
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no155.jpg,0,No Tumor,1,Tumor,0.9174507260322571,False,0.08254927396774292,0.9174507260322571
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y424.jpg,1,Tumor,1,Tumor,0.9867772459983826,True,0.013222754001617432,0.9867772459983826
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no434.jpg,0,No Tumor,0,No Tumor,0.9399133464681111,True,0.9399133464681111,0.060086653531888926
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1304.jpg,1,Tumor,1,Tumor,0.980728805065155,True,0.01927119493484497,0.980728805065155
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y377.jpg,1,Tumor,1,Tumor,0.920074462890625,True,0.079925537109375,0.920074462890625
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y546.jpg,1,Tumor,1,Tumor,0.9881765246391296,True,0.011823475360870361,0.9881765246391296
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y988.jpg,1,Tumor,1,Tumor,0.9773707389831543,True,0.022629261016845703,0.9773707389831543
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no525.jpg,0,No Tumor,0,No Tumor,0.8906751738388066,True,0.8906751738388066,0.10932482616119346
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y4.jpg,1,Tumor,1,Tumor,0.9412234425544739,True,0.05877655744552612,0.9412234425544739
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y853.jpg,1,Tumor,1,Tumor,0.9061560034751892,True,0.09384399652481079,0.9061560034751892
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y31.jpg,1,Tumor,1,Tumor,0.9856629967689514,True,0.014337003231048584,0.9856629967689514
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no793.jpg,0,No Tumor,0,No Tumor,0.9752018397197024,True,0.9752018397197024,0.024798160280297545
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1176.jpg,0,No Tumor,0,No Tumor,0.9965435904305858,True,0.9965435904305858,0.0034564095694141865
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1078.jpg,1,Tumor,1,Tumor,0.8125700354576111,True,0.18742996454238892,0.8125700354576111
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y405.jpg,1,Tumor,1,Tumor,0.7161193490028381,True,0.28388065099716187,0.7161193490028381
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no698.jpg,0,No Tumor,0,No Tumor,0.9229003053471401,True,0.9229003053471401,0.07709969465285994
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y663.jpg,1,Tumor,1,Tumor,0.9820137619972229,True,0.0179862380027771,0.9820137619972229
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y881.jpg,1,Tumor,1,Tumor,0.9246877431869507,True,0.07531225681304932,0.9246877431869507
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1351.jpg,0,No Tumor,0,No Tumor,0.9981897891588698,True,0.9981897891588698,0.0018102108411302024
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y952.jpg,1,Tumor,1,Tumor,0.9665370583534241,True,0.03346294164657593,0.9665370583534241
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1338.jpg,0,No Tumor,0,No Tumor,0.9858276348971798,True,0.9858276348971798,0.014172365102820113
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1185.jpg,0,No Tumor,0,No Tumor,0.9605836129101573,True,0.9605836129101573,0.03941638708984275
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1194.jpg,0,No Tumor,0,No Tumor,0.9815244078636169,True,0.9815244078636169,0.018475592136383057
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1028.jpg,1,Tumor,1,Tumor,0.9054896235466003,True,0.09451037645339966,0.9054896235466003
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y168.jpg,1,Tumor,1,Tumor,0.567637026309967,True,0.43236297369003296,0.567637026309967
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no788.jpg,0,No Tumor,0,No Tumor,0.7766229145712529,True,0.7766229145712529,0.2233770854287471
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1082.jpg,0,No Tumor,0,No Tumor,0.9333093444499178,True,0.9333093444499178,0.06669065555008219
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no864.jpg,0,No Tumor,0,No Tumor,0.9261702826159426,True,0.9261702826159426,0.07382971738405736
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1195.jpg,0,No Tumor,0,No Tumor,0.6748009719013878,True,0.6748009719013878,0.3251990280986122
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y660.jpg,1,Tumor,1,Tumor,0.8316905498504639,True,0.16830945014953613,0.8316905498504639
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y463.jpg,1,Tumor,1,Tumor,0.9769347906112671,True,0.02306520938873291,0.9769347906112671
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1382.jpg,1,Tumor,0,No Tumor,0.8485961682885315,False,0.8485961682885315,0.15140383171146857
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y657.jpg,1,Tumor,1,Tumor,0.6577582955360413,True,0.34224170446395874,0.6577582955360413
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no311.jpg,0,No Tumor,0,No Tumor,0.9471859790804091,True,0.9471859790804091,0.05281402091959088
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1104.jpg,0,No Tumor,0,No Tumor,0.8016254186388043,True,0.8016254186388043,0.19837458136119573
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1440.jpg,0,No Tumor,0,No Tumor,0.9955489589108668,True,0.9955489589108668,0.004451041089133168
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no646.jpg,0,No Tumor,0,No Tumor,0.9783433225504059,True,0.9783433225504059,0.0216566774495941
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1421.jpg,0,No Tumor,0,No Tumor,0.8490973711013794,True,0.8490973711013794,0.1509026288986206
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1121.jpg,1,Tumor,1,Tumor,0.9785903096199036,True,0.021409690380096436,0.9785903096199036
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1250.jpg,0,No Tumor,0,No Tumor,0.8724560737609863,True,0.8724560737609863,0.12754392623901367
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1429.jpg,0,No Tumor,0,No Tumor,0.9703524889490099,True,0.9703524889490099,0.029647511050990057
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y652.jpg,1,Tumor,1,Tumor,0.9640516638755798,True,0.035948336124420166,0.9640516638755798
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no737.jpg,0,No Tumor,0,No Tumor,0.9465966714926436,True,0.9465966714926436,0.0534033285073564
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no836.jpg,0,No Tumor,0,No Tumor,0.7992857098579407,True,0.7992857098579407,0.20071429014205933
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1319.jpg,1,Tumor,1,Tumor,0.891999363899231,True,0.10800063610076904,0.891999363899231
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y774.jpg,1,Tumor,1,Tumor,0.9666001796722412,True,0.03339982032775879,0.9666001796722412
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1205.jpg,1,Tumor,0,No Tumor,0.5584474205970764,False,0.5584474205970764,0.4415525794029236
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1171.jpg,1,Tumor,1,Tumor,0.97334223985672,True,0.02665776014328003,0.97334223985672
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no455.jpg,0,No Tumor,0,No Tumor,0.9285385081808157,True,0.9285385081808157,0.07146149181918421
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no318.jpg,0,No Tumor,0,No Tumor,0.6675812602043152,True,0.6675812602043152,0.3324187397956848
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no192.jpg,0,No Tumor,0,No Tumor,0.9842154383659363,True,0.9842154383659363,0.01578456163406372
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no542.jpg,0,No Tumor,0,No Tumor,0.8451772802296686,True,0.8451772802296686,0.15482271977033138
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no843.jpg,0,No Tumor,0,No Tumor,0.9760379754899517,True,0.9760379754899517,0.023962024510048238
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1106.jpg,0,No Tumor,0,No Tumor,0.9907319864984978,True,0.9907319864984978,0.009268013501502196
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1259.jpg,1,Tumor,1,Tumor,0.9388007521629333,True,0.06119924783706665,0.9388007521629333
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y886.jpg,1,Tumor,1,Tumor,0.5980187654495239,True,0.4019812345504761,0.5980187654495239
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no247.jpg,0,No Tumor,0,No Tumor,0.8771614628395765,True,0.8771614628395765,0.12283853716042348
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1154.jpg,0,No Tumor,0,No Tumor,0.9916842214689642,True,0.9916842214689642,0.00831577853103584
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1355.jpg,0,No Tumor,0,No Tumor,0.8063956499099731,True,0.8063956499099731,0.19360435009002686
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y200.jpg,1,Tumor,1,Tumor,0.9644556045532227,True,0.035544395446777344,0.9644556045532227
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y69.jpg,1,Tumor,1,Tumor,0.7853085398674011,True,0.21469146013259888,0.7853085398674011
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y265.jpg,1,Tumor,1,Tumor,0.9621787071228027,True,0.037821292877197266,0.9621787071228027
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y100.JPG,1,Tumor,1,Tumor,0.572125256061554,True,0.42787474393844604,0.572125256061554
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no608.jpg,0,No Tumor,0,No Tumor,0.8378854393959045,True,0.8378854393959045,0.16211456060409546
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y164.jpg,1,Tumor,1,Tumor,0.9873262047767639,True,0.012673795223236084,0.9873262047767639
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y457.jpg,1,Tumor,1,Tumor,0.7188904881477356,True,0.2811095118522644,0.7188904881477356
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y752.jpg,1,Tumor,1,Tumor,0.6179162263870239,True,0.3820837736129761,0.6179162263870239
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1451.jpg,1,Tumor,1,Tumor,0.567637026309967,True,0.43236297369003296,0.567637026309967
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y61.jpg,1,Tumor,0,No Tumor,0.5288984179496765,False,0.5288984179496765,0.4711015820503235
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1131.jpg,0,No Tumor,0,No Tumor,0.9802430831631903,True,0.9802430831631903,0.019756916836809676
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y976.jpg,1,Tumor,1,Tumor,0.9862577319145203,True,0.013742268085479736,0.9862577319145203
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y832.jpg,1,Tumor,1,Tumor,0.9676556587219238,True,0.03234434127807617,0.9676556587219238
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y101.jpg,1,Tumor,1,Tumor,0.9664104580879211,True,0.03358954191207886,0.9664104580879211
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y323.jpg,1,Tumor,1,Tumor,0.9671630263328552,True,0.032836973667144775,0.9671630263328552
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no884.jpg,0,No Tumor,0,No Tumor,0.9757161304009057,True,0.9757161304009057,0.02428386959909429
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no207.jpg,0,No Tumor,0,No Tumor,0.9488225053908117,True,0.9488225053908117,0.051177494609188245
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y845.jpg,1,Tumor,1,Tumor,0.9716179370880127,True,0.028382062911987305,0.9716179370880127
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no605.jpg,0,No Tumor,0,No Tumor,0.9507778882980347,True,0.9507778882980347,0.04922211170196533
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y696.jpg,1,Tumor,1,Tumor,0.511945366859436,True,0.48805463314056396,0.511945366859436
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y271.jpg,1,Tumor,1,Tumor,0.9097468256950378,True,0.09025317430496216,0.9097468256950378
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y858.jpg,1,Tumor,1,Tumor,0.8776865601539612,True,0.12231343984603882,0.8776865601539612
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no511.jpg,0,No Tumor,0,No Tumor,0.9837225400733983,True,0.9837225400733983,0.01627745992660169
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y438.jpg,1,Tumor,1,Tumor,0.9917163252830505,True,0.008283674716949463,0.9917163252830505
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/no/N17.jpg,0,No Tumor,1,Tumor,0.6136996746063232,False,0.38630032539367676,0.6136996746063232
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y565.jpg,1,Tumor,1,Tumor,0.968020498752594,True,0.031979501247406006,0.968020498752594
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no114.jpg,0,No Tumor,0,No Tumor,0.6945099234580994,True,0.6945099234580994,0.30549007654190063
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no932.jpg,0,No Tumor,0,No Tumor,0.9745319161898992,True,0.9745319161898992,0.025468083810100812
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y871.jpg,1,Tumor,1,Tumor,0.9927951693534851,True,0.007204830646514893,0.9927951693534851
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y576.jpg,1,Tumor,1,Tumor,0.9523086547851562,True,0.04769134521484375,0.9523086547851562
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1000.jpg,1,Tumor,1,Tumor,0.9960237741470337,True,0.003976225852966309,0.9960237741470337
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1471.jpg,1,Tumor,0,No Tumor,0.5737978390991044,False,0.5737978390991044,0.42620216090089563
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y35.jpg,1,Tumor,1,Tumor,0.9293122291564941,True,0.07068777084350586,0.9293122291564941
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y324.jpg,1,Tumor,1,Tumor,0.9839090704917908,True,0.01609092950820923,0.9839090704917908
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1152.jpg,1,Tumor,1,Tumor,0.9914886951446533,True,0.00851130485534668,0.9914886951446533
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1316.jpg,0,No Tumor,0,No Tumor,0.9827572217146742,True,0.9827572217146742,0.017242778285325822
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y261.jpg,1,Tumor,1,Tumor,0.8622356653213501,True,0.1377643346786499,0.8622356653213501
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y756.jpg,1,Tumor,1,Tumor,0.6191259622573853,True,0.38087403774261475,0.6191259622573853
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no63.jpg,0,No Tumor,0,No Tumor,0.9457010626792908,True,0.9457010626792908,0.05429893732070923
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no120.jpg,0,No Tumor,1,Tumor,0.7013041377067566,False,0.2986958622932434,0.7013041377067566
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no477.jpg,0,No Tumor,1,Tumor,0.859545886516571,False,0.14045411348342896,0.859545886516571
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1323.jpg,0,No Tumor,0,No Tumor,0.9192084601580466,True,0.9192084601580466,0.08079153984195336
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y331.jpg,1,Tumor,1,Tumor,0.9856629967689514,True,0.014337003231048584,0.9856629967689514
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no332.jpg,0,No Tumor,0,No Tumor,0.9855521477334076,True,0.9855521477334076,0.01444785226659243
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no814.jpg,0,No Tumor,0,No Tumor,0.7864588616260717,True,0.7864588616260717,0.21354113837392835
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y346.jpg,1,Tumor,1,Tumor,0.993561863899231,True,0.006438136100769043,0.993561863899231
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1075.jpg,1,Tumor,1,Tumor,0.989591658115387,True,0.010408341884613037,0.989591658115387
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no305.jpg,0,No Tumor,0,No Tumor,0.9790758076883072,True,0.9790758076883072,0.02092419231169284
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no616.jpg,0,No Tumor,0,No Tumor,0.9593832242649698,True,0.9593832242649698,0.04061677573503021
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y718.jpg,1,Tumor,0,No Tumor,0.6475753784179688,False,0.6475753784179688,0.35242462158203125
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1479.jpg,0,No Tumor,0,No Tumor,0.960361161223922,True,0.960361161223922,0.039638838776077955
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y295.jpg,1,Tumor,1,Tumor,0.9728823304176331,True,0.027117669582366943,0.9728823304176331
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y42.jpg,1,Tumor,1,Tumor,0.8933094143867493,True,0.10669058561325073,0.8933094143867493
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y889.jpg,1,Tumor,1,Tumor,0.9660279750823975,True,0.03397202491760254,0.9660279750823975
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1111.jpg,0,No Tumor,0,No Tumor,0.9891815523644132,True,0.9891815523644132,0.010818447635586807
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y254.jpg,1,Tumor,1,Tumor,0.9846346974372864,True,0.015365302562713623,0.9846346974372864
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y814.jpg,1,Tumor,1,Tumor,0.925094723701477,True,0.07490527629852295,0.925094723701477
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no853.jpg,0,No Tumor,0,No Tumor,0.9862046342792464,True,0.9862046342792464,0.013795365720753579
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y702.jpg,1,Tumor,1,Tumor,0.8925625681877136,True,0.10743743181228638,0.8925625681877136
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no321.jpg,0,No Tumor,0,No Tumor,0.9678385546159314,True,0.9678385546159314,0.03216144538406865
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no26.jpg,0,No Tumor,0,No Tumor,0.6621413826942444,True,0.6621413826942444,0.3378586173057556
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no303.jpg,0,No Tumor,0,No Tumor,0.9881766044906204,True,0.9881766044906204,0.011823395509379638
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no501.jpg,0,No Tumor,0,No Tumor,0.6039318442344666,True,0.6039318442344666,0.39606815576553345
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no402.jpg,0,No Tumor,0,No Tumor,0.9413314005930931,True,0.9413314005930931,0.058668599406906954
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no973.jpg,0,No Tumor,0,No Tumor,0.9877587245968361,True,0.9877587245968361,0.012241275403163896
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1391.jpg,0,No Tumor,0,No Tumor,0.9936856354458945,True,0.9936856354458945,0.006314364554105555
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no503.jpg,0,No Tumor,0,No Tumor,0.5128984298438302,True,0.5128984298438302,0.48710157015616984
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no752.jpg,0,No Tumor,0,No Tumor,0.9538802540074298,True,0.9538802540074298,0.04611974599257017
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1493.jpg,1,Tumor,1,Tumor,0.9566342234611511,True,0.04336577653884888,0.9566342234611511
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y245.jpg,1,Tumor,1,Tumor,0.6371436715126038,True,0.36285632848739624,0.6371436715126038
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1450.jpg,0,No Tumor,0,No Tumor,0.9756234033802009,True,0.9756234033802009,0.024376596619799077
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1088.jpg,1,Tumor,1,Tumor,0.9687380790710449,True,0.03126192092895508,0.9687380790710449
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1492.jpg,1,Tumor,1,Tumor,0.973036527633667,True,0.026963472366333008,0.973036527633667
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1047.jpg,0,No Tumor,0,No Tumor,0.8183016059055686,True,0.8183016059055686,0.18169839409443148
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y792.jpg,1,Tumor,1,Tumor,0.9076402187347412,True,0.09235978126525879,0.9076402187347412
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no522.jpg,0,No Tumor,0,No Tumor,0.8655653595924377,True,0.8655653595924377,0.13443464040756226
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/yes/y1387.jpg,1,Tumor,0,No Tumor,0.7908535599708557,False,0.7908535599708557,0.2091464400291443
+/kaggle/input/datasets/ahmedhamada0/brain-tumor-detection/no/no1094.jpg,0,No Tumor,0,No Tumor,0.9742394431692507,True,0.9742394431692507,0.025760556830749296
+/kaggle/input/datasets/navoneel/brain-mri-images-for-brain-tumor-detection/yes/Y249.JPG,1,Tumor,0,No Tumor,0.5534449650810669,False,0.5534449650810669,0.44655503491893306

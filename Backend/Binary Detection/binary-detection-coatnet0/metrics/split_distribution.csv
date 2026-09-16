@@ -1,0 +1,4 @@
+,Train,Validation,Test
+No Tumor,1119,239,240
+Tumor,1158,249,248
+Total,2277,488,488

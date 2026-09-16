@@ -1,0 +1,8 @@
+              precision    recall  f1-score   support
+
+    No Tumor     0.9917    0.9958    0.9937       239
+       Tumor     0.9960    0.9920    0.9940       249
+
+    accuracy                         0.9939       488
+   macro avg     0.9938    0.9939    0.9939       488
+weighted avg     0.9939    0.9939    0.9939       488

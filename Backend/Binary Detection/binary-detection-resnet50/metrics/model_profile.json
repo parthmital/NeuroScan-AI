@@ -1,0 +1,14 @@
+{
+	"architecture": "ResNet",
+	"total_parameters": 23510081,
+	"trainable_parameters": 23510081,
+	"non_trainable_parameters": 0,
+	"total_parameters_millions": 23.51,
+	"buffer_elements": 53173,
+	"parameter_memory_fp32_mb": 89.68,
+	"serialised_state_dict_mb": 89.99,
+	"input_size": "3x224x224",
+	"flops_per_image": 8174276608,
+	"gflops_per_image": 8.174,
+	"data_parallel_gpus": 2
+}

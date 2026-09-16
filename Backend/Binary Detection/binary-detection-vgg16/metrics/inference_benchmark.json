@@ -1,0 +1,16 @@
+{
+	"device": "Tesla T4",
+	"precision": "fp16 autocast",
+	"latency_batch1_mean_ms": 8.185,
+	"latency_batch1_median_ms": 7.988,
+	"latency_batch1_p95_ms": 9.717,
+	"latency_batch1_std_ms": 0.534,
+	"throughput_batch1_images_per_s": 122.18,
+	"benchmark_batch_size": 32,
+	"latency_batched_mean_ms": 94.633,
+	"throughput_batched_images_per_s": 338.15,
+	"test_set_images": 488,
+	"test_set_end_to_end_s": 3.838,
+	"test_set_end_to_end_images_per_s": 127.14,
+	"original_test_cell_seconds": 13.268
+}

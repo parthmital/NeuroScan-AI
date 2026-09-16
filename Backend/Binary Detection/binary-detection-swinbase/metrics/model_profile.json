@@ -1,0 +1,14 @@
+{
+	"architecture": "SwinTransformer",
+	"total_parameters": 86744249,
+	"trainable_parameters": 86744249,
+	"non_trainable_parameters": 0,
+	"total_parameters_millions": 86.744,
+	"buffer_elements": 336140,
+	"parameter_memory_fp32_mb": 330.9,
+	"serialised_state_dict_mb": 331.03,
+	"input_size": "3x224x224",
+	"flops_per_image": 30859847680,
+	"gflops_per_image": 30.86,
+	"data_parallel_gpus": 2
+}

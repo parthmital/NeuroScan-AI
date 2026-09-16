@@ -1,0 +1,14 @@
+{
+	"architecture": "Inception3",
+	"total_parameters": 24346082,
+	"trainable_parameters": 24346082,
+	"non_trainable_parameters": 0,
+	"total_parameters_millions": 24.346,
+	"buffer_elements": 36320,
+	"parameter_memory_fp32_mb": 92.87,
+	"serialised_state_dict_mb": 93.2,
+	"input_size": "3x299x299",
+	"flops_per_image": 11422340288,
+	"gflops_per_image": 11.422,
+	"data_parallel_gpus": 2
+}
