@@ -57,6 +57,11 @@ bun-debug.log*
 *.ckpt
 *.onnx
 
+# TensorBoard event logs and runs
+events.out.tfevents.*
+**/tensorboard/
+tensorboard/
+
 # OS and editor noise
 .DS_Store
 Thumbs.db
