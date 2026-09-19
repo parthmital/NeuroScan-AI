@@ -369,16 +369,15 @@ These issues are grouped by how much they affect the reported results.
 
 ## Folder layout
 
-```
-Binary Detection/
-├── EfficientNetB0.pth                         # standalone weights, not produced by these notebooks (see B4)
-├── binary-detection-<model>.ipynb             # 9 notebooks, 65 cells each
-└── binary-detection-<model>/                  # unzipped output of each notebook
-    ├── metrics/     # 21 files: CSV / JSON / TXT
-    ├── plots/       # 13 PNGs (01–03, 05–14; 04 is classification-only)
-    ├── tensorboard/<YYYYMMDD-HHMMSS>/events.out.tfevents.*
-    └── weights/     # best_<model>.pth and final_<model>_brain_tumor.pth
-```
+| Path                                    | Contents                                                                                                 |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `EfficientNetB0.pth`                    | Standalone weights, **not** produced by these notebooks (see [B4](#b-issues-that-affect-interpretation)) |
+| `binary-detection-<model>.ipynb`        | 9 notebooks, 65 cells each                                                                               |
+| `binary-detection-<model>/`             | Unzipped outputs of that notebook (subfolders below)                                                     |
+| `binary-detection-<model>/metrics/`     | 21 files (CSV, JSON, TXT)                                                                                |
+| `binary-detection-<model>/plots/`       | 13 PNGs, numbered `01`–`03` and `05`–`14` (`04` exists only in Classification)                           |
+| `binary-detection-<model>/tensorboard/` | One run folder `<YYYYMMDD-HHMMSS>/` with the `events.out.tfevents.*` file                                |
+| `binary-detection-<model>/weights/`     | `best_<model>.pth` and `final_<model>_brain_tumor.pth`                                                   |
 
 | Notebook                                                                             | Output folder                                                              | Weights                                                                 |
 | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
@@ -396,22 +395,25 @@ Binary Detection/
 
 ## End-to-end pipeline
 
+```mermaid
+flowchart LR
+    A[Collect images] --> B[Explore data] --> C[Split 70/15/15] --> D[Train 10 epochs]
+    D --> E[Test best checkpoint] --> F[Evaluate and explain] --> G[Benchmark and package]
 ```
-Kaggle inputs (2 datasets, yes/no folders)
-  └─ os.walk → DataFrame(path, label)            3253 images, 0 = No Tumor, 1 = Tumor
-      ├─ EDA: class distribution, samples, image sizes, intensity histograms (no mutation)
-      └─ stratified split 70/15/15 (seed 42)     train 2277 / val 488 / test 488
-          └─ BrainDataset + transforms (resize, flip, rotate, jitter, ImageNet normalise)
-              └─ pretrained backbone, head → 1 logit, nn.DataParallel over 2 GPUs
-                  └─ 10 epochs: AdamW 3e-4, cosine LR, BCEWithLogits, AMP fp16
-                      ├─ keep checkpoint with best val AUC (best_*.pth)
-                      └─ reload best → test → save final_*.pth
-                          └─ single-GPU re-inference on val + test → per-image predictions
-                              ├─ metrics, confusion matrices, ROC/PR, calibration, per-class
-                              ├─ Grad-CAM (correct and misclassified)
-                              ├─ latency / throughput benchmark
-                              └─ benchmark_summary.{json,csv} → zip of everything
-```
+
+| #   | Stage                 | What happens                                                                                                   | Key numbers                          |
+| --- | --------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| 1   | Collect images        | `os.walk` over the yes/no folders of 2 Kaggle datasets builds a `(path, label)` table                          | 3253 images; 0 = No Tumor, 1 = Tumor |
+| 2   | Explore data          | Class distribution, sample images, image sizes, intensity histograms. Read-only: nothing is changed.           | Plots `01`–`03`                      |
+| 3   | Split                 | Stratified 70/15/15, seed 42                                                                                   | Train 2277, val 488, test 488        |
+| 4   | Prepare inputs        | `BrainDataset`, then resize, flip, rotate, colour jitter and ImageNet normalisation                            | 224 px (299 for InceptionV3)         |
+| 5   | Build model           | Pretrained backbone, head replaced with 1 output logit, `nn.DataParallel` over 2 GPUs                          |                                      |
+| 6   | Train                 | 10 epochs: AdamW 3e-4, cosine LR, `BCEWithLogitsLoss`, AMP fp16. Saves the epoch with the best validation AUC. | `best_*.pth`                         |
+| 7   | Test                  | Reloads the best checkpoint, evaluates the test set, saves the same weights again                              | `final_*.pth`                        |
+| 8   | Predict               | Re-runs validation and test on a single-GPU copy and saves per-image predictions                               | `predictions_{val,test}.csv`         |
+| 9   | Evaluate              | Metrics, confusion matrices, ROC/PR curves, calibration, per-class bars, sample predictions                    | Plots `08`–`12`                      |
+| 10  | Explain               | Grad-CAM on the most confident correct and misclassified test images                                           | Plots `13`–`14`                      |
+| 11  | Benchmark and package | Latency and throughput benchmark, one-row `benchmark_summary`, zip of every output                             | 37 files per zip                     |
 
 **Design rule, stated in each notebook's first cell:**
 

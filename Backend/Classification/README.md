@@ -334,16 +334,15 @@ The issues are grouped by how much they affect the reported results.
 
 ## Folder layout
 
-```
-Classification/
-├── EfficientNetB0.pth                       # standalone weights, not produced by these notebooks (see B6)
-├── classification-<model>.ipynb             # 6 notebooks, 75 cells each
-└── classification-<model>/                  # unzipped output of each notebook
-    ├── metrics/     # 22 files (binary set + deduplication_summary.csv)
-    ├── plots/       # 14 PNGs, 01–14 (includes 04_deduplication_before_after.png)
-    ├── tensorboard/<YYYYMMDD-HHMMSS>/events.out.tfevents.*
-    └── weights/     # best_<model>_multi_class.pth, final_<model>_brain_tumor_multi_class.pth
-```
+| Path                                  | Contents                                                                                                 |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `EfficientNetB0.pth`                  | Standalone weights, **not** produced by these notebooks (see [B6](#b-issues-that-affect-interpretation)) |
+| `classification-<model>.ipynb`        | 6 notebooks, 75 cells each                                                                               |
+| `classification-<model>/`             | Unzipped outputs of that notebook (subfolders below)                                                     |
+| `classification-<model>/metrics/`     | 22 files: the binary set plus `deduplication_summary.csv`                                                |
+| `classification-<model>/plots/`       | 14 PNGs, numbered `01`–`14`, including `04_deduplication_before_after.png`                               |
+| `classification-<model>/tensorboard/` | One run folder `<YYYYMMDD-HHMMSS>/` with the `events.out.tfevents.*` file                                |
+| `classification-<model>/weights/`     | `best_<model>_multi_class.pth` and `final_<model>_brain_tumor_multi_class.pth`                           |
 
 | Notebook                                                                   | Output folder                                                    | Weights                                                                                     |
 | -------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -358,21 +357,24 @@ Classification/
 
 ## End-to-end pipeline
 
+```mermaid
+flowchart LR
+    A[Collect images] --> B[Explore data] --> C[Remove near-duplicates] --> D[Split 70/15/15]
+    D --> E[Train 10 epochs] --> F[Test best checkpoint] --> G[Evaluate, explain, benchmark]
 ```
-Kaggle inputs (2 datasets, 3 tumour folders each; sartaj Training + Testing merged)
-  └─ os.walk (.jpg only) → DataFrame(path, label)       5828 images
-      ├─ EDA on the raw (pre-dedup) data: distribution, samples, sizes, intensities
-      └─ pHash every image → greedy near-duplicate removal (Hamming ≤ 5)   → 4705 images
-          ├─ dedup before/after plot + table
-          └─ stratified 70/15/15 split (seed 42)        train 3293 / val 706 / test 706
-              └─ BrainDataset (long labels) + same augmentation as binary
-                  └─ pretrained backbone, head → 3 logits, DataParallel over 2 GPUs
-                      └─ 10 epochs: AdamW 3e-4, cosine LR, CrossEntropy, AMP fp16
-                          ├─ keep best macro OvR val AUC checkpoint
-                          └─ reload best → test → save final
-                              └─ single-GPU re-inference → metrics, CM, ROC/PR (per class + micro),
-                                 calibration, per-class bars, samples, Grad-CAM, benchmark, zip
-```
+
+| #   | Stage                       | What happens                                                                                                                                   | Key numbers                       |
+| --- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| 1   | Collect images              | `os.walk` over 3 tumour folders in each of 2 Kaggle datasets, `.jpg` only. The sartajbhuvaji Training and Testing folders are merged.          | 5828 images                       |
+| 2   | Explore data                | Class distribution, sample images, image sizes, intensity histograms, run on the data **before** deduplication                                 | Plots `01`–`03`                   |
+| 3   | Remove near-duplicates      | pHash every image, then greedily drop any image within Hamming distance 5 of an already-kept one                                               | 5828 → 4705 (plot `04`)           |
+| 4   | Split                       | Stratified 70/15/15, seed 42                                                                                                                   | Train 3293, val 706, test 706     |
+| 5   | Prepare inputs              | `BrainDataset` (long labels) with the same augmentation as binary                                                                              | 224 px (299 for InceptionV3)      |
+| 6   | Build model                 | Pretrained backbone, head replaced with 3 output logits, DataParallel over 2 GPUs                                                              |                                   |
+| 7   | Train                       | 10 epochs: AdamW 3e-4, cosine LR, `CrossEntropyLoss`, AMP fp16. Saves the epoch with the best macro OvR validation AUC.                        | `best_*_multi_class.pth`          |
+| 8   | Test                        | Reloads the best checkpoint, evaluates the test set, saves the same weights again                                                              | `final_*_multi_class.pth`         |
+| 9   | Evaluate                    | Single-GPU re-inference, then metrics, confusion matrices, per-class and micro-average ROC/PR, calibration, per-class bars, sample predictions | Plots `08`–`12`                   |
+| 10  | Explain, benchmark, package | Grad-CAM, latency and throughput benchmark, `benchmark_summary`, zip of every output                                                           | Plots `13`–`14`; 39 files per zip |
 
 ## Dataset and deduplication
 
