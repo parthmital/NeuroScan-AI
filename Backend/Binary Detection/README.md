@@ -5,8 +5,6 @@ Nine pretrained image classifiers, one notebook each, trained and benchmarked on
 All nine notebooks share the same pipeline, data, split, hyperparameters and outputs. The model is the only intended difference.
 
 > **Source of truth.** Every number here comes from the executed notebook outputs and the artefacts in this folder (`metrics/`, `plots/`, `weights/`, `tensorboard/`). Where the evidence does not explain a choice, the README says so instead of guessing.
->
-> **Related.** The follow-on three-class tumour-type task is documented in [../Classification/README.md](../Classification/README.md).
 
 ## At a glance
 
@@ -52,7 +50,6 @@ Full details in [Anomalies and limitations](#anomalies-and-limitations).
 **Using it**
 
 - [Reproducing a run](#reproducing-a-run)
-- [How Binary Detection relates to Classification](#how-binary-detection-relates-to-classification)
 - [Metric glossary](#metric-glossary)
 
 ## Headline results
@@ -375,7 +372,7 @@ These issues are grouped by how much they affect the reported results.
 | `binary-detection-<model>.ipynb`        | 9 notebooks, 65 cells each                                                                               |
 | `binary-detection-<model>/`             | Unzipped outputs of that notebook (subfolders below)                                                     |
 | `binary-detection-<model>/metrics/`     | 21 files (CSV, JSON, TXT)                                                                                |
-| `binary-detection-<model>/plots/`       | 13 PNGs, numbered `01`–`03` and `05`–`14` (`04` exists only in Classification)                           |
+| `binary-detection-<model>/plots/`       | 13 PNGs, numbered `01`–`03` and `05`–`14` (the numbering skips `04`)                                     |
 | `binary-detection-<model>/tensorboard/` | One run folder `<YYYYMMDD-HHMMSS>/` with the `events.out.tfevents.*` file                                |
 | `binary-detection-<model>/weights/`     | `best_<model>.pth` and `final_<model>_brain_tumor.pth`                                                   |
 
@@ -479,7 +476,7 @@ The sample grid shows mixed MRI sequences, contrasts, crops and borders across b
 
 ### No deduplication
 
-Unlike [Classification](../Classification/README.md), this pipeline does **not** remove duplicate or near-duplicate images before splitting.
+This pipeline does **not** remove duplicate or near-duplicate images before splitting.
 
 - Two public datasets are merged, and there is no overlap check between or within them.
 - Any duplicates could fall on both sides of the train/test split.
@@ -571,7 +568,7 @@ EfficientNetB0 is the reference, as its code is the most canonical version of th
   - tensors moved without `non_blocking`
   - no `try/except` in the dataset
 - **SwinBase:**
-  - Uses **timm**. Classification uses torchvision `swin_b` instead.
+  - Uses **timm** rather than torchvision.
   - Weights come from the Hugging Face Hub, and the output warns about an unauthenticated HF request.
   - `GradScaler()` without a device argument.
 - **ViT-B16:** unused `classification_report` import.
@@ -655,7 +652,7 @@ Outputs are identical in all nine notebooks.
 - applies the transform
 - returns `(img, float32 label)`
 
-**Why plot `04` is missing:** `04` is the deduplication plot, which exists only in Classification.
+**Why there is no plot `04`:** the plot numbering skips `04`. No cell in these notebooks produces a plot with that number.
 
 ### 3. Model (cells 23–26)
 
@@ -804,25 +801,6 @@ m.eval()
   - build the model with `aux_logits=True`
   - replace both `fc` and `AuxLogits.fc` before loading
   - use a 299-px input
-
-## How Binary Detection relates to Classification
-
-|                | Binary Detection (this folder)                 | [Classification](../Classification/README.md)                                                   |
-| -------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| Question       | Is there a tumour?                             | Which tumour type is it?                                                                        |
-| Classes        | `No Tumor`, `Tumor`                            | `Glioma`, `Meningioma`, `Pituitary` (no "no tumour" class)                                      |
-| Data           | navoneel + ahmedhamada0 (3253 images)          | sartajbhuvaji + Jun Cheng (5828 → 4705 after dedup)                                             |
-| Deduplication  | None                                           | pHash, Hamming distance ≤ 5                                                                     |
-| Head / loss    | 1 logit, `BCEWithLogitsLoss`                   | 3 logits, `CrossEntropyLoss`                                                                    |
-| Models         | 9 (adds DenseNet121, MobileNetV3-Large, VGG16) | 6                                                                                               |
-| Notebook cells | 65                                             | 75 (the extra cells split imports/config, paths, transforms and loaders, and add deduplication) |
-
-**The two models are meant to work in sequence, but nothing tests that.**
-
-- The classifier has no "no tumour" output, so it is only meaningful on images that already contain a tumour.
-- That implies a two-stage design: this detector first, then the type classifier on positive cases.
-- **Neither folder implements or evaluates that cascade.**
-- The two stages were trained on different source datasets, so combined end-to-end performance is unknown.
 
 ## Metric glossary
 

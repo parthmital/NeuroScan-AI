@@ -5,8 +5,6 @@ This folder benchmarks six pretrained image classifiers, one notebook each, on a
 All six notebooks share the same pipeline, the same deduplicated data and split, and the same hyperparameters. The exceptions are batch size and input size. Every notebook writes the same set of artefacts.
 
 > **Source of truth.** Every number here comes from the executed notebook outputs and the artefacts in this folder. Where the evidence does not explain a choice, the README says so instead of guessing.
->
-> **Relation to Binary Detection.** This pipeline is adapted from [../Binary Detection/README.md](../Binary%20Detection/README.md). That README documents the shared template in the most depth. This one covers the full pipeline and lists every place where it departs from the binary version.
 
 ## At a glance
 
@@ -53,7 +51,6 @@ Full details are in [Anomalies and limitations](#anomalies-and-limitations).
 **Using it**
 
 - [Reproducing a run](#reproducing-a-run)
-- [How Classification relates to Binary Detection](#how-classification-relates-to-binary-detection)
 - [Metric glossary](#metric-glossary)
 
 ## Headline results
@@ -120,7 +117,7 @@ Training ran on 2x Tesla T4 (Kaggle). Inference ran on 1 GPU with fp16 autocast.
   - Each leads on a different measure. SwinBase is best on accuracy and calibration. InceptionV3 is best on ranking (AUC). CoAtNet-0 is the only model whose top-2 prediction is always correct.
 - **EfficientNetB0 is the efficiency pick.** It makes the same 17 errors as ResNet50 with about 1/10 of the FLOPs and 1/6 of the storage. It also has the highest batched throughput of the models tested here. MobileNet-class models, which might beat it, are not tested in this folder.
 - **ViT-B16 lags far behind** with 67 errors. Its best epoch is the last one and validation AUC is still rising, so it is under-trained with this recipe.
-- **Training time mostly measures data loading, not model cost.** This matches Binary Detection. EfficientNetB0 (0.77 GFLOPs) took longer to train than SwinBase (30.9 GFLOPs), at 23.5 vs 67.4 training images per second. Timings come from separate Kaggle sessions.
+- **Training time mostly measures data loading, not model cost.** EfficientNetB0 (0.77 GFLOPs) took longer to train than SwinBase (30.9 GFLOPs), at 23.5 vs 67.4 training images per second. Timings come from separate Kaggle sessions.
 - **Meningioma is the hardest class for every model.** It is the smallest class, and it absorbs most of the confusion with Glioma (see [confusion matrices](#confusion-matrices-test)).
 
 ## Training dynamics and per-model notes
@@ -289,7 +286,7 @@ The issues are grouped by how much they affect the reported results.
 **A3. Batch sizes differ (32 to 256).**
 
 - The learning rate and epoch count are the same for every model, so the optimisation budget is not controlled.
-- ViT-B16's batch-size change from the binary pipeline has no stated reason.
+- ViT-B16's small batch size (32) has no stated reason.
 
 **A4. SwinBase Grad-CAM focuses outside the brain for some classes** ([see above](#grad-cam)). The model may partly rely on cues that are not anatomical.
 
@@ -314,8 +311,7 @@ The issues are grouped by how much they affect the reported results.
 **B5. InceptionV3 keeps an unused auxiliary head.**
 
 - Only `fc` is replaced. `AuxLogits.fc` still maps 768 inputs to the 1000 ImageNet classes.
-- With `aux_logits=False` the head is never called, but it is counted in the profile: 25.118 M parameters, vs 24.346 M in the binary run, which replaced it with a 1-output layer.
-- The difference is exactly 772,329 parameters: (768·1000+1000) − (768+1) for the auxiliary head, plus (2048·3+3) − (2048+1) for the main head.
+- With `aux_logits=False` the head is never called, but its 769,000 parameters (768·1000 weights + 1000 biases) are still counted in the profile's 25.118 M total.
 - The head is also stored in the checkpoint. Anyone loading the weights must build the model with the same unmodified auxiliary head.
 
 **B6. The provenance of `Classification/EfficientNetB0.pth` is unknown.**
@@ -339,7 +335,7 @@ The issues are grouped by how much they affect the reported results.
 | `EfficientNetB0.pth`                  | Standalone weights, **not** produced by these notebooks (see [B6](#b-issues-that-affect-interpretation)) |
 | `classification-<model>.ipynb`        | 6 notebooks, 75 cells each                                                                               |
 | `classification-<model>/`             | Unzipped outputs of that notebook (subfolders below)                                                     |
-| `classification-<model>/metrics/`     | 22 files: the binary set plus `deduplication_summary.csv`                                                |
+| `classification-<model>/metrics/`     | 22 files (CSV, JSON, TXT), including `deduplication_summary.csv`                                         |
 | `classification-<model>/plots/`       | 14 PNGs, numbered `01`–`14`, including `04_deduplication_before_after.png`                               |
 | `classification-<model>/tensorboard/` | One run folder `<YYYYMMDD-HHMMSS>/` with the `events.out.tfevents.*` file                                |
 | `classification-<model>/weights/`     | `best_<model>_multi_class.pth` and `final_<model>_brain_tumor_multi_class.pth`                           |
@@ -369,7 +365,7 @@ flowchart LR
 | 2   | Explore data                | Class distribution, sample images, image sizes, intensity histograms, run on the data **before** deduplication                                 | Plots `01`–`03`                   |
 | 3   | Remove near-duplicates      | pHash every image, then greedily drop any image within Hamming distance 5 of an already-kept one                                               | 5828 → 4705 (plot `04`)           |
 | 4   | Split                       | Stratified 70/15/15, seed 42                                                                                                                   | Train 3293, val 706, test 706     |
-| 5   | Prepare inputs              | `BrainDataset` (long labels) with the same augmentation as binary                                                                              | 224 px (299 for InceptionV3)      |
+| 5   | Prepare inputs              | `BrainDataset` (long labels) with resize, flip, rotate, colour jitter and ImageNet normalisation                                               | 224 px (299 for InceptionV3)      |
 | 6   | Build model                 | Pretrained backbone, head replaced with 3 output logits, DataParallel over 2 GPUs                                                              |                                   |
 | 7   | Train                       | 10 epochs: AdamW 3e-4, cosine LR, `CrossEntropyLoss`, AMP fp16. Saves the epoch with the best macro OvR validation AUC.                        | `best_*_multi_class.pth`          |
 | 8   | Test                        | Reloads the best checkpoint, evaluates the test set, saves the same weights again                                                              | `final_*_multi_class.pth`         |
@@ -390,7 +386,7 @@ The paths come from the data paths cell (cell 10). All are prefixed with `/kaggl
 
 **Collection rules**
 
-- Only `.jpg` files are collected (`VALID_EXTENSIONS = (".jpg",)`). The binary pipeline also accepts `.jpeg`, `.png` and `.tif`.
+- Only `.jpg` files are collected (`VALID_EXTENSIONS = (".jpg",)`).
 - The sartajbhuvaji `no_tumor` folders are not used.
 - The sartajbhuvaji official `Training`/`Testing` split is **discarded**. Both halves go into one pool, which is then re-split.
 
@@ -421,7 +417,7 @@ The paths come from the data paths cell (cell 10). All are prefixed with `/kaggl
 - **About 19% of images were near-duplicates.**
   - The likely reason is overlap between the two sources. The sartajbhuvaji dataset is commonly described as partly derived from the Jun Cheng figshare data.
   - The notebook does **not** verify that overlap. It only reports per-class counts.
-  - Either way, deduplicating **before** splitting stops the same scan from appearing in both train and test. The binary pipeline does not do this.
+  - Either way, deduplicating **before** splitting stops the same scan from appearing in both train and test.
 - **Comparison runs across classes, and the first image kept wins.** If a Meningioma or Pituitary image is within distance 5 of an already-kept Glioma image, the later one is silently removed. Label conflicts are not reported, so how many removals crossed classes is unknown.
 - **The loop is O(n²) in Python**, about 11 million hash comparisons.
 - **The exploratory cells run before deduplication.** Cells 14 and 16 (plots `01`–`03` and `image_dimension_stats.csv`) use `df_raw`, the 5,828-image set. The split and all training use the 4,705 deduplicated images.
@@ -474,13 +470,13 @@ The classes are moderately imbalanced (Glioma 42.5%, Meningioma 27.7%). No class
 
 ### Data loading and augmentation
 
-| Setting            | Value                                                                                                                                  |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Image size         | 224 (299 for InceptionV3)                                                                                                              |
-| Batch size         | 256 by default. Some models override it, see [Per-notebook differences](#per-notebook-differences).                                    |
-| Loaders            | `num_workers=4`, `pin_memory`, `persistent_workers`, `prefetch_factor=4`. The train loader shuffles, with `drop_last=True`.            |
-| Train augmentation | Same as binary: `Resize` → `RandomHorizontalFlip` → `RandomRotation(10)` → `ColorJitter(0.2, 0.2)` → `ToTensor` → ImageNet `Normalize` |
-| Eval transform     | `Resize` → `ToTensor` → `Normalize`                                                                                                    |
+| Setting            | Value                                                                                                                       |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| Image size         | 224 (299 for InceptionV3)                                                                                                   |
+| Batch size         | 256 by default. Some models override it, see [Per-notebook differences](#per-notebook-differences).                         |
+| Loaders            | `num_workers=4`, `pin_memory`, `persistent_workers`, `prefetch_factor=4`. The train loader shuffles, with `drop_last=True`. |
+| Train augmentation | `Resize` → `RandomHorizontalFlip` → `RandomRotation(10)` → `ColorJitter(0.2, 0.2)` → `ToTensor` → ImageNet `Normalize`      |
+| Eval transform     | `Resize` → `ToTensor` → `Normalize`                                                                                         |
 
 **Training batches per epoch after `drop_last`**
 
@@ -520,48 +516,41 @@ EfficientNetB0 is the reference. Differences that are only comments, `# ===== �
 - **EfficientNetB0:** the reference. It has an unused `models` import.
 - **ResNet50:** unused `classification_report` import.
 - **InceptionV3:**
-  - **No auxiliary loss.** The binary version uses `main + 0.4·aux`.
+  - **No auxiliary loss** is used during training.
   - `AuxLogits` is left as an unused 1000-class head ([B5](#b-issues-that-affect-interpretation)).
   - `import imagehash` sits in the imports cell instead of the deduplication cell.
 - **CoAtNet-0:**
   - Needs `timm`.
   - Ran a day after the others (18 Sep vs 17 Sep 2026).
 - **SwinBase:**
-  - Binary uses **timm** `swin_base_patch4_window7_224`, so the pretrained weights differ.
+  - Uses the **torchvision** `swin_b` implementation and weights.
   - Prints two extra lines: `Model loaded successfully on cuda` and the parameter count.
   - Imports `swin_b` twice.
-- **ViT-B16:** replaces `heads.head`, whereas binary replaces the whole `heads` module. The result is equivalent.
+- **ViT-B16:** replaces only `heads.head`, the final linear layer inside the `heads` module.
 
 ### Why the notebooks differ
 
 This section uses only evidence from the notebooks.
 
-- **Image size 299 for InceptionV3.** This is the Inception default, following the reasoning stated in the binary notebook.
+- **Image size 299 for InceptionV3.** This is the Inception default input size.
+- **Head replacement.** Each architecture exposes its classifier under a different attribute, so this code must differ.
+- **Grad-CAM layer.** The notebook-settings markdown documents each choice as the last spatial or token stage of that architecture.
 - **Batch sizes.**
-  - No classification notebook states a reason.
-  - Compared with binary, CoAtNet-0 rose from 64 to 128 (peak 11.3 GB on GPU0).
-  - ViT-B16 fell from 128 to 32 (peak 3.9 GB, far below the GPU limit). Memory therefore does not explain the ViT change. The reason is **unknown**.
+  - No notebook states a reason.
+  - CoAtNet-0 uses 128 (peak 11.3 GB on GPU0).
+  - ViT-B16 uses 32 (peak 3.9 GB, far below the GPU limit), so memory does not explain its small batch. The reason is **unknown**.
   - Because batch sizes range from 32 to 256, optimiser steps range from 120 to 1,020 over 10 epochs. The comparison is not controlled for optimisation budget.
-- **Dropping the Inception auxiliary loss.**
+- **No Inception auxiliary loss.**
   - No reason is given.
-  - Setting `aux_logits=False` after construction makes torchvision return a plain tensor in train mode.
-  - As a result, the shared `run_epoch`, which expects a single output, works without the Inception-specific branch that binary needed.
-- **torchvision vs timm Swin.** No reason is given.
-
-### Differences from the binary pipeline (all notebooks)
-
-- Imports, config, paths, transforms and data loaders sit in separate cells, which is why there are 75 cells instead of 65.
-- Only `.jpg` files are collected.
-- pHash deduplication and plot `04` are added.
-- Labels are `long`, the head has 3 outputs, and the loss is `CrossEntropyLoss`.
-- Metrics use softmax and argmax, AUC is one-vs-rest, and there is a multi-class metric branch.
-- ROC and PR plots add a micro-average curve.
-- Weight filenames carry a `_multi_class` suffix.
-- Each run's output zip holds 39 files.
+  - Setting `aux_logits=False` after construction makes torchvision return a plain tensor in train mode, so the shared `run_epoch`, which expects a single output, works unchanged.
+- **timm for CoAtNet-0.** CoAtNet has no torchvision implementation.
 
 ## Cell-by-cell walkthrough
 
-Every notebook has 75 cells in markdown/code pairs. The original cells are tagged `# Cell 1` to `# Cell 14`, and most models also use `# ===== SECTION =====` banners. Where a cell matches the binary template, the [binary walkthrough](../Binary%20Detection/README.md#cell-by-cell-walkthrough) has the full line-level detail.
+Every notebook has 75 cells in markdown/code pairs. Indices are 0-based.
+
+- Code comments `# Cell 1` to `# Cell 14` mark the **original** training cells. Most models also use `# ===== SECTION =====` banners.
+- Unnumbered code cells are the **added** observation, evaluation and benchmarking cells. The first markdown cell states that these added cells "only observe the run". Any randomness in them runs inside `preserved_rng_state()`, so they do not change the training outcome.
 
 | Section                                 | Cells | Purpose                                                 |
 | --------------------------------------- | ----- | ------------------------------------------------------- |
@@ -573,70 +562,151 @@ Every notebook has 75 cells in markdown/code pairs. The original cells are tagge
 
 ### 1. Setup (cells 0–8)
 
-- **Cell 0.** Title and the 9-step pipeline description, worded the same as binary.
-- **Cell 2.** Imports only. Binary puts imports and config in one cell; here they are split.
-- **Cell 4.** Config: seed, batch size, epochs, LR, image size, loader flags, device, seeding, cuDNN/TF32. Prints `CUDA available: True` and `GPU count: 2`.
-- **Cell 6.** Sets `MODEL_NAME`, `TASK="classification"`, `CLASS_NAMES=["Glioma","Meningioma","Pituitary"]`, `RUN_NAME` and `get_gradcam_target_layer`.
-- **Cell 8.** Output folders and helpers, the same code as binary. `NUM_CLASSES=3` makes `IS_BINARY=False`, which switches every later cell to its multi-class branch.
+**Cell 0 (markdown).** Title, the 9-step pipeline, and the statement that the added cells only observe the run.
+
+**Cell 2: imports.** Libraries for data handling, modelling, metrics and logging.
+
+**Cell 4: config.** One place for all hyperparameters.
+
+- `SEED`, `BATCH_SIZE`, `EPOCHS`, `LR`, `IMG_SIZE`, loader settings.
+- `DEVICE`, seeding, cuDNN benchmark and TF32 flags.
+- Prints `CUDA available: True` and `GPU count: 2`.
+
+**Cell 6: identity.** The only per-notebook settings the shared cells need:
+
+- `MODEL_NAME`, `TASK="classification"`, `CLASS_NAMES=["Glioma","Meningioma","Pituitary"]`, `RUN_NAME`
+- `get_gradcam_target_layer(net)`
+
+**Cell 8: output folders and helpers.**
+
+- Creates `/kaggle/working/outputs/<RUN_NAME>/{plots,metrics}`.
+- Saving: `save_fig`, `save_json`, `save_table`, `save_text`.
+- Utilities: `unwrap_model` (strips the `DataParallel` wrapper), `denormalise`, `sync_cuda`.
+- `preserved_rng_state()`: snapshots and restores the Python, NumPy, torch and CUDA RNG states.
+- `NUM_CLASSES=3` makes `IS_BINARY=False`, which selects the multi-class branch in every later cell.
 
 ### 2. Data (cells 9–32)
 
-| Cell | Content                                              | Output                                                             |
-| ---- | ---------------------------------------------------- | ------------------------------------------------------------------ |
-| 10   | Data paths (a separate cell, unlike binary)          |                                                                    |
-| 12   | `collect()` and DataFrame                            | `Total Images before deduplication: 5828` (G 2352, M 1645, P 1831) |
-| 14   | `df_raw` copy, class bar chart, 6 samples per class  | `01`, `02`                                                         |
-| 16   | Image sizes and intensity histograms (100 per class) | `03`, `image_dimension_stats.csv`                                  |
-| 18   | **pHash deduplication** (new)                        | `Total Images after deduplication: 4705`                           |
-| 20   | **Before/after plot and table** (new, plot `04`)     | `04_deduplication_before_after.png`, `deduplication_summary.csv`   |
-| 22   | Stratified split                                     | `Train: 3293 Val: 706 Test: 706`                                   |
-| 24   | Split distribution plot and table                    | `05`, `split_distribution.csv`                                     |
-| 26   | `BrainDataset`, returning `torch.long` labels        |                                                                    |
-| 28   | Transforms (separate cell)                           |                                                                    |
-| 30   | DataLoaders (separate cell)                          |                                                                    |
-| 32   | Augmentation before/after (2 per class, 6 columns)   | `06`                                                               |
+| Cell | Content                                                                                                      | Output                                                             |
+| ---- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| 10   | Data paths for each tumour class                                                                             |                                                                    |
+| 12   | `collect(paths, label)` walks the folders and builds `df[path,label]`                                        | `Total Images before deduplication: 5828` (G 2352, M 1645, P 1831) |
+| 14   | Copies `df` to `df_raw`. Class bar chart and 6 random samples per class (`random_state=SEED`).               | `01`, `02`                                                         |
+| 16   | Reads every image size. Grayscale intensity histograms from 100 sampled images per class (51 bins, density). | `03`, `image_dimension_stats.csv`                                  |
+| 18   | **pHash deduplication** ([details](#deduplication))                                                          | `Total Images after deduplication: 4705`                           |
+| 20   | Before/after class counts on shared axes, and a summary table                                                | `04_deduplication_before_after.png`, `deduplication_summary.csv`   |
+| 22   | Stratified 70/15/15 split                                                                                    | `Train: 3293 Val: 706 Test: 706`                                   |
+| 24   | Per-split class counts (grouped bars) and proportions (stacked bars)                                         | `05`, `split_distribution.csv`                                     |
+| 26   | `BrainDataset` (details below)                                                                               |                                                                    |
+| 28   | Training augmentation and evaluation transforms                                                              |                                                                    |
+| 30   | Train, validation and test `DataLoader`s                                                                     |                                                                    |
+| 32   | For 2 train images per class, the eval transform (top) and one random train augmentation (bottom)            | `06`                                                               |
+
+`BrainDataset` (cell 26):
+
+- opens the image
+- converts it to RGB, so grayscale MRIs are replicated to 3 channels to match ImageNet backbones
+- applies the transform
+- returns `(img, torch.long label)`
 
 ### 3. Model and training (cells 33–46)
 
-| Cell | Content                                                                                                       |
-| ---- | ------------------------------------------------------------------------------------------------------------- |
-| 34   | Backbone with a 3-way head, DataParallel, `CrossEntropyLoss`, AdamW, cosine schedule, scaler                  |
-| 36   | Model profile: parameters, size and FLOPs (`model_profile.json`)                                              |
-| 38   | `run_epoch`: `outputs = model(images)` (no squeeze), `softmax(dim=1)` probabilities, argmax accuracy, OvR AUC |
-| 40   | Training tracker wrapper, identical to binary                                                                 |
-| 42   | 10-epoch loop with TensorBoard logging and best-AUC checkpointing                                             |
-| 44   | Training summary (`training_history.csv`, `training_summary.json`)                                            |
-| 46   | Training curves (`07_training_curves.png`). The AUC panel shows macro OvR AUC.                                |
+**Cell 34: model build.** Pretrained backbone with a 3-output head, `DataParallel`, `CrossEntropyLoss`, AdamW, cosine schedule and `GradScaler`.
+
+**Cell 36: model profile.** Saved as `model_profile.json`.
+
+- Total and trainable parameters (always all trainable) and buffer count.
+- Serialised `state_dict` size, measured via `BytesIO`.
+- FLOPs for one `1x3xSxS` input, using `torch.utils.flop_counter.FlopCounterMode` on a CPU deep copy.
+
+**Cell 38: `run_epoch(loader, training)`.**
+
+- Autocast forward pass: `outputs = model(images)`, loss `CrossEntropyLoss(outputs, labels)`.
+- While training: scaled backward pass and optimiser step.
+- Collects `softmax(dim=1)` probabilities. Returns mean batch loss, argmax accuracy and one-vs-rest AUC.
+- The eval pass does **not** use `torch.no_grad()`. It simply skips the optimiser step.
+
+**Cell 40: training tracker.** Lets the original training cell stay unchanged.
+
+- Rebinds `run_epoch` to a wrapper that identifies the phase (train, val or test) by which loader it receives.
+- Times each phase with CUDA syncs, records LR, loss, accuracy, AUC and timings per epoch, and drives an epoch-level progress bar.
+- Resets GPU peak-memory stats. A `_tracks_history` flag prevents double wrapping if the cell is re-run.
+
+**Cell 42: training loop.**
+
+- 10 epochs of train → val → `scheduler.step()`.
+- TensorBoard scalars `Loss/Train`, `Loss/Val`, `AUC/Train`, `AUC/Val`.
+- Saves a checkpoint when validation AUC improves, using `model.module.state_dict()` with more than one GPU.
+
+**Cell 44: training summary.** Saved as `training_history.csv` and `training_summary.json`:
+
+- per-epoch history
+- best epoch (the first maximum, matching the `>` checkpoint rule)
+- total and mean times, and time to best epoch
+- train images/s and peak memory per GPU
+
+**Cell 46: training curves** (`07_training_curves.png`):
+
+- loss, accuracy and macro OvR AUC, train vs val, with the best epoch marked
+- generalisation gap (val loss minus train loss)
+- learning rate
+- time per epoch
+
+**Note:** training accuracy and AUC are measured on **augmented** batches in train mode. They are not directly comparable to the validation numbers.
 
 ### 4. Test, save, evaluate (cells 47–64)
 
-| Cell | Content                                                                                                |
-| ---- | ------------------------------------------------------------------------------------------------------ |
-| 48   | Reload the best checkpoint, run the test pass, print `FINAL UNSEEN TEST RESULTS`                       |
-| 50   | Save `final_*_multi_class.pth`                                                                         |
-| 52   | Single-GPU re-inference and per-image predictions (`prob_glioma`, `prob_meningioma`, `prob_pituitary`) |
-| 54   | Metrics (see below)                                                                                    |
-| 56   | 3x3 confusion matrices, counts and row-normalised (`08`)                                               |
-| 58   | One-vs-rest ROC and PR per class, plus the **micro-average** curve (`09`)                              |
-| 60   | Calibration on max-softmax confidence (`10`)                                                           |
-| 62   | Per-class metric bars on test (`11`)                                                                   |
-| 64   | Correct and misclassified samples (`12`)                                                               |
+**Cell 48: test.** Loads the best checkpoint into the (DataParallel) model, runs the test pass and prints `FINAL UNSEEN TEST RESULTS`.
 
-**Cell 54 metrics, compared with binary:**
+**Cell 50: save.** Saves the reloaded best weights again as `final_*_multi_class.pth`.
 
-- **Added:** `roc_auc_ovr_macro`, `roc_auc_ovr_weighted`, `roc_auc_ovo_macro`, `pr_auc_macro`, `pr_auc_micro`, `specificity_macro`, `top_2_accuracy`.
-- **Absent:** the binary-only TP/FP and Youden fields.
-- **Also saved:** per-class one-vs-rest metrics and the classification report.
+**Cell 52: predictions.** Saved as `predictions_val.csv` and `predictions_test.csv`.
+
+- Deep-copies the unwrapped model onto one GPU and re-runs val and test under autocast.
+- Applies softmax, then renormalises in float64.
+- Stores per image: path, true and predicted class, confidence, `prob_glioma`, `prob_meningioma`, `prob_pituitary`, correctness.
+
+**Cell 54: metrics.**
+
+- **Core:** accuracy, balanced accuracy, error rate, precision/recall/F1 (macro, weighted, micro), MCC, Cohen's κ, macro Jaccard, log loss, Brier score, 15-bin ECE, mean confidence.
+- **Multi-class:** `roc_auc_ovr_macro`, `roc_auc_ovr_weighted`, `roc_auc_ovo_macro`, `pr_auc_macro`, `pr_auc_micro`, `specificity_macro`, `top_2_accuracy`.
+- **Also:** per-class one-vs-rest metrics and the sklearn classification report (4 digits).
+- **Artefacts:** `metrics_{val,test}.json`, `per_class_metrics_{val,test}.csv`, `classification_report_{val,test}.txt`, `metrics_summary.csv`.
+
+| Cell | Content                                                                                                    | Artefacts                               |
+| ---- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| 56   | 3x3 confusion matrices, counts and row-normalised, validation (top) and test (bottom)                      | `confusion_matrix_{val,test}.csv`, `08` |
+| 58   | One-vs-rest ROC and PR per class, plus the **micro-average** curve                                         | `09`                                    |
+| 60   | Reliability diagram (15 bins of max-softmax confidence) and confidence histograms for correct vs incorrect | `calibration_bins_{val,test}.csv`, `10` |
+| 62   | Per-class precision, recall, specificity, F1 and AUC on test                                               | `11`                                    |
+| 64   | 6 random correct and 6 random misclassified test images (seeded)                                           | `12`                                    |
 
 ### 5. Explainability, benchmark, packaging (cells 65–74)
 
-| Cell | Content                                                                                                                        |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------ |
-| 66   | Generic Grad-CAM. For a multi-logit model, the score is the logit of the predicted class.                                      |
-| 68   | Grad-CAM for the 2 most confident correct predictions per class (6 columns) and the 6 most confident errors (`13`, `14`)       |
-| 70   | Latency (batch 1) and throughput (batch 32) benchmark                                                                          |
-| 72   | `benchmark_summary.{json,csv}`. The headline set uses `test_roc_auc_ovr_macro`, `test_pr_auc_macro` and `test_top_2_accuracy`. |
-| 74   | Zip of 39 files: the binary pipeline's 37 plus the dedup plot and table                                                        |
+**Cell 66: generic `GradCAM` class.**
+
+- A forward hook captures activations and a tensor hook captures gradients on the target layer.
+- `to_nchw` converts other layouts to `(B,C,H,W)`:
+  - transformer tokens `(B,T,C)`, dropping a class token when T is not a perfect square
+  - channels-last maps `(B,H,W,C)`
+- The score is the logit of the predicted class.
+- The CAM is the ReLU of the gradient-mean-weighted activation sum, bilinearly upsampled and min-max normalised. It runs on a float32 deep copy.
+
+**Cell 68: Grad-CAM figures.** Each shows input, heatmap and overlay.
+
+- `13`: the 2 most confident correct predictions per class.
+- `14`: the 6 most confident errors.
+- Failures are caught in `gradcam_status`. Every run reports `ok`.
+
+**Cell 70: inference benchmark** (`inference_benchmark.json`), synthetic input under fp16 autocast.
+
+- Batch 1: 10 warm-up and 100 timed iterations (mean, median, p95, std).
+- Batch 32: 3 warm-up and 20 timed iterations (throughput).
+- Also the end-to-end test-set time from cell 52 and the original test-cell time.
+
+**Cell 72: benchmark summary.** Config, profile, training, inference, validation and test metrics and environment in one record (`benchmark_summary.json` and `.csv`). The headline set uses `test_roc_auc_ovr_macro`, `test_pr_auc_macro` and `test_top_2_accuracy`.
+
+**Cell 74: packaging.** Zips the outputs, all weights and the TensorBoard run into `<RUN_NAME>-outputs.zip` (39 files). The run folders here are the unzipped archives.
 
 ## Reproducing a run
 
@@ -666,30 +736,6 @@ m.eval()
 - replace only `fc`, with `Linear(2048, 3)`
 - load the checkpoint
 - use a 299-px input
-
-## How Classification relates to Binary Detection
-
-|                    | [Binary Detection](../Binary%20Detection/README.md)               | Classification (this folder)                             |
-| ------------------ | ----------------------------------------------------------------- | -------------------------------------------------------- |
-| Question           | Tumour present?                                                   | Which tumour type?                                       |
-| Classes            | No Tumor / Tumor                                                  | Glioma / Meningioma / Pituitary                          |
-| Data               | navoneel + ahmedhamada0, 3253 images, no dedup                    | sartajbhuvaji + Jun Cheng, 5828 → 4705 after pHash dedup |
-| Split sizes        | 2277 / 488 / 488                                                  | 3293 / 706 / 706                                         |
-| Head / loss        | 1 logit, BCEWithLogits                                            | 3 logits, CrossEntropy                                   |
-| Selection metric   | Val ROC AUC                                                       | Val macro OvR ROC AUC                                    |
-| Models             | 9                                                                 | 6 (no DenseNet121, MobileNetV3-Large or VGG16)           |
-| Best test accuracy | 0.9939 (DenseNet121, ResNet50, EfficientNetB0 and CoAtNet-0 tied) | 0.9858 (SwinBase)                                        |
-| Swin               | via timm                                                          | via torchvision                                          |
-| Inception          | with auxiliary loss                                               | without auxiliary loss                                   |
-| CoAtNet batch size | 64                                                                | 128                                                      |
-| ViT batch size     | 128                                                               | 32                                                       |
-
-**The two models are meant to be used in sequence, but that has not been tested.**
-
-- The intended flow is to run binary detection first, then classify the tumour type for positive cases.
-- That is the only sensible way to use a classifier with no normal class.
-- **No notebook in either folder chains the two models or evaluates the combined result.**
-- The two models were trained on separate source datasets. How accurately the classifier handles images the detector flags has not been measured.
 
 ## Metric glossary
 
