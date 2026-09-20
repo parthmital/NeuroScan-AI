@@ -19,9 +19,9 @@
 \captionsetup{labelfont=bf,justification=centering}
 \emergencystretch=2em
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-\setlength{\textfloatsep}{6pt plus 1pt minus 2pt}
-\setlength{\floatsep}{6pt plus 1pt minus 2pt}
-\setlength{\intextsep}{6pt plus 1pt minus 2pt}
+\setlength{\textfloatsep}{12pt plus 2pt minus 3pt}
+\setlength{\floatsep}{12pt plus 2pt minus 3pt}
+\setlength{\intextsep}{12pt plus 2pt minus 3pt}
 \renewcommand{\arraystretch}{1.08}
 \raggedbottom
 \setcounter{topnumber}{5}
@@ -94,7 +94,8 @@ Recent studies applying these architectures to brain tumour detection include th
 \centering
 \caption{Comparison of existing studies for brain tumour detection.}
 \label{tab:existing-studies}
-\begin{tabularx}{\textwidth}{@{}YYccc@{}}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccc@{}}
 \toprule
 Study & Model & Dataset size & Task & Accuracy \\
 \midrule
@@ -106,7 +107,7 @@ Ghassemi et al. (2020) \cite{ref26} & EfficientNet & 3,064 & Binary & 98.87\% \\
 Cheng et al. (2015) \cite{ref5} & SVM + features & 3,064 & Multiclass & 90.00\% \\
 Deepak and Ameer (2019) \cite{ref15} & InceptionV3 & 3,064 & Multiclass & 97.50\% \\
 \bottomrule
-\end{tabularx}
+\end{tabular*}
 \end{table}
 
 Several open issues remain. Cross-architecture comparison is difficult because most studies examine no more than two or three models. Dataset heterogeneity is a further obstacle, because split schemes, preprocessing, and evaluation protocols differ between studies. Transformer under-representation is an additional problem, since current papers deal mainly with CNN-based models. Reproducibility is also limited, because source code, exact splits, and pretrained weights are not consistently released. Incomplete deduplication is a final gap, as most papers do not account for duplicate and near-duplicate images in combined datasets. Reporting practice is also narrow: headline accuracy and AUC are commonly quoted without per-class sensitivity and specificity, without any assessment of probability calibration, and without measured inference cost, all of which matter for clinical interpretation. This paper addresses these gaps by evaluating nine architectures under identical conditions, combining datasets from multiple public sources, applying perceptual hash based deduplication before splitting, comparing CNN and transformer families directly, reporting per-class and calibration metrics alongside measured latency and throughput, and releasing the complete code and per-model artefacts for both the binary and the multiclass tasks.
@@ -127,15 +128,15 @@ A design point worth stating explicitly is that the two tasks are kept separate 
   font=\sffamily\small,
   >=Latex,
   stage/.style={draw=black!70, fill=black!4, rounded corners=3pt, line width=0.5pt,
-                text width=2.55cm, align=center, minimum height=1.55cm, inner sep=3pt},
+                text width=2.74cm, align=center, minimum height=1.55cm, inner sep=3pt},
   lbl/.style={font=\sffamily\bfseries\footnotesize},
   arrow/.style={->, line width=0.7pt, draw=black!70}
 ]
-\node[stage] (acq) {\textbf{Data acquisition}\\[2pt]\scriptsize Binary: 2 Kaggle sets (3,253)\\ Multiclass: 2 Kaggle sets (5,828)};
-\node[stage, right=0.7cm of acq] (cur) {\textbf{Curation}\\[2pt]\scriptsize pHash deduplication (multiclass)\\ $5{,}828\rightarrow4{,}705$\\ Stratified 70/15/15 split};
-\node[stage, right=0.7cm of cur] (pre) {\textbf{Preprocessing}\\[2pt]\scriptsize RGB conversion, resize,\\ ImageNet normalisation,\\ train-only augmentation};
-\node[stage, right=0.7cm of pre] (mod) {\textbf{Model development}\\[2pt]\scriptsize 9 ImageNet backbones,\\ shared protocol,\\ replaced heads};
-\node[stage, right=0.7cm of mod] (ev) {\textbf{Evaluation}\\[2pt]\scriptsize Accuracy, per-class\\ metrics, AUC, calibration,\\ Grad-CAM, latency};
+\node[stage] (acq) {\textbf{Data acquisition}\\[2pt]\scriptsize Binary: 2 Kaggle\\ sets (3,253)\\ Multiclass: 2\\ Kaggle sets (5,828)};
+\node[stage, right=0.4cm of acq] (cur) {\textbf{Curation}\\[2pt]\scriptsize pHash deduplication\\ (multiclass)\\ $5{,}828\rightarrow4{,}705$\\ Stratified\\ 70/15/15 split};
+\node[stage, right=0.4cm of cur] (pre) {\textbf{Preprocessing}\\[2pt]\scriptsize RGB conversion,\\ resize, ImageNet\\ normalisation,\\ train-only\\ augmentation};
+\node[stage, right=0.4cm of pre] (mod) {\textbf{Model}\\\textbf{development}\\[2pt]\scriptsize 9 ImageNet\\ backbones,\\ shared protocol,\\ replaced heads};
+\node[stage, right=0.4cm of mod] (ev) {\textbf{Evaluation}\\[2pt]\scriptsize Accuracy, per-class\\ metrics, AUC,\\ calibration,\\ Grad-CAM, latency};
 
 \draw[arrow] (acq) -- (cur);
 \draw[arrow] (cur) -- (pre);
@@ -228,7 +229,8 @@ Stratified sampling was used for both splits so that every subset retained a rep
 \centering
 \caption{Stratified dataset splits for both tasks. Proportions are 70\% training, 15\% validation, and 15\% test in each case.}
 \label{tab:splits}
-\begin{tabularx}{\textwidth}{@{}lYccc@{}}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccc@{}}
 \toprule
 Task & Class & Training & Validation & Test \\
 \midrule
@@ -241,7 +243,7 @@ Task & Class & Training & Validation & Test \\
  & Pituitary & 980 & 211 & 210 \\
  & \textbf{Total} & \textbf{3,293} & \textbf{706} & \textbf{706} \\
 \bottomrule
-\end{tabularx}
+\end{tabular*}
 \end{table}
 
 All images were loaded using the Python Imaging Library and converted to the RGB colour format even where the original was greyscale, ensuring compatibility with the ImageNet-pretrained backbones. Images were resized to the input resolution expected by each backbone, which was $224\times 224$ pixels for every model except InceptionV3, which requires $299\times 299$ pixels. Pixel values were converted to a PyTorch tensor and scaled to the range $[0,1]$, then normalised using the ImageNet channel means of $[0.485, 0.456, 0.406]$ and standard deviations of $[0.229, 0.224, 0.225]$. To improve generalisation, data augmentation was applied exclusively to the training set and consisted of random horizontal flipping with probability 0.5, random rotation of up to $\pm 10$ degrees, and colour jitter adjusting brightness and contrast by up to 20\%. These augmentations were applied on the fly at each epoch. For validation and testing, only resizing, tensor conversion, and normalisation were applied, with no stochastic augmentation, ensuring deterministic and reproducible evaluation. Figure~\ref{fig:augment} illustrates representative images before and after augmentation for both tasks.
@@ -289,6 +291,7 @@ The random seed was fixed at 42 for PyTorch, NumPy, and the Python standard libr
 \centering
 \caption{Training hyperparameters, standardised across all models and both tasks.}
 \label{tab:hyperparams}
+\small
 \begin{tabularx}{\textwidth}{@{}lY@{}}
 \toprule
 Hyperparameter & Setting \\
@@ -325,7 +328,7 @@ Two differences affect results and deserve particular attention. The InceptionV3
 \caption{Implementation differences between the per-model notebooks, with the reason for each. Differences confined to comments, cell titles, or equivalent reformatting are not listed.}
 \label{tab:impl-diffs}
 \small
-\begin{tabularx}{\textwidth}{@{}lYY@{}}
+\begin{tabularx}{\textwidth}{@{}llY@{}}
 \toprule
 Difference & Scope & Reason \\
 \midrule
@@ -372,9 +375,10 @@ InceptionV3 followed at 98.77\% accuracy with an AUC of 0.9986. The three transf
 \centering
 \caption{Binary detection results on the held-out test split (488 images). Sensitivity is recall of the tumour-positive class and specificity is recall of the tumour-negative class. Parameter counts are measured from the instantiated models. Rows are ordered by accuracy.}
 \label{tab:binary-results}
+\small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
 \toprule
-Model & Accuracy (\%) & Sensitivity (\%) & Specificity (\%) & F1 (\%) & AUC & Test loss & Parameters (M) \\
+Model & Acc. (\%) & Sens. (\%) & Spec. (\%) & F1 (\%) & AUC & Test loss & Params (M) \\
 \midrule
 CoAtNet-0 & 99.39 & 100.00 & 98.75 & 99.40 & 0.9999 & 0.0253 & 26.67 \\
 DenseNet121 & 99.39 & 98.79 & 100.00 & 99.39 & 1.0000 & 0.0189 & 6.95 \\
@@ -400,7 +404,7 @@ The error asymmetry is seen most directly by comparing Figure~\ref{fig:binary-co
 \small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccccc@{}}
 \toprule
-Model & Class & Support & Precision (\%) & Sensitivity (\%) & Specificity (\%) & F1 (\%) \\
+Model & Class & Support & Prec. (\%) & Sens. (\%) & Spec. (\%) & F1 (\%) \\
 \midrule
 CoAtNet-0 & No tumour & 240 & 100.00 & 98.75 & 100.00 & 99.37 \\
  & Tumour & 248 & 98.80 & 100.00 & 98.75 & 99.40 \\
@@ -496,9 +500,10 @@ The per-class breakdown in Table~\ref{tab:multiclass-perclass} shows that mening
 \centering
 \caption{Multiclass classification results on the held-out test split (706 images). Precision and F1 are macro-averaged across the three tumour classes, and AUC is the macro-averaged one-versus-rest value. Rows are ordered by accuracy.}
 \label{tab:multiclass-results}
+\small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
 \toprule
-Model & Accuracy (\%) & Balanced acc. (\%) & Precision (\%) & F1 (\%) & AUC & Test loss & Parameters (M) \\
+Model & Acc. (\%) & Bal. acc. (\%) & Prec. (\%) & F1 (\%) & AUC & Test loss & Params (M) \\
 \midrule
 Swin-Base & 98.58 & 98.42 & 98.54 & 98.47 & 0.9993 & 0.0410 & 86.75 \\
 CoAtNet-0 & 98.44 & 98.21 & 98.50 & 98.35 & 0.9989 & 0.0521 & 26.67 \\
@@ -517,7 +522,7 @@ ViT-B/16 & 90.51 & 90.37 & 90.31 & 90.34 & 0.9759 & 0.2637 & 85.80 \\
 \small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccccc@{}}
 \toprule
-Model & Class & Support & Precision (\%) & Sensitivity (\%) & Specificity (\%) & F1 (\%) \\
+Model & Class & Support & Prec. (\%) & Sens. (\%) & Spec. (\%) & F1 (\%) \\
 \midrule
 Swin-Base & Glioma & 300 & 99.00 & 99.33 & 99.26 & 99.17 \\
  & Meningioma & 196 & 98.95 & 95.92 & 99.61 & 97.41 \\
@@ -617,12 +622,12 @@ The accuracy-per-million-parameters column makes the architectural efficiency di
 
 \begin{table*}[htbp]
 \centering
-\caption{Computational efficiency comparison for the binary detection task. Training used dual NVIDIA Tesla T4 graphics processing units, except InceptionV3, which ran on a single device (Section~\ref{sec:impl}) and whose training time is therefore not comparable. Latency and throughput were measured on one device for every model, at batch size 1 and 32 respectively. Rows are ordered by parameter count.}
+\caption{Computational efficiency comparison for the binary detection task. Training used dual NVIDIA Tesla T4 graphics processing units, except InceptionV3, which ran on a single device (Section~\ref{sec:impl}) and whose training time is therefore not comparable. Latency and throughput were measured on one device for every model, at batch size 1 and 32 respectively. ``Thr.'' is throughput in images per second and ``Acc./M'' is test accuracy in percentage points per million parameters. Rows are ordered by parameter count.}
 \label{tab:efficiency}
 \small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
 \toprule
-Model & Params (M) & GFLOPs & Batch size & Train time (min) & Latency (ms) & Throughput (img/s) & Acc. per M params \\
+Model & Params (M) & GFLOPs & Batch & Train (min) & Latency (ms) & Thr. (img/s) & Acc./M \\
 \midrule
 EfficientNetB0 & 4.01 & 0.77 & 256 & 16.3 & 10.76 & 1364 & 24.79 \\
 MobileNetV3-Large & 4.20 & 0.43 & 256 & 12.0 & 8.08 & 2409 & 21.60 \\
@@ -641,12 +646,12 @@ The corresponding measurements for the multiclass runs are given in Table~\ref{t
 
 \begin{table*}[htbp]
 \centering
-\caption{Computational efficiency comparison for the multiclass classification task, measured on dual NVIDIA Tesla T4 graphics processing units. Latency is the mean over single-image inference; throughput is measured at batch size 32. Rows are ordered by parameter count.}
+\caption{Computational efficiency comparison for the multiclass classification task, measured on dual NVIDIA Tesla T4 graphics processing units. Latency is the mean over single-image inference; ``Thr.'' is throughput in images per second, measured at batch size 32, and ``Acc./M'' is test accuracy in percentage points per million parameters. Rows are ordered by parameter count.}
 \label{tab:efficiency-multiclass}
 \small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
 \toprule
-Model & Params (M) & GFLOPs & Batch size & Train time (min) & Latency (ms) & Throughput (img/s) & Acc. per M params \\
+Model & Params (M) & GFLOPs & Batch & Train (min) & Latency (ms) & Thr. (img/s) & Acc./M \\
 \midrule
 EfficientNetB0 & 4.01 & 0.77 & 256 & 26.9 & 13.85 & 1471 & 24.33 \\
 ResNet50 & 23.51 & 8.17 & 256 & 8.1 & 7.82 & 792 & 4.15 \\
@@ -665,7 +670,7 @@ Calibration quality, reported in Table~\ref{tab:calibration}, adds a dimension t
 \caption{Expected calibration error (ECE), Matthews correlation coefficient (MCC), and Cohen's kappa on the held-out test split for both tasks. Lower ECE indicates better agreement between predicted confidence and observed accuracy.}
 \label{tab:calibration}
 \small
-\begin{tabularx}{\textwidth}{@{}lYccc@{}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccc@{}}
 \toprule
 Task & Model & ECE & MCC & Kappa \\
 \midrule
@@ -688,7 +693,7 @@ Task & Model & ECE & MCC & Kappa \\
  & ResNet50 & 0.0116 & 0.9633 & 0.9632 \\
  & ViT-B/16 & 0.0266 & 0.8550 & 0.8550 \\
 \bottomrule
-\end{tabularx}
+\end{tabular*}
 \end{table}
 
 \FloatBarrier
@@ -756,6 +761,7 @@ More generally, direct comparison with published figures should be treated with 
 \centering
 \caption{Comparison of the present results with previously published studies. Results obtained in this work are measured on the held-out test split.}
 \label{tab:literature-comparison}
+\small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llcccc@{}}
 \toprule
 Study & Model & Dataset size & Task & Reported accuracy & This work \\
@@ -853,10 +859,12 @@ All datasets used in this study are publicly available and are cited in Section~
 \FloatBarrier
 \appendix
 \renewcommand{\thetable}{\Alph{section}.\arabic{table}}
+\renewcommand{\thefigure}{\Alph{section}.\arabic{figure}}
 
 \section{Complete Binary Detection Results}
 \label{app:binary}
 \setcounter{table}{0}
+\setcounter{figure}{0}
 
 Table~\ref{tab:complete-binary-results} reports the training and validation metrics at the best epoch for each model on the binary detection task, where the best epoch is the one giving the highest validation AUC. These are validation-split figures; the corresponding test-split results are given in Table~\ref{tab:binary-results}. Figure~\ref{fig:binary-split} shows the resulting stratified split distribution and Figure~\ref{fig:binary-imgprops} the native image properties of this dataset.
 
@@ -864,7 +872,7 @@ Table~\ref{tab:complete-binary-results} reports the training and validation metr
 \centering
 \caption{Binary detection training and validation metrics at the best epoch, selected by validation AUC.}
 \label{tab:complete-binary-results}
-\scriptsize
+\small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
 \toprule
 Model & Epoch & Train loss & Train acc. & Train AUC & Val. loss & Val. acc. & Val. AUC \\
@@ -898,17 +906,19 @@ VGG16 & 10 & 0.2590 & 0.8872 & 0.9603 & 0.2421 & 0.8975 & 0.9687 \\
 
 \FloatBarrier
 
+\FloatBarrier
 \section{Complete Multiclass Results}
 \label{app:multiclass}
 \setcounter{table}{0}
+\setcounter{figure}{0}
 
 Table~\ref{tab:complete-multiclass-results} reports the training and validation metrics at the checkpointed epoch for each model on the multiclass task, where that epoch is the one giving the highest validation macro one-versus-rest AUC. Because this metric saturates near 0.997, it distinguishes only weakly between late epochs, and for several models validation accuracy continued to rise after the checkpointed epoch; Swin-Base, for example, is checkpointed at epoch 7 with a validation accuracy of 97.31\%, although its validation accuracy reaches 98.16\% at epochs 9 and 10. These are validation-split figures; the corresponding test-split results are given in Table~\ref{tab:multiclass-results}. Figure~\ref{fig:cls-dist} shows the post-deduplication class distribution, Figure~\ref{fig:cls-split} the resulting stratified split distribution, and Figure~\ref{fig:cls-imgprops} the native image properties of this dataset.
 
 \begin{table}[H]
 \centering
-\caption{Multiclass classification training and validation metrics at the best epoch, selected by validation accuracy.}
+\caption{Multiclass classification training and validation metrics at the checkpointed epoch, selected by validation macro one-versus-rest AUC.}
 \label{tab:complete-multiclass-results}
-\scriptsize
+\small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
 \toprule
 Model & Epoch & Train loss & Train acc. & Train AUC & Val. loss & Val. acc. & Val. AUC \\
@@ -946,6 +956,7 @@ ViT-B/16 & 10 & 0.3040 & 0.8808 & 0.9712 & 0.3419 & 0.8810 & 0.9689 \\
 
 \FloatBarrier
 
+\FloatBarrier
 \section{Code Repository}
 \label{app:code}
 
