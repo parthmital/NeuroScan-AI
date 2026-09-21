@@ -14,6 +14,17 @@
 \usepackage{microtype}
 \usepackage{tikz}
 \usepackage{url}
+\usepackage{etoolbox}
+\usepackage{iftex}
+\ifXeTeX
+  % XeTeX (tectonic) cannot use the 8-bit Times fonts loaded by the class option,
+  % which leaves text without bold or italic; load OpenType Times/Helvetica clones.
+  \usepackage{fontspec}
+  \setmainfont{texgyretermes}[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \setsansfont{texgyreheros}[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+\fi
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc,fit}
 \urlstyle{same}
 \captionsetup{labelfont=bf,justification=centering}
@@ -24,13 +35,39 @@
 \setlength{\intextsep}{12pt plus 2pt minus 3pt}
 \renewcommand{\arraystretch}{1.08}
 \raggedbottom
+% visible gap between paragraphs
+\setlength{\parskip}{6pt plus 1fil}
+% never break a paragraph (and so never a sentence) across pages; a page may end
+% short instead (unlimited bottom stretch), and a paragraph only splits if it
+% cannot fit on a page at all
+\makeatletter
+\def\@textbottom{\vskip \z@ \@plus 1fill}
+% the kernel re-inserts \interlinepenalty where a float was defined, which would
+% make the gap between paragraphs around every float unbreakable; use 0 there
+\patchcmd{\@specialoutput}{\addpenalty \interlinepenalty}{\addpenalty \z@}{}{\PatchFailed}
+\patchcmd{\@addtocurcol}{\addpenalty \interlinepenalty}{\addpenalty \z@}{}{\PatchFailed}
+\patchcmd{\@addtocurcol}{\penalty\interlinepenalty}{\penalty\z@}{}{\PatchFailed}
+\makeatother
+\AtBeginDocument{%
+  \interlinepenalty=10000
+  \clubpenalty=10000
+  \widowpenalty=10000
+  \displaywidowpenalty=10000
+  \predisplaypenalty=10000
+}
 \setcounter{topnumber}{5}
 \setcounter{bottomnumber}{2}
 \setcounter{totalnumber}{6}
 \renewcommand{\topfraction}{0.95}
 \renewcommand{\bottomfraction}{0.85}
 \renewcommand{\textfraction}{0.05}
-\renewcommand{\floatpagefraction}{0.85}
+\renewcommand{\floatpagefraction}{0.7}
+\makeatletter
+% start float-only pages at the top instead of centring them vertically
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{18pt plus 4pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
 \journal{Engineering Applications of Artificial Intelligence}
 
 \begin{document}
@@ -154,14 +191,12 @@ A design point worth stating explicitly is that the two tasks are kept separate 
 \label{fig:methodology}
 \end{figure*}
 
-\FloatBarrier
-
 \subsection{Data Collection}
 \label{sec:data}
 
 For the binary brain tumour detection task, which requires classifying MRI images as either containing a tumour or being tumour-free, we combined two publicly available brain MRI datasets sourced from the Kaggle platform. Dataset~1, \textit{Brain MRI Images for Brain Tumor Detection} \cite{ds1}, contains 253 MRI images in total, with 155 labelled as tumour-positive and 98 as tumour-negative. The images represent a mix of T1-weighted and T2-weighted sequences, though specific sequence information is not uniformly provided. Dataset~2, \textit{Br35H: Brain Tumor Detection 2020} \cite{ds2}, contains a substantially larger collection of 3,000 MRI images with a perfectly balanced distribution of 1,500 tumour-positive and 1,500 tumour-negative images. The images are provided in JPEG format and have been pre-cropped to focus on the brain region, though some variability in field of view and image resolution exists across samples. The combined dataset for binary classification comprised 3,253 images, with 1,598 tumour-negative images (49.1\%) and 1,655 tumour-positive images (50.9\%). This near-perfect balance prevents the model from exploiting class imbalance and keeps chance-level accuracy at approximately 50\%. Representative samples of tumour-negative and tumour-positive images are shown in Figure~\ref{fig:binary-samples}, and the class distribution is given in Figure~\ref{fig:binary-dist}.
 
-For the more challenging multiclass classification task, in which the model must distinguish between glioma, meningioma, and pituitary tumours, we combined two further publicly available brain tumour MRI datasets. Dataset~1, Bhuvaji et al., \textit{Brain Tumor Classification (MRI)} \cite{ds3}, provides all images in JPEG format at a consistent resolution of $224\times 224$ pixels. Dataset~2 is the brain tumour collection of Cheng et al. \cite{ds4}, described in the associated study \cite{ref5}, whose images were also converted to JPEG format. The combined dataset prior to deduplication consisted of 5,828 images, with glioma the largest subset at 2,352 images (40.4\%), meningioma at 1,645 images (28.2\%), and pituitary at 1,831 images (31.4\%). Representative samples of each tumour type are shown in Figure~\ref{fig:cls-samples}.
+For the more challenging multiclass classification task, in which the model must distinguish between glioma, meningioma, and pituitary tumours, we combined two further publicly available brain tumour MRI datasets. Dataset~1, Bhuvaji et al., \textit{Brain Tumor Classification (MRI)} \cite{ds3}, provides all images in JPEG format at a consistent resolution of $224\times 224$ pixels. Dataset~2 is the brain tumour collection of Cheng et al. \cite{ds4}, described in the associated study \cite{ref5}, and was obtained in the JPEG conversion distributed on Kaggle \cite{ds5}. The combined dataset prior to deduplication consisted of 5,828 images, with glioma the largest subset at 2,352 images (40.4\%), meningioma at 1,645 images (28.2\%), and pituitary at 1,831 images (31.4\%). Representative samples of each tumour type are shown in Figure~\ref{fig:cls-samples}.
 
 The two collections differ substantially in their native image geometry, as summarised in Table~\ref{tab:image-dims} and illustrated in Figures~\ref{fig:binary-imgprops} and \ref{fig:cls-imgprops}. The binary detection images are heterogeneous, with widths ranging from 150 to 1,920 pixels and a standard deviation of 155 to 195 pixels about mean dimensions of roughly 300 to 400 pixels, reflecting the varied cropping and field of view of the two contributing sources. The multiclass images are far more uniform, with a median of $512\times 512$ pixels in every class and interquartile ranges that collapse to a single value, since the great majority of images were distributed at that resolution. This difference matters for interpretation: the multiclass task operates on a visually homogeneous collection, whereas the binary task requires the model to absorb considerably more variation in scale and framing. All images were resized to a common input resolution during preprocessing, so this heterogeneity affects the effective magnification of anatomy rather than the tensor shape presented to the network.
 
@@ -193,7 +228,7 @@ Task & Class & Images & Mean W & Mean H & SD W & Min W & Max W \\
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.86\linewidth]{figures/binary_class_distribution.png}
+\includegraphics[width=\linewidth]{figures/binary_class_distribution.png}
 \caption{Class distribution of the combined binary detection dataset, comprising 1,598 tumour-negative and 1,655 tumour-positive images.}
 \label{fig:binary-dist}
 \end{figure}
@@ -204,8 +239,6 @@ Task & Class & Images & Mean W & Mean H & SD W & Min W & Max W \\
 \caption{Sample MRI images by tumour type for the multiclass classification task, showing glioma, meningioma, and pituitary cases.}
 \label{fig:cls-samples}
 \end{figure}
-
-\FloatBarrier
 
 \subsection{Preprocessing and Deduplication}
 \label{sec:preproc}
@@ -264,8 +297,6 @@ All images were loaded using the Python Imaging Library and converted to the RGB
 \caption{Representative MRI images before and after the training-time augmentation pipeline, comprising random horizontal flipping, random rotation of up to $\pm 10$ degrees, and brightness and contrast jitter of up to 20\%.}
 \label{fig:augment}
 \end{figure}
-
-\FloatBarrier
 
 \subsection{Model Development}
 \label{sec:models}
@@ -485,8 +516,6 @@ VGG16 & No tumour & 240 & 86.45 & 90.42 & 86.29 & 88.39 \\
 \label{fig:binary-pred}
 \end{figure}
 
-\FloatBarrier
-
 \subsection{Multiclass Classification Results}
 \label{sec:multiclass-results}
 
@@ -611,8 +640,6 @@ The corresponding figures for EfficientNetB0 are provided alongside, since it is
 \label{fig:cls-pred}
 \end{figure}
 
-\FloatBarrier
-
 \subsection{Model Efficiency Comparison}
 \label{sec:efficiency}
 
@@ -696,8 +723,6 @@ Task & Model & ECE & MCC & Kappa \\
 \end{tabular*}
 \end{table}
 
-\FloatBarrier
-
 \subsection{Interpretability Results}
 \label{sec:interpretability}
 
@@ -748,8 +773,6 @@ This should be read as a qualitative observation rather than a quantitative inte
 \label{fig:cls-gradcam-mis}
 \end{figure}
 
-\FloatBarrier
-
 \subsection{Comparison with Existing Literature}
 \label{sec:comparison}
 
@@ -796,63 +819,65 @@ All datasets used in this study are publicly available and are cited in Section~
 
 \begin{thebibliography}{99}
 
-\bibitem{ref1} E. I. Zacharaki, S. Wang, S. Chawla, et al., ''Classification of brain tumor type and grade using MRI texture and shape in a machine learning scheme,'' Magnetic Resonance in Medicine, vol. 62, no. 6, pp. 1609-1618, 2009.
+\bibitem{ref1} E. I. Zacharaki, S. Wang, S. Chawla, et al., ``Classification of brain tumor type and grade using MRI texture and shape in a machine learning scheme,'' Magnetic Resonance in Medicine, vol. 62, no. 6, pp. 1609-1618, 2009.
 
-\bibitem{ref2} S. Bauer, R. Wiest, L. P. Nolte, and M. Reyes, ''A survey of MRI-based medical image analysis for brain tumor studies,'' Physics in Medicine and Biology, vol. 58, no. 13, pp. R97-R129, 2013.
+\bibitem{ref2} S. Bauer, R. Wiest, L. P. Nolte, and M. Reyes, ``A survey of MRI-based medical image analysis for brain tumor studies,'' Physics in Medicine and Biology, vol. 58, no. 13, pp. R97-R129, 2013.
 
-\bibitem{ref3} N. Gordillo, E. Montseny, and P. Sobrevilla, ''State of the art survey on MRI brain tumor segmentation,'' Magnetic Resonance Imaging, vol. 31, no. 8, pp. 1426-1438, 2013.
+\bibitem{ref3} N. Gordillo, E. Montseny, and P. Sobrevilla, ``State of the art survey on MRI brain tumor segmentation,'' Magnetic Resonance Imaging, vol. 31, no. 8, pp. 1426-1438, 2013.
 
-\bibitem{ref4} K. Simonyan and A. Zisserman, ''Very deep convolutional networks for large-scale image recognition,'' arXiv preprint arXiv:1409.1556, 2014.
+\bibitem{ref4} K. Simonyan and A. Zisserman, ``Very deep convolutional networks for large-scale image recognition,'' arXiv preprint arXiv:1409.1556, 2014.
 
-\bibitem{ref5} J. Cheng, W. Huang, S. Cao, et al., ''Enhanced performance of brain tumor classification via tumor region augmentation and partition,'' PLoS ONE, vol. 10, no. 10, p. e0140381, 2015.
+\bibitem{ref5} J. Cheng, W. Huang, S. Cao, et al., ``Enhanced performance of brain tumor classification via tumor region augmentation and partition,'' PLoS ONE, vol. 10, no. 10, p. e0140381, 2015.
 
-\bibitem{ref6} K. He, X. Zhang, S. Ren, and J. Sun, ''Deep residual learning for image recognition,'' in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), 2016, pp. 770-778.
+\bibitem{ref6} K. He, X. Zhang, S. Ren, and J. Sun, ``Deep residual learning for image recognition,'' in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), 2016, pp. 770-778.
 
-\bibitem{ref7} C. Szegedy, V. Vanhoucke, S. Ioffe, J. Shlens, and Z. Wojna, ''Rethinking the inception architecture for computer vision,'' in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), 2016, pp. 2818-2826.
+\bibitem{ref7} C. Szegedy, V. Vanhoucke, S. Ioffe, J. Shlens, and Z. Wojna, ``Rethinking the inception architecture for computer vision,'' in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), 2016, pp. 2818-2826.
 
-\bibitem{ref9} G. Huang, Z. Liu, L. Van Der Maaten, and K. Q. Weinberger, ''Densely connected convolutional networks,'' in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), 2017, pp. 4700-4708.
+\bibitem{ref9} G. Huang, Z. Liu, L. Van Der Maaten, and K. Q. Weinberger, ``Densely connected convolutional networks,'' in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), 2017, pp. 4700-4708.
 
-\bibitem{ref12} J. Seetha and S. S. Raja, ''Brain tumor classification using convolutional neural networks,'' Biomedical and Pharmacology Journal, vol. 11, no. 3, p. 1457, 2018.
+\bibitem{ref12} J. Seetha and S. S. Raja, ``Brain tumor classification using convolutional neural networks,'' Biomedical and Pharmacology Journal, vol. 11, no. 3, p. 1457, 2018.
 
-\bibitem{ref13} A. L. Beam and I. S. Kohane, ''Big data and machine learning in health care,'' JAMA, vol. 319, no. 13, pp. 1317-1318, 2018.
+\bibitem{ref13} A. L. Beam and I. S. Kohane, ``Big data and machine learning in health care,'' JAMA, vol. 319, no. 13, pp. 1317-1318, 2018.
 
-\bibitem{ref14} J. De Fauw, J. R. Ledsam, B. Romera-Paredes, et al., ''Clinically applicable deep learning for diagnosis and referral in retinal disease,'' Nature Medicine, vol. 24, no. 9, pp. 1342-1350, 2018.
+\bibitem{ref14} J. De Fauw, J. R. Ledsam, B. Romera-Paredes, et al., ``Clinically applicable deep learning for diagnosis and referral in retinal disease,'' Nature Medicine, vol. 24, no. 9, pp. 1342-1350, 2018.
 
-\bibitem{ref15} S. Deepak and P. M. Ameer, ''Brain tumor classification using deep CNN features via transfer learning,'' Computers in Biology and Medicine, vol. 111, p. 103345, 2019.
+\bibitem{ref15} S. Deepak and P. M. Ameer, ``Brain tumor classification using deep CNN features via transfer learning,'' Computers in Biology and Medicine, vol. 111, p. 103345, 2019.
 
-\bibitem{ref16} M. Talo, U. B. Baloglu, \"O. Y{\i}ld{\i}r{\i}m, and U. R. Acharya, ''Application of deep transfer learning for automated brain abnormality classification using MR images,'' Cognitive Systems Research, vol. 54, pp. 176-188, 2019.
+\bibitem{ref16} M. Talo, U. B. Baloglu, \"O. Y{\i}ld{\i}r{\i}m, and U. R. Acharya, ``Application of deep transfer learning for automated brain abnormality classification using MR images,'' Cognitive Systems Research, vol. 54, pp. 176-188, 2019.
 
-\bibitem{ref18} M. Tan and Q. Le, ''EfficientNet: Rethinking model scaling for convolutional neural networks,'' in Proc. Int. Conf. Mach. Learn. (ICML), 2019, pp. 6105-6114.
+\bibitem{ref18} M. Tan and Q. Le, ``EfficientNet: Rethinking model scaling for convolutional neural networks,'' in Proc. Int. Conf. Mach. Learn. (ICML), 2019, pp. 6105-6114.
 
-\bibitem{ref19} A. Howard, M. Sandler, G. Chu, et al., ''Searching for MobileNetV3,'' in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV), 2019, pp. 1314-1324.
+\bibitem{ref19} A. Howard, M. Sandler, G. Chu, et al., ``Searching for MobileNetV3,'' in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV), 2019, pp. 1314-1324.
 
-\bibitem{ref20} J. S. Bauer, ''Interobserver variability in the radiological assessment of brain tumors,'' Journal of Neuro-Oncology, vol. 145, no. 2, pp. 231-240, 2019.
+\bibitem{ref20} J. S. Bauer, ``Interobserver variability in the radiological assessment of brain tumors,'' Journal of Neuro-Oncology, vol. 145, no. 2, pp. 231-240, 2019.
 
-\bibitem{ref21} M. S. Patel and J. K. Singh, ''Challenges in brain tumor diagnosis in resource-limited settings,'' The Lancet Neurology, vol. 18, no. 4, pp. 334-335, 2019.
+\bibitem{ref21} M. S. Patel and J. K. Singh, ``Challenges in brain tumor diagnosis in resource-limited settings,'' The Lancet Neurology, vol. 18, no. 4, pp. 334-335, 2019.
 
-\bibitem{ref23} M. A. Khan, I. Ashraf, M. Alhaisoni, et al., ''Multimodal brain tumor classification using deep learning and robust feature selection: A machine learning application for radiologists,'' Diagnostics, vol. 10, no. 8, p. 565, 2020.
+\bibitem{ref23} M. A. Khan, I. Ashraf, M. Alhaisoni, et al., ``Multimodal brain tumor classification using deep learning and robust feature selection: A machine learning application for radiologists,'' Diagnostics, vol. 10, no. 8, p. 565, 2020.
 
-\bibitem{ref24} N. Noreen, S. Palaniappan, A. Qayyum, I. Ahmad, M. Imran, and M. Shoaib, ''A deep learning model based on concatenation approach for the diagnosis of brain tumor,'' IEEE Access, vol. 8, pp. 55135-55144, 2020.
+\bibitem{ref24} N. Noreen, S. Palaniappan, A. Qayyum, I. Ahmad, M. Imran, and M. Shoaib, ``A deep learning model based on concatenation approach for the diagnosis of brain tumor,'' IEEE Access, vol. 8, pp. 55135-55144, 2020.
 
-\bibitem{ref25} A. Rehman, S. Naz, M. I. Razzak, F. Akram, and M. Imran, ''A deep learning-based framework for automatic brain tumors classification using transfer learning,'' Circuits, Systems, and Signal Processing, vol. 39, no. 2, pp. 757-775, 2020.
+\bibitem{ref25} A. Rehman, S. Naz, M. I. Razzak, F. Akram, and M. Imran, ``A deep learning-based framework for automatic brain tumors classification using transfer learning,'' Circuits, Systems, and Signal Processing, vol. 39, no. 2, pp. 757-775, 2020.
 
-\bibitem{ref26} N. Ghassemi, A. Shoeibi, and M. Rouhani, ''Deep neural network with generative adversarial networks pre-training for brain tumor classification based on MR images,'' Biomedical Signal Processing and Control, vol. 57, p. 101678, 2020.
+\bibitem{ref26} N. Ghassemi, A. Shoeibi, and M. Rouhani, ``Deep neural network with generative adversarial networks pre-training for brain tumor classification based on MR images,'' Biomedical Signal Processing and Control, vol. 57, p. 101678, 2020.
 
-\bibitem{ref28} A. Dosovitskiy, L. Beyer, A. Kolesnikov, et al., ''An image is worth 16x16 words: Transformers for image recognition at scale,'' in Proc. Int. Conf. Learn. Represent. (ICLR), 2021.
+\bibitem{ref28} A. Dosovitskiy, L. Beyer, A. Kolesnikov, et al., ``An image is worth 16x16 words: Transformers for image recognition at scale,'' in Proc. Int. Conf. Learn. Represent. (ICLR), 2021.
 
-\bibitem{ref29} Z. Liu, Y. Lin, Y. Cao, et al., ''Swin transformer: Hierarchical vision transformer using shifted windows,'' in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV), 2021, pp. 10012-10022.
+\bibitem{ref29} Z. Liu, Y. Lin, Y. Cao, et al., ``Swin transformer: Hierarchical vision transformer using shifted windows,'' in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV), 2021, pp. 10012-10022.
 
-\bibitem{ref30} W. Xu, Y. Xu, T. Chang, and Z. Tu, ''Co-scale conv-attentional image transformers,'' in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV), 2021, pp. 9981-9990.
+\bibitem{ref30} W. Xu, Y. Xu, T. Chang, and Z. Tu, ``Co-scale conv-attentional image transformers,'' in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV), 2021, pp. 9981-9990.
 
-\bibitem{ref32} S. Khan, M. Naseer, M. Hayat, S. W. Zamir, F. S. Khan, and M. Shah, ''Transformers in vision: A survey,'' ACM Computing Surveys, vol. 54, no. 10s, pp. 1-41, 2022.
+\bibitem{ref32} S. Khan, M. Naseer, M. Hayat, S. W. Zamir, F. S. Khan, and M. Shah, ``Transformers in vision: A survey,'' ACM Computing Surveys, vol. 54, no. 10s, pp. 1-41, 2022.
 
-\bibitem{ds1} N. Chakrabarty, ''Brain MRI images for brain tumor detection,'' Kaggle dataset, 2019. [Online]. Available: \url{https://www.kaggle.com/datasets/navoneel/brain-mri-images-for-brain-tumor-detection}
+\bibitem{ds1} N. Chakrabarty, ``Brain MRI images for brain tumor detection,'' Kaggle dataset, version 1, 2019. [Online]. Available: \url{https://www.kaggle.com/datasets/navoneel/brain-mri-images-for-brain-tumor-detection}
 
-\bibitem{ds2} A. Hamada, ''Br35H: Brain tumor detection 2020,'' Kaggle dataset, 2020. [Online]. Available: \url{https://www.kaggle.com/datasets/ahmedhamada0/brain-tumor-detection}
+\bibitem{ds2} A. Hamada, ``Br35H :: Brain tumor detection 2020,'' IEEE DataPort, 2025, doi: \url{https://doi.org/10.21227/tbkk-q937}. Also available on Kaggle: \url{https://www.kaggle.com/datasets/ahmedhamada0/brain-tumor-detection}
 
-\bibitem{ds3} S. Bhuvaji, A. Kadam, P. Bhumkar, S. Dedge, and S. Kanchan, ''Brain tumor classification (MRI),'' Kaggle dataset, 2020. [Online]. Available: \url{https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri}
+\bibitem{ds3} S. Bhuvaji, A. Kadam, P. Bhumkar, S. Dedge, and S. Kanchan, ``Brain tumor classification (MRI),'' Kaggle dataset, 2020, doi: \url{https://doi.org/10.34740/KAGGLE/DSV/1183165}
 
-\bibitem{ds4} J. Cheng, ''Brain tumor dataset,'' figshare, 2017. [Online]. Available: \url{https://doi.org/10.6084/m9.figshare.1512427.v5}
+\bibitem{ds4} J. Cheng, ``Brain tumor dataset,'' figshare, version 5, 2017, doi: \url{https://doi.org/10.6084/m9.figshare.1512427.v5}
+
+\bibitem{ds5} MoundirB, ``Jun Cheng brain tumor MRI dataset JPG,'' Kaggle dataset, version 1, 2025. JPEG conversion of \cite{ds4}. [Online]. Available: \url{https://www.kaggle.com/datasets/moundir8/jun-cheng-brain-tumor-mri-dataset-jpg}
 
 \end{thebibliography}
 
@@ -868,7 +893,7 @@ All datasets used in this study are publicly available and are cited in Section~
 
 Table~\ref{tab:complete-binary-results} reports the training and validation metrics at the best epoch for each model on the binary detection task, where the best epoch is the one giving the highest validation AUC. These are validation-split figures; the corresponding test-split results are given in Table~\ref{tab:binary-results}. Figure~\ref{fig:binary-split} shows the resulting stratified split distribution and Figure~\ref{fig:binary-imgprops} the native image properties of this dataset.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Binary detection training and validation metrics at the best epoch, selected by validation AUC.}
 \label{tab:complete-binary-results}
@@ -890,14 +915,14 @@ VGG16 & 10 & 0.2590 & 0.8872 & 0.9603 & 0.2421 & 0.8975 & 0.9687 \\
 \end{tabular*}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.86\linewidth]{figures/binary_split.png}
+\includegraphics[width=\linewidth]{figures/binary_split.png}
 \caption{Stratified training, validation, and test split distribution for the binary detection dataset.}
 \label{fig:binary-split}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/binary_image_properties.png}
 \caption{Native image dimension and intensity distributions for the binary detection dataset, showing the wide variation in resolution and field of view across the two contributing sources. Summary statistics are given in Table~\ref{tab:image-dims}.}
@@ -914,7 +939,7 @@ VGG16 & 10 & 0.2590 & 0.8872 & 0.9603 & 0.2421 & 0.8975 & 0.9687 \\
 
 Table~\ref{tab:complete-multiclass-results} reports the training and validation metrics at the checkpointed epoch for each model on the multiclass task, where that epoch is the one giving the highest validation macro one-versus-rest AUC. Because this metric saturates near 0.997, it distinguishes only weakly between late epochs, and for several models validation accuracy continued to rise after the checkpointed epoch; Swin-Base, for example, is checkpointed at epoch 7 with a validation accuracy of 97.31\%, although its validation accuracy reaches 98.16\% at epochs 9 and 10. These are validation-split figures; the corresponding test-split results are given in Table~\ref{tab:multiclass-results}. Figure~\ref{fig:cls-dist} shows the post-deduplication class distribution, Figure~\ref{fig:cls-split} the resulting stratified split distribution, and Figure~\ref{fig:cls-imgprops} the native image properties of this dataset.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Multiclass classification training and validation metrics at the checkpointed epoch, selected by validation macro one-versus-rest AUC.}
 \label{tab:complete-multiclass-results}
@@ -933,21 +958,21 @@ ViT-B/16 & 10 & 0.3040 & 0.8808 & 0.9712 & 0.3419 & 0.8810 & 0.9689 \\
 \end{tabular*}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.86\linewidth]{figures/cls_class_distribution.png}
+\includegraphics[width=\linewidth]{figures/cls_class_distribution.png}
 \caption{Class distribution of the combined multiclass dataset \emph{before} deduplication, covering all 5,828 images. The exploratory characterisation cells run on the raw pool; the post-deduplication counts used for training are given in Figure~\ref{fig:dedup}.}
 \label{fig:cls-dist}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.86\linewidth]{figures/cls_split.png}
+\includegraphics[width=\linewidth]{figures/cls_split.png}
 \caption{Stratified training, validation, and test split distribution for the multiclass classification dataset.}
 \label{fig:cls-split}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/cls_image_properties.png}
 \caption{Native image dimension and intensity distributions for the multiclass classification dataset before deduplication, which is markedly more homogeneous than the binary collection, with a median resolution of $512\times 512$ pixels in every class. Summary statistics are given in Table~\ref{tab:image-dims}.}
