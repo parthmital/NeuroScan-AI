@@ -1,11 +1,12 @@
-import { useState, useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Upload, FileImage, X, CheckCircle2, AlertCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2, FileImage, Upload, X } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useUploadScan } from "@/hooks/use-scans";
 import type { Modality } from "@/lib/types";
-import { useAuth } from "@/components/auth/AuthContext";
 
 interface UploadedFile {
 	id: string;
@@ -17,9 +18,22 @@ interface UploadedFile {
 }
 
 const MODALITIES: Modality[] = ["FLAIR", "T1", "T1CE", "T2"];
+const ACCEPTED = /\.nii(\.gz)?$/i;
+
+/** Same file-name rules the server uses to assign modalities. */
+const detectModality = (filename: string): Modality | undefined => {
+	const upper = filename.toUpperCase();
+	if (upper.includes("FLAIR")) return "FLAIR";
+	if (upper.includes("T1CE") || upper.includes("T1C")) return "T1CE";
+	if (upper.includes("T2")) return "T2";
+	if (upper.includes("T1")) return "T1";
+	return undefined;
+};
 
 export const DropZone = () => {
 	const navigate = useNavigate();
+	const fileInputRef = useRef<HTMLInputElement>(null);
+	const uploadScan = useUploadScan();
 	const [isDragging, setIsDragging] = useState(false);
 	const [files, setFiles] = useState<UploadedFile[]>([]);
 	const [selectedModalities, setSelectedModalities] = useState<Set<Modality>>(
@@ -36,25 +50,24 @@ export const DropZone = () => {
 	}, []);
 
 	const addFiles = useCallback((newFiles: File[]) => {
-		const uploadFiles: UploadedFile[] = newFiles.map((f) => ({
-			id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-			name: f.name,
-			size: f.size,
-			modality: detectModality(f.name),
-			status: "ready" as const,
-			file: f,
-		}));
+		const rejected = newFiles.filter((f) => !ACCEPTED.test(f.name));
+		if (rejected.length > 0) {
+			toast.error(
+				`Only NIfTI files (.nii, .nii.gz) are supported: ${rejected.map((f) => f.name).join(", ")}`,
+			);
+		}
+		const uploadFiles: UploadedFile[] = newFiles
+			.filter((f) => ACCEPTED.test(f.name))
+			.map((f) => ({
+				id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+				name: f.name,
+				size: f.size,
+				modality: detectModality(f.name),
+				status: "ready" as const,
+				file: f,
+			}));
 		setFiles((prev) => [...prev, ...uploadFiles]);
 	}, []);
-
-	const detectModality = (filename: string): Modality | undefined => {
-		const upper = filename.toUpperCase();
-		if (upper.includes("FLAIR")) return "FLAIR";
-		if (upper.includes("T1CE") || upper.includes("T1C")) return "T1CE";
-		if (upper.includes("T1")) return "T1";
-		if (upper.includes("T2")) return "T2";
-		return undefined;
-	};
 
 	const handleDrop = useCallback(
 		(e: React.DragEvent) => {
@@ -71,6 +84,8 @@ export const DropZone = () => {
 			if (e.target.files) {
 				addFiles(Array.from(e.target.files));
 			}
+			// Allow choosing the same file again after removing it.
+			e.target.value = "";
 		},
 		[addFiles],
 	);
@@ -94,46 +109,26 @@ export const DropZone = () => {
 		return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 	};
 
-	const { token } = useAuth();
-
 	const [patientName, setPatientName] = useState("");
 	const [patientId, setPatientId] = useState("");
 
 	const handleStartProcessing = async () => {
 		if (files.length === 0) return;
-
 		setFiles((prev) => prev.map((f) => ({ ...f, status: "processing" })));
-
-		const formData = new FormData();
-		files.forEach((f) => {
-			formData.append("files", f.file);
-		});
-		formData.append("patientName", patientName || "Uploaded Scan");
-		formData.append("patientId", patientId);
-
 		try {
-			const response = await fetch("http://localhost:8000/api/process-mri", {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-				body: formData,
+			const scan = await uploadScan.mutateAsync({
+				files: files.map((f) => f.file),
+				patientName: patientName.trim() || "Uploaded Scan",
+				patientId: patientId.trim(),
 			});
-
-			if (!response.ok) throw new Error("Processing failed");
-
-			const result = await response.json();
-			console.log("Processing result:", result);
-
 			setFiles((prev) => prev.map((f) => ({ ...f, status: "done" })));
-
-			// Navigate to ScanDetail with the real data
-			setTimeout(() => {
-				navigate(`/scan/${result.id}`, { state: { scanResult: result } });
-			}, 500);
+			toast.success("Upload complete. Processing has started.");
+			navigate(`/scan/${scan.id}`);
 		} catch (error) {
-			console.error("Upload error:", error);
 			setFiles((prev) => prev.map((f) => ({ ...f, status: "error" })));
+			toast.error(
+				error instanceof Error ? error.message : "Upload failed. Try again.",
+			);
 		}
 	};
 
@@ -154,13 +149,22 @@ export const DropZone = () => {
 						? "scale-[1.01] border-medical bg-medical-light/50"
 						: "border-border hover:border-medical/40 hover:bg-muted/30",
 				)}
-				onClick={() => document.getElementById("file-input")?.click()}
+				onClick={() => fileInputRef.current?.click()}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						fileInputRef.current?.click();
+					}
+				}}
+				role="button"
+				tabIndex={0}
+				aria-label="Choose MRI files to upload"
 			>
 				<input
-					id="file-input"
+					ref={fileInputRef}
 					type="file"
 					multiple
-					accept=".nii,.nii.gz,.dcm,.dicom"
+					accept=".nii,.gz"
 					className="hidden"
 					onChange={handleFileInput}
 				/>
@@ -178,8 +182,7 @@ export const DropZone = () => {
 					Drop your MRI files here
 				</h3>
 				<p className="mb-3 text-sm text-muted-foreground">
-					or click to browse. Supports NIfTI (.nii, .nii.gz) and DICOM (.dcm)
-					formats.
+					or click to browse. Supports NIfTI volumes (.nii, .nii.gz).
 				</p>
 				<p className="text-xs text-muted-foreground/70">
 					Batch upload supported · Multi-modal MRI (FLAIR, T1, T1CE, T2)
@@ -190,10 +193,15 @@ export const DropZone = () => {
 			{files.length > 0 && (
 				<div className="grid grid-cols-1 gap-4 rounded-2xl border border-border bg-muted/30 p-5 sm:grid-cols-2">
 					<div className="space-y-2">
-						<label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+						<label
+							htmlFor="patient-name"
+							className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+						>
 							Patient Name
 						</label>
 						<Input
+							id="patient-name"
+							maxLength={120}
 							placeholder="e.g. John Doe"
 							value={patientName}
 							onChange={(e) => setPatientName(e.target.value)}
@@ -201,10 +209,15 @@ export const DropZone = () => {
 						/>
 					</div>
 					<div className="space-y-2">
-						<label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+						<label
+							htmlFor="patient-id"
+							className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+						>
 							Patient ID (Optional)
 						</label>
 						<Input
+							id="patient-id"
+							maxLength={64}
 							placeholder="e.g. PT-10492"
 							value={patientId}
 							onChange={(e) => setPatientId(e.target.value)}
@@ -216,14 +229,15 @@ export const DropZone = () => {
 
 			{/* Modality selector */}
 			<div>
-				<label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+				<p className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 					Expected Modalities
-				</label>
+				</p>
 				<div className="flex gap-2">
 					{MODALITIES.map((mod) => (
 						<button
 							key={mod}
 							onClick={() => toggleModality(mod)}
+							aria-pressed={selectedModalities.has(mod)}
 							className={cn(
 								"rounded-lg px-4 py-2 text-sm font-medium transition-all",
 								selectedModalities.has(mod)
@@ -258,9 +272,9 @@ export const DropZone = () => {
 			{files.length > 0 && (
 				<div className="space-y-2">
 					<div className="flex items-center justify-between">
-						<label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+						<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 							Uploaded Files ({files.length})
-						</label>
+						</p>
 						<Button
 							variant="ghost"
 							size="sm"
@@ -293,9 +307,16 @@ export const DropZone = () => {
 								{file.status === "done" && (
 									<CheckCircle2 className="h-4 w-4 text-success" />
 								)}
+								{file.status === "error" && (
+									<AlertCircle
+										className="h-4 w-4 text-destructive"
+										aria-label="Upload failed"
+									/>
+								)}
 								<button
 									onClick={() => removeFile(file.id)}
-									className="rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:text-foreground group-hover:opacity-100"
+									aria-label={`Remove ${file.name}`}
+									className="rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100"
 								>
 									<X className="h-3.5 w-3.5" />
 								</button>

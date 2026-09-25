@@ -1,0 +1,9 @@
+# Development and CI tooling: tests, lint/format, types, architecture contracts, security audits.
+-r requirements.txt
+bandit==1.9.4
+httpx==0.28.1
+import-linter==2.15
+mypy==2.3.1
+pip-audit==2.10.1
+pytest==9.1.1
+ruff==0.16.9

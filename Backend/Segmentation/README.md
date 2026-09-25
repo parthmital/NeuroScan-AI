@@ -6,16 +6,16 @@ All six models are written from scratch in plain PyTorch inside the notebooks (n
 
 ## At a glance
 
-| Item                      | Value                                                                                                                                  |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Task                      | Multi-label 3D segmentation: WT, TC and ET masks per voxel                                                                             |
-| Data                      | Kaggle dataset `awsaf49/brats20-dataset-training-validation`, 368 cases that have a `_seg.nii` file                                    |
-| Input                     | 4 x 128 x 128 x 128 (FLAIR, T1, T1CE, T2), resampled from the original volumes                                                         |
-| Split                     | Random 70/15/15 with seed 42: train 257, validation 55, test 56 cases                                                                  |
-| Training                  | 10 epochs, batch 4 (2 for Swin-UNETR), AMP, gradient clipping at 1.0, 2x Tesla T4                                                      |
-| Best test mean Dice       | 3D UNet, 0.7999                                                                                                                        |
-| Model used by the web app | VNet: `VNet.pth` in this folder, loaded by [`Backend/processor.py`](../processor.py). Test mean Dice of the VNet notebook run: 0.7655. |
-| Missing result            | Swin-UNETR has no test result: its test cell failed with a `state_dict` loading error                                                  |
+| Item                      | Value                                                                                                                                                                          |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Task                      | Multi-label 3D segmentation: WT, TC and ET masks per voxel                                                                                                                     |
+| Data                      | Kaggle dataset `awsaf49/brats20-dataset-training-validation`, 368 cases that have a `_seg.nii` file                                                                            |
+| Input                     | 4 x 128 x 128 x 128 (FLAIR, T1, T1CE, T2), resampled from the original volumes                                                                                                 |
+| Split                     | Random 70/15/15 with seed 42: train 257, validation 55, test 56 cases                                                                                                          |
+| Training                  | 10 epochs, batch 4 (2 for Swin-UNETR), AMP, gradient clipping at 1.0, 2x Tesla T4                                                                                              |
+| Best test mean Dice       | 3D UNet, 0.7999                                                                                                                                                                |
+| Model used by the web app | VNet: `VNet.pth` in this folder, loaded by [`Backend/neuroscan/inference/processor.py`](../neuroscan/inference/processor.py). Test mean Dice of the VNet notebook run: 0.7655. |
+| Missing result            | Swin-UNETR has no test result: its test cell failed with a `state_dict` loading error                                                                                          |
 
 ## Contents
 
@@ -48,7 +48,7 @@ Segmentation/
 
 Unlike Binary Detection and Classification, there are **no output folders** here. Metrics exist only as printed cell outputs, and the only figures are the three images saved inside `VNet-Visualisation.ipynb`. The notebooks save checkpoints (`best_model.pth`, `best_model_nnunet.pth`, `best_model_swinunetr.pth`, `best_model_transbts.pth`) to the Kaggle working directory; none of those files is in this repository.
 
-`VNet.pth` (5,617,589 bytes) is excluded by the root [`.gitignore`](../../.gitignore) rule `*.pth`, so a fresh clone does not contain it. It loads into the `VNet3D` class in `processor.py` without errors and has 1,398,761 parameters, the same count the VNet notebook prints. No notebook writes a file named `VNet.pth`, so which training run produced it is not recorded.
+`VNet.pth` (5,617,589 bytes) is excluded by the root [`.gitignore`](../../.gitignore) rule `*.pth`, so a fresh clone does not contain it. It loads into the `VNet3D` class in `neuroscan/inference/networks.py` without errors and has 1,398,761 parameters, the same count the VNet notebook prints. No notebook writes a file named `VNet.pth`, so which training run produced it is not recorded.
 
 ## Dataset and split
 
@@ -418,14 +418,14 @@ For Swin-UNETR, the test cell needs to load the checkpoint without stripping the
 
 ## Loading the deployed VNet
 
-The backend defines the same `VNet3D` in [`processor.py`](../processor.py), without gradient checkpointing, and loads `VNet.pth` from this folder at start-up. To use it directly:
+The backend defines the same `VNet3D` in [`networks.py`](../neuroscan/inference/networks.py), without gradient checkpointing, and loads `VNet.pth` from this folder at start-up. To use it directly:
 
 ```python
 import torch
-from processor import VNet3D  # run from the Backend folder
+from neuroscan.inference.networks import VNet3D  # run from the Backend folder
 
 model = VNet3D()
-state = torch.load("Segmentation/VNet.pth", map_location="cpu")
+state = torch.load("Segmentation/VNet.pth", map_location="cpu", weights_only=True)
 state = {k.replace("module.", ""): v for k, v in state.items()}
 model.load_state_dict(state)
 model.eval()

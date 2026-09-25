@@ -6,17 +6,17 @@ Every number in this README is read from the saved notebook outputs and the file
 
 ## At a glance
 
-| Item                      | Value                                                                                                                                                                  |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Task                      | Binary classification: `No Tumor` (label 0) vs `Tumor` (label 1)                                                                                                       |
-| Data                      | 3,253 JPG/PNG/TIF images from 2 Kaggle datasets, 1,598 No Tumor and 1,655 Tumor, **not deduplicated**                                                                  |
-| Split                     | Stratified 70/15/15 with seed 42: train 2,277, validation 488, test 488                                                                                                |
-| Recipe                    | 10 epochs, AdamW (lr 3e-4), cosine LR schedule, `BCEWithLogitsLoss` on one logit, AMP fp16, 2x Tesla T4                                                                |
-| Best test accuracy        | 0.9939 (3 of 488 wrong), shared by DenseNet121, ResNet50, EfficientNetB0 and CoAtNet-0                                                                                 |
-| Lowest test accuracy      | VGG16, 0.8832                                                                                                                                                          |
-| Only zero-miss models     | EfficientNetB0 and CoAtNet-0 (0 false negatives, 3 false positives each)                                                                                               |
-| Best probability quality  | DenseNet121: lowest test log loss (0.0189) and ECE (0.0044), ROC AUC 0.99998                                                                                           |
-| Model used by the web app | `EfficientNetB0.pth` in this folder, loaded by [`Backend/processor.py`](../processor.py). Its origin is not recorded (see [B4](#b-issues-that-affect-interpretation)). |
+| Item                      | Value                                                                                                                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Task                      | Binary classification: `No Tumor` (label 0) vs `Tumor` (label 1)                                                                                                                                               |
+| Data                      | 3,253 JPG/PNG/TIF images from 2 Kaggle datasets, 1,598 No Tumor and 1,655 Tumor, **not deduplicated**                                                                                                          |
+| Split                     | Stratified 70/15/15 with seed 42: train 2,277, validation 488, test 488                                                                                                                                        |
+| Recipe                    | 10 epochs, AdamW (lr 3e-4), cosine LR schedule, `BCEWithLogitsLoss` on one logit, AMP fp16, 2x Tesla T4                                                                                                        |
+| Best test accuracy        | 0.9939 (3 of 488 wrong), shared by DenseNet121, ResNet50, EfficientNetB0 and CoAtNet-0                                                                                                                         |
+| Lowest test accuracy      | VGG16, 0.8832                                                                                                                                                                                                  |
+| Only zero-miss models     | EfficientNetB0 and CoAtNet-0 (0 false negatives, 3 false positives each)                                                                                                                                       |
+| Best probability quality  | DenseNet121: lowest test log loss (0.0189) and ECE (0.0044), ROC AUC 0.99998                                                                                                                                   |
+| Model used by the web app | `EfficientNetB0.pth` in this folder, loaded by [`Backend/neuroscan/inference/processor.py`](../neuroscan/inference/processor.py). Its origin is not recorded (see [B4](#b-issues-that-affect-interpretation)). |
 
 Main caveats, detailed in [Anomalies and limitations](#anomalies-and-limitations):
 

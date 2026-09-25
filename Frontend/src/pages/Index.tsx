@@ -4,16 +4,15 @@ import { VolumeChart } from "@/components/dashboard/VolumeChart";
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useConfig } from "@/hooks/use-config";
+import { APP_CONFIG as config } from "@/lib/config";
 
-import { useAuth } from "@/components/auth/AuthContext";
+import { useAuth } from "@/components/auth/useAuth";
 
 const Index = () => {
 	const navigate = useNavigate();
-	const { data: config, isLoading: configLoading } = useConfig();
 	const { user } = useAuth();
 
-	if (configLoading || !config || !user) {
+	if (!user) {
 		return (
 			<div className="space-y-8">
 				<div className="h-20 w-1/3 rounded-xl bg-muted" />

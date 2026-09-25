@@ -1,68 +1,73 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "@/components/auth/AuthContext";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ArrowRight, BrainCircuit, Loader2, ShieldCheck } from "lucide-react";
+import { toast } from "sonner";
+import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
 	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
-	CardDescription,
-	CardContent,
-	CardFooter,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { BrainCircuit, Loader2, ArrowRight, ShieldCheck } from "lucide-react";
-import { toast } from "sonner";
+
+const inputClass = "border-border/50 bg-background/50 focus:border-medical/50";
+
+/** Only same-app paths are followed after login, never external URLs. */
+const safeRedirect = (state: unknown): string => {
+	const path = (state as { from?: { pathname?: string } } | null)?.from
+		?.pathname;
+	return path && path.startsWith("/") && !path.startsWith("//") ? path : "/";
+};
 
 const Login = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [otp, setOtp] = useState("");
+	const [needsOtp, setNeedsOtp] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const { login } = useAuth();
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		setError(null);
+		if (!username.trim() || !password) {
+			setError("Enter your username and password.");
+			return;
+		}
+		if (needsOtp && !/^\d{6}$/.test(otp)) {
+			setError("Enter the 6-digit code from your authenticator app.");
+			return;
+		}
 		setIsLoading(true);
-
 		try {
-			const formData = new URLSearchParams();
-			formData.append("username", username);
-			formData.append("password", password);
-
-			const response = await fetch("http://localhost:8000/api/auth/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded",
-				},
-				body: formData,
-			});
-
-			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.detail || "Login failed");
+			const result = await login(
+				username.trim(),
+				password,
+				needsOtp ? otp : undefined,
+			);
+			if (result.status === "otp-required") {
+				setNeedsOtp(true);
+				return;
 			}
-
-			const data = await response.json();
-			login(data.access_token, data.user);
-			toast.success("Welcome back, " + data.user.fullName);
-			navigate("/");
-		} catch (error: unknown) {
-			const errorMessage =
-				error instanceof Error ? error.message : "An unknown error occurred";
-			toast.error(errorMessage);
+			toast.success(`Welcome back, ${result.user.fullName}`);
+			navigate(safeRedirect(location.state), { replace: true });
+		} catch (err) {
+			setError(err instanceof Error ? err.message : "Sign-in failed.");
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
 	return (
-		<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background/50">
-			{/* Background Decorations */}
-			<div className="absolute right-[-10%] top-[-10%] h-[40%] w-[40%] rounded-full bg-medical/5 blur-[120px]" />
-			<div className="absolute bottom-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-blue-500/5 blur-[120px]" />
-
+		<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background/50 px-4">
 			<Card className="w-full max-w-md border-border/40 bg-card/50 shadow-2xl backdrop-blur-xl">
 				<CardHeader className="space-y-3 text-center">
 					<div className="mb-2 flex justify-center">
@@ -78,11 +83,7 @@ const Login = () => {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<form
-						onSubmit={handleSubmit}
-						className="space-y-5"
-						autoComplete="off"
-					>
+					<form onSubmit={handleSubmit} noValidate className="space-y-5">
 						<div className="space-y-2">
 							<Label htmlFor="username">Username</Label>
 							<Input
@@ -91,45 +92,76 @@ const Login = () => {
 								placeholder="drrebecca"
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
-								required
-								autoComplete="off"
+								autoComplete="username"
 								spellCheck={false}
-								className="border-border/50 bg-background/50 focus:border-medical/50"
+								disabled={needsOtp}
+								className={inputClass}
 							/>
 						</div>
 						<div className="space-y-2">
-							<div className="flex items-center justify-between">
-								<Label htmlFor="password">Password</Label>
-								<a href="#" className="text-xs text-medical hover:underline">
-									Forgot password?
-								</a>
-							</div>
+							<Label htmlFor="password">Password</Label>
 							<Input
 								id="password"
 								type="password"
-								placeholder="••••••••"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
-								required
-								autoComplete="new-password"
-								spellCheck={false}
-								className="border-border/50 bg-background/50 focus:border-medical/50"
+								autoComplete="current-password"
+								disabled={needsOtp}
+								className={inputClass}
 							/>
 						</div>
+						{needsOtp && (
+							<div className="space-y-2">
+								<Label htmlFor="otp">Authentication code</Label>
+								<Input
+									id="otp"
+									inputMode="numeric"
+									autoComplete="one-time-code"
+									maxLength={6}
+									placeholder="123456"
+									value={otp}
+									onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+									autoFocus
+									className={inputClass}
+								/>
+								<p className="text-xs text-muted-foreground">
+									Enter the 6-digit code from your authenticator app.
+								</p>
+							</div>
+						)}
+						{error && (
+							<p role="alert" className="text-sm text-destructive">
+								{error}
+							</p>
+						)}
 						<Button
 							type="submit"
 							className="h-11 w-full bg-medical text-base font-medium text-white shadow-lg shadow-medical/20 hover:bg-medical/90"
 							disabled={isLoading}
 						>
 							{isLoading ? (
-								<Loader2 className="h-5 w-5" />
+								<Loader2 className="h-5 w-5 animate-spin" />
 							) : (
 								<>
-									Sign In
+									{needsOtp ? "Verify and Sign In" : "Sign In"}
 									<ArrowRight className="ml-2 h-4 w-4" />
 								</>
 							)}
 						</Button>
+						{needsOtp && (
+							<Button
+								type="button"
+								variant="ghost"
+								className="w-full text-xs text-muted-foreground"
+								onClick={() => {
+									setNeedsOtp(false);
+									setOtp("");
+									setError(null);
+								}}
+							>
+								Use a different account
+							</Button>
+						)}
 					</form>
 				</CardContent>
 				<CardFooter className="flex flex-col space-y-4 pt-2">
@@ -142,9 +174,12 @@ const Login = () => {
 							Create an account
 						</Link>
 					</div>
-					<div className="flex w-full items-center justify-center space-x-2 border-t border-border/50 pt-4 text-[10px] uppercase tracking-widest text-muted-foreground">
-						<ShieldCheck className="h-3 w-3" />
-						<span>Secure Medical-Grade Authentication</span>
+					<div className="flex w-full items-center justify-center gap-2 border-t border-border/50 pt-4 text-xs text-muted-foreground">
+						<ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+						<span>
+							Forgot your password or lost your authenticator? Ask your
+							NeuroScan administrator to reset it.
+						</span>
 					</div>
 				</CardFooter>
 			</Card>

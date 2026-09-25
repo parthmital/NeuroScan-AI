@@ -31,16 +31,16 @@ No clinical validation is recorded in this repository. Treat every output as a r
 
 ## Quick start (Windows)
 
-These steps start the backend on port 8000 and the frontend on port 8080 on one Windows machine. Run every command from the repository root in PowerShell unless a step says otherwise.
+These steps start the backend on `127.0.0.1:8000` and the frontend on `localhost:8080` on one Windows machine. Run every command from the repository root in PowerShell unless a step says otherwise.
 
 ### Prerequisites
 
-| Tool    | Version                              | Why                                                                            |
-| ------- | ------------------------------------ | ------------------------------------------------------------------------------ |
-| Python  | 3.11 (the local `.venv` uses 3.11.9) | Runs the FastAPI backend and PyTorch                                           |
-| Node.js | 20.19 or newer, or 22.12 or newer    | Vite 7.3.1 declares `"node": "^20.19.0 \|\| >=22.12.0"` in its `engines` field |
-| npm     | Comes with Node.js                   | Installs frontend packages (`package-lock.json` is committed)                  |
-| Git     | Any recent version                   | Clones the repository                                                          |
+| Tool    | Version                                                        | Why                                                 |
+| ------- | -------------------------------------------------------------- | --------------------------------------------------- |
+| Python  | 3.11 (pinned in [`.python-version`](.python-version))          | Runs the FastAPI backend and PyTorch                |
+| Node.js | 22 or newer; CI uses 24 ([`Frontend/.nvmrc`](Frontend/.nvmrc)) | Vite 8 dev server and build                         |
+| npm     | Comes with Node.js                                             | Installs frontend packages from `package-lock.json` |
+| Git     | Any recent version                                             | Clones the repository                               |
 
 ### Steps
 
@@ -50,27 +50,23 @@ These steps start the backend on port 8000 and the frontend on port 8080 on one 
    python -m venv .venv
    ```
 
-   Expected result: a `.venv` folder appears. `start.ps1` refuses to run without it.
-
-2. **Install the backend dependencies.**
+2. **Install the backend dependencies** (all versions are pinned). Use `requirements-dev.txt` instead if you will run the tests and linters.
 
    ```powershell
    .\.venv\Scripts\pip install -r Backend\requirements.txt
    ```
 
-   Expected result: pip installs FastAPI, PyTorch, nibabel, OpenCV and the other packages. `requirements.txt` has no version pins, so pip installs the latest releases. The CPU build of PyTorch is enough; the backend falls back to CPU when CUDA is not available.
+   The CPU build of PyTorch is enough; the backend uses CUDA only when it is available.
 
-3. **Install the frontend dependencies.**
+3. **Install the frontend dependencies** from the lockfile.
 
    ```powershell
    cd Frontend
-   npm install
+   npm ci
    cd ..
    ```
 
-   Expected result: a `Frontend/node_modules` folder appears.
-
-4. **Place the three model weight files.** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. The backend expects exactly these paths:
+4. **Place the three model weight files.** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. Default paths (override with the variables in [Configuration](#configuration)):
 
    | File                                          | Size (bytes) | Used for         |
    | --------------------------------------------- | ------------ | ---------------- |
@@ -78,23 +74,17 @@ These steps start the backend on port 8000 and the frontend on port 8080 on one 
    | `Backend/Classification/EfficientNetB0.pth`   | 16,359,363   | Tumour type      |
    | `Backend/Segmentation/VNet.pth`               | 5,617,589    | 3D segmentation  |
 
-   No download location is recorded in the repository. Obtain the files from the project maintainer.
+   No download location is recorded in the repository. Obtain the files from the project maintainer. The backend loads them with `torch.load(weights_only=True)`, so a weights file cannot run code.
 
-5. **(Optional) Create a `.env` file** from the template. Without a `.env`, the backend allows all CORS origins and uses a built-in JWT secret, which is fine for local testing only. The template allows only `http://localhost:8080`, the Vite dev server (see [Configuration](#configuration)).
-
-   ```powershell
-   Copy-Item .env.example .env
-   ```
-
-6. **Start both services.**
+5. **Start both services.**
 
    ```powershell
    .\start.ps1
    ```
 
-   Expected result: the script prints the Node.js and Python versions, starts the backend and frontend as PowerShell background jobs, opens `http://localhost:8080` in the browser, and streams both logs with `[NeuroScan-Backend]` and `[NeuroScan-Frontend]` prefixes. Press `Ctrl+C` to stop both.
+   On first run the script writes a development `.env` with freshly generated `JWT_SECRET` and `DATA_ENCRYPTION_KEY` values (the file is Git-ignored). It then starts the backend and frontend as background jobs, opens `http://localhost:8080`, and streams both logs with `[NeuroScan-Backend]` and `[NeuroScan-Frontend]` prefixes. Press `Ctrl+C` to stop both.
 
-7. **Use the app.** Register an account at `http://localhost:8080/register`, then upload the four modality files of one case on the Upload page. The interactive API documentation is at `http://localhost:8000/docs`.
+6. **Use the app.** Register at `http://localhost:8080/register`, then upload the four modality files of one case on the Upload page. Processing runs in the background; the scan page updates itself until the results appear. In development mode the API documentation is at `http://127.0.0.1:8000/docs`.
 
 If something fails, see [Troubleshooting](#troubleshooting).
 
@@ -104,91 +94,92 @@ If something fails, see [Troubleshooting](#troubleshooting).
 
 ```mermaid
 flowchart LR
-    U[Browser] -->|HTTP, JWT bearer token| F[React SPA<br/>Vite dev server :8080]
-    F -->|fetch http://localhost:8000/api/...| B[FastAPI backend :8000]
-    B --> P[BrainProcessor<br/>processor.py]
+    U[Browser] -->|same origin, HttpOnly session cookie| F[Vite dev server or reverse proxy :8080]
+    F -->|/api proxied| B[FastAPI app<br/>neuroscan.api]
+    B --> Q[PipelineRunner<br/>one background worker]
+    Q --> P[BrainProcessor<br/>neuroscan.inference]
     P --> M1[EfficientNet-B0<br/>detection]
     P --> M2[EfficientNet-B0<br/>classification]
     P --> M3[VNet3D<br/>segmentation]
-    B --> DB[(SQLite<br/>Backend/neuroscan.db)]
-    B --> FS[Backend/uploads/scan-id/<br/>MRI files and segmentation.nii]
+    B --> DB[(SQLite + Alembic migrations)]
+    Q --> DB
+    B --> FS[uploads/scan-id/<br/>flair.nii ... segmentation.nii]
 ```
 
-At start-up, the backend creates the database tables and loads the three models from the paths above. If any model fails to load, the error is swallowed and the server still starts; uploads then fail with `503 AI models not loaded.`
+Module boundaries, dependency rules, and design decisions are in [`ARCHITECTURE.md`](ARCHITECTURE.md).
+
+At start-up the backend validates its configuration (it refuses to start with a missing or example secret), applies database migrations, loads the models, and re-queues any scan left unfinished by a previous run. If a model file is missing, the error is logged, `/api/ready` reports `models: false`, and uploads return `503`.
 
 ### What happens when a scan is uploaded
 
-`POST /api/process-mri` in [`Backend/main.py`](Backend/main.py) does the following:
+`POST /api/process-mri` ([`neuroscan/api/scans.py`](Backend/neuroscan/api/scans.py)):
 
-1. Creates `Backend/uploads/scan-<6 hex chars>/` and saves every uploaded file there under its original filename.
-2. Assigns each file to a modality from its filename, case-insensitively, in this order: contains `FLAIR` -> flair; contains `T1CE` or `T1C` -> t1ce; contains `T2` -> t2; contains `T1` -> t1. Files that match nothing are saved but ignored.
-3. Picks one representative file (flair first, then t1ce, t2, t1), takes the **middle slice** along the third axis, rescales it to 0-255 and converts it to a 3-channel image.
-4. **Detection:** crops the brain with an OpenCV threshold and contour, resizes to 224 x 224, applies ImageNet normalisation and runs the detection model. `sigmoid(output) > 0.5` means a tumour is present.
-5. **Classification:** runs the classification model on the same slice and takes the softmax argmax over `glioma`, `meningioma`, `pituitary`. The class is reported only if detection found a tumour; otherwise the result says `No Tumour Detected` with confidence `1 - P(tumour)`.
-6. **Segmentation** (only when all four modalities are present): z-scores each volume over non-zero voxels, resizes it to 128 x 128 x 128, runs VNet, thresholds each output channel at 0.5, and saves `segmentation.nii` resized back to the FLAIR volume's shape (label 1 = WT, 2 = TC, 3 = ET, later labels overwriting earlier ones).
-7. Stores a `Scan` row with the results and returns it.
+1. Assigns each file to a modality from its filename, case-insensitively, in this order: contains `FLAIR` -> flair; `T1CE` or `T1C` -> t1ce; `T2` -> t2; `T1` -> t1. A file that matches nothing, or a second file for the same modality, rejects the upload with `400`.
+2. Streams each file to `uploads/scan-<32 hex>/<modality>.nii` (or `.nii.gz` when the content is gzip). The client's filename is never used as a path. Each file is capped at `MAX_UPLOAD_FILE_MB`, and its NIfTI header must describe a 3D or 4D volume with sides up to 1024 and at most 32 Mi voxels; anything else is deleted and rejected.
+3. Creates the `Scan` row with status `queued`, returns it with `202`, and hands the job to the single background worker. When `MAX_PENDING_JOBS` are already waiting, the upload is kept as `failed` with a "server is busy" message so it can be retried later, and the request returns `503`.
+
+The worker ([`neuroscan/scans/pipeline.py`](Backend/neuroscan/scans/pipeline.py)) then updates `pipelineStep` and `progress` as it goes:
+
+4. Picks one representative file (flair first, then t1ce, t2, t1), takes the **middle axial slice** (the first frame of a 4D series), rescales it to 0-255 and converts it to a 3-channel image.
+5. **Detection:** crops the brain with an OpenCV threshold and contour, resizes to 224 x 224, applies ImageNet normalisation and runs the detection model. `sigmoid(output) > 0.5` means a tumour is present.
+6. **Classification:** runs the classification model on the same slice and takes the softmax argmax over `glioma`, `meningioma`, `pituitary`. The class is reported only if detection found a tumour; otherwise the result says `No Tumour Detected` with confidence `1 - P(tumour)`.
+7. **Segmentation** (only when all four modalities are present): z-scores each volume over non-zero voxels, resizes it to 128 x 128 x 128, runs VNet, thresholds each output channel at 0.5, and saves `segmentation.nii` resized back to the FLAIR volume's shape (label 1 = WT, 2 = TC, 3 = ET, later labels overwriting earlier ones). A segmentation failure is logged and leaves the volumes at `0.0`.
+8. Marks the scan `completed`. Any other failure marks it `failed` with a generic message; the details go only to the server log. Failed scans can be retried from the scan page.
+
+The refactored pipeline was checked against results the original code had stored for a BraTS 2020 case: detection, class, confidence, all three volumes, and the saved mask (voxel for voxel) are identical.
 
 The reported volumes (`wtVolume`, `tcVolume`, `etVolume`, `tumorVolume`) are the number of voxels above 0.5 in the 128^3 grid divided by 1,000. They are not scaled by the scan's voxel spacing, even though the frontend labels them as cubic centimetres.
 
 ### Frontend pages
 
-Routes are defined in [`Frontend/src/App.tsx`](Frontend/src/App.tsx). Everything except login and registration requires a token.
+Routes are defined in [`Frontend/src/App.tsx`](Frontend/src/App.tsx). Everything except login and registration requires a session; signed-in pages are loaded on demand.
 
-| Route                 | Page                        | Purpose                                                                        |
-| --------------------- | --------------------------- | ------------------------------------------------------------------------------ |
-| `/login`, `/register` | `Login.tsx`, `Register.tsx` | Sign in or create an account                                                   |
-| `/`                   | `Index.tsx`                 | Dashboard: stats cards, recent scans, tumour volume chart                      |
-| `/upload`             | `Upload.tsx`                | Drag-and-drop upload and processing                                            |
-| `/scans`              | `ScanLibrary.tsx`           | List, search, edit and delete scans                                            |
-| `/scan/:id`           | `ScanDetail.tsx`            | 2D slice viewer with overlay, 3D viewer (vtk.js), pipeline view and report tab |
-| `/reports`            | `Reports.tsx`               | List of completed scans                                                        |
-| `/settings`           | `Settings.tsx`              | Profile settings                                                               |
+| Route                 | Page                        | Purpose                                                                                          |
+| --------------------- | --------------------------- | ------------------------------------------------------------------------------------------------ |
+| `/login`, `/register` | `Login.tsx`, `Register.tsx` | Sign in (with a second step for the authenticator code when 2FA is on) or create an account      |
+| `/`                   | `Index.tsx`                 | Dashboard: stats cards, recent scans, tumour volume chart                                        |
+| `/upload`             | `Upload.tsx`                | Drag-and-drop NIfTI upload                                                                       |
+| `/scans`              | `ScanLibrary.tsx`           | List, search, edit and delete scans                                                              |
+| `/scan/:id`           | `ScanDetail.tsx`            | Live processing status, retry, 2D slice viewer with overlay, 3D viewer (vtk.js), PDF/CSV reports |
+| `/reports`            | `Reports.tsx`               | Completed scans with PDF and CSV downloads, and "Export All" as one CSV                          |
+| `/settings`           | `Settings.tsx`              | Profile, theme and overlay colours, password change, two-factor authentication                   |
 
 ## Technology stack
 
 ### Backend
 
-`Backend/requirements.txt` lists packages without versions. The "local version" column is what `pip list` reports in this repository's `.venv`, not a requirement.
+Pinned in [`Backend/requirements.txt`](Backend/requirements.txt) (runtime) and [`Backend/requirements-dev.txt`](Backend/requirements-dev.txt) (tooling).
 
-| Package                | Local version | Role in this project                                                 |
-| ---------------------- | ------------- | -------------------------------------------------------------------- |
-| FastAPI                | 0.141.1       | HTTP API, request parsing, dependency injection and the `/docs` page |
-| Uvicorn                | 0.53.0        | ASGI server that runs `main:app`                                     |
-| SQLModel               | 0.0.42        | Table models (`User`, `Scan`) and sessions on SQLite                 |
-| Pydantic               | 2.13.5        | Request and response validation (through FastAPI and SQLModel)       |
-| python-jose            | 3.5.0         | Creates and verifies HS256 JWT access tokens                         |
-| bcrypt                 | 5.0.0         | Password hashing                                                     |
-| python-multipart       | not checked   | Parses multipart uploads and the login form                          |
-| python-dotenv          | not checked   | Loads `.env`                                                         |
-| PyTorch                | 2.14.0        | Runs the three models; uses CUDA when available, otherwise CPU       |
-| torchvision            | 0.29.0        | EfficientNet-B0 architecture and image transforms                    |
-| nibabel                | 5.4.2         | Reads and writes NIfTI files                                         |
-| opencv-python-headless | not checked   | Brain cropping, slice rotation, JPEG and PNG encoding                |
-| NumPy                  | 2.4.6         | Array handling                                                       |
-| Pillow                 | not checked   | Converts slices for torchvision transforms                           |
-| scikit-image, black    | not checked   | Listed in `requirements.txt` but not imported by the backend code    |
+| Package                                              | Version                    | Role in this project                                                                |
+| ---------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------- |
+| FastAPI, Starlette, Uvicorn                          | 0.141.1, 1.6.0, 0.53.0     | HTTP API, middleware, ASGI server                                                   |
+| SQLModel, SQLAlchemy                                 | 0.0.42, 2.0.54             | Tables (`User`, `Scan`) and sessions                                                |
+| Alembic                                              | 1.20.0                     | Versioned schema migrations, applied at start-up                                    |
+| Pydantic, email-validator                            | 2.13.5, 2.3.0              | Request validation and settings                                                     |
+| PyJWT                                                | 2.15.0                     | HS256 session tokens (replaces `python-jose`, which pulled in a vulnerable `ecdsa`) |
+| bcrypt                                               | 5.0.0                      | Password hashing (cost 12)                                                          |
+| PyOTP, qrcode, cryptography                          | 2.10.0, 8.2, 50.0.1        | TOTP two-factor auth, enrolment QR code, Fernet encryption of TOTP secrets          |
+| reportlab                                            | 5.0.1                      | PDF reports                                                                         |
+| PyTorch, torchvision                                 | 2.14.0, 0.29.0             | The three models                                                                    |
+| nibabel, NumPy, OpenCV, Pillow                       | see file                   | NIfTI I/O, arrays, cropping and image encoding                                      |
+| pytest, ruff, mypy, import-linter, bandit, pip-audit | see `requirements-dev.txt` | Tests, lint and format, strict types, architecture contracts, security checks       |
 
 ### Frontend
 
-Versions are the ranges in [`Frontend/package.json`](Frontend/package.json).
+Ranges from [`Frontend/package.json`](Frontend/package.json); exact versions are in `package-lock.json`.
 
-| Package                                                             | Version range      | Role                                               |
-| ------------------------------------------------------------------- | ------------------ | -------------------------------------------------- |
-| React, React DOM                                                    | ^18.3.1            | UI                                                 |
-| TypeScript                                                          | ^5.6.0             | Type checking                                      |
-| Vite with `@vitejs/plugin-react-swc`                                | ^7.3.1             | Dev server on port 8080 and production build       |
-| vite-plugin-glsl                                                    | ^1.5.5             | Loads the `.glsl` shaders that vtk.js imports      |
-| React Router DOM                                                    | ^6.30.1            | Client-side routing                                |
-| TanStack React Query                                                | ^5.83.0            | Fetches and caches the scan list                   |
-| Tailwind CSS, tailwindcss-animate                                   | ^3.4.17, ^1.0.7    | Styling                                            |
-| Radix UI primitives, class-variance-authority, clsx, tailwind-merge | see `package.json` | shadcn/ui-style components in `src/components/ui/` |
-| @kitware/vtk.js                                                     | ^35.2.0            | 3D volume rendering                                |
-| nifti-reader-js                                                     | ^0.8.0             | Parses NIfTI files downloaded for the 3D viewer    |
-| Recharts                                                            | ^2.15.4            | Dashboard volume chart                             |
-| sonner                                                              | ^1.7.4             | Toast notifications                                |
-| lucide-react                                                        | ^0.462.0           | Icons                                              |
-| Vitest, Testing Library, jsdom                                      | ^3.2.4             | Test runner                                        |
-| ESLint with typescript-eslint                                       | ^9.32.0            | Linting                                            |
+| Package                                                 | Version range   | Role                                                      |
+| ------------------------------------------------------- | --------------- | --------------------------------------------------------- |
+| React, React DOM                                        | ^18.3.1         | UI                                                        |
+| TypeScript (strict mode)                                | ^5.6.0          | Type checking                                             |
+| Vite with `@vitejs/plugin-react-swc`                    | ^8.3.1          | Dev server with `/api` proxy, production build            |
+| vite-plugin-glsl                                        | ^1.6.1          | Loads the `.glsl` shaders that vtk.js imports             |
+| React Router DOM                                        | ^7.18.4         | Client-side routing                                       |
+| TanStack React Query                                    | ^5.83.0         | Scan queries, polling while processing, mutations         |
+| Tailwind CSS, Radix UI primitives                       | see file        | Styling and accessible components in `src/components/ui/` |
+| @kitware/vtk.js, nifti-reader-js                        | ^37.3.0, ^0.8.0 | 3D volume rendering                                       |
+| Recharts, sonner, lucide-react                          | see file        | Chart, toasts, icons                                      |
+| Vitest, Testing Library, jsdom, ESLint, Prettier, jscpd | see file        | Tests, lint, format, duplicate detection                  |
 
 ### Research notebooks
 
@@ -198,70 +189,78 @@ The notebooks run on Kaggle with 2x Tesla T4 GPUs. Binary Detection and Classifi
 
 ```text
 NeuroScan-AI/
-|-- README.md                 This file
-|-- .env.example              Template for the root .env file
+|-- README.md, ARCHITECTURE.md
+|-- .env.example              Every backend setting, with how to generate secrets
+|-- .github/                  CI workflow (SHA-pinned actions) and Dependabot
+|-- .pre-commit-config.yaml   gitleaks secret scan before each commit
 |-- start.ps1                 Starts backend and frontend together on Windows
 |-- Backend/
-|   |-- main.py               FastAPI app: auth, scan and upload routes, CORS, model loading
-|   |-- processor.py          BrainProcessor: preprocessing, detection, classification, VNet3D segmentation, slice rendering
-|   |-- models.py             SQLModel tables (User, Scan) and request schemas
-|   |-- database.py           SQLite engine and session dependency
-|   |-- requirements.txt      Backend Python packages (unpinned)
-|   |-- Binary Detection/     9 detection notebooks, their outputs, and the deployed EfficientNetB0.pth
-|   |-- Classification/       6 classification notebooks, their outputs, and the deployed EfficientNetB0.pth
-|   |-- Segmentation/         7 segmentation notebooks and the deployed VNet.pth
-|   |-- Materials/            LaTeX papers, report, review decks and build-latex.ps1
-|   |-- uploads/              Runtime: one folder per scan (Git-ignored)
-|   |-- Input/                Local sample BraTS files (Git-ignored)
-|   `-- neuroscan.db          Runtime SQLite database (Git-ignored)
+|   |-- main.py               ASGI entry point (uvicorn main:app)
+|   |-- neuroscan/            Application package (see ARCHITECTURE.md)
+|   |   |-- app.py            Application factory: middleware, routers, lifespan
+|   |   |-- config.py         Settings from the environment, validated at start-up
+|   |   |-- api/              Routers (auth, scans, health), dependencies, middleware
+|   |   |-- scans/            File storage, background pipeline, CSV/PDF exports
+|   |   |-- inference/        Networks, NIfTI handling, BrainProcessor
+|   |   |-- security/         Passwords, tokens, TOTP, rate limiting
+|   |   |-- migrations/       Alembic environment and versioned migrations
+|   |   `-- cli.py            Operator commands: reset password, unlock, disable 2FA
+|   |-- tests/                pytest suite (no model weights needed)
+|   |-- pyproject.toml        ruff, mypy, pytest and import-linter configuration
+|   |-- requirements*.txt     Pinned runtime and development dependencies
+|   |-- Binary Detection/, Classification/, Segmentation/   Notebooks, outputs, deployed weights
+|   `-- Materials/            LaTeX papers, report, review decks and build-latex.ps1
 `-- Frontend/
-    |-- package.json          npm scripts and dependencies
-    |-- vite.config.ts        Port 8080, GLSL plugin, @ alias to src/
-    |-- vitest.config.ts      jsdom test environment
+    |-- vite.config.ts        Port 8080, /api proxy, security headers for preview
     `-- src/
-        |-- App.tsx           Routes and the ProtectedRoute guard
+        |-- App.tsx           Routes, lazy loading, ProtectedRoute
         |-- pages/            Route pages listed above
-        |-- components/       auth, dashboard, layout, scan, upload, ui
-        |-- hooks/            use-data (scan query), use-config, use-toast
-        |-- lib/              api.ts, config.ts (UI text and navigation), types.ts, utils.ts, mock-data.ts (not imported)
-        `-- test/             Vitest setup and one example test
+        |-- components/       auth, dashboard, layout, scan, settings, upload, ui
+        |-- hooks/            use-scans, use-overlay-colors, use-report-download
+        |-- lib/              api.ts (the only HTTP client), types, formatting helpers
+        `-- test/             Vitest tests
 ```
+
+Runtime data (`Backend/neuroscan.db`, `Backend/uploads/`, `.env`) is Git-ignored.
 
 ## Configuration
 
-The backend calls `load_dotenv()`, which searches for a `.env` file starting in `Backend/` and moving up to parent folders, so a `.env` in the repository root is used. The frontend reads `VITE_API_URL` from `Frontend/.env`, because Vite loads env files from the `Frontend/` folder.
+The backend reads settings from the environment and from a `.env` file found by searching upward from `Backend/neuroscan/`, so a root `.env` is used. Invalid or insecure values stop start-up with a clear error. [`.env.example`](.env.example) documents every variable; the important ones:
 
-| Variable       | Used by                   | Required    | Default when unset                               | Purpose and format                                                                                                                       | Safe example                        |
-| -------------- | ------------------------- | ----------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `JWT_SECRET`   | `Backend/main.py`         | Recommended | `neuroscan-secret-key-change-this-in-production` | Secret used to sign HS256 tokens. Use a long random string and never commit it.                                                          | `replace-with-a-long-random-string` |
-| `CORS_ORIGINS` | `Backend/main.py`         | No          | `*` (all origins)                                | Comma-separated list of allowed browser origins, no spaces                                                                               | `http://localhost:8080`             |
-| `DATABASE_URL` | `Backend/database.py`     | No          | `sqlite:///<Backend folder>/neuroscan.db`        | SQLAlchemy URL. The engine sets `check_same_thread=False`, which is SQLite-specific.                                                     | `sqlite:///C:/path/to/neuroscan.db` |
-| `VITE_API_URL` | `Frontend/src/lib/api.ts` | No          | `http://localhost:8000/api`                      | API base URL baked into the frontend at build time. Only the functions in `api.ts` use it (see [Known limitations](#known-limitations)). | `http://localhost:8000/api`         |
+| Variable                                                               | Required | Default                            | Purpose                                                                                                     |
+| ---------------------------------------------------------------------- | -------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `JWT_SECRET`                                                           | Yes      | none                               | Signs session tokens. At least 32 characters; the example value is refused. Rotating it signs everyone out. |
+| `DATA_ENCRYPTION_KEY`                                                  | Yes      | none                               | Fernet key that encrypts TOTP secrets at rest. Rotating it invalidates 2FA enrolments.                      |
+| `ENVIRONMENT`                                                          | No       | `production`                       | `development` enables `/docs`; `production` disables it and sends HSTS.                                     |
+| `DATABASE_URL`                                                         | No       | `sqlite:///<Backend>/neuroscan.db` | SQLAlchemy URL                                                                                              |
+| `UPLOAD_DIR`                                                           | No       | `<Backend>/uploads`                | Scan file storage; keep it outside any web-served folder                                                    |
+| `DETECTION_WEIGHTS` etc.                                               | No       | paths in the Quick start           | Relative paths resolve against `Backend/`                                                                   |
+| `CORS_ORIGINS`                                                         | No       | empty (no CORS)                    | Only for a frontend on a different origin. `*` is refused because requests carry cookies.                   |
+| `COOKIE_SECURE`                                                        | No       | `true`                             | Browsers treat `localhost` as secure, so this works in development too                                      |
+| `ACCESS_TOKEN_EXPIRE_MINUTES`                                          | No       | `30`                               | Session lifetime                                                                                            |
+| `ALLOW_REGISTRATION`                                                   | No       | `true`                             | Set `false` once staff accounts exist                                                                       |
+| `MAX_UPLOAD_FILE_MB`, `MAX_PENDING_JOBS`, `AUTH_RATE_LIMIT_PER_MINUTE` | No       | `300`, `8`, `10`                   | Upload, queue and brute-force limits                                                                        |
 
-`.env.example` sets `CORS_ORIGINS=http://localhost:8080`. Add any other origin you open the frontend from, such as `http://localhost:4173` for `npm run preview`.
-
-Other fixed settings in code: token lifetime 30 minutes (`ACCESS_TOKEN_EXPIRE_MINUTES`), JWT algorithm HS256, backend port 8000, frontend dev port 8080, and model paths as listed in the [Quick start](#quick-start-windows).
+The frontend calls `/api` on its own origin. `VITE_API_URL` (in `Frontend/.env`) overrides that base URL at build time, and `VITE_DEV_API_TARGET` changes where the dev server proxies `/api` (default `http://127.0.0.1:8000`).
 
 ## Running the application
 
 ### Option 1: `start.ps1` (Windows)
 
-See [Quick start](#quick-start-windows). What the script does, from [`start.ps1`](start.ps1):
+See [Quick start](#quick-start-windows). The script:
 
-- Exits if `.venv` or `.venv\Scripts` is missing. It does not create the environment.
-- In the backend job, runs `python -c "import fastapi, uvicorn, torch, nibabel, sqlmodel"` and runs `pip install -r requirements.txt` if that import fails.
-- In the frontend job, runs `npm install` if `node_modules` is missing.
-- Starts `python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000` in `Backend/` and `npm run dev` in `Frontend/`.
-- Opens `http://localhost:8080` and prints combined, prefixed logs until `Ctrl+C`.
+- Exits if `.venv` is missing; creates a development `.env` with random secrets if there is none.
+- Installs Python requirements if the imports fail, and runs `npm ci` if `node_modules` is missing.
+- Starts `uvicorn main:app --reload --host 127.0.0.1 --port 8000` in `Backend/` and `npm run dev` in `Frontend/`.
 
 ### Option 2: two terminals
 
-Backend, from the repository root:
+Create a `.env` from `.env.example` first. Backend, from the repository root:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 cd Backend
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 Frontend, in a second terminal:
@@ -271,141 +270,100 @@ cd Frontend
 npm run dev
 ```
 
-On macOS or Linux, activate the environment with `source .venv/bin/activate` instead; the other commands are the same. `start.ps1` is Windows-only.
+On macOS or Linux, activate the environment with `source .venv/bin/activate`; the other commands are the same.
 
-### Production build of the frontend
+### Production deployment
+
+- Build the frontend with `npm run build` and serve `Frontend/dist/` and the API **from one HTTPS origin** through a reverse proxy (for example `/` to the static files and `/api` to Uvicorn), so the `SameSite=Strict` session cookie stays first-party and no CORS is needed.
+- Send the same security headers as `vite.config.ts` (`preview.headers`) from the proxy, including the Content-Security-Policy.
+- Run Uvicorn behind the proxy with `--proxy-headers --forwarded-allow-ips=<proxy address>` so rate limiting sees real client addresses.
+- Run **one** backend process. The pipeline queue and the per-IP rate limiter live in process memory, and SQLite suits a single writer. Scaling out needs a shared job queue and a server database first (see `ARCHITECTURE.md`).
+- Probe `GET /api/health` (liveness) and `GET /api/ready` (database and models).
+
+### Account recovery
+
+There is no email service, so forgotten passwords and lost authenticators are handled by an operator on the server, from `Backend/` with the virtual environment active:
 
 ```powershell
-cd Frontend
-npm run build
+python -m neuroscan.cli reset-password <username>   # prompts for the new password
+python -m neuroscan.cli unlock <username>           # clears a login lockout
+python -m neuroscan.cli disable-2fa <username>      # lost authenticator device
 ```
 
-Output goes to `Frontend/dist/`. `npm run preview` serves the built files locally.
+Each command signs the user out of all sessions.
 
 ## API reference
 
-All routes are in [`Backend/main.py`](Backend/main.py) under the `/api` prefix. FastAPI also serves generated documentation at `/docs` and `/openapi.json`.
+Routes live in [`Backend/neuroscan/api/`](Backend/neuroscan/api/) under `/api`. In development, generated documentation is at `/docs` and `/openapi.json`; both are off in production.
 
-**Authentication.** Protected routes accept a JWT in either the `Authorization: Bearer <token>` header or a `token` query parameter. Tokens are HS256, carry the username in `sub`, and expire after 30 minutes. A missing, invalid or expired token, or a token for a deleted user, returns `401 {"detail": "Could not validate credentials"}`. Scan routes return `404` when the scan does not exist and `403 {"detail": "Access denied"}` when it belongs to another user.
+**Sessions.** Register, login, password change and 2FA changes set an `HttpOnly`, `SameSite=Strict`, `Secure` cookie named `neuroscan_session` (path `/api`). The token is an HS256 JWT with issuer, audience, expiry and a per-user version; logout, password change and 2FA changes bump the version, which revokes every earlier token. Tokens are never returned in a response body and never accepted in a URL.
 
-| Method | Route                                           | Auth | Purpose                                     |
-| ------ | ----------------------------------------------- | ---- | ------------------------------------------- |
-| POST   | `/api/auth/register`                            | No   | Create an account and receive a token       |
-| POST   | `/api/auth/login`                               | No   | Exchange username and password for a token  |
-| GET    | `/api/auth/me`                                  | Yes  | Current user                                |
-| PUT    | `/api/auth/me`                                  | Yes  | Update profile fields                       |
-| GET    | `/api/scans`                                    | Yes  | List your scans, newest first               |
-| GET    | `/api/scans/{scan_id}`                          | Yes  | One scan                                    |
-| POST   | `/api/process-mri`                              | Yes  | Upload MRI files and run the pipeline       |
-| GET    | `/api/scans/{scan_id}/slice/{slice_idx}`        | Yes  | One MRI slice as JPEG                       |
-| GET    | `/api/scans/{scan_id}/segmentation/{slice_idx}` | Yes  | One segmentation slice as a coloured PNG    |
-| GET    | `/api/scans/{scan_id}/download/{key}`           | Yes  | Download a stored file                      |
-| PUT    | `/api/scans/{scan_id}`                          | Yes  | Rename the patient or change the patient ID |
-| DELETE | `/api/scans/{scan_id}`                          | Yes  | Delete a scan and its files                 |
+**CSRF.** Every `POST`, `PUT` and `DELETE` must send `X-Requested-With: NeuroScan`, or the API returns `403`.
 
-### POST /api/auth/register
+**Errors.** `401` when not signed in; scan routes return `404` both for missing scans and for other users' scans, so IDs cannot be probed. Validation errors return `422` without echoing submitted values. Unexpected errors return `500 {"detail": "Internal server error", "requestId": "..."}`; the same ID is in the `X-Request-ID` header and the JSON server log.
 
-JSON body (`UserCreate` in [`models.py`](Backend/models.py)). All fields are strings with no length or format checks in the backend.
+| Method | Route                                           | Purpose                                                                         |
+| ------ | ----------------------------------------------- | ------------------------------------------------------------------------------- | --- | ---- | ---------------------------- |
+| POST   | `/api/auth/register`                            | Create an account (`201`); `403` when registration is disabled                  |
+| POST   | `/api/auth/login`                               | JSON `username`, `password`, optional `otp`                                     |
+| POST   | `/api/auth/logout`                              | End the session and revoke all tokens (`204`)                                   |
+| GET    | `/api/auth/me`                                  | Current user                                                                    |
+| PUT    | `/api/auth/me`                                  | Update `fullName`, `email`, `title`, `department`, `institution`                |
+| POST   | `/api/auth/password`                            | `currentPassword`, `newPassword`                                                |
+| POST   | `/api/auth/2fa/setup`                           | `password`; returns `secret`, `otpauthUri`, `qrSvg`                             |
+| POST   | `/api/auth/2fa/enable`                          | `code` from the authenticator app                                               |
+| POST   | `/api/auth/2fa/disable`                         | `password` and `code`                                                           |
+| GET    | `/api/scans?limit=&offset=`                     | Your scans, newest first; `limit` 1-500 (default 100), total in `X-Total-Count` |
+| GET    | `/api/scans/export.csv`                         | All completed scans as CSV                                                      |
+| POST   | `/api/process-mri`                              | Upload and queue (`202`)                                                        |
+| GET    | `/api/scans/{scan_id}`                          | One scan (poll this for progress)                                               |
+| PUT    | `/api/scans/{scan_id}`                          | Change `patientName` or `patientId`                                             |
+| DELETE | `/api/scans/{scan_id}`                          | Delete the scan and its files                                                   |
+| POST   | `/api/scans/{scan_id}/retry`                    | Re-queue a failed scan (`202`); `409` otherwise                                 |
+| GET    | `/api/scans/{scan_id}/slice/{slice_idx}`        | Axial MRI slice as JPEG, `?modality=flair                                       | t1  | t1ce | t2`, header `X-Total-Slices` |
+| GET    | `/api/scans/{scan_id}/segmentation/{slice_idx}` | Segmentation slice as PNG                                                       |
+| GET    | `/api/scans/{scan_id}/download/{key}`           | `key` is `flair`, `t1`, `t1ce`, `t2` or `segmentation`                          |
+| GET    | `/api/scans/{scan_id}/report.pdf`               | PDF report (`409` until completed)                                              |
+| GET    | `/api/scans/{scan_id}/report.csv`               | CSV report (`409` until completed)                                              |
+| GET    | `/api/health`, `/api/ready`                     | Liveness; readiness of database and models (`503` when not ready)               |
 
-| Field                                | Required            |
-| ------------------------------------ | ------------------- |
-| `username`                           | Yes, must be unique |
-| `email`                              | Yes, must be unique |
-| `password`                           | Yes                 |
-| `fullName`                           | Yes                 |
-| `title`, `department`, `institution` | No                  |
+### Rules worth knowing
 
-Responses:
+- **Passwords:** 12 to 72 bytes (bcrypt's limit). Usernames: 3 to 32 of `A-Z a-z 0-9 _ . -`, unique regardless of case; emails are stored lower case and unique.
+- **Login protection:** 5 wrong passwords or codes lock the account for 15 minutes; the lock message is shown only to someone who then enters the right password. Login, registration, password and 2FA routes also allow `AUTH_RATE_LIMIT_PER_MINUTE` requests per client per minute (`429` beyond that).
+- **2FA codes** are standard 30-second TOTP codes with one step of clock drift allowed; a code cannot be used twice.
+- **Request size:** 1 MB for JSON routes; `MAX_UPLOAD_FILE_MB` x 4 plus 1 MB for uploads (`413` beyond).
+- **CSV exports** prefix cells that start with `=`, `+`, `-`, `@`, tab or carriage return with `'`, so spreadsheets never execute them.
 
-- `200` with `{"access_token": "...", "token_type": "bearer", "user": {"id", "username", "fullName", "email", "title"}}`.
-- `400 {"detail": "Username already registered"}`.
-- A duplicate email is not checked before insert, so it fails at the database unique constraint and returns `500`.
+### Scan object
 
-```powershell
-Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/auth/register -ContentType "application/json" `
-  -Body '{"username":"demo","email":"demo@example.com","password":"change-me","fullName":"Demo User"}'
-```
+| Field                      | Notes                                                                                                    |
+| -------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `id`                       | `scan-` followed by 32 hex characters (older scans have 6)                                               |
+| `patientId`, `patientName` | Given at upload or generated (`PT-<year>-<4 hex>`, `Uploaded Scan`)                                      |
+| `scanDate`, `createdAt`    | Upload date `YYYY-MM-DD`; UTC timestamp                                                                  |
+| `modalities`               | For example `["FLAIR", "T1", "T1CE", "T2"]`                                                              |
+| `status`                   | `queued`, `processing`, `completed` or `failed`                                                          |
+| `pipelineStep`, `progress` | `queued`, `detection`, `classification`, `segmentation`, `complete`; 0-100                               |
+| `results`                  | `detected`, `classification`, `confidence`, `tumorVolume`, `wtVolume`, `tcVolume`, `etVolume`, or `null` |
+| `hasSegmentation`          | Whether a segmentation mask exists                                                                       |
+| `errorMessage`             | User-facing reason when `failed`                                                                         |
 
-### POST /api/auth/login
-
-Form body (`application/x-www-form-urlencoded`) with `username` and `password`, as defined by `OAuth2PasswordRequestForm`.
-
-- `200` with the same shape as register.
-- `401 {"detail": "Incorrect username or password"}`.
-
-```powershell
-curl.exe -X POST http://localhost:8000/api/auth/login -d "username=demo&password=change-me"
-```
-
-### GET /api/auth/me and PUT /api/auth/me
-
-- `GET` returns the full `User` row: `id`, `username`, `email`, `hashed_password`, `fullName`, `title`, `department`, `institution`, `createdAt`. See [Security notes](#security-notes) about `hashed_password`.
-- `PUT` takes a JSON body with any of `fullName`, `email`, `title`, `department`, `institution`. Only fields that are present and not `null` are changed. Returns the updated `User`, or `400 {"detail": "Email already in use"}`.
-
-### GET /api/scans and GET /api/scans/{scan_id}
-
-Return `Scan` objects. Fields:
-
-| Field                                | Type                | Notes                                                                                                                                                                                                                                                        |
-| ------------------------------------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `id`                                 | string              | `scan-` followed by 6 hex characters                                                                                                                                                                                                                         |
-| `patientId`                          | string              | Given at upload, or generated as `PT-2026-` plus 4 hex characters                                                                                                                                                                                            |
-| `patientName`                        | string              | Default `Uploaded Scan`                                                                                                                                                                                                                                      |
-| `scanDate`                           | string              | Upload date, `YYYY-MM-DD`                                                                                                                                                                                                                                    |
-| `modalities`                         | list of strings     | Detected modalities in upper case, for example `["FLAIR", "T1", "T1CE", "T2"]`                                                                                                                                                                               |
-| `filePaths`                          | object              | Modality -> path relative to `Backend/uploads`                                                                                                                                                                                                               |
-| `status`, `progress`, `pipelineStep` | string, int, string | Always `completed`, `100`, `complete` after a successful upload                                                                                                                                                                                              |
-| `results`                            | object              | `detected` (bool), `classification` (`glioma`, `meningioma`, `pituitary` or `No Tumour Detected`), `confidence` (0-1, 4 decimals), `tumorVolume`, `wtVolume`, `tcVolume`, `etVolume` (2 decimals, see [How it works](#what-happens-when-a-scan-is-uploaded)) |
-| `createdAt`                          | datetime            | UTC                                                                                                                                                                                                                                                          |
-| `userId`                             | int                 | Owner                                                                                                                                                                                                                                                        |
-
-### POST /api/process-mri
-
-Multipart form data:
-
-| Field         | Required         | Notes                                                                                                                           |
-| ------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `files`       | Yes, one or more | NIfTI files. Filenames must contain `FLAIR`, `T1CE`/`T1C`, `T2` or `T1` to be recognised. All four are needed for segmentation. |
-| `patientName` | No               | Default `Uploaded Scan`                                                                                                         |
-| `patientId`   | No               | Generated when missing                                                                                                          |
-
-Responses:
-
-- `200` with the new `Scan`.
-- `503 {"detail": "AI models not loaded."}` when the detection or classification model did not load.
-- `500` with the error text for any processing failure. The scan folder is deleted in that case. A request with no recognisable modality also ends up as `500` with detail `"400: No valid MRI modality found."`, because the internal `400` error is caught by the general error handler.
-- A segmentation error is only printed to the server log; the scan is still saved with all volumes set to `0.0`.
+Server file paths and the owner ID are never returned.
 
 ```powershell
-curl.exe -X POST http://localhost:8000/api/process-mri -H "Authorization: Bearer <token>" `
+curl.exe -c cookies.txt -H "X-Requested-With: NeuroScan" -H "Content-Type: application/json" `
+  -d '{\"username\":\"demo\",\"password\":\"a-long-passphrase\"}' http://localhost:8080/api/auth/login
+curl.exe -b cookies.txt -H "X-Requested-With: NeuroScan" `
   -F "files=@BraTS20_Training_001_flair.nii" -F "files=@BraTS20_Training_001_t1.nii" `
   -F "files=@BraTS20_Training_001_t1ce.nii" -F "files=@BraTS20_Training_001_t2.nii" `
-  -F "patientName=Case 001"
+  -F "patientName=Case 001" http://localhost:8080/api/process-mri
 ```
-
-### GET /api/scans/{scan_id}/slice/{slice_idx}
-
-- Query parameter `modality` (default `flair`). An unknown modality falls back to the first stored one.
-- Returns `image/jpeg` of axial slice `slice_idx` (third axis), intensity-clipped at the 99.5th percentile and rotated 90 degrees counter-clockwise, with header `X-Total-Slices`.
-- `404` if the scan or file is missing; `500 {"detail": "Failed to extract slice"}` for an out-of-range index.
-
-### GET /api/scans/{scan_id}/segmentation/{slice_idx}
-
-Returns `image/png` of the saved `segmentation.nii` slice, rotated to match the MRI slice. Colours: WT voxels outside TC red, TC voxels outside ET yellow, ET white, background black. `404 {"detail": "Segmentation not found"}` when segmentation did not run.
-
-### GET /api/scans/{scan_id}/download/{key}
-
-`key` is `segmentation`, a stored modality (`flair`, `t1`, `t1ce`, `t2`), or a filename inside that scan's folder (checked with `realpath` to stay inside `Backend/uploads`). Returns the file as `application/octet-stream`, or `404 {"detail": "File not found"}`. The 3D viewer uses this route.
-
-### PUT /api/scans/{scan_id} and DELETE /api/scans/{scan_id}
-
-- `PUT` takes JSON with optional `patientName` and `patientId` and returns the updated `Scan`.
-- `DELETE` removes the scan folder and the database row and returns `{"message": "Scan deleted successfully"}`.
 
 ## Data storage
 
-- **Database:** SQLite at `Backend/neuroscan.db` (Git-ignored), created on start-up with `SQLModel.metadata.create_all`. There are no migrations; schema changes need a new database or a manual migration. Tables: `user` and `scan` (`scan.userId` references `user.id`). `models.py` also defines `UserLogin` and `ScanCreate`, which no route uses.
-- **Files:** `Backend/uploads/<scan_id>/` holds the uploaded files under their original names and `segmentation.nii` when segmentation ran. The folder is Git-ignored.
+- **Database:** SQLite at `Backend/neuroscan.db` by default, in WAL mode so the background worker and API requests do not block each other. The schema is managed by Alembic migrations in `Backend/neuroscan/migrations/versions/`, applied automatically at start-up. A database created before migrations existed is recognised, stamped at the baseline, and upgraded in place; the upgrade only adds columns and an index. To author a new migration, run `..\.venv\Scripts\alembic revision --autogenerate -m "describe change"` from `Backend/`.
+- **Files:** `<UPLOAD_DIR>/<scan_id>/` holds one file per modality (`flair.nii`, `t1ce.nii.gz`, ...) and `segmentation.nii` when segmentation ran. Scans uploaded by earlier versions keep their original file names and still work.
 
 ## Research notebooks and results
 
@@ -438,76 +396,80 @@ The paper texts were not reviewed for this README; their numbers may differ from
 
 ## Testing and code quality
 
-| Check            | Command (run in `Frontend/`) | Result when this README was written                                                                                |
-| ---------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Unit tests       | `npm run test`               | 1 test file, 1 test passed. The only test is a placeholder (`expect(true).toBe(true)`).                            |
-| Lint             | `npm run lint`               | 1 error (`@typescript-eslint/no-explicit-any` in `src/components/scan/VolumeViewer3D.tsx`) and 4 warnings          |
-| Production build | `npm run build`              | Succeeds, with a warning that the main chunk is 1,364.78 kB (380.39 kB gzipped), above Vite's 500 kB warning limit |
-| Watch mode       | `npm run test:watch`         | Not run                                                                                                            |
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs all of these on every push and pull request, plus a gitleaks scan of the full Git history.
 
-The backend has no automated tests. Loading the three weight files into `BrainProcessor` was checked manually and succeeds on CPU. `black` is listed in `requirements.txt` for formatting; no configuration file for it is committed. Frontend formatting uses Prettier with `prettier-plugin-tailwindcss` ([`.prettierrc.json`](.prettierrc.json)).
+| Check                     | Command                                                                                   | Result when this README was written                                              |
+| ------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Backend tests             | `pytest` (in `Backend/`)                                                                  | 60 passed; they use a fake inference engine, so no weights are needed            |
+| Backend lint and format   | `ruff check neuroscan tests main.py`, `ruff format --check ...`                           | Clean                                                                            |
+| Backend types             | `mypy` (strict)                                                                           | Clean                                                                            |
+| Architecture contracts    | `lint-imports`                                                                            | 3 contracts kept                                                                 |
+| Backend security          | `bandit -q -r neuroscan main.py`, `pip-audit -r requirements.txt -r requirements-dev.txt` | No findings                                                                      |
+| Everything frontend       | `npm run check` (in `Frontend/`)                                                          | Strict typecheck, lint, Prettier, jscpd (0 clones), 18 tests, and build all pass |
+| Frontend dependency audit | `npm audit`                                                                               | 0 vulnerabilities                                                                |
 
 ## Troubleshooting
 
-| Problem                                                      | Likely cause                                                                                | How to check                                                                  | Fix                                                                                                    |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `start.ps1` prints `Virtual environment not found`           | `.venv` does not exist in the repository root                                               | `Test-Path .venv`                                                             | `python -m venv .venv`, then install requirements                                                      |
-| Upload returns `503 AI models not loaded.`                   | A `.pth` file is missing or does not match the architecture; the start-up error is silenced | `Test-Path "Backend\Binary Detection\EfficientNetB0.pth"` (and the other two) | Place all three weight files at the exact paths in the [Quick start](#quick-start-windows) and restart |
-| Browser console shows CORS errors on `http://localhost:8080` | `.env` sets `CORS_ORIGINS` without `http://localhost:8080`                                  | `Get-Content .env`                                                            | Add `http://localhost:8080` to `CORS_ORIGINS`, or remove the line to allow all origins locally         |
-| Login works but every page returns to `/login`               | Token expired (30 minutes) or `JWT_SECRET` changed                                          | Browser dev tools, Application > Local Storage > `token`                      | Log in again                                                                                           |
-| Upload succeeds but volumes are `0.0` and no overlay appears | Fewer than four modalities recognised, or segmentation failed                               | Check the scan's `modalities`; read the backend log for `Segmentation error:` | Name the files so they contain `flair`, `t1`, `t1ce` and `t2`                                          |
-| Upload returns `500` with `No valid MRI modality found`      | No filename contains FLAIR, T1CE, T1C, T2 or T1                                             | Check the filenames                                                           | Rename the files                                                                                       |
-| DICOM upload fails                                           | The upload box accepts `.dcm`, but the backend reads files only with nibabel (NIfTI)        | Backend log                                                                   | Convert DICOM to NIfTI first                                                                           |
-| `npm run dev` fails with a Node.js version error             | Node.js older than 20.19                                                                    | `node --version`                                                              | Install Node.js 20.19+ or 22.12+                                                                       |
-| Frontend cannot reach the API from another machine           | Most components call `http://localhost:8000` directly                                       | Browser network tab                                                           | Open the app on the machine running the backend, or change the hard-coded URLs to use `VITE_API_URL`   |
-| `build-latex.ps1` says `tectonic.exe not found`              | The binary is Git-ignored                                                                   | `Test-Path Backend\Materials\tectonic.exe`                                    | Download Tectonic and place `tectonic.exe` there                                                       |
+| Problem                                                                             | Likely cause                                                                                    | Fix                                                                               |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Backend exits with a `ValidationError` naming `jwt_secret` or `data_encryption_key` | `.env` is missing, empty, or still has the example value                                        | Run `start.ps1` once, or generate the values with the commands in `.env.example`  |
+| `sqlite3.OperationalError: unable to open database file`                            | `DATABASE_URL` points to a folder that does not exist, or uses a Git Bash path such as `/d/...` | Use a Windows path such as `sqlite:///D:/data/neuroscan.db` and create the folder |
+| Upload returns `503 AI models are not loaded`                                       | A `.pth` file is missing or does not match the architecture                                     | Check the start-up log and `GET /api/ready`; place the weights and restart        |
+| Upload returns `400 Cannot tell the modality of ...`                                | A filename has none of FLAIR, T1CE, T1C, T2 or T1                                               | Rename the files                                                                  |
+| Upload returns `400 ... not a readable NIfTI image`                                 | The file is not NIfTI (for example DICOM)                                                       | Convert to NIfTI (`.nii` or `.nii.gz`) first                                      |
+| Upload returns `413`                                                                | A file is larger than `MAX_UPLOAD_FILE_MB`                                                      | Raise the limit in `.env` if the file is legitimate                               |
+| Scan stays `failed`                                                                 | The pipeline raised an error                                                                    | Find the scan ID in the backend's JSON log, fix the cause, then press Retry       |
+| Volumes are `0.0` and there is no overlay                                           | Fewer than four modalities, or segmentation failed                                              | Upload all four modalities; check the log for `Segmentation failed`               |
+| Every request returns `401` after login                                             | Browser blocked the `Secure` cookie on plain HTTP other than `localhost`                        | Use HTTPS, or `localhost` in development                                          |
+| `403 Missing or invalid X-Requested-With header`                                    | A script called the API without the CSRF header                                                 | Send `X-Requested-With: NeuroScan` on `POST`, `PUT` and `DELETE`                  |
+| Locked out, or lost the authenticator                                               | Lockout after 5 failures, or 2FA device lost                                                    | Wait 15 minutes, or use the [account recovery](#account-recovery) commands        |
+| `build-latex.ps1` says `tectonic.exe not found`                                     | The binary is Git-ignored                                                                       | Download Tectonic and place `tectonic.exe` in `Backend/Materials/`                |
 
 ## Known limitations
 
-- **Hard-coded API URL in the frontend.** Only `fetchScans`, `fetchScan` and `processMRI` in `src/lib/api.ts` use `VITE_API_URL`. Login, registration, profile, upload (`DropZone.tsx`), scan edit and delete, slice viewer and 3D viewer call `http://localhost:8000/api/...` directly. The app therefore works only when the browser can reach the backend at `localhost:8000`.
-- **Report export is not implemented.** The "Download PDF", "Export CSV", "PDF", "CSV" and "Export All" buttons on the scan detail and Reports pages have no action.
-- **DICOM is not supported** by the backend, although the upload box accepts `.dcm` files.
 - **Detection and classification use a single 2D slice** (the middle slice of one modality), not the whole volume.
 - **Volumes are voxel counts at 128^3 divided by 1,000**, not physical volumes.
-- **Processing is synchronous.** The upload request blocks until all three models finish; there is no job queue.
-- **`src/lib/mock-data.ts` is not imported** anywhere.
+- **DICOM is not supported**; convert to NIfTI first.
+- **One backend process.** The job queue and rate limiter are in memory and SQLite has one writer. See `ARCHITECTURE.md` for what to change before running several instances.
+- **No email service**, so there is no self-service password reset; operators use the recovery CLI.
 
 ## Security notes
 
-These are observations from reading the code, not the result of a security audit.
+A security review of the whole repository (code, dependencies, and Git history) was carried out and its findings fixed. What protects the application now:
 
-- `GET /api/auth/me` and `PUT /api/auth/me` return the `User` table model, which includes `hashed_password`.
-- If `JWT_SECRET` is unset, tokens are signed with a default secret that is visible in `main.py`.
-- Without `CORS_ORIGINS`, every origin is allowed.
-- `POST /api/process-mri` writes each upload to `os.path.join(scan_dir, file.filename)` without sanitising the filename.
-- There is no upload size limit, rate limiting or password policy in the backend.
-- Tokens are stored in browser `localStorage` and can also be passed in the URL query string, where they may appear in logs.
+- Passwords hashed with bcrypt (cost 12), a 12-character minimum, account lockout, per-client rate limits, and timing-equalised login for unknown users.
+- Sessions in `HttpOnly`, `SameSite=Strict`, `Secure` cookies with revocable, audience- and issuer-bound JWTs; nothing sensitive in `localStorage`; a required CSRF header on state-changing requests.
+- Optional TOTP two-factor authentication with encrypted secrets and replay protection.
+- Every scan route checks ownership and hides other users' scans behind `404`; response models never include password hashes, secrets or file paths.
+- Uploads are streamed with size limits, stored under server-chosen names, and validated as bounded NIfTI volumes before any processing; model weights load with `weights_only=True`.
+- Security headers on every response (CSP, `nosniff`, `X-Frame-Options`, `Referrer-Policy`, `no-store`, HSTS in production), API docs off in production, generic error bodies with request IDs, and structured audit logs for sign-in and account events.
+- Configuration is validated at start-up; example secrets and wildcard CORS are refused.
+- Pinned dependencies with no known vulnerabilities at the time of writing, Dependabot updates, CI with SHA-pinned actions and a read-only token, and gitleaks in CI and as a pre-commit hook.
 
-Follow the [Configuration](#configuration) section and keep `.env` out of Git (it is already ignored).
+Keep `.env` out of Git (it is already ignored) and rotate `JWT_SECRET` and `DATA_ENCRYPTION_KEY` if they are ever exposed.
 
 ## Project metrics
 
-| Metric                              | Value                                                                                                                          | Source                                                            |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
-| API routes                          | 12                                                                                                                             | `Backend/main.py`                                                 |
-| Database tables                     | 2 (`user`, `scan`)                                                                                                             | `Backend/models.py`                                               |
-| Frontend routes                     | 9 including the 404 page                                                                                                       | `Frontend/src/App.tsx`                                            |
-| Environment variables               | 4                                                                                                                              | `main.py`, `database.py`, `api.ts`                                |
-| npm scripts                         | 7 (`dev`, `build`, `build:dev`, `lint`, `preview`, `test`, `test:watch`)                                                       | `Frontend/package.json`                                           |
-| Frontend tests                      | 1 placeholder test                                                                                                             | `Frontend/src/test/example.test.ts`                               |
-| Backend tests                       | 0                                                                                                                              | Repository search                                                 |
-| Research notebooks                  | 22 (9 detection, 6 classification, 7 segmentation)                                                                             | `Backend/*/*.ipynb`                                               |
-| Deployed model parameters           | Detection and classification: EfficientNet-B0 (4,008,829 and 4,011,391 in the notebook versions); segmentation: VNet 1,398,761 | Notebook `model_profile.json` files and `processor.py` load check |
-| JWT lifetime                        | 30 minutes                                                                                                                     | `ACCESS_TOKEN_EXPIRE_MINUTES` in `main.py`                        |
-| Ports                               | 8000 (API), 8080 (Vite dev)                                                                                                    | `main.py`, `vite.config.ts`                                       |
-| End-to-end processing time per scan | Not measured in the current repository.                                                                                        |                                                                   |
+| Metric                    | Value                                                                                                                          | Source                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| API routes                | 23                                                                                                                             | `Backend/neuroscan/api/`                              |
+| Database tables           | 2 (`user`, `scan`), 2 migrations                                                                                               | `Backend/neuroscan/models.py`, `migrations/versions/` |
+| Frontend routes           | 9 including the 404 page                                                                                                       | `Frontend/src/App.tsx`                                |
+| Backend tests             | 60                                                                                                                             | `Backend/tests/`                                      |
+| Frontend tests            | 18                                                                                                                             | `Frontend/src/test/`                                  |
+| Research notebooks        | 22 (9 detection, 6 classification, 7 segmentation)                                                                             | `Backend/*/*.ipynb`                                   |
+| Deployed model parameters | Detection and classification: EfficientNet-B0 (4,008,829 and 4,011,391 in the notebook versions); segmentation: VNet 1,398,761 | Notebook `model_profile.json` files                   |
+| Session lifetime          | 30 minutes by default                                                                                                          | `ACCESS_TOKEN_EXPIRE_MINUTES`                         |
+| Ports                     | 8000 (API, localhost only), 8080 (Vite dev)                                                                                    | `start.ps1`, `vite.config.ts`                         |
+| Processing time per scan  | About 4 seconds for one four-modality BraTS 2020 case on the development machine (CPU, no CUDA), measured once end to end      | Local end-to-end run                                  |
 
 ## Contributing
 
-- Follow the existing conventions: typed Python, device-agnostic PyTorch, ownership checks on scan routes, `@/` imports and shared types in `src/lib/types.ts` on the frontend.
-- Keep API response shapes in `Backend/models.py` and `Frontend/src/lib/types.ts` in sync.
-- Do not commit `.pth`, `.db`, `.nii` or `.nii.gz` files; `.gitignore` already excludes them.
-- Changing `VNet3D` or the EfficientNet head in `processor.py` breaks loading of the existing weight files.
-- Before opening a pull request, run `npm run lint`, `npm run test` and `npm run build` in `Frontend/`.
+- Read [`ARCHITECTURE.md`](ARCHITECTURE.md) for where new code goes and which imports are allowed.
+- Keep API response shapes in `Backend/neuroscan/schemas.py` and `Frontend/src/lib/types.ts` in sync.
+- Schema changes need a new Alembic migration; never edit an applied one.
+- Do not commit `.pth`, `.db`, `.nii` or `.nii.gz` files; `.gitignore` already excludes them. Install the pre-commit hook with `pre-commit install`.
+- Changing `VNet3D` or the EfficientNet head in `neuroscan/inference/networks.py` breaks loading of the existing weight files.
+- Before opening a pull request, run the checks in [Testing and code quality](#testing-and-code-quality).
 
 No licence file is present in the repository.

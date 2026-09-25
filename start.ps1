@@ -50,17 +50,38 @@ if (-not (Test-Path $VenvScripts)) {
     exit 1
 }
 
+# Create a development .env with fresh random secrets on first run (never committed).
+$EnvFile = Join-Path $RootPath ".env"
+if (-not (Test-Path $EnvFile)) {
+    Write-Host "Creating development .env with new random secrets..." -ForegroundColor Yellow
+    $Secrets = & "$VenvPath\Scripts\python.exe" -c "import secrets; from cryptography.fernet import Fernet; print(secrets.token_urlsafe(48)); print(Fernet.generate_key().decode())"
+    if ($LASTEXITCODE -ne 0 -or -not $Secrets) {
+        Write-Host "Could not generate secrets. Install backend dependencies first: .venv\Scripts\pip install -r Backend
+equirements.txt" -ForegroundColor Red
+        exit 1
+    }
+    $EnvLines = @(
+        "ENVIRONMENT=development",
+        "JWT_SECRET=$($Secrets[0])",
+        "DATA_ENCRYPTION_KEY=$($Secrets[1])",
+        "COOKIE_SECURE=true",
+        "HOST=127.0.0.1",
+        "PORT=8000"
+    )
+    Set-Content -Path $EnvFile -Value $EnvLines -Encoding ascii
+}
+
 # Define services
 $Services = @(
     @{ 
         Name = "NeuroScan-Backend"
         Path = "$RootPath\Backend"
-        Cmd = "& `"$VenvScripts\python.exe`" -m uvicorn main:app --reload --host 0.0.0.0 --port 8000 --log-level info 2>&1"
+        Kind = "backend"
     },
     @{ 
         Name = "NeuroScan-Frontend"
         Path = "$RootPath\Frontend"
-        Cmd = "npm run dev 2>&1"
+        Kind = "frontend"
     }
 )
 
@@ -93,7 +114,7 @@ foreach ($Service in $Services) {
     }
     
     Start-Job -Name $Service.Name -ScriptBlock {
-        Param($Path, $Cmd, $VenvScripts)
+        Param($Path, $Kind, $VenvScripts)
         
         # Force UTF-8 encoding INSIDE the job process
         chcp 65001 | Out-Null
@@ -109,31 +130,28 @@ foreach ($Service in $Services) {
             Set-Location $Path
             Write-Host "Changed directory to: $Path" -ForegroundColor Gray
             
-            # For backend, check if requirements are installed
-            if ($Cmd -like "*python*") {
+            if ($Kind -eq "backend") {
                 Write-Host "Checking Python dependencies..." -ForegroundColor Gray
-                & "$VenvScripts\python.exe" -c "import fastapi, uvicorn, torch, nibabel, sqlmodel" 2>$null
+                & "$VenvScripts\python.exe" -c "import fastapi, uvicorn, torch, nibabel, sqlmodel, jwt, pyotp, alembic, reportlab" 2>$null
                 if ($LASTEXITCODE -ne 0) {
                     Write-Host "Installing Python dependencies..." -ForegroundColor Yellow
                     & "$VenvScripts\pip.exe" install -r requirements.txt
                 }
+                # Localhost only; the frontend dev server proxies /api to this port.
+                & "$VenvScripts\python.exe" -m uvicorn main:app --reload --host 127.0.0.1 --port 8000 --log-level info 2>&1
             }
-            
-            # For frontend, check if node_modules exists
-            if ($Cmd -like "*npm*") {
+            else {
                 if (-not (Test-Path "node_modules")) {
-                    Write-Host "Installing Node.js dependencies..." -ForegroundColor Yellow
-                    npm install
+                    Write-Host "Installing Node.js dependencies from the lockfile..." -ForegroundColor Yellow
+                    npm ci
                 }
+                npm run dev 2>&1
             }
-            
-            Write-Host "Starting service with command: $Cmd" -ForegroundColor Gray
-            Invoke-Expression $Cmd
         }
         catch {
             Write-Host "Error starting service: $_" -ForegroundColor Red
         }
-    } -ArgumentList $Service.Path, $Service.Cmd, $VenvScripts | Out-Null
+    } -ArgumentList $Service.Path, $Service.Kind, $VenvScripts | Out-Null
 }
 
 # Wait a moment for services to start
@@ -148,7 +166,7 @@ try {
 }
 
 Write-Host "`nReady! Combined logs below (Ctrl+C to quit):" -ForegroundColor White
-Write-Host "Backend API: http://localhost:8000" -ForegroundColor Cyan
+Write-Host "Backend API: http://127.0.0.1:8000 (proxied at http://localhost:8080/api)" -ForegroundColor Cyan
 Write-Host "Frontend: http://localhost:8080" -ForegroundColor Green
 Write-Host "----------------------------------------------------------------------`n"
 

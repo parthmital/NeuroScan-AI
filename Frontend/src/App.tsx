@@ -1,25 +1,40 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+	BrowserRouter,
+	Navigate,
+	Route,
+	Routes,
+	useLocation,
+} from "react-router-dom";
+import { Loader2 } from "lucide-react";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "./components/layout/AppLayout";
-import Index from "./pages/Index";
-import Upload from "./pages/Upload";
-import ScanDetail from "./pages/ScanDetail";
-import ScanLibrary from "./pages/ScanLibrary";
-import Reports from "./pages/Reports";
-import Settings from "./pages/Settings";
-import NotFound from "./pages/NotFound";
-
-import { Navigate, useLocation } from "react-router-dom";
-import { AuthProvider, useAuth } from "./components/auth/AuthContext";
+import { AuthProvider } from "./components/auth/AuthContext";
+import { useAuth } from "./components/auth/useAuth";
+import { ApiError } from "./lib/api";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
 
-const queryClient = new QueryClient();
+// Signed-in pages load on demand, keeping the login screen's bundle small.
+const Index = lazy(() => import("./pages/Index"));
+const Upload = lazy(() => import("./pages/Upload"));
+const ScanDetail = lazy(() => import("./pages/ScanDetail"));
+const ScanLibrary = lazy(() => import("./pages/ScanLibrary"));
+const Reports = lazy(() => import("./pages/Reports"));
+const Settings = lazy(() => import("./pages/Settings"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			// Client errors (missing scan, expired session) will not succeed on retry.
+			retry: (failureCount, error) =>
+				!(error instanceof ApiError && error.status < 500) && failureCount < 2,
+		},
+	},
+});
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 	const { isAuthenticated, isLoading } = useAuth();
@@ -28,10 +43,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 	if (isLoading) {
 		return (
 			<div className="flex h-screen w-screen items-center justify-center bg-black">
-				<div className="flex flex-col items-center gap-4">
-					<Loader2 className="h-10 w-10 text-medical" />
+				<div role="status" className="flex flex-col items-center gap-4">
+					<Loader2 className="h-10 w-10 animate-spin text-medical" />
 					<p className="text-sm uppercase tracking-widest text-white/50">
-						Initialising Security
+						Checking session
 					</p>
 				</div>
 			</div>
@@ -45,32 +60,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 	return <>{children}</>;
 };
 
-const App = () => {
-	useEffect(() => {
-		const theme = localStorage.getItem("theme");
-		if (
-			theme === "dark" ||
-			(!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-		) {
-			document.documentElement.classList.add("dark");
-			if (!theme) localStorage.setItem("theme", "dark");
-		} else {
-			document.documentElement.classList.remove("dark");
-		}
-	}, []);
-
-	return (
-		<QueryClientProvider client={queryClient}>
-			<TooltipProvider>
-				<AuthProvider>
-					<Toaster />
-					<Sonner />
-					<BrowserRouter
-						future={{
-							v7_startTransition: true,
-							v7_relativeSplatPath: true,
-						}}
-					>
+const App = () => (
+	<QueryClientProvider client={queryClient}>
+		<TooltipProvider>
+			<AuthProvider>
+				<Toaster />
+				<BrowserRouter>
+					<Suspense fallback={null}>
 						<Routes>
 							<Route path="/login" element={<Login />} />
 							<Route path="/register" element={<Register />} />
@@ -90,11 +86,11 @@ const App = () => {
 							</Route>
 							<Route path="*" element={<NotFound />} />
 						</Routes>
-					</BrowserRouter>
-				</AuthProvider>
-			</TooltipProvider>
-		</QueryClientProvider>
-	);
-};
+					</Suspense>
+				</BrowserRouter>
+			</AuthProvider>
+		</TooltipProvider>
+	</QueryClientProvider>
+);
 
 export default App;

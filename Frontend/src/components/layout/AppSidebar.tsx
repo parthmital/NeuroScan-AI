@@ -1,18 +1,34 @@
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { useConfig } from "@/hooks/use-config";
-import * as Icons from "lucide-react";
-import { AppConfig } from "@/lib/types";
+import {
+	Brain,
+	FileText,
+	HelpCircle,
+	Images,
+	LayoutDashboard,
+	LogOut,
+	Settings,
+	Upload,
+	type LucideIcon,
+} from "lucide-react";
+import { APP_CONFIG as config } from "@/lib/config";
+import { initials } from "@/lib/user-format";
 
-import { useAuth } from "../auth/AuthContext";
+import { useAuth } from "../auth/useAuth";
+
+// Explicit imports keep the bundle to the icons actually used.
+const NAV_ICONS: Record<string, LucideIcon> = {
+	LayoutDashboard,
+	Upload,
+	Images,
+	FileText,
+	Settings,
+};
 
 export const AppSidebar = () => {
-	const [collapsed, setCollapsed] = useState(false);
-	const { data: config, isLoading: configLoading } = useConfig();
 	const { user, logout } = useAuth();
 
-	if (configLoading || !config || !user) {
+	if (!user) {
 		return (
 			<aside
 				className={cn(
@@ -24,33 +40,29 @@ export const AppSidebar = () => {
 
 	const navItems = config.navItems.map((item) => ({
 		...item,
-		icon:
-			(Icons[item.icon as keyof typeof Icons] as Icons.LucideIcon) ||
-			Icons.HelpCircle,
+		icon: NAV_ICONS[item.icon] ?? HelpCircle,
 	}));
 
 	return (
 		<aside
 			className={cn(
 				"sidebar-gradient fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-sidebar-border transition-all duration-300",
-				collapsed ? "w-[72px]" : "w-[260px]",
+				"w-[260px]",
 			)}
 		>
 			{/* Brand */}
 			<div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-5">
 				<div className="medical-gradient flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
-					<Icons.Brain className="h-5 w-5 text-medical-foreground" />
+					<Brain className="h-5 w-5 text-medical-foreground" />
 				</div>
-				{!collapsed && (
-					<div className="animate-slide-in-left">
-						<h1 className="text-sm font-bold tracking-tight text-sidebar-primary-foreground">
-							{config.appName}
-						</h1>
-						<p className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">
-							{config.appSubtitle}
-						</p>
-					</div>
-				)}
+				<div className="animate-slide-in-left">
+					<h1 className="text-sm font-bold tracking-tight text-sidebar-primary-foreground">
+						{config.appName}
+					</h1>
+					<p className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">
+						{config.appSubtitle}
+					</p>
+				</div>
 			</div>
 
 			{/* Navigation */}
@@ -81,8 +93,8 @@ export const AppSidebar = () => {
 												: "text-sidebar-foreground/50 group-hover:text-sidebar-foreground/80",
 										)}
 									/>
-									{!collapsed && <span>{item.label}</span>}
-									{isActive && !collapsed && (
+									<span>{item.label}</span>
+									{isActive && (
 										<div className="ml-auto h-1.5 w-1.5 rounded-full bg-sidebar-primary" />
 									)}
 								</>
@@ -97,30 +109,24 @@ export const AppSidebar = () => {
 				<div className="flex items-center gap-3 px-3 py-2">
 					<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sidebar-accent">
 						<span className="text-xs font-semibold text-sidebar-primary">
-							{user.fullName
-								.split(" ")
-								.map((n) => n[0])
-								.join("")}
+							{initials(user.fullName)}
 						</span>
 					</div>
-					{!collapsed && (
-						<div className="animate-slide-in-left min-w-0 flex-1">
-							<p className="truncate text-xs font-medium text-sidebar-foreground">
-								{user.fullName}
-							</p>
-							<p className="truncate text-[10px] text-sidebar-foreground/50">
-								{user.username}
-							</p>
-						</div>
-					)}
-					{!collapsed && (
-						<button
-							onClick={logout}
-							className="rounded p-1 text-sidebar-foreground/40 transition-colors hover:text-sidebar-foreground/70"
-						>
-							<Icons.LogOut className="h-4 w-4" />
-						</button>
-					)}
+					<div className="animate-slide-in-left min-w-0 flex-1">
+						<p className="truncate text-xs font-medium text-sidebar-foreground">
+							{user.fullName}
+						</p>
+						<p className="truncate text-[10px] text-sidebar-foreground/50">
+							{user.username}
+						</p>
+					</div>
+					<button
+						onClick={logout}
+						aria-label="Log out"
+						className="rounded p-1 text-sidebar-foreground/40 transition-colors hover:text-sidebar-foreground/70"
+					>
+						<LogOut className="h-4 w-4" />
+					</button>
 				</div>
 			</div>
 		</aside>

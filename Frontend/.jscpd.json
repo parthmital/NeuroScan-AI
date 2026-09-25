@@ -1,0 +1,10 @@
+{
+	"threshold": 1,
+	"minTokens": 60,
+	"reporters": ["console"],
+	"format": ["typescript", "tsx", "python"],
+	"path": ["src", "../Backend/neuroscan"],
+	"ignore": ["**/components/ui/**", "**/migrations/versions/**", "**/test/**"],
+	"absolute": false,
+	"gitignore": true
+}

@@ -1,29 +1,33 @@
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, Download, FileText } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, Download, FileText, RotateCcw } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { SliceViewer } from "@/components/scan/SliceViewer";
 import { VolumeViewer3D } from "@/components/scan/VolumeViewer3D";
 import { SegmentationControls } from "@/components/scan/SegmentationControls";
 import { ProcessingPipeline } from "@/components/scan/ProcessingPipeline";
+import { ModalityBadges } from "@/components/scan/ModalityBadges";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useConfig } from "@/hooks/use-config";
-import { useScans } from "@/hooks/use-data";
-import { MRIScan, AppConfig } from "@/lib/types";
+import { APP_CONFIG } from "@/lib/config";
+import { formatPercent, isInProgress } from "@/lib/scan-format";
+import { useOverlayColors } from "@/hooks/use-overlay-colors";
+import { useReportDownload } from "@/hooks/use-report-download";
+import { useRetryScan, useScan } from "@/hooks/use-scans";
+import type { Overlays } from "@/lib/types";
+
+const config = APP_CONFIG.scanDetail;
 
 const ScanDetail = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const location = useLocation();
-	const { data: config, isLoading: configLoading } = useConfig();
-	const { data: scans, isLoading: scansLoading } = useScans();
+	const { data: scan, isLoading, isError } = useScan(id);
+	const { colors: overlayColors } = useOverlayColors();
+	const { pending, downloadPdf, downloadCsv } = useReportDownload();
+	const retryScan = useRetryScan();
 
-	const scan =
-		location.state?.scanResult ||
-		(scans as MRIScan[])?.find((s) => s.id === id);
-
-	const [overlays, setOverlays] = useState({
+	const [overlays, setOverlays] = useState<Overlays>({
 		wt: true,
 		tc: true,
 		et: true,
@@ -32,18 +36,7 @@ const ScanDetail = () => {
 
 	const [viewMode, setViewMode] = useState<"2d" | "3d">("2d");
 
-	const [overlayColors] = useState(() => {
-		const saved = localStorage.getItem("overlayColors");
-		return saved
-			? JSON.parse(saved)
-			: {
-					wt: "#eab308",
-					tc: "#ef4444",
-					et: "#3b82f6",
-				};
-	});
-
-	if (configLoading || scansLoading || !config) {
+	if (isLoading) {
 		return (
 			<div className="space-y-6">
 				<div className="h-10 w-24 rounded-xl bg-muted" />
@@ -53,7 +46,7 @@ const ScanDetail = () => {
 		);
 	}
 
-	if (!scan) {
+	if (isError || !scan) {
 		return (
 			<div className="py-20 text-center">
 				<p className="text-lg font-semibold text-foreground">Scan not found</p>
@@ -67,6 +60,18 @@ const ScanDetail = () => {
 		);
 	}
 
+	const results = scan.status === "completed" ? scan.results : null;
+	const completed = results !== null;
+
+	const retry = async () => {
+		try {
+			await retryScan.mutateAsync(scan.id);
+			toast.success("Scan queued for processing");
+		} catch (error) {
+			toast.error(error instanceof Error ? error.message : "Retry failed");
+		}
+	};
+
 	return (
 		<div className="space-y-6">
 			{/* Header */}
@@ -78,7 +83,7 @@ const ScanDetail = () => {
 					className="text-muted-foreground"
 				>
 					<ArrowLeft className="mr-1 h-4 w-4" />
-					{(config as AppConfig).scanDetail.backButton}
+					{config.backButton}
 				</Button>
 			</div>
 
@@ -94,47 +99,75 @@ const ScanDetail = () => {
 						<span>·</span>
 						<span>{scan.scanDate}</span>
 						<span>·</span>
-						<div className="flex gap-1">
-							{scan.modalities.map((m) => (
-								<span
-									key={m}
-									className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground"
-								>
-									{m}
-								</span>
-							))}
-						</div>
+						<ModalityBadges modalities={scan.modalities} />
 					</div>
 				</div>
 
 				<div className="flex shrink-0 gap-2">
-					{scan.results && (
+					{scan.status === "failed" && (
+						<Button
+							variant="outline"
+							size="sm"
+							className="gap-1.5 text-xs"
+							disabled={retryScan.isPending}
+							onClick={retry}
+						>
+							<RotateCcw className="h-3.5 w-3.5" />
+							{config.retryButton}
+						</Button>
+					)}
+					{completed && (
 						<>
-							<Button variant="outline" size="sm" className="gap-1.5 text-xs">
+							<Button
+								variant="outline"
+								size="sm"
+								className="gap-1.5 text-xs"
+								disabled={pending !== null}
+								onClick={() => downloadCsv(scan.id)}
+							>
 								<Download className="h-3.5 w-3.5" />
-								{(config as AppConfig).scanDetail.exportButton}
+								{config.exportButton}
 							</Button>
-							<Button variant="outline" size="sm" className="gap-1.5 text-xs">
+							<Button
+								variant="outline"
+								size="sm"
+								className="gap-1.5 text-xs"
+								disabled={pending !== null}
+								onClick={() => downloadPdf(scan.id)}
+							>
 								<FileText className="h-3.5 w-3.5" />
-								{(config as AppConfig).scanDetail.reportButton}
+								{config.reportButton}
 							</Button>
 						</>
 					)}
 				</div>
 			</div>
 
+			{isInProgress(scan) && (
+				<div
+					role="status"
+					className="flex items-center gap-3 rounded-xl border border-medical/20 bg-medical/5 p-4 text-sm text-foreground"
+				>
+					<div className="h-4 w-4 animate-spin rounded-full border-2 border-medical border-t-transparent" />
+					Processing: {scan.pipelineStep} ({scan.progress}%). Results appear
+					here automatically.
+				</div>
+			)}
+			{scan.status === "failed" && scan.errorMessage && (
+				<div
+					role="alert"
+					className="rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive"
+				>
+					{scan.errorMessage}
+				</div>
+			)}
+
 			{/* Main content */}
 			<Tabs defaultValue="viewer" className="space-y-6">
 				<TabsList className="bg-muted/50">
-					<TabsTrigger value="viewer">
-						{(config as AppConfig).scanDetail.viewerTab}
-					</TabsTrigger>
-					<TabsTrigger value="pipeline">
-						{(config as AppConfig).scanDetail.pipelineTab}
-					</TabsTrigger>
-					<TabsTrigger value="report">
-						{(config as AppConfig).scanDetail.reportTab}
-					</TabsTrigger>
+					<TabsTrigger value="viewer">{config.viewerTab}</TabsTrigger>
+					<TabsTrigger value="pipeline">{config.pipelineTab}</TabsTrigger>
+					<TabsTrigger value="report">{config.reportTab}</TabsTrigger>
 				</TabsList>
 
 				<TabsContent value="viewer" className="space-y-0">
@@ -166,6 +199,7 @@ const ScanDetail = () => {
 							{viewMode === "2d" ? (
 								<SliceViewer
 									scanId={scan.id}
+									hasSegmentation={scan.hasSegmentation}
 									modalities={scan.modalities}
 									overlays={overlays}
 									overlayColors={overlayColors}
@@ -176,7 +210,7 @@ const ScanDetail = () => {
 									modalities={scan.modalities}
 									overlays={overlays}
 									overlayColors={overlayColors}
-									hasSegmentation={!!scan.results?.detected}
+									hasSegmentation={scan.hasSegmentation}
 								/>
 							)}
 						</div>
@@ -191,7 +225,7 @@ const ScanDetail = () => {
 							{scan.results && (
 								<div>
 									<h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-										{(config as AppConfig).scanDetail.measurementsTitle}
+										{config.measurementsTitle}
 									</h3>
 									<div className="grid grid-cols-2 gap-2">
 										<div className="rounded-lg border border-border bg-muted/30 p-3">
@@ -207,7 +241,7 @@ const ScanDetail = () => {
 												Confidence
 											</p>
 											<p className="mt-0.5 text-sm font-semibold text-foreground">
-												{(scan.results.confidence * 100).toFixed(1)}%
+												{formatPercent(scan.results.confidence)}
 											</p>
 										</div>
 										<div className="rounded-lg border border-border bg-muted/30 p-3">
@@ -241,14 +275,14 @@ const ScanDetail = () => {
 				</TabsContent>
 
 				<TabsContent value="report">
-					{scan.results ? (
+					{results ? (
 						<div className="max-w-2xl space-y-6 rounded-xl border border-border bg-card p-8">
 							<div className="border-b border-border pb-4">
 								<h2 className="text-lg font-bold text-foreground">
-									{(config as AppConfig).scanDetail.reportTitle}
+									{config.reportTitle}
 								</h2>
 								<p className="mt-1 text-xs text-muted-foreground">
-									Generated on {scan.scanDate} · NeuroScan AI v2.4
+									Generated on {scan.scanDate}
 								</p>
 							</div>
 
@@ -279,7 +313,7 @@ const ScanDetail = () => {
 
 							<div className="space-y-3">
 								<h3 className="text-sm font-semibold text-foreground">
-									{(config as AppConfig).scanDetail.findingsTitle}
+									{config.findingsTitle}
 								</h3>
 								<div className="space-y-2 rounded-lg border border-border bg-muted/30 p-4">
 									<div className="flex items-center justify-between">
@@ -289,10 +323,10 @@ const ScanDetail = () => {
 										<span
 											className={cn(
 												"text-sm font-semibold",
-												scan.results.detected ? "text-warning" : "text-success",
+												results.detected ? "text-warning" : "text-success",
 											)}
 										>
-											{scan.results.detected ? "Yes" : "No"}
+											{results.detected ? "Yes" : "No"}
 										</span>
 									</div>
 									<div className="flex items-center justify-between">
@@ -300,7 +334,7 @@ const ScanDetail = () => {
 											Classification
 										</span>
 										<span className="text-sm font-semibold text-foreground">
-											{scan.results.classification}
+											{results.classification}
 										</span>
 									</div>
 									<div className="flex items-center justify-between">
@@ -308,16 +342,16 @@ const ScanDetail = () => {
 											Confidence Score
 										</span>
 										<span className="text-sm font-semibold text-foreground">
-											{(scan.results.confidence * 100).toFixed(1)}%
+											{formatPercent(results.confidence)}
 										</span>
 									</div>
 								</div>
 							</div>
 
-							{scan.results.detected && (
+							{results.detected && (
 								<div className="space-y-3">
 									<h3 className="text-sm font-semibold text-foreground">
-										{(config as AppConfig).scanDetail.volumetricTitle}
+										{config.volumetricTitle}
 									</h3>
 									<div className="space-y-2 rounded-lg border border-border bg-muted/30 p-4">
 										<div className="flex items-center justify-between">
@@ -331,7 +365,7 @@ const ScanDetail = () => {
 												</span>
 											</div>
 											<span className="text-sm font-semibold text-foreground">
-												{scan.results.wtVolume} cm³
+												{results.wtVolume} cm³
 											</span>
 										</div>
 										<div className="flex items-center justify-between">
@@ -345,7 +379,7 @@ const ScanDetail = () => {
 												</span>
 											</div>
 											<span className="text-sm font-semibold text-foreground">
-												{scan.results.tcVolume} cm³
+												{results.tcVolume} cm³
 											</span>
 										</div>
 										<div className="flex items-center justify-between">
@@ -359,7 +393,7 @@ const ScanDetail = () => {
 												</span>
 											</div>
 											<span className="text-sm font-semibold text-foreground">
-												{scan.results.etVolume} cm³
+												{results.etVolume} cm³
 											</span>
 										</div>
 									</div>
@@ -367,25 +401,30 @@ const ScanDetail = () => {
 							)}
 
 							<div className="flex gap-3 border-t border-border pt-4">
-								<Button className="gap-2 bg-medical text-medical-foreground hover:bg-medical/90">
+								<Button
+									className="gap-2 bg-medical text-medical-foreground hover:bg-medical/90"
+									disabled={pending !== null}
+									onClick={() => downloadPdf(scan.id)}
+								>
 									<Download className="h-4 w-4" />
-									{(config as AppConfig).scanDetail.downloadPDF}
+									{pending === "pdf" ? "Preparing..." : config.downloadPDF}
 								</Button>
-								<Button variant="outline" className="gap-2">
+								<Button
+									variant="outline"
+									className="gap-2"
+									disabled={pending !== null}
+									onClick={() => downloadCsv(scan.id)}
+								>
 									<Download className="h-4 w-4" />
-									{(config as AppConfig).scanDetail.exportCSV}
+									{pending === "csv" ? "Preparing..." : config.exportCSV}
 								</Button>
 							</div>
 						</div>
 					) : (
 						<div className="py-16 text-center text-muted-foreground">
 							<FileText className="mx-auto mb-3 h-10 w-10 opacity-30" />
-							<p className="text-sm font-medium">
-								{(config as AppConfig).scanDetail.notAvailable}
-							</p>
-							<p className="mt-1 text-xs">
-								{(config as AppConfig).scanDetail.processingRequired}
-							</p>
+							<p className="text-sm font-medium">{config.notAvailable}</p>
+							<p className="mt-1 text-xs">{config.processingRequired}</p>
 						</div>
 					)}
 				</TabsContent>

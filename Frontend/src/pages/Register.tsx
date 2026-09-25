@@ -1,28 +1,106 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, Loader2, UserPlus } from "lucide-react";
+import { toast } from "sonner";
+import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
 	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
-	CardDescription,
-	CardContent,
-	CardFooter,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-	BrainCircuit,
-	Loader2,
-	ArrowRight,
-	ShieldCheck,
-	UserPlus,
-} from "lucide-react";
-import { toast } from "sonner";
-import { useAuth } from "@/components/auth/AuthContext";
+import { passwordProblem } from "@/lib/password";
+
+const inputClass = "border-border/50 bg-background/50 focus:border-medical/50";
+
+type Field =
+	| "fullName"
+	| "email"
+	| "username"
+	| "password"
+	| "title"
+	| "department"
+	| "institution";
+
+const FIELDS: {
+	id: Field;
+	label: string;
+	placeholder?: string;
+	type?: string;
+	autoComplete: string;
+	required?: boolean;
+	wide?: boolean;
+}[] = [
+	{
+		id: "fullName",
+		label: "Full Name",
+		placeholder: "Dr. Alex Rivera",
+		autoComplete: "name",
+		required: true,
+	},
+	{
+		id: "email",
+		label: "Email Address",
+		placeholder: "alex.rivera@hospital.org",
+		type: "email",
+		autoComplete: "email",
+		required: true,
+	},
+	{
+		id: "username",
+		label: "Username",
+		placeholder: "arivera",
+		autoComplete: "username",
+		required: true,
+	},
+	{
+		id: "password",
+		label: "Password",
+		type: "password",
+		autoComplete: "new-password",
+		required: true,
+	},
+	{
+		id: "title",
+		label: "Professional Title",
+		placeholder: "Chief Radiologist",
+		autoComplete: "organization-title",
+	},
+	{
+		id: "department",
+		label: "Department",
+		placeholder: "Neuroradiology",
+		autoComplete: "off",
+	},
+	{
+		id: "institution",
+		label: "Medical Institution",
+		placeholder: "General Hospital Center",
+		autoComplete: "organization",
+		wide: true,
+	},
+];
+
+const validate = (form: Record<Field, string>): string | null => {
+	if (!form.fullName.trim() || !form.email.trim() || !form.username.trim()) {
+		return "Full name, email, and username are required.";
+	}
+	if (!/^[A-Za-z0-9_.-]{3,32}$/.test(form.username.trim())) {
+		return "Username must be 3 to 32 letters, digits, dots, dashes, or underscores.";
+	}
+	if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+		return "Enter a valid email address.";
+	}
+	return passwordProblem(form.password);
+};
 
 const Register = () => {
-	const [formData, setFormData] = useState({
+	const [form, setForm] = useState<Record<Field, string>>({
 		username: "",
 		email: "",
 		password: "",
@@ -31,52 +109,38 @@ const Register = () => {
 		department: "",
 		institution: "",
 	});
+	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const { login } = useAuth();
+	const { register } = useAuth();
 	const navigate = useNavigate();
-
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData({ ...formData, [e.target.id]: e.target.value });
-	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		const problem = validate(form);
+		setError(problem);
+		if (problem) return;
 		setIsLoading(true);
-
 		try {
-			const response = await fetch("http://localhost:8000/api/auth/register", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(formData),
+			await register({
+				username: form.username.trim(),
+				email: form.email.trim(),
+				password: form.password,
+				fullName: form.fullName.trim(),
+				title: form.title.trim() || undefined,
+				department: form.department.trim() || undefined,
+				institution: form.institution.trim() || undefined,
 			});
-
-			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.detail || "Registration failed");
-			}
-
-			const data = await response.json();
-			login(data.access_token, data.user);
-
 			toast.success("Account created successfully!");
 			navigate("/");
-		} catch (error: unknown) {
-			const errorMessage =
-				error instanceof Error ? error.message : "An unknown error occurred";
-			toast.error(errorMessage);
+		} catch (err) {
+			setError(err instanceof Error ? err.message : "Registration failed.");
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
 	return (
-		<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background/50 px-8 py-12">
-			{/* Background Decorations */}
-			<div className="absolute right-[-10%] top-[-10%] h-[40%] w-[40%] rounded-full bg-medical/5 blur-[120px]" />
-			<div className="absolute bottom-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-blue-500/5 blur-[120px]" />
-
+		<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background/50 px-4 py-12 sm:px-8">
 			<Card className="w-full max-w-2xl border-border/40 bg-card/50 shadow-2xl backdrop-blur-xl">
 				<CardHeader className="space-y-3 text-center">
 					<div className="mb-2 flex justify-center">
@@ -92,107 +156,56 @@ const Register = () => {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<form onSubmit={handleSubmit} className="space-y-6">
-						<div className="grid grid-cols-2 gap-6">
-							<div className="space-y-2">
-								<Label htmlFor="fullName">Full Name</Label>
-								<Input
-									id="fullName"
-									placeholder="Dr. Alex Rivera"
-									value={formData.fullName}
-									onChange={handleChange}
-									required
-									autoComplete="off"
-									spellCheck={false}
-									className="border-border/50 bg-background/50 focus:border-medical/50"
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="email">Email Address</Label>
-								<Input
-									id="email"
-									type="email"
-									placeholder="alex.rivera@hospital.org"
-									value={formData.email}
-									onChange={handleChange}
-									required
-									autoComplete="off"
-									spellCheck={false}
-									className="border-border/50 bg-background/50 focus:border-medical/50"
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="username">Username</Label>
-								<Input
-									id="username"
-									placeholder="arivera"
-									value={formData.username}
-									onChange={handleChange}
-									required
-									autoComplete="off"
-									spellCheck={false}
-									className="border-border/50 bg-background/50 focus:border-medical/50"
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="password">Password</Label>
-								<Input
-									id="password"
-									type="password"
-									placeholder="••••••••"
-									value={formData.password}
-									onChange={handleChange}
-									required
-									autoComplete="new-password"
-									spellCheck={false}
-									className="border-border/50 bg-background/50 focus:border-medical/50"
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="title">Professional Title</Label>
-								<Input
-									id="title"
-									placeholder="Chief Radiologist"
-									value={formData.title}
-									onChange={handleChange}
-									autoComplete="off"
-									spellCheck={false}
-									className="border-border/50 bg-background/50 focus:border-medical/50"
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="department">Department</Label>
-								<Input
-									id="department"
-									placeholder="Neuroradiology"
-									value={formData.department}
-									onChange={handleChange}
-									autoComplete="off"
-									spellCheck={false}
-									className="border-border/50 bg-background/50 focus:border-medical/50"
-								/>
-							</div>
-							<div className="col-span-2 space-y-2">
-								<Label htmlFor="institution">Medical Institution</Label>
-								<Input
-									id="institution"
-									placeholder="General Hospital Center"
-									value={formData.institution}
-									onChange={handleChange}
-									autoComplete="off"
-									spellCheck={false}
-									className="border-border/50 bg-background/50 focus:border-medical/50"
-								/>
-							</div>
+					<form onSubmit={handleSubmit} noValidate className="space-y-6">
+						<div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+							{FIELDS.map((field) => (
+								<div
+									key={field.id}
+									className={
+										field.wide ? "space-y-2 sm:col-span-2" : "space-y-2"
+									}
+								>
+									<Label htmlFor={field.id}>
+										{field.label}
+										{!field.required && (
+											<span className="ml-1 text-xs font-normal text-muted-foreground">
+												(optional)
+											</span>
+										)}
+									</Label>
+									<Input
+										id={field.id}
+										type={field.type ?? "text"}
+										placeholder={field.placeholder}
+										value={form[field.id]}
+										onChange={(e) =>
+											setForm({ ...form, [field.id]: e.target.value })
+										}
+										autoComplete={field.autoComplete}
+										spellCheck={false}
+										maxLength={field.id === "password" ? 72 : 120}
+										className={inputClass}
+									/>
+									{field.id === "password" && (
+										<p className="text-xs text-muted-foreground">
+											At least 12 characters.
+										</p>
+									)}
+								</div>
+							))}
 						</div>
-
+						{error && (
+							<p role="alert" className="text-sm text-destructive">
+								{error}
+							</p>
+						)}
 						<Button
 							type="submit"
 							className="h-11 w-full bg-medical text-base font-medium text-white shadow-lg shadow-medical/20 hover:bg-medical/90"
 							disabled={isLoading}
 						>
 							{isLoading ? (
-								<Loader2 className="h-5 w-5" />
+								<Loader2 className="h-5 w-5 animate-spin" />
 							) : (
 								<>
 									Complete Registration
@@ -211,10 +224,6 @@ const Register = () => {
 						>
 							Sign in instead
 						</Link>
-					</div>
-					<div className="flex w-full items-center justify-center space-x-2 border-t border-border/50 pt-4 text-[10px] uppercase tracking-widest text-muted-foreground">
-						<ShieldCheck className="h-3 w-3" />
-						<span>Secure Medical-Grade Authentication</span>
 					</div>
 				</CardFooter>
 			</Card>

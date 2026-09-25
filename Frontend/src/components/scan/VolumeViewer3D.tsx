@@ -2,36 +2,28 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { RotateCcw, Sun, Contrast } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
-
-interface Overlays {
-	wt: boolean;
-	tc: boolean;
-	et: boolean;
-	opacity: number;
-}
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { scansApi } from "@/lib/api";
+import { parseHex } from "@/lib/color";
+import type { OverlayColors, Overlays } from "@/lib/types";
 
 interface VolumeViewer3DProps {
 	scanId: string;
 	modalities: string[];
-	overlays?: Overlays;
-	overlayColors?: {
-		wt: string;
-		tc: string;
-		et: string;
-	};
-	hasSegmentation?: boolean;
+	overlays: Overlays;
+	overlayColors: OverlayColors;
+	hasSegmentation: boolean;
 }
 
-function hexToRgb(hex: string) {
-	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	return result
-		? {
-				r: parseInt(result[1], 16) / 255,
-				g: parseInt(result[2], 16) / 255,
-				b: parseInt(result[3], 16) / 255,
-			}
-		: { r: 1, g: 1, b: 1 };
-}
+/** vtk.js colour transfer functions take channels in 0-1. */
+const unitRgb = (hex: string) => {
+	const { r, g, b } = parseHex(hex);
+	return { r: r / 255, g: g / 255, b: b / 255 };
+};
 
 export const VolumeViewer3D = ({
 	scanId,
@@ -51,6 +43,11 @@ export const VolumeViewer3D = ({
 	const [brightness, setBrightness] = useState(0);
 	const [contrast, setContrast] = useState(1);
 
+	// Latest display settings, read when a volume finishes loading. Keeping them out of the
+	// loading effect's dependencies stops every slider move from re-downloading the volume.
+	const displayRef = useRef({ overlays, overlayColors, brightness, contrast });
+	displayRef.current = { overlays, overlayColors, brightness, contrast };
+
 	// Exposed reset camera handle
 	const resetCameraRef = useRef<(() => void) | null>(null);
 
@@ -65,7 +62,7 @@ export const VolumeViewer3D = ({
 	}, []);
 
 	const updateSegmentationOverlays = useCallback(
-		(currentOverlays: Overlays, currentColors: Record<string, string>) => {
+		(currentOverlays: Overlays, currentColors: OverlayColors) => {
 			if (
 				!segCtfunRef.current ||
 				!segOfunRef.current ||
@@ -76,9 +73,9 @@ export const VolumeViewer3D = ({
 			const ctfun = segCtfunRef.current;
 			const ofun = segOfunRef.current;
 
-			const wtColor = hexToRgb(currentColors.wt || "#eab308");
-			const tcColor = hexToRgb(currentColors.tc || "#ef4444");
-			const etColor = hexToRgb(currentColors.et || "#3b82f6");
+			const wtColor = unitRgb(currentColors.wt);
+			const tcColor = unitRgb(currentColors.tc);
+			const etColor = unitRgb(currentColors.et);
 
 			const activeOpacity = currentOverlays.opacity ?? 0.6;
 
@@ -205,11 +202,6 @@ export const VolumeViewer3D = ({
 				segCtfunRef.current = segCtfun;
 				segOfunRef.current = segOfun;
 
-				// Apply initial segmentation overlay state so they are visible immediately
-				if (overlays && overlayColors) {
-					updateSegmentationOverlays(overlays, overlayColors);
-				}
-
 				const segProp = segVolume.getProperty() as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 				segProp.setRGBTransferFunction(0, segCtfun);
 				segProp.setScalarOpacity(0, segOfun);
@@ -310,39 +302,11 @@ export const VolumeViewer3D = ({
 				// -------------------------------------------------------
 				// Fetch and load the NIfTI volume(s)
 				// -------------------------------------------------------
-				const token = localStorage.getItem("token");
-				if (!token) throw new Error("User not authenticated.");
-
-				const fetchPromises = [
-					fetch(
-						`http://localhost:8000/api/scans/${scanId}/download/${selectedModality.toLowerCase()}`,
-						{ headers: { Authorization: `Bearer ${token}` } },
-					),
-				];
-
-				if (hasSegmentation) {
-					fetchPromises.push(
-						fetch(
-							`http://localhost:8000/api/scans/${scanId}/download/segmentation`,
-							{ headers: { Authorization: `Bearer ${token}` } },
-						),
-					);
-				}
-
-				const responses = await Promise.all(fetchPromises);
-
-				for (const res of responses) {
-					if (!res.ok) {
-						const text = await res.text().catch(() => "");
-						throw new Error(
-							`Failed to download MRI volume (${res.status})${text ? ": " + text : ""}`,
-						);
-					}
-				}
-
-				const buffers = await Promise.all(
-					responses.map((res) => res.arrayBuffer()),
-				);
+				const buffers = await Promise.all([
+					scansApi.volume(scanId, selectedModality),
+					...(hasSegmentation ? [scansApi.volume(scanId, "segmentation")] : []),
+				]);
+				if (!mounted) return;
 
 				// Helper to load nifti buffer into imageData
 				const loadNifti = (bufferObj: ArrayBuffer, doNormalize: boolean) => {
@@ -418,15 +382,12 @@ export const VolumeViewer3D = ({
 				if (hasSegmentation && buffers.length > 1) {
 					const segImage = loadNifti(buffers[1], false); // Don't normalize masks
 					segMapper.setInputData(segImage);
-
-					// Apply initial segmentation overlay state
-					if (overlays && overlayColors) {
-						updateSegmentationOverlays(overlays, overlayColors);
-					}
 				}
 
+				const display = displayRef.current;
+				updateSegmentationOverlays(display.overlays, display.overlayColors);
 				// Brain-tissue pure grayscale transfer
-				updateColorMapping(brightness, contrast);
+				updateColorMapping(display.brightness, display.contrast);
 
 				// Opacity mapping
 				ofun.removeAllPoints();
@@ -441,11 +402,13 @@ export const VolumeViewer3D = ({
 				renderWindow.render();
 
 				if (mounted) setIsLoading(false);
-			} catch (err: any) {
-				// eslint-disable-line @typescript-eslint/no-explicit-any
-				console.error("[VolumeViewer3D]", err);
+			} catch (err) {
 				if (mounted) {
-					setError(err?.message ?? "Unknown error loading 3D volume.");
+					setError(
+						err instanceof Error
+							? err.message
+							: "Unknown error loading 3D volume.",
+					);
 					setIsLoading(false);
 				}
 			}
@@ -462,10 +425,6 @@ export const VolumeViewer3D = ({
 		scanId,
 		selectedModality,
 		hasSegmentation,
-		brightness,
-		contrast,
-		overlays,
-		overlayColors,
 		updateColorMapping,
 		updateSegmentationOverlays,
 	]);
@@ -477,9 +436,7 @@ export const VolumeViewer3D = ({
 
 	// Handle overlay reactivity dynamically
 	useEffect(() => {
-		if (overlays && overlayColors) {
-			updateSegmentationOverlays(overlays, overlayColors);
-		}
+		updateSegmentationOverlays(overlays, overlayColors);
 	}, [overlays, overlayColors, updateSegmentationOverlays]);
 
 	return (
@@ -534,14 +491,19 @@ export const VolumeViewer3D = ({
 						</span>
 
 						{/* Reset camera */}
-						<button
-							onClick={resetCamera}
-							title="Reset camera"
-							className="absolute bottom-4 right-4 z-10 flex items-center gap-1 rounded-md border border-border bg-card/80 px-2 py-1 text-[10px] font-medium text-muted-foreground backdrop-blur-sm transition-colors hover:border-medical/50 hover:text-medical"
-						>
-							<RotateCcw className="h-3 w-3" />
-							Reset
-						</button>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<button
+									onClick={resetCamera}
+									aria-label="Reset camera"
+									className="absolute bottom-4 right-4 z-10 flex items-center gap-1 rounded-md border border-border bg-card/80 px-2 py-1 text-[10px] font-medium text-muted-foreground backdrop-blur-sm transition-colors hover:border-medical/50 hover:text-medical focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+								>
+									<RotateCcw className="h-3 w-3" />
+									Reset
+								</button>
+							</TooltipTrigger>
+							<TooltipContent>Reset camera</TooltipContent>
+						</Tooltip>
 					</>
 				)}
 			</div>
@@ -554,6 +516,7 @@ export const VolumeViewer3D = ({
 							<button
 								key={m}
 								onClick={() => setSelectedModality(m)}
+								aria-pressed={selectedModality === m}
 								className={cn(
 									"rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
 									selectedModality === m
@@ -571,6 +534,7 @@ export const VolumeViewer3D = ({
 					<div className="flex flex-1 items-center gap-2">
 						<Sun className="h-3.5 w-3.5 text-muted-foreground" />
 						<Slider
+							aria-label="Brightness"
 							value={[brightness]}
 							onValueChange={([v]) => setBrightness(v)}
 							min={-100}
@@ -582,6 +546,7 @@ export const VolumeViewer3D = ({
 					<div className="flex flex-1 items-center gap-2">
 						<Contrast className="h-3.5 w-3.5 text-muted-foreground" />
 						<Slider
+							aria-label="Contrast"
 							value={[contrast]}
 							onValueChange={([v]) => setContrast(v)}
 							min={0.1}

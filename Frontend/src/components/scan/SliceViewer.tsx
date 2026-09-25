@@ -1,23 +1,16 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Slider } from "@/components/ui/slider";
-import { cn, hexToRgba } from "@/lib/utils";
-
-interface Overlays {
-	wt: boolean;
-	tc: boolean;
-	et: boolean;
-	opacity: number;
-}
+import { cn } from "@/lib/utils";
+import { scansApi } from "@/lib/api";
+import { parseHex } from "@/lib/color";
+import type { OverlayColors, Overlays } from "@/lib/types";
 
 interface SliceViewerProps {
 	scanId?: string;
 	modalities?: string[];
+	hasSegmentation: boolean;
 	overlays: Overlays;
-	overlayColors?: {
-		wt: string;
-		tc: string;
-		et: string;
-	};
+	overlayColors: OverlayColors;
 }
 
 const DEFAULT_TOTAL_SLICES = 155;
@@ -26,6 +19,7 @@ const CANVAS_SIZE = 480;
 export const SliceViewer = ({
 	scanId,
 	modalities,
+	hasSegmentation,
 	overlays,
 	overlayColors,
 }: SliceViewerProps) => {
@@ -52,14 +46,6 @@ export const SliceViewer = ({
 
 		return () => clearTimeout(timer);
 	}, [slice, overlays, overlayColors]);
-	// Parse hex color to RGB object
-	const getRgb = (hex: string) => {
-		const bigint = parseInt(hex.slice(1), 16);
-		const r = (bigint >> 16) & 255;
-		const g = (bigint >> 8) & 255;
-		const b = bigint & 255;
-		return { r, g, b };
-	};
 
 	const fetchSlice = useCallback(async () => {
 		if (!scanId || !canvasRef.current) return;
@@ -70,23 +56,17 @@ export const SliceViewer = ({
 
 		setIsLoading(true);
 		try {
-			const token = localStorage.getItem("token");
-			const headers = { Authorization: `Bearer ${token}` };
-
-			// Fetch Scan Slice
-			const scanRes = await fetch(
-				`http://localhost:8000/api/scans/${scanId}/slice/${debouncedSlice}?modality=${selectedModality.toLowerCase()}`,
-				{ headers },
+			const { image, totalSlices: total } = await scansApi.sliceImage(
+				scanId,
+				debouncedSlice,
+				selectedModality,
 			);
+			if (total > 0) {
+				setTotalSlices(total);
+				setSlice((current) => Math.min(current, total - 1));
+			}
 
-			if (!scanRes.ok) throw new Error("Failed to fetch slice");
-
-			// Update total slices if header is present
-			const total = scanRes.headers.get("X-Total-Slices");
-			if (total) setTotalSlices(parseInt(total));
-
-			const scanBlob = await scanRes.blob();
-			const scanBitmap = await createImageBitmap(scanBlob);
+			const scanBitmap = await createImageBitmap(image);
 
 			// Clear canvas
 			ctx.fillStyle = "#0a0a0a";
@@ -109,13 +89,11 @@ export const SliceViewer = ({
 
 			// Fetch and Draw Segmentation Overlay
 			try {
-				const segRes = await fetch(
-					`http://localhost:8000/api/scans/${scanId}/segmentation/${debouncedSlice}`,
-					{ headers },
-				);
-
-				if (segRes.ok) {
-					const segBlob = await segRes.blob();
+				if (hasSegmentation) {
+					const segBlob = await scansApi.segmentationImage(
+						scanId,
+						debouncedSlice,
+					);
 					const segBitmap = await createImageBitmap(segBlob);
 
 					// Create offscreen canvas for pixel manipulation
@@ -133,15 +111,9 @@ export const SliceViewer = ({
 						);
 						const data = imageData.data;
 
-						const wtColor = debouncedOverlayColors
-							? getRgb(debouncedOverlayColors.wt)
-							: { r: 234, g: 179, b: 8 };
-						const tcColor = debouncedOverlayColors
-							? getRgb(debouncedOverlayColors.tc)
-							: { r: 239, g: 68, b: 68 };
-						const etColor = debouncedOverlayColors
-							? getRgb(debouncedOverlayColors.et)
-							: { r: 59, g: 130, b: 246 };
+						const wtColor = parseHex(debouncedOverlayColors.wt);
+						const tcColor = parseHex(debouncedOverlayColors.tc);
+						const etColor = parseHex(debouncedOverlayColors.et);
 
 						for (let i = 0; i < data.length; i += 4) {
 							// Mask channels: R=WT, G=TC, B=ET
@@ -203,12 +175,6 @@ export const SliceViewer = ({
 				console.warn("Segmentation fetch failed or not available", err);
 			}
 
-			// HUD overlay (Now moved to DOM)
-			// ctx.fillStyle = "rgba(0, 200, 180, 0.7)";
-			// ctx.font = "11px monospace";
-			// ctx.fillText(`Slice: ${debouncedSlice + 1}/${totalSlices}`, 12, 20);
-			// ctx.fillText(`Modality: ${selectedModality}`, 12, 36);
-
 			// Orientation markers
 			ctx.fillStyle = "rgba(0, 200, 180, 0.5)";
 			ctx.font = "13px monospace";
@@ -224,6 +190,7 @@ export const SliceViewer = ({
 		}
 	}, [
 		scanId,
+		hasSegmentation,
 		debouncedSlice,
 		selectedModality,
 		debouncedOverlays,
@@ -261,6 +228,7 @@ export const SliceViewer = ({
 					Slice {slice + 1}
 				</span>
 				<Slider
+					aria-label="Slice"
 					value={[slice]}
 					onValueChange={([v]) => setSlice(v)}
 					min={0}
@@ -310,6 +278,7 @@ export const SliceViewer = ({
 						<button
 							key={m}
 							onClick={() => setSelectedModality(m)}
+							aria-pressed={selectedModality === m}
 							className={cn(
 								"rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
 								selectedModality === m

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { AppSidebar } from "./AppSidebar";
-import { useAuth } from "../auth/AuthContext";
-import { LogOut, Settings, Bell, Search } from "lucide-react";
+import { useAuth } from "../auth/useAuth";
+import { LogOut, Settings, Search } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -12,10 +12,10 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useConfig } from "@/hooks/use-config";
+import { APP_CONFIG } from "@/lib/config";
+import { initials } from "@/lib/user-format";
 
 export const AppLayout = () => {
-	const { data: config } = useConfig();
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
 	const [searchQuery, setSearchQuery] = useState("");
@@ -34,7 +34,7 @@ export const AppLayout = () => {
 						<div className="relative flex-1">
 							<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 							<Input
-								placeholder={config?.dashboard.searchPlaceholder || "Search..."}
+								placeholder={APP_CONFIG.dashboard.searchPlaceholder}
 								className="h-9 border-none bg-muted/50 pl-9 text-sm"
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.target.value)}
@@ -61,11 +61,11 @@ export const AppLayout = () => {
 							</div>
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild>
-									<button className="flex h-9 w-9 items-center justify-center rounded-full border border-medical/20 bg-medical/10 font-bold text-medical transition-all hover:bg-medical/20">
-										{user?.fullName
-											.split(" ")
-											.map((n) => n[0])
-											.join("")}
+									<button
+										aria-label="Account menu"
+										className="flex h-9 w-9 items-center justify-center rounded-full border border-medical/20 bg-medical/10 font-bold text-medical transition-all hover:bg-medical/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+									>
+										{initials(user?.fullName ?? "")}
 									</button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="end" className="w-56">

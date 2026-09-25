@@ -1,53 +1,25 @@
 import {
-	Brain,
-	Loader2,
-	CheckCircle2,
 	AlertTriangle,
-	HelpCircle,
-	LucideIcon,
+	Brain,
+	CheckCircle2,
+	Loader2,
+	type LucideIcon,
 } from "lucide-react";
-import { useScans } from "@/hooks/use-data";
+import { useScans } from "@/hooks/use-scans";
+import { isInProgress } from "@/lib/scan-format";
 import { cn } from "@/lib/utils";
 
-const iconMap: Record<string, LucideIcon> = {
-	total: Brain,
-	processing: Loader2,
-	completed: CheckCircle2,
-	flagged: AlertTriangle,
-};
-
-const colorMap: Record<string, string> = {
-	total: "text-medical bg-medical-light",
-	processing: "text-info bg-info/10",
-	completed: "text-success bg-success/10",
-	flagged: "text-warning bg-warning/10",
-};
+interface Stat {
+	label: string;
+	value: number;
+	icon: LucideIcon;
+	colour: string;
+}
 
 export const StatsCards = () => {
 	const { data: scans, isLoading } = useScans();
 
-	const stats = scans
-		? [
-				{ label: "Total Scans", value: scans.length, type: "total" },
-				{
-					label: "Processing",
-					value: 0,
-					type: "processing",
-				},
-				{
-					label: "Completed",
-					value: scans.length,
-					type: "completed",
-				},
-				{
-					label: "Flagged",
-					value: scans.filter((s) => s.results?.detected).length,
-					type: "flagged",
-				},
-			]
-		: null;
-
-	if (isLoading || !stats) {
+	if (isLoading || !scans) {
 		return (
 			<div className="grid grid-cols-4 gap-5">
 				{[1, 2, 3, 4].map((i) => (
@@ -60,34 +32,58 @@ export const StatsCards = () => {
 		);
 	}
 
+	const stats: Stat[] = [
+		{
+			label: "Total Scans",
+			value: scans.length,
+			icon: Brain,
+			colour: "text-medical bg-medical-light",
+		},
+		{
+			label: "Processing",
+			value: scans.filter(isInProgress).length,
+			icon: Loader2,
+			colour: "text-info bg-info/10",
+		},
+		{
+			label: "Completed",
+			value: scans.filter((s) => s.status === "completed").length,
+			icon: CheckCircle2,
+			colour: "text-success bg-success/10",
+		},
+		{
+			label: "Flagged",
+			value: scans.filter((s) => s.results?.detected).length,
+			icon: AlertTriangle,
+			colour: "text-warning bg-warning/10",
+		},
+	];
+
 	return (
 		<div className="grid grid-cols-4 gap-5">
-			{stats.map((stat, index) => {
-				const Icon = iconMap[stat.type] || HelpCircle;
-				return (
-					<div
-						key={stat.label}
-						className={cn("rounded-xl border border-border bg-card p-5")}
-					>
-						<div className="mb-3 flex items-center justify-between">
-							<span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-								{stat.label}
-							</span>
-							<div
-								className={cn(
-									"flex h-9 w-9 items-center justify-center rounded-lg",
-									colorMap[stat.type] || "bg-muted text-muted-foreground",
-								)}
-							>
-								<Icon className={cn("w-4.5 h-4.5")} />
-							</div>
+			{stats.map(({ label, value, icon: Icon, colour }) => (
+				<div
+					key={label}
+					className="rounded-xl border border-border bg-card p-5"
+				>
+					<div className="mb-3 flex items-center justify-between">
+						<span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+							{label}
+						</span>
+						<div
+							className={cn(
+								"flex h-9 w-9 items-center justify-center rounded-lg",
+								colour,
+							)}
+						>
+							<Icon className="h-4 w-4" />
 						</div>
-						<p className="text-3xl font-bold tracking-tight text-foreground">
-							{stat.value}
-						</p>
 					</div>
-				);
-			})}
+					<p className="text-3xl font-bold tracking-tight text-foreground">
+						{value}
+					</p>
+				</div>
+			))}
 		</div>
 	);
 };

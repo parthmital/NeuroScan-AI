@@ -1,22 +1,11 @@
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
-
-interface Overlays {
-	wt: boolean;
-	tc: boolean;
-	et: boolean;
-	opacity: number;
-}
+import type { OverlayColors, Overlays, TumourRegion } from "@/lib/types";
 
 interface SegmentationControlsProps {
 	overlays: Overlays;
 	onOverlaysChange: (overlays: Overlays) => void;
-	overlayColors?: {
-		wt: string;
-		tc: string;
-		et: string;
-	};
+	overlayColors: OverlayColors;
 }
 
 export const SegmentationControls = ({
@@ -29,22 +18,22 @@ export const SegmentationControls = ({
 			key: "wt" as const,
 			label: "Whole Tumour (WT)",
 			description: "Includes all tumour sub-regions",
-			color: overlayColors?.wt || "hsl(50, 100%, 50%)",
+			color: overlayColors.wt,
 		},
 		{
 			key: "tc" as const,
 			label: "Tumour Core (TC)",
 			description: "Necrotic core and enhancing tumour",
-			color: overlayColors?.tc || "hsl(0, 100%, 50%)",
+			color: overlayColors.tc,
 		},
 		{
 			key: "et" as const,
 			label: "Enhancing Tumour (ET)",
 			description: "Active tumour with contrast enhancement",
-			color: overlayColors?.et || "hsl(220, 100%, 60%)",
+			color: overlayColors.et,
 		},
 	];
-	const toggleRegion = (key: "wt" | "tc" | "et") => {
+	const toggleRegion = (key: TumourRegion) => {
 		onOverlaysChange({ ...overlays, [key]: !overlays[key] });
 	};
 
@@ -78,6 +67,7 @@ export const SegmentationControls = ({
 							</div>
 							<Switch
 								checked={overlays[region.key]}
+								aria-label={`Show ${region.label}`}
 								onCheckedChange={() => toggleRegion(region.key)}
 								className="shrink-0"
 							/>
@@ -96,6 +86,7 @@ export const SegmentationControls = ({
 					</span>
 				</div>
 				<Slider
+					aria-label="Overlay opacity"
 					value={[overlays.opacity]}
 					onValueChange={([v]) => setOpacity(v)}
 					min={0}

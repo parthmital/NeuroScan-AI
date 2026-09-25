@@ -1,8 +1,11 @@
 export type Modality = "FLAIR" | "T1" | "T1CE" | "T2";
-export type ScanStatus =
-	"uploading" | "queued" | "processing" | "completed" | "failed";
+export type ScanStatus = "queued" | "processing" | "completed" | "failed";
 export type PipelineStep =
-	"detection" | "classification" | "segmentation" | "complete";
+	| "queued"
+	| "detection"
+	| "classification"
+	| "segmentation"
+	| "complete";
 
 export interface ScanResult {
 	detected: boolean;
@@ -23,7 +26,36 @@ export interface MRIScan {
 	status: ScanStatus;
 	pipelineStep: PipelineStep;
 	progress: number;
-	results?: ScanResult;
+	results: ScanResult | null;
+	createdAt: string;
+	hasSegmentation: boolean;
+	errorMessage: string | null;
+}
+
+export interface User {
+	id: number;
+	username: string;
+	email: string;
+	fullName: string;
+	title: string | null;
+	department: string | null;
+	institution: string | null;
+	createdAt: string;
+	totpEnabled: boolean;
+}
+
+export interface TwoFactorSetup {
+	secret: string;
+	otpauthUri: string;
+	qrSvg: string;
+}
+
+export type TumourRegion = "wt" | "tc" | "et";
+
+export type OverlayColors = Record<TumourRegion, string>;
+
+export interface Overlays extends Record<TumourRegion, boolean> {
+	opacity: number;
 }
 
 export interface AppConfig {
@@ -82,10 +114,4 @@ export interface AppConfig {
 		notAvailable: string;
 		processingRequired: string;
 	};
-}
-
-export interface AppStat {
-	label: string;
-	value: number;
-	type: string;
 }

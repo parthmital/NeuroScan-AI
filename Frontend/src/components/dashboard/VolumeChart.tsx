@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
 	BarChart,
 	Bar,
@@ -8,31 +7,21 @@ import {
 	ResponsiveContainer,
 	CartesianGrid,
 } from "recharts";
-import { useScans } from "@/hooks/use-data";
-import { useConfig } from "@/hooks/use-config";
-import { MRIScan, AppConfig } from "@/lib/types";
+import { useScans } from "@/hooks/use-scans";
+import { useOverlayColors } from "@/hooks/use-overlay-colors";
+import { APP_CONFIG } from "@/lib/config";
 
 export const VolumeChart = () => {
-	const { data: scans, isLoading: scansLoading } = useScans();
-	const { data: config, isLoading: configLoading } = useConfig();
-	const [overlayColors] = useState(() => {
-		const saved = localStorage.getItem("overlayColors");
-		return saved
-			? JSON.parse(saved)
-			: {
-					wt: "#eab308",
-					tc: "#ef4444",
-					et: "#3b82f6",
-				};
-	});
+	const { data: scans, isLoading } = useScans();
+	const { colors: overlayColors } = useOverlayColors();
 
-	if (scansLoading || configLoading || !scans || !config) {
+	if (isLoading || !scans) {
 		return (
 			<div className="h-[320px] rounded-xl border border-border bg-card p-6" />
 		);
 	}
 
-	const chartData = (scans as MRIScan[])
+	const chartData = scans
 		.filter((s) => s.results?.detected)
 		.map((s) => ({
 			name: s.patientId.split("-").pop(),
@@ -44,10 +33,10 @@ export const VolumeChart = () => {
 	return (
 		<div className="animate-fade-in rounded-xl border border-border bg-card p-6">
 			<h2 className="mb-1 text-sm font-semibold text-foreground">
-				{(config as AppConfig).volumeChart.title}
+				{APP_CONFIG.volumeChart.title}
 			</h2>
 			<p className="mb-6 text-xs text-muted-foreground">
-				{(config as AppConfig).volumeChart.subtitle}
+				{APP_CONFIG.volumeChart.subtitle}
 			</p>
 			<div className="h-[220px]">
 				<ResponsiveContainer width="100%" height="100%">

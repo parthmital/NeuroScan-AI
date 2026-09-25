@@ -6,17 +6,17 @@ Every number in this README is read from the saved notebook outputs and the file
 
 ## At a glance
 
-| Item                      | Value                                                                                                                                                                  |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Task                      | 3-class classification: Glioma (0), Meningioma (1), Pituitary (2). There is no "no tumour" class.                                                                      |
-| Data                      | 5,828 JPG images from 2 Kaggle datasets; 4,705 remain after perceptual-hash (pHash) deduplication, a 19.27% reduction                                                  |
-| Split                     | Stratified 70/15/15 with seed 42: train 3,293, validation 706, test 706                                                                                                |
-| Recipe                    | 10 epochs, AdamW (lr 3e-4), cosine LR schedule, `CrossEntropyLoss`, AMP fp16, 2x Tesla T4                                                                              |
-| Best test accuracy        | SwinBase, 0.9858 (10 of 706 wrong). CoAtNet-0 (0.9844) and InceptionV3 (0.9830) are within 2 errors.                                                                   |
-| Lowest test accuracy      | ViT-B16, 0.9051                                                                                                                                                        |
-| Efficiency                | EfficientNetB0 matches ResNet50's test accuracy (0.9759) with 0.769 vs 8.174 GFLOPs per image                                                                          |
-| Hardest class             | Meningioma, for every model                                                                                                                                            |
-| Model used by the web app | `EfficientNetB0.pth` in this folder, loaded by [`Backend/processor.py`](../processor.py). Its origin is not recorded (see [B6](#b-issues-that-affect-interpretation)). |
+| Item                      | Value                                                                                                                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Task                      | 3-class classification: Glioma (0), Meningioma (1), Pituitary (2). There is no "no tumour" class.                                                                                                              |
+| Data                      | 5,828 JPG images from 2 Kaggle datasets; 4,705 remain after perceptual-hash (pHash) deduplication, a 19.27% reduction                                                                                          |
+| Split                     | Stratified 70/15/15 with seed 42: train 3,293, validation 706, test 706                                                                                                                                        |
+| Recipe                    | 10 epochs, AdamW (lr 3e-4), cosine LR schedule, `CrossEntropyLoss`, AMP fp16, 2x Tesla T4                                                                                                                      |
+| Best test accuracy        | SwinBase, 0.9858 (10 of 706 wrong). CoAtNet-0 (0.9844) and InceptionV3 (0.9830) are within 2 errors.                                                                                                           |
+| Lowest test accuracy      | ViT-B16, 0.9051                                                                                                                                                                                                |
+| Efficiency                | EfficientNetB0 matches ResNet50's test accuracy (0.9759) with 0.769 vs 8.174 GFLOPs per image                                                                                                                  |
+| Hardest class             | Meningioma, for every model                                                                                                                                                                                    |
+| Model used by the web app | `EfficientNetB0.pth` in this folder, loaded by [`Backend/neuroscan/inference/processor.py`](../neuroscan/inference/processor.py). Its origin is not recorded (see [B6](#b-issues-that-affect-interpretation)). |
 
 Main caveats, detailed in [Anomalies and limitations](#anomalies-and-limitations):
 

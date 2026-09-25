@@ -1,0 +1,70 @@
+[project]
+name = "neuroscan-backend"
+version = "1.0.0"
+requires-python = ">=3.11,<3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["Materials", "*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "BLE", "SIM", "RUF"]
+ignore = [
+    "S101",   # assert is used only in tests
+    "UP007",  # Optional[...] kept in SQLModel/pydantic fields for readability
+    "UP045",  # same as UP007 for Optional
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106"]  # fixed test credentials
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI dependency markers are declarative defaults, not calls evaluated per request.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.File", "fastapi.Form", "fastapi.Path"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["neuroscan"]
+
+[tool.mypy]
+python_version = "3.11"
+packages = ["neuroscan"]
+strict = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["neuroscan.migrations.*"]
+ignore_errors = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+filterwarnings = ["error::pytest.PytestUnraisableExceptionWarning"]
+
+[tool.importlinter]
+root_package = "neuroscan"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Layers: api -> scans -> inference; security and models below"
+type = "layers"
+layers = [
+    "neuroscan.app",
+    "neuroscan.api",
+    "neuroscan.scans",
+    "neuroscan.inference",
+]
+
+[[tool.importlinter.contracts]]
+name = "Inference is framework-free (no web, database, or security imports)"
+type = "forbidden"
+source_modules = ["neuroscan.inference"]
+forbidden_modules = ["fastapi", "starlette", "sqlmodel", "sqlalchemy", "neuroscan.security", "neuroscan.db", "neuroscan.models"]
+
+[[tool.importlinter.contracts]]
+name = "Security primitives do not depend on HTTP, storage, or inference"
+type = "forbidden"
+source_modules = ["neuroscan.security"]
+forbidden_modules = ["fastapi", "starlette", "neuroscan.api", "neuroscan.scans", "neuroscan.inference", "neuroscan.db"]

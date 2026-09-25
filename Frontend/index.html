@@ -48,78 +48,11 @@
 		/>
 		<meta name="twitter:image" content="/og.png" />
 
-		<!-- Additional SEO -->
-		<meta
-			name="robots"
-			content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-		/>
-		<meta name="language" content="English" />
-		<meta name="category" content="Healthcare, Medical Technology, AI" />
-		<link rel="canonical" href="http://localhost:3000" />
+		<!-- Patient data: keep the app out of search engines -->
+		<meta name="robots" content="noindex, nofollow" />
+		<meta name="referrer" content="no-referrer" />
 
-		<!-- Structured Data -->
-		<script type="application/ld+json">
-			{
-				"@context": "https://schema.org",
-				"@type": "MedicalWebApplication",
-				"name": "NeuroScan AI",
-				"description": "Advanced medical imaging platform for MRI analysis, AI-powered tumour detection, classification, and segmentation",
-				"url": "http://localhost:3000",
-				"applicationCategory": "HealthApplication",
-				"operatingSystem": "Web Browser",
-				"offers": {
-					"@type": "Offer",
-					"price": "0",
-					"priceCurrency": "USD"
-				},
-				"provider": {
-					"@type": "Organization",
-					"name": "NeuroScan AI",
-					"url": "http://localhost:3000"
-				},
-				"medicalSpecialty": "Radiology",
-				"about": [
-					{
-						"@type": "Thing",
-						"name": "MRI Analysis"
-					},
-					{
-						"@type": "Thing",
-						"name": "Tumour Detection"
-					},
-					{
-						"@type": "Thing",
-						"name": "Medical Imaging"
-					},
-					{
-						"@type": "Thing",
-						"name": "AI Healthcare"
-					}
-				],
-				"audience": {
-					"@type": "Audience",
-					"audienceType": "Physicians, Radiologists, Medical Professionals"
-				}
-			}
-		</script>
-		<script>
-			(function () {
-				try {
-					const theme = localStorage.getItem("theme");
-					if (
-						theme === "dark" ||
-						(!theme &&
-							window.matchMedia("(prefers-color-scheme: dark)").matches)
-					) {
-						document.documentElement.classList.add("dark");
-					} else {
-						document.documentElement.classList.remove("dark");
-					}
-				} catch (e) {
-					console.error("Theme initialization failed:", e);
-				}
-			})();
-		</script>
+		<script src="/theme-init.js"></script>
 	</head>
 
 	<body>
