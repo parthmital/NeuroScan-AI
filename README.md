@@ -193,6 +193,8 @@ NeuroScan-AI/
 |-- .env.example              Every backend setting, with how to generate secrets
 |-- .github/                  CI workflow (SHA-pinned actions) and Dependabot
 |-- .pre-commit-config.yaml   gitleaks secret scan before each commit
+|-- .gitattributes            LF line endings on every OS, matching Prettier
+|-- pyproject.toml            black settings matching ruff, for `black .` from the root
 |-- start.ps1                 Starts backend and frontend together on Windows
 |-- Backend/
 |   |-- main.py               ASGI entry point (uvicorn main:app)
@@ -408,6 +410,8 @@ CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs all of these on
 | Backend security          | `bandit -q -r neuroscan main.py`, `pip-audit -r requirements.txt -r requirements-dev.txt` | No findings                                                                      |
 | Everything frontend       | `npm run check` (in `Frontend/`)                                                          | Strict typecheck, lint, Prettier, jscpd (0 clones), 18 tests, and build all pass |
 | Frontend dependency audit | `npm audit`                                                                               | 0 vulnerabilities                                                                |
+
+From the repository root, `black .` and `npx prettier . --write` produce the same output CI checks: black uses ruff's 100-character line length from the root `pyproject.toml`, and `.gitattributes` checks files out with LF so Prettier does not rewrite line endings on Windows.
 
 ## Troubleshooting
 

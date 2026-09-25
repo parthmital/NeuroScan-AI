@@ -1,0 +1,6 @@
+# Root-level formatter settings for running `black .` from the repository root.
+# Backend/pyproject.toml configures ruff, which CI uses (`ruff format --check`); these
+# values match it so black and ruff produce identical code.
+[tool.black]
+line-length = 100
+target-version = ["py311"]
