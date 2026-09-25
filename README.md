@@ -199,7 +199,6 @@ The notebooks run on Kaggle with 2x Tesla T4 GPUs. Binary Detection and Classifi
 ```text
 NeuroScan-AI/
 |-- README.md                 This file
-|-- AGENTS.md                 Conventions for coding agents working in this repository
 |-- .env.example              Template for the root .env file
 |-- start.ps1                 Starts backend and frontend together on Windows
 |-- Backend/
@@ -505,7 +504,7 @@ Follow the [Configuration](#configuration) section and keep `.env` out of Git (i
 
 ## Contributing
 
-- Read [`AGENTS.md`](AGENTS.md) for the coding conventions: typed Python, device-agnostic PyTorch, ownership checks on scan routes, `@/` imports and shared types in `src/lib/types.ts` on the frontend.
+- Follow the existing conventions: typed Python, device-agnostic PyTorch, ownership checks on scan routes, `@/` imports and shared types in `src/lib/types.ts` on the frontend.
 - Keep API response shapes in `Backend/models.py` and `Frontend/src/lib/types.ts` in sync.
 - Do not commit `.pth`, `.db`, `.nii` or `.nii.gz` files; `.gitignore` already excludes them.
 - Changing `VNet3D` or the EfficientNet head in `processor.py` breaks loading of the existing weight files.
