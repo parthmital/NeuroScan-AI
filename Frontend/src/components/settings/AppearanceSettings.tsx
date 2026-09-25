@@ -42,7 +42,7 @@ const ThemeOption = ({
 		aria-checked={selected}
 		onClick={onSelect}
 		className={cn(
-			"flex items-center gap-3 rounded-lg border-2 p-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+			"flex items-center gap-3 rounded-lg border-2 p-4 text-left focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring",
 			selected
 				? "border-medical bg-medical/5"
 				: "border-border hover:border-muted-foreground/30",
@@ -126,7 +126,7 @@ export const AppearanceSettings = () => {
 											aria-label={swatch.name}
 											onClick={() => setColor(region.id, swatch.hex)}
 											className={cn(
-												"flex h-7 w-7 items-center justify-center rounded-md border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+												"flex h-7 w-7 items-center justify-center rounded-md border-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
 												selected ? "border-foreground" : "border-transparent",
 											)}
 											style={{ backgroundColor: swatch.hex }}

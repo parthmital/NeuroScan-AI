@@ -199,6 +199,8 @@ export const SliceViewer = ({
 
 	useEffect(() => {
 		if (scanId) {
+			// Fetching from the API is external sync; its loading flag is set before the first await.
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			fetchSlice();
 		}
 	}, [fetchSlice, scanId]);
@@ -245,7 +247,7 @@ export const SliceViewer = ({
 				className="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-border bg-black"
 			>
 				{isLoading && (
-					<div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+					<div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-xs">
 						<div className="flex flex-col items-center gap-2">
 							<div className="h-8 w-8 animate-spin rounded-full border-2 border-medical border-t-transparent" />
 							<p className="font-mono text-[10px] uppercase tracking-widest text-medical">
@@ -282,7 +284,7 @@ export const SliceViewer = ({
 							className={cn(
 								"rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
 								selectedModality === m
-									? "border-medical bg-medical text-medical-foreground shadow-sm"
+									? "border-medical bg-medical text-medical-foreground shadow-xs"
 									: "border-border bg-card text-muted-foreground hover:border-medical/50 hover:bg-muted/50",
 							)}
 						>

@@ -141,7 +141,7 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 					<div className="space-y-2">
 						<Label
 							htmlFor="twofa-password"
-							className="text-xs text-muted-foreground"
+							className="text-xs leading-6 text-muted-foreground"
 						>
 							Confirm your password to continue
 						</Label>
@@ -198,7 +198,7 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 					<div className="space-y-2">
 						<Label
 							htmlFor="twofa-enable-code"
-							className="text-xs text-muted-foreground"
+							className="text-xs leading-6 text-muted-foreground"
 						>
 							Code from the app
 						</Label>
@@ -233,7 +233,7 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 						<div className="space-y-2">
 							<Label
 								htmlFor="twofa-disable-password"
-								className="text-xs text-muted-foreground"
+								className="text-xs leading-6 text-muted-foreground"
 							>
 								Password
 							</Label>
@@ -249,7 +249,7 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 						<div className="space-y-2">
 							<Label
 								htmlFor="twofa-disable-code"
-								className="text-xs text-muted-foreground"
+								className="text-xs leading-6 text-muted-foreground"
 							>
 								Code from the app
 							</Label>

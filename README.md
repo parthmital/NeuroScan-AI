@@ -170,13 +170,13 @@ Ranges from [`Frontend/package.json`](Frontend/package.json); exact versions are
 
 | Package                                                 | Version range   | Role                                                      |
 | ------------------------------------------------------- | --------------- | --------------------------------------------------------- |
-| React, React DOM                                        | ^18.3.1         | UI                                                        |
-| TypeScript (strict mode)                                | ^5.6.0          | Type checking                                             |
+| React, React DOM                                        | ^19.3.0         | UI                                                        |
+| TypeScript (strict mode)                                | ~6.0.3          | Type checking                                             |
 | Vite with `@vitejs/plugin-react-swc`                    | ^8.3.1          | Dev server with `/api` proxy, production build            |
 | vite-plugin-glsl                                        | ^1.6.1          | Loads the `.glsl` shaders that vtk.js imports             |
 | React Router DOM                                        | ^7.18.4         | Client-side routing                                       |
-| TanStack React Query                                    | ^5.83.0         | Scan queries, polling while processing, mutations         |
-| Tailwind CSS, Radix UI primitives                       | see file        | Styling and accessible components in `src/components/ui/` |
+| TanStack React Query                                    | ^5.103.1        | Scan queries, polling while processing, mutations         |
+| Tailwind CSS 4, Radix UI primitives                     | see file        | Styling and accessible components in `src/components/ui/` |
 | @kitware/vtk.js, nifti-reader-js                        | ^37.3.0, ^0.8.0 | 3D volume rendering                                       |
 | Recharts, sonner, lucide-react                          | see file        | Chart, toasts, icons                                      |
 | Vitest, Testing Library, jsdom, ESLint, Prettier, jscpd | see file        | Tests, lint, format, duplicate detection                  |

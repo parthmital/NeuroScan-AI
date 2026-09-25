@@ -20,6 +20,11 @@ updates:
     groups:
       npm:
         patterns: ["*"]
+    ignore:
+      # typescript-eslint 8 supports TypeScript <6.1; a TypeScript 7 bump makes `npm ci` fail.
+      # Remove once typescript-eslint declares TypeScript 7 support.
+      - dependency-name: typescript
+        versions: [">=7"]
   - package-ecosystem: github-actions
     directory: /
     schedule:

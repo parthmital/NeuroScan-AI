@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/components/auth/useAuth";
@@ -55,8 +55,12 @@ export const ProfileForm = ({ user }: { user: User }) => {
 	const [form, setForm] = useState(() => fromUser(user));
 	const [error, setError] = useState<string | null>(null);
 	const [saving, setSaving] = useState(false);
+	const [syncedUser, setSyncedUser] = useState(user);
 
-	useEffect(() => setForm(fromUser(user)), [user]);
+	if (user !== syncedUser) {
+		setSyncedUser(user);
+		setForm(fromUser(user));
+	}
 
 	const save = async (event: React.FormEvent) => {
 		event.preventDefault();
@@ -102,7 +106,7 @@ export const ProfileForm = ({ user }: { user: User }) => {
 					>
 						<Label
 							htmlFor={`profile-${field.id}`}
-							className="text-xs font-medium text-muted-foreground"
+							className="text-xs leading-6 font-medium text-muted-foreground"
 						>
 							{field.label}
 						</Label>

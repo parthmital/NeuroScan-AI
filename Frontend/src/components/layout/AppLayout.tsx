@@ -23,7 +23,7 @@ export const AppLayout = () => {
 	return (
 		<div className="flex min-h-screen bg-background">
 			{/* Sidebar */}
-			<div className="w-[260px] flex-shrink-0 border-r border-border">
+			<div className="w-[260px] shrink-0 border-r border-border">
 				<AppSidebar />
 			</div>
 
@@ -49,7 +49,7 @@ export const AppLayout = () => {
 						</div>
 					</div>
 					<div className="flex items-center gap-3">
-						<div className="h-8 w-[1px] bg-border" />
+						<div className="h-8 w-px bg-border" />
 						<div className="flex items-center gap-3 pl-1">
 							<div className="flex flex-col items-end">
 								<span className="text-sm font-medium leading-none">
@@ -63,7 +63,7 @@ export const AppLayout = () => {
 								<DropdownMenuTrigger asChild>
 									<button
 										aria-label="Account menu"
-										className="flex h-9 w-9 items-center justify-center rounded-full border border-medical/20 bg-medical/10 font-bold text-medical transition-all hover:bg-medical/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+										className="flex h-9 w-9 items-center justify-center rounded-full border border-medical/20 bg-medical/10 font-bold text-medical transition-all hover:bg-medical/20 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
 									>
 										{initials(user?.fullName ?? "")}
 									</button>

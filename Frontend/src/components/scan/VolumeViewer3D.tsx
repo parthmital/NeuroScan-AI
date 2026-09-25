@@ -46,7 +46,9 @@ export const VolumeViewer3D = ({
 	// Latest display settings, read when a volume finishes loading. Keeping them out of the
 	// loading effect's dependencies stops every slider move from re-downloading the volume.
 	const displayRef = useRef({ overlays, overlayColors, brightness, contrast });
-	displayRef.current = { overlays, overlayColors, brightness, contrast };
+	useEffect(() => {
+		displayRef.current = { overlays, overlayColors, brightness, contrast };
+	});
 
 	// Exposed reset camera handle
 	const resetCameraRef = useRef<(() => void) | null>(null);
@@ -448,7 +450,7 @@ export const VolumeViewer3D = ({
 			>
 				{/* Loading overlay */}
 				{isLoading && (
-					<div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+					<div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-xs">
 						<div className="flex flex-col items-center gap-2">
 							<div className="h-8 w-8 animate-spin rounded-full border-2 border-medical border-t-transparent" />
 							<p className="font-mono text-[10px] uppercase tracking-widest text-medical">
@@ -496,7 +498,7 @@ export const VolumeViewer3D = ({
 								<button
 									onClick={resetCamera}
 									aria-label="Reset camera"
-									className="absolute bottom-4 right-4 z-10 flex items-center gap-1 rounded-md border border-border bg-card/80 px-2 py-1 text-[10px] font-medium text-muted-foreground backdrop-blur-sm transition-colors hover:border-medical/50 hover:text-medical focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+									className="absolute bottom-4 right-4 z-10 flex items-center gap-1 rounded-md border border-border bg-card/80 px-2 py-1 text-[10px] font-medium text-muted-foreground backdrop-blur-xs transition-colors hover:border-medical/50 hover:text-medical focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
 								>
 									<RotateCcw className="h-3 w-3" />
 									Reset
@@ -520,7 +522,7 @@ export const VolumeViewer3D = ({
 								className={cn(
 									"rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
 									selectedModality === m
-										? "border-medical bg-medical text-medical-foreground shadow-sm"
+										? "border-medical bg-medical text-medical-foreground shadow-xs"
 										: "border-border bg-card text-muted-foreground hover:border-medical/50 hover:bg-muted/50",
 								)}
 							>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,13 +26,15 @@ export const EditScanDialog = ({ scan, onClose }: ScanDialogProps) => {
 	const [form, setForm] = useState({ patientName: "", patientId: "" });
 	const [error, setError] = useState<string | null>(null);
 	const updateScan = useUpdateScan();
+	const [syncedScan, setSyncedScan] = useState<MRIScan | null>(null);
 
-	useEffect(() => {
+	if (scan !== syncedScan) {
+		setSyncedScan(scan);
 		if (scan) {
 			setForm({ patientName: scan.patientName, patientId: scan.patientId });
 			setError(null);
 		}
-	}, [scan]);
+	}
 
 	const save = async (event: React.FormEvent) => {
 		event.preventDefault();

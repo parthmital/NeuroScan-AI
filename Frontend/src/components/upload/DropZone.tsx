@@ -241,7 +241,7 @@ export const DropZone = () => {
 							className={cn(
 								"rounded-lg px-4 py-2 text-sm font-medium transition-all",
 								selectedModalities.has(mod)
-									? "bg-medical text-medical-foreground shadow-sm"
+									? "bg-medical text-medical-foreground shadow-xs"
 									: "bg-muted text-muted-foreground hover:bg-muted/80",
 							)}
 						>
@@ -316,7 +316,7 @@ export const DropZone = () => {
 								<button
 									onClick={() => removeFile(file.id)}
 									aria-label={`Remove ${file.name}`}
-									className="rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100"
+									className="rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100"
 								>
 									<X className="h-3.5 w-3.5" />
 								</button>

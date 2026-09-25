@@ -45,7 +45,7 @@ export const PasswordForm = () => {
 		<div className="space-y-2">
 			<Label
 				htmlFor={`password-${key}`}
-				className="text-xs font-medium text-muted-foreground"
+				className="text-xs leading-6 font-medium text-muted-foreground"
 			>
 				{label}
 			</Label>

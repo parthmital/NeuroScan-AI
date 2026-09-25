@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Pencil, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,13 +31,16 @@ const ScanLibrary = () => {
 	const location = useLocation();
 	const querySearch = new URLSearchParams(location.search).get("search") || "";
 	const [search, setSearch] = useState(querySearch);
+	const [syncedQuery, setSyncedQuery] = useState(querySearch);
 	const [editingScan, setEditingScan] = useState<MRIScan | null>(null);
 	const [deletingScan, setDeletingScan] = useState<MRIScan | null>(null);
 	const { data: scans, isLoading } = useScans();
 
-	useEffect(() => {
+	// A new ?search= value replaces whatever was typed.
+	if (querySearch !== syncedQuery) {
+		setSyncedQuery(querySearch);
 		setSearch(querySearch);
-	}, [querySearch]);
+	}
 
 	if (isLoading || !scans) {
 		return (

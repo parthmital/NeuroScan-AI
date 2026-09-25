@@ -1,8 +1,135 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap")
+layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@utility container {
+	margin-inline: auto;
+	padding-inline: 2rem;
+	@media (width >= --theme(--breakpoint-sm)) {
+		max-width: none;
+	}
+	@media (width >= 1400px) {
+		max-width: 1400px;
+	}
+}
+
+@theme {
+	/* Tailwind v3 line heights: absolute values inherit as-is, unlike v4's unitless ratios. */
+	--text-xs--line-height: 1rem;
+	--text-sm--line-height: 1.25rem;
+	--text-base--line-height: 1.5rem;
+	--text-lg--line-height: 1.75rem;
+	--text-xl--line-height: 1.75rem;
+	--text-2xl--line-height: 2rem;
+	--text-3xl--line-height: 2.25rem;
+	--text-4xl--line-height: 2.5rem;
+
+	--font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+
+	--color-border: hsl(var(--border));
+	--color-input: hsl(var(--input));
+	--color-ring: hsl(var(--ring));
+	--color-background: hsl(var(--background));
+	--color-foreground: hsl(var(--foreground));
+
+	--color-primary: hsl(var(--primary));
+	--color-primary-foreground: hsl(var(--primary-foreground));
+
+	--color-secondary: hsl(var(--secondary));
+	--color-secondary-foreground: hsl(var(--secondary-foreground));
+
+	--color-destructive: hsl(var(--destructive));
+	--color-destructive-foreground: hsl(var(--destructive-foreground));
+
+	--color-muted: hsl(var(--muted));
+	--color-muted-foreground: hsl(var(--muted-foreground));
+
+	--color-accent: hsl(var(--accent));
+	--color-accent-foreground: hsl(var(--accent-foreground));
+
+	--color-popover: hsl(var(--popover));
+	--color-popover-foreground: hsl(var(--popover-foreground));
+
+	--color-card: hsl(var(--card));
+	--color-card-foreground: hsl(var(--card-foreground));
+
+	--color-medical: hsl(var(--medical));
+	--color-medical-foreground: hsl(var(--medical-foreground));
+	--color-medical-light: hsl(var(--medical-light));
+
+	--color-success: hsl(var(--success));
+	--color-success-foreground: hsl(var(--success-foreground));
+
+	--color-warning: hsl(var(--warning));
+	--color-warning-foreground: hsl(var(--warning-foreground));
+
+	--color-info: hsl(var(--info));
+	--color-info-foreground: hsl(var(--info-foreground));
+
+	--color-sidebar: hsl(var(--sidebar-background));
+	--color-sidebar-foreground: hsl(var(--sidebar-foreground));
+	--color-sidebar-primary: hsl(var(--sidebar-primary));
+	--color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+	--color-sidebar-accent: hsl(var(--sidebar-accent));
+	--color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+	--color-sidebar-border: hsl(var(--sidebar-border));
+	--color-sidebar-ring: hsl(var(--sidebar-ring));
+
+	--radius-lg: var(--radius);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-sm: calc(var(--radius) - 4px);
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentcolor);
+	}
+}
+
+@utility medical-gradient {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--medical)) 0%,
+		hsl(185 72% 30%) 100%
+	);
+}
+
+@utility sidebar-gradient {
+	background: linear-gradient(
+		180deg,
+		hsl(var(--sidebar-background)) 0%,
+		hsl(220 65% 8%) 100%
+	);
+}
+
+@utility scan-overlay-wt {
+	background-color: hsl(50 100% 50% / 0.4);
+}
+
+@utility scan-overlay-tc {
+	background-color: hsl(0 100% 50% / 0.5);
+}
+
+@utility scan-overlay-et {
+	background-color: hsl(220 100% 60% / 0.6);
+}
 
 @layer base {
 	:root {
@@ -134,34 +261,6 @@
 }
 
 @layer utilities {
-	.medical-gradient {
-		background: linear-gradient(
-			135deg,
-			hsl(var(--medical)) 0%,
-			hsl(185 72% 30%) 100%
-		);
-	}
-
-	.sidebar-gradient {
-		background: linear-gradient(
-			180deg,
-			hsl(var(--sidebar-background)) 0%,
-			hsl(220 65% 8%) 100%
-		);
-	}
-
-	.scan-overlay-wt {
-		background-color: hsl(50 100% 50% / 0.4);
-	}
-
-	.scan-overlay-tc {
-		background-color: hsl(0 100% 50% / 0.5);
-	}
-
-	.scan-overlay-et {
-		background-color: hsl(220 100% 60% / 0.6);
-	}
-
 	* {
 		animation: none !important;
 		transition: none !important;

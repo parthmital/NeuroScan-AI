@@ -93,7 +93,7 @@ export const RecentScans = () => {
 											<button
 												aria-label={`Actions for ${scan.patientName}`}
 												onClick={(e) => e.stopPropagation()}
-												className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+												className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
 											>
 												<MoreHorizontal className="h-3.5 w-3.5" />
 											</button>

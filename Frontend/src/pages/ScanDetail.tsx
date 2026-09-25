@@ -163,8 +163,8 @@ const ScanDetail = () => {
 			)}
 
 			{/* Main content */}
-			<Tabs defaultValue="viewer" className="space-y-6">
-				<TabsList className="bg-muted/50">
+			<Tabs defaultValue="viewer" className="flex flex-col gap-6">
+				<TabsList className="self-start bg-muted/50">
 					<TabsTrigger value="viewer">{config.viewerTab}</TabsTrigger>
 					<TabsTrigger value="pipeline">{config.pipelineTab}</TabsTrigger>
 					<TabsTrigger value="report">{config.reportTab}</TabsTrigger>
@@ -186,7 +186,7 @@ const ScanDetail = () => {
 											className={cn(
 												"rounded-md border px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all",
 												viewMode === mode
-													? "border-medical bg-medical text-medical-foreground shadow-sm"
+													? "border-medical bg-medical text-medical-foreground shadow-xs"
 													: "border-border bg-card text-muted-foreground hover:border-medical/50 hover:bg-muted/50",
 											)}
 										>

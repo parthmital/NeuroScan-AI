@@ -70,7 +70,7 @@ const Login = () => {
 		<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background/50 px-4">
 			<Card className="w-full max-w-md border-border/40 bg-card/50 shadow-2xl backdrop-blur-xl">
 				<CardHeader className="space-y-3 text-center">
-					<div className="mb-2 flex justify-center">
+					<div className="mb-5 flex justify-center">
 						<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-medical/20 text-medical shadow-lg shadow-medical/10">
 							<BrainCircuit className="h-6 w-6" />
 						</div>

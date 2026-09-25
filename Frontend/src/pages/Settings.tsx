@@ -29,8 +29,8 @@ const Settings = () => {
 				</p>
 			</div>
 
-			<Tabs defaultValue="profile" className="space-y-6">
-				<TabsList className="gap-1 bg-muted/50 p-1">
+			<Tabs defaultValue="profile" className="flex flex-col gap-6">
+				<TabsList className="gap-1 self-start bg-muted/50 p-1">
 					<TabsTrigger value="profile" className="gap-1.5 text-xs">
 						<UserIcon className="h-3.5 w-3.5" />
 						Profile
