@@ -39,8 +39,7 @@ NeuroScan-AI/
 │   ├── package.json            # Frontend dependencies & npm scripts
 │   ├── vite.config.ts          # Vite configuration (port 8080, GLSL plugin, @ alias)
 │   └── tailwind.config.ts      # Tailwind CSS configuration & design tokens
-├── start.ps1                   # Unified local development launcher
-└── docker-compose.yml          # Container orchestration (Backend + Frontend Nginx)
+└── start.ps1                   # Unified local development launcher
 ```
 
 ---

@@ -1,978 +1,514 @@
 # NeuroScan AI
 
-**AI-Powered Brain Tumour Detection, Classification and Segmentation Platform**
-
-Deep Learning Meets Medical Imaging — From Research to Clinical Deployment
-
----
-
-## Table of Contents
-
-- [NeuroScan AI](#neuroscan-ai)
-  - [Table of Contents](#table-of-contents)
-  - [What is NeuroScan AI?](#what-is-neuroscan-ai)
-    - [The Problem We Solve](#the-problem-we-solve)
-    - [Our Solution](#our-solution)
-  - [Key Features](#key-features)
-    - [For Healthcare Professionals](#for-healthcare-professionals)
-    - [For Technical Users](#for-technical-users)
-  - [Technology Stack](#technology-stack)
-    - [Frontend Stack](#frontend-stack)
-    - [Backend Stack](#backend-stack)
-    - [AI/ML Stack](#aiml-stack)
-  - [Quick Start Guide](#quick-start-guide)
-    - [One-Command Startup (Windows)](#one-command-startup-windows)
-    - [Manual Setup (Cross-Platform)](#manual-setup-cross-platform)
-  - [Frontend Deep Dive](#frontend-deep-dive)
-    - [Frontend Core Technologies](#frontend-core-technologies)
-      - [React 18 with TypeScript](#react-18-with-typescript)
-      - [Vite Build Tool](#vite-build-tool)
-      - [Tailwind CSS and shadcn/ui](#tailwind-css-and-shadcnui)
-    - [Component Architecture](#component-architecture)
-      - [App.tsx — The Root Component](#apptsx--the-root-component)
-      - [ProtectedRoute — Authentication Guard](#protectedroute--authentication-guard)
-    - [State Management](#state-management)
-      - [React Query (TanStack Query)](#react-query-tanstack-query)
-      - [Auth Context](#auth-context)
-    - [API Integration](#api-integration)
-      - [lib/api.ts — HTTP Client](#libapits--http-client)
-  - [Backend Deep Dive](#backend-deep-dive)
-    - [Backend Core Technologies](#backend-core-technologies)
-      - [FastAPI — Modern Python Web Framework](#fastapi--modern-python-web-framework)
-      - [SQLModel — ORM and Pydantic](#sqlmodel--orm-and-pydantic)
-      - [SQLite — Serverless Database](#sqlite--serverless-database)
-    - [API Endpoints](#api-endpoints)
-    - [Authentication Flow](#authentication-flow)
-  - [AI/ML Pipeline and Comparative Analysis](#aiml-pipeline-and-comparative-analysis)
-    - [Three-Stage Architecture](#three-stage-architecture)
-    - [Stage 1: Tumour Detection — Comparative Analysis](#stage-1-tumour-detection--comparative-analysis)
-      - [Models Evaluated](#models-evaluated)
-      - [Detection Performance Results](#detection-performance-results)
-      - [Key Findings from Detection Comparative Analysis](#key-findings-from-detection-comparative-analysis)
-    - [Stage 2: Tumour Classification — Comparative Analysis](#stage-2-tumour-classification--comparative-analysis)
-      - [Models Evaluated](#models-evaluated-1)
-      - [Dataset Composition](#dataset-composition)
-      - [Classification Performance Results](#classification-performance-results)
-      - [Key Findings from Classification Comparative Analysis](#key-findings-from-classification-comparative-analysis)
-    - [Stage 3: Tumour Segmentation — Comparative Analysis](#stage-3-tumour-segmentation--comparative-analysis)
-      - [Models Evaluated](#models-evaluated-2)
-      - [Dataset Composition](#dataset-composition-1)
-      - [Segmentation Performance Results (Dice Scores)](#segmentation-performance-results-dice-scores)
-      - [Computational Efficiency Analysis](#computational-efficiency-analysis)
-      - [Key Findings from Segmentation Comparative Analysis](#key-findings-from-segmentation-comparative-analysis)
-    - [Model Architectures](#model-architectures)
-      - [EfficientNet-B0 (Detection and Classification)](#efficientnet-b0-detection-and-classification)
-      - [VNet3D (Segmentation)](#vnet3d-segmentation)
-    - [Training Methodology](#training-methodology)
-      - [Standardised Training Configuration](#standardised-training-configuration)
-      - [Multi-GPU Strategy](#multi-gpu-strategy)
-      - [Data Sources](#data-sources)
-      - [Preprocessing Pipeline](#preprocessing-pipeline)
-  - [Installation and Setup](#installation-and-setup)
-    - [Prerequisites](#prerequisites)
-    - [Step-by-Step Setup](#step-by-step-setup)
-      - [Step 1: Clone Repository](#step-1-clone-repository)
-      - [Step 2: Create Python Virtual Environment](#step-2-create-python-virtual-environment)
-      - [Step 3: Install Python Dependencies](#step-3-install-python-dependencies)
-      - [Step 4: Install Node.js Dependencies](#step-4-install-nodejs-dependencies)
-      - [Step 5: Download Pre-trained Models](#step-5-download-pre-trained-models)
-    - [Running the Application](#running-the-application)
-      - [Option A: One-Command Startup (Windows)](#option-a-one-command-startup-windows)
-      - [Option B: Manual Terminal Sessions](#option-b-manual-terminal-sessions)
-      - [Verify Installation](#verify-installation)
-  - [Usage Guide](#usage-guide)
-    - [For Medical Professionals](#for-medical-professionals)
-      - [Uploading MRI Scans](#uploading-mri-scans)
-      - [Interpreting Results](#interpreting-results)
-      - [Generating Reports](#generating-reports)
-    - [For Developers](#for-developers)
-      - [API Usage Examples](#api-usage-examples)
-      - [Extending the Pipeline](#extending-the-pipeline)
-    - [For Researchers](#for-researchers)
-      - [Reproducing Training Results](#reproducing-training-results)
-  - [Detailed Research Documentation](#detailed-research-documentation)
-    - [1. Binary Detection Research](#1-binary-detection-research)
-    - [2. Classification Research](#2-classification-research)
-    - [3. Segmentation Research](#3-segmentation-research)
-  - [Contributing](#contributing)
-    - [Development Workflow](#development-workflow)
-
----
-
-## What is NeuroScan AI?
-
-**NeuroScan AI** is a comprehensive, full-stack medical imaging platform that leverages cutting-edge **deep learning** and **computer vision** techniques to automate brain tumour analysis from **MRI scans**. Built with a modern tech stack and research-grade AI models, it bridges the gap between academic research and real-world clinical deployment.
-
-### The Problem We Solve
-
-Brain tumour diagnosis traditionally requires:
-
-- **Hours of manual analysis** by specialised radiologists
-- **Subjective interpretation** with inter-observer variability
-- **Limited accessibility** in underserved regions
-- **Delayed treatment planning** due to diagnostic bottlenecks
-
-### Our Solution
-
-NeuroScan AI provides **automated, AI-powered analysis** that delivers:
-
-- **Detection**: Identifies presence of tumours with greater than 98% accuracy
-- **Classification**: Categorises tumours into Glioma, Meningioma, or Pituitary types
-- **Segmentation**: Generates pixel-precise 3D tumour boundaries for treatment planning
-- **Volumetric Analysis**: Calculates tumour volume metrics for tracking progression
-
----
-
-## Key Features
-
-### For Healthcare Professionals
-
-| Feature                   | Description                                                         | Benefit                   |
-| ------------------------- | ------------------------------------------------------------------- | ------------------------- |
-| **Drag-and-Drop Upload**  | Upload multiple MRI modalities (T1, T1CE, T2, FLAIR) simultaneously | Streamlined workflow      |
-| **Real-Time Processing**  | AI analysis completes in under 30 seconds                           | Immediate results         |
-| **Interactive 3D Viewer** | VTK.js-powered visualisation with slice navigation                  | Detailed examination      |
-| **Segmentation Overlay**  | Colour-coded tumour sub-regions (WT, TC, ET)                        | Precise localisation      |
-| **PDF Report Generation** | One-click export of diagnostic findings                             | Documentation and sharing |
-| **Patient Management**    | Secure, per-user scan libraries with privacy                        | Data security             |
-
-### For Technical Users
-
-| Feature                | Technology                 | Purpose                              |
-| ---------------------- | -------------------------- | ------------------------------------ |
-| **JWT Authentication** | OAuth2 and bcrypt          | Secure, stateless auth               |
-| **RESTful API**        | FastAPI and Pydantic       | Type-safe, auto-documented endpoints |
-| **Database**           | SQLite and SQLModel        | ACID-compliant, ORM-native           |
-| **ML Pipeline**        | PyTorch and TorchVision    | GPU-accelerated inference            |
-| **Image Processing**   | OpenCV and NiBabel         | Medical-grade NIfTI handling         |
-| **Modern Frontend**    | React 18, TypeScript, Vite | Fast, type-safe UI                   |
-
----
-
-## Technology Stack
-
-### Frontend Stack
-
-| Category       | Technology   | Version | Purpose                       |
-| -------------- | ------------ | ------- | ----------------------------- |
-| **Framework**  | React        | 18.3.1  | UI component library          |
-| **Language**   | TypeScript   | 5.6.0   | Type-safe development         |
-| **Build Tool** | Vite         | 7.3.1   | Fast development and bundling |
-| **Styling**    | Tailwind CSS | 3.4.17  | Utility-first CSS             |
-| **Components** | shadcn/ui    | Latest  | Accessible UI primitives      |
-| **Icons**      | Lucide React | 0.462.0 | Modern icon library           |
-| **State**      | React Query  | 5.83.0  | Server state management       |
-| **Routing**    | React Router | 6.30.1  | Client-side navigation        |
-| **3D Viz**     | VTK.js       | 35.2.0  | Medical image visualisation   |
-| **Charts**     | Recharts     | 2.15.4  | Data visualisation            |
-| **Testing**    | Vitest       | 3.2.4   | Unit testing framework        |
-
-### Backend Stack
-
-| Category             | Technology  | Version  | Purpose                      |
-| -------------------- | ----------- | -------- | ---------------------------- |
-| **Framework**        | FastAPI     | Latest   | High-performance async API   |
-| **Server**           | Uvicorn     | Standard | ASGI server                  |
-| **ML Framework**     | PyTorch     | 2.0+     | Deep learning                |
-| **Computer Vision**  | OpenCV      | Latest   | Image processing             |
-| **Medical Imaging**  | NiBabel     | Latest   | NIfTI file I/O               |
-| **Database**         | SQLModel    | Latest   | ORM and Pydantic integration |
-| **Database Engine**  | SQLite      | 3.x      | Lightweight, serverless      |
-| **Authentication**   | python-jose | Latest   | JWT token handling           |
-| **Password Hashing** | bcrypt      | Latest   | Secure password storage      |
-| **Validation**       | Pydantic    | Latest   | Data validation              |
-
-### AI/ML Stack
-
-| Component            | Architecture    | Framework        | Accuracy         |
-| -------------------- | --------------- | ---------------- | ---------------- |
-| **Tumour Detection** | EfficientNet-B0 | PyTorch          | Greater than 99% |
-| **Classification**   | EfficientNet-B0 | PyTorch          | 97.59%           |
-| **Segmentation**     | VNet 3D         | PyTorch (Custom) | WT/TC/ET volumes |
-
----
-
-## Quick Start Guide
-
-**Prerequisites**: Node.js 18+, Python 3.11+, PowerShell
-
-### One-Command Startup (Windows)
-
-```powershell
-# Clone and navigate to the repository
-git clone <repository-url>
-cd "NeuroScan AI"
-
-# Start everything (Frontend + Backend)
-.\start.ps1
-```
-
-This script automatically:
-
-1. Checks for Node.js and Python
-2. Creates/activates Python virtual environment
-3. Installs dependencies (npm + pip)
-4. Starts Backend API (http://localhost:8000)
-5. Starts Frontend Dev Server (http://localhost:8080)
-6. Opens browser automatically
-
-### Manual Setup (Cross-Platform)
-
-```bash
-# 1. Setup Backend
-cd Backend
-python -m venv ../.venv
-source ../.venv/bin/activate  # Linux/Mac
-# or: ..\.venv\Scripts\activate  # Windows
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-
-# 2. Setup Frontend (new terminal)
-cd Frontend
-npm install
-npm run dev
-
-# 3. Open http://localhost:8080 in browser
-```
-
----
-
-## Frontend Deep Dive
-
-### Frontend Core Technologies
-
-#### React 18 with TypeScript
-
-The frontend is built on **React 18** using **functional components** and **hooks** for state management. TypeScript provides compile-time type safety, catching errors before they reach production.
-
-**Key Patterns:**
-
-- **Functional Components**: Modern React with hooks (no class components)
-- **Custom Hooks**: `useAuth`, `useConfig`, `use-toast` for reusable logic
-- **Type Safety**: All props, API responses, and state are strictly typed
-
-#### Vite Build Tool
-
-**Vite** replaces webpack for instant Hot Module Replacement (HMR) and optimised production builds.
-
-**Configuration highlights:**
-
-```typescript
-// vite.config.ts
-export default defineConfig({
-	plugins: [react()],
-	server: { port: 8080 },
-	resolve: {
-		alias: {
-			"@": path.resolve(__dirname, "./src"), // Clean imports: @/components/ui/button
-		},
-	},
-});
-```
-
-#### Tailwind CSS and shadcn/ui
-
-**Tailwind CSS** provides atomic utility classes for rapid styling without writing custom CSS.
-
-**shadcn/ui** offers accessible, composable components built on Radix UI primitives:
-
-- **Button**: Primary, secondary, ghost variants
-- **Card**: Container with consistent styling
-- **Dialog**: Modal overlays
-- **Tabs**: Content organisation
-- **Toast**: User notifications
-
-### Component Architecture
-
-#### App.tsx — The Root Component
-
-```typescript
-// src/App.tsx (simplified)
-const App = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/upload" element={<Upload />} />
-              <Route path="/scan/:id" element={<ScanDetail />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </QueryClientProvider>
-  );
-};
-```
-
-#### ProtectedRoute — Authentication Guard
-
-Wraps all authenticated routes, redirects to `/login` if no valid JWT token exists.
-
-### State Management
-
-#### React Query (TanStack Query)
-
-Manages server state with automatic caching, refetching, and optimistic updates.
-
-```typescript
-// Example: Fetching scans
-const { data: scans, isLoading } = useQuery({
-	queryKey: ["scans"],
-	queryFn: fetchScans,
-	staleTime: 30000, // Data fresh for 30 seconds
-});
-```
-
-#### Auth Context
-
-Global authentication state using React Context API:
-
-- `isAuthenticated`: Boolean login status
-- `user`: Current user object
-- `login()/logout()`: Authentication methods
-- Persists token in `localStorage`
-
-### API Integration
-
-#### lib/api.ts — HTTP Client
-
-Centralised API functions using native `fetch`:
-
-```typescript
-const API_BASE_URL = "http://localhost:8000/api";
-
-export const processMRI = async (files: File[], patientName?: string) => {
-	const formData = new FormData();
-	files.forEach((f) => formData.append("files", f));
-	if (patientName) formData.append("patientName", patientName);
-
-	const response = await fetch(`${API_BASE_URL}/process-mri`, {
-		method: "POST",
-		headers: { Authorization: `Bearer ${token}` },
-		body: formData,
-	});
-	return handleResponse(response);
-};
-```
-
----
-
-## Backend Deep Dive
-
-### Backend Core Technologies
-
-#### FastAPI — Modern Python Web Framework
-
-**FastAPI** is a high-performance, async-capable web framework with automatic API documentation.
-
-**Why FastAPI?**
-
-- **Type Safety**: Native Pydantic integration for request/response validation
-- **Async/Await**: Handles concurrent requests efficiently
-- **Auto Documentation**: Interactive Swagger UI at `/docs`
-- **Dependency Injection**: Clean, testable code structure
-
-#### SQLModel — ORM and Pydantic
-
-**SQLModel** (by the creator of FastAPI) combines SQLAlchemy ORM with Pydantic validation:
-
-```python
-class User(SQLModel, table=True):
-  id: Optional[int] = Field(default=None, primary_key=True)
-  username: str = Field(index=True, unique=True)
-  email: str = Field(index=True, unique=True)
-  hashed_password: str
-  fullName: str
-  createdAt: datetime = Field(default_factory=datetime.now)
-
-class Scan(SQLModel, table=True):
-  id: str = Field(primary_key=True)
-  patientId: str
-  patientName: str
-  scanDate: str
-  modalities: List[str] = Field(sa_column=Column(JSON))
-  results: Optional[Dict[str, object]] = Field(default=None, sa_column=Column(JSON))
-  userId: Optional[int] = Field(default=None, foreign_key="user.id")
-```
-
-#### SQLite — Serverless Database
-
-**SQLite** chosen for:
-
-- **Zero Configuration**: No separate server process
-- **Single File**: Easy backup and portability
-- **ACID Compliant**: Reliable transactions
-- **Sufficient Scale**: Handles thousands of scans efficiently
-
-### API Endpoints
-
-| Method | Endpoint                             | Description            | Auth Required |
-| ------ | ------------------------------------ | ---------------------- | ------------- |
-| POST   | `/api/auth/register`                 | Create new account     | No            |
-| POST   | `/api/auth/login`                    | Authenticate, get JWT  | No            |
-| GET    | `/api/auth/me`                       | Get current user info  | Yes           |
-| PUT    | `/api/auth/me`                       | Update profile         | Yes           |
-| GET    | `/api/scans`                         | List user's scans      | Yes           |
-| GET    | `/api/scans/{id}`                    | Get specific scan      | Yes           |
-| POST   | `/api/process-mri`                   | Upload and analyse MRI | Yes           |
-| GET    | `/api/scans/{id}/slice/{idx}`        | Get MRI slice image    | Yes           |
-| GET    | `/api/scans/{id}/segmentation/{idx}` | Get segmentation mask  | Yes           |
-| GET    | `/api/scans/{id}/download/{key}`     | Download NIfTI files   | Yes           |
-| PUT    | `/api/scans/{id}`                    | Update scan metadata   | Yes           |
-| DELETE | `/api/scans/{id}`                    | Delete scan            | Yes           |
-
-### Authentication Flow
-
-The authentication system uses JWT (JSON Web Tokens) with OAuth2PasswordBearer:
-
-1. User submits username/password to `/api/auth/login`
-2. Server verifies credentials using bcrypt-hashed passwords
-3. Server issues JWT token valid for 30 minutes
-4. Client stores token in localStorage
-5. Subsequent requests include token in Authorization header
-6. Server validates token and identifies user
-
----
-
-## AI/ML Pipeline and Comparative Analysis
-
-NeuroScan AI implements a **three-stage comparative analysis pipeline** for comprehensive brain tumour analysis. Each stage was developed through rigorous comparative evaluation of multiple state-of-the-art deep learning architectures under identical experimental conditions.
-
-### Three-Stage Architecture
-
-The AI pipeline consists of three sequential stages:
-
-1. **Stage 1: Tumour Detection** — Binary classification (tumour present/absent)
-2. **Stage 2: Tumour Classification** — Multi-class classification (Glioma/Meningioma/Pituitary)
-3. **Stage 3: Tumour Segmentation** — 3D volumetric segmentation (WT/TC/ET regions)
-
-Each stage employed **comparative evaluation** across multiple architectures to identify optimal models for clinical deployment.
-
-### Stage 1: Tumour Detection — Comparative Analysis
-
-The detection stage performs binary classification to determine whether a tumour is present in the MRI scan. We conducted a comprehensive comparative study of **9 state-of-the-art architectures** spanning classical CNNs, efficient CNNs, and transformer-based models.
-
-#### Models Evaluated
-
-| Architecture Family | Models                                         |
-| ------------------- | ---------------------------------------------- |
-| **Classical CNNs**  | ResNet50, VGG16, DenseNet121                   |
-| **Efficient CNNs**  | EfficientNetB0, MobileNetV3-Large, InceptionV3 |
-| **Transformers**    | ViT-B/16, Swin Transformer Base, CoaTNet-0     |
-
-#### Detection Performance Results
-
-| Model              | Test Accuracy | Test AUC   | Parameters | Training Time |
-| ------------------ | ------------- | ---------- | ---------- | ------------- |
-| **CoaTNet-0**      | **99.59%**    | **1.0000** | ~10M       | Moderate      |
-| **EfficientNetB0** | **99.59%**    | **0.9999** | 5.3M       | Fastest       |
-| **InceptionV3**    | **99.39%**    | **1.0000** | 23.9M      | Moderate      |
-| **ResNet50**       | **99.39%**    | **0.9999** | 25.6M      | Fast          |
-| **DenseNet121**    | **97.95%**    | **0.9999** | 8.0M       | Fast          |
-| **Swin Base**      | 98.16%        | 0.9990     | 88M        | Slow          |
-| **MobileNetV3**    | 91.39%        | 0.9982     | 5.4M       | Fast          |
-| **ViT-B/16**       | 95.08%        | 0.9861     | 86M        | Slowest       |
-| **VGG16**          | 83.20%        | 0.9247     | 138M       | Slow          |
-
-#### Key Findings from Detection Comparative Analysis
-
-- **Top Performers**: CoaTNet-0 and EfficientNetB0 achieved 99.59% accuracy with near-perfect AUC scores
-- **Efficiency Champion**: EfficientNetB0 achieved 99.59% accuracy with only 5.3M parameters — ideal for resource-constrained deployment
-- **Transformer Performance**: CoaTNet-0 (hybrid CNN-transformer) outperformed pure transformers (ViT-B/16 at 95.08%)
-- **Classical CNNs**: ResNet50 and DenseNet121 showed strong performance (99.39% and 97.95%) but required more parameters
-- **Underperformer**: VGG16 achieved only 83.20% accuracy despite having the highest parameter count (138M)
-
-**Selected Model for Production**: **EfficientNetB0** — chosen for optimal balance of accuracy (99.59%) and computational efficiency (5.3M parameters).
-
-### Stage 2: Tumour Classification — Comparative Analysis
-
-The classification stage categorises detected tumours into three types: Glioma, Meningioma, and Pituitary. We evaluated **6 state-of-the-art architectures** using a combined dataset of 4,705 unique MRI images after rigorous perceptual hashing deduplication.
-
-#### Models Evaluated
-
-| Architecture Family | Models                                |
-| ------------------- | ------------------------------------- |
-| **CNNs**            | EfficientNetB0, InceptionV3, ResNet50 |
-| **Transformers**    | ViT-B/16, Swin-Base                   |
-| **Hybrid**          | CoaTNet-0                             |
-
-#### Dataset Composition
-
-| Tumour Type | Count     | Percentage |
-| ----------- | --------- | ---------- |
-| Glioma      | 2,000     | 42.5%      |
-| Meningioma  | 1,304     | 27.7%      |
-| Pituitary   | 1,401     | 29.8%      |
-| **Total**   | **4,705** | **100%**   |
-
-#### Classification Performance Results
-
-| Model              | Test Accuracy | Test Loss  | Test AUC   | Parameters |
-| ------------------ | ------------- | ---------- | ---------- | ---------- |
-| **InceptionV3**    | **98.58%**    | 0.0389     | **0.9995** | 27.2M      |
-| **Swin-Base**      | **98.58%**    | **0.0377** | 0.9993     | 86.7M      |
-| **EfficientNetB0** | **97.59%**    | 0.0582     | 0.9987     | 5.3M       |
-| **CoaTNet-0**      | **97.59%**    | 0.0638     | 0.9990     | ~10M       |
-| **ResNet-50**      | **96.60%**    | 0.0740     | 0.9990     | 25.6M      |
-| **ViT-B/16**       | 89.52%        | 0.2737     | 0.9736     | 86.4M      |
-
-#### Key Findings from Classification Comparative Analysis
-
-- **Top Performers**: InceptionV3 and Swin-Base tied at 98.58% accuracy with AUC greater than 0.999
-- **Efficiency Leader**: EfficientNetB0 achieved 97.59% accuracy with only 5.3M parameters — 16x smaller than Swin-Base with only 1% accuracy drop
-- **Convergence Patterns**: CNN architectures (InceptionV3, EfficientNetB0, ResNet-50) converged rapidly within 3-5 epochs; transformers required longer training
-- **AUC-ROC Analysis**: Five of six models achieved AUC greater than 0.998, indicating excellent class separation capability
-- **ViT Limitations**: ViT-B/16 showed significantly slower convergence (89.52% accuracy), likely due to smaller dataset size and lack of inductive biases
-
-**Selected Model for Production**: **EfficientNetB0** — chosen for optimal accuracy-to-efficiency ratio, enabling deployment on standard clinical hardware.
-
-### Stage 3: Tumour Segmentation — Comparative Analysis
-
-The segmentation stage performs 3D volumetric segmentation to delineate tumour sub-regions: Whole Tumour (WT), Tumour Core (TC), and Enhancing Tumour (ET). We conducted a comprehensive benchmark of **6 state-of-the-art 3D segmentation architectures** on the BraTS 2020 dataset.
-
-#### Models Evaluated
-
-| Architecture Family | Models                      |
-| ------------------- | --------------------------- |
-| **CNN Encoders**    | 3D UNet, nnU-Net, VNet      |
-| **Transformers**    | UNETR, Swin-UNETR, TransBTS |
-
-#### Dataset Composition
-
-| Metric                  | Value           |
-| ----------------------- | --------------- |
-| Total cases             | 368             |
-| High-grade glioma (HGG) | 293             |
-| Low-grade glioma (LGG)  | 75              |
-| Original dimensions     | 240 x 240 x 155 |
-
-#### Segmentation Performance Results (Dice Scores)
-
-| Model          | WT Dice    | TC Dice    | ET Dice    | Mean Dice  | Test Loss | Parameters | Training Time |
-| -------------- | ---------- | ---------- | ---------- | ---------- | --------- | ---------- | ------------- |
-| **UNet**       | **0.8647** | **0.7844** | **0.7505** | **0.7999** | 0.4109    | 5.6M       | 32.4 min      |
-| **nnU-Net**    | 0.8569     | 0.7813     | 0.7452     | 0.7945     | 0.4553    | 16.5M      | 55.1 min      |
-| **VNet**       | 0.8541     | 0.7108     | 0.7316     | 0.7655     | 0.4880    | 1.4M       | 16.9 min      |
-| **Swin-UNETR** | 0.8128     | 0.6261     | 0.5314     | 0.6568     | 1.3411    | 10.7M      | 49.5 min      |
-| **UNETR**      | 0.7128     | 0.6261     | 0.5314     | 0.6234     | 1.3411    | 137.6M     | 117.2 min     |
-| **TransBTS**   | 0.6383     | 0.4618     | 0.4325     | 0.5109     | 2.1940    | 35.8M      | 70.1 min      |
-
-#### Computational Efficiency Analysis
-
-| Model          | Mean Dice | Params (M) | Efficiency (Dice/M) | Training (min) | Time Efficiency (Dice/min) |
-| -------------- | --------- | ---------- | ------------------- | -------------- | -------------------------- |
-| **VNet**       | 0.7655    | 1.4        | **0.5468**          | 16.9           | **0.0453**                 |
-| **UNet**       | 0.7999    | 5.6        | 0.1428              | 32.4           | 0.0247                     |
-| **nnU-Net**    | 0.7945    | 16.5       | 0.0482              | 55.1           | 0.0144                     |
-| **Swin-UNETR** | 0.6568    | 10.7       | 0.0614              | 49.5           | 0.0133                     |
-| **TransBTS**   | 0.5109    | 35.8       | 0.0143              | 70.1           | 0.0073                     |
-| **UNETR**      | 0.6234    | 137.6      | 0.0045              | 117.2          | 0.0053                     |
-
-#### Key Findings from Segmentation Comparative Analysis
-
-- **Best Overall Performance**: UNet achieved highest mean Dice (0.7999), demonstrating that classic architecture remains highly competitive when properly trained
-- **Most Parameter-Efficient**: VNet achieved 76.5% of UNet's performance with only 25% of its parameters (1.4M vs 5.6M)
-- **Transformer Underperformance**: Despite having more parameters, transformer models (UNETR: 0.6234, TransBTS: 0.5109) significantly underperformed CNNs
-- **Best Transformer**: Swin-UNETR (0.6568) was the best transformer variant, likely due to hierarchical design matching CNN decoder requirements
-- **Performance Gradient**: All models showed consistent pattern: WT (easiest) greater than TC greater than ET (most challenging)
-- **Training Efficiency**: VNet demonstrated superior time efficiency (0.0453 Dice/min), making it optimal for rapid prototyping
-
-**Selected Model for Production**: **VNet** — chosen for exceptional parameter efficiency (1.4M parameters), fast training (16.9 min), and strong performance (0.7655 mean Dice), making it ideal for resource-constrained clinical environments.
-
-### Model Architectures
-
-#### EfficientNet-B0 (Detection and Classification)
-
-**Architecture**: Convolutional Neural Network with compound scaling
-
-```python
-# Key characteristics:
-- Parameters: 5.3 million
-- Input: 224 x 224 RGB images
-- Compound scaling: depth, width, resolution jointly optimised
-- Depthwise separable convolutions for efficiency
-
-# Detection head: 1 output (sigmoid activation)
-# Classification head: 3 outputs (softmax activation)
-```
-
-**Why EfficientNet?**
-
-- **Best accuracy/efficiency tradeoff**: 97.59% to 99.59% accuracy with minimal parameters
-- **Transfer learning**: Pre-trained on ImageNet, fine-tuned on medical data
-- **Fast inference**: Suitable for real-time clinical use
-
-#### VNet3D (Segmentation)
-
-**Architecture**: 3D Fully Convolutional Network with Residual Blocks
-
-```python
-class VNet3D(nn.Module):
-  """
-  Encoder-Decoder with skip connections
-  """
-  # Encoder path (downsampling)
-  e1: ResBlock(4 to 16 channels)   # Input: 4 MRI modalities
-  d1: Conv3d(16 to 16, stride=2)  # Downsample
-  e2: ResBlock(16 to 32)
-  d2: Conv3d(32 to 32, stride=2)
-  e3: ResBlock(32 to 64)
-  d3: Conv3d(64 to 64, stride=2)
-
-  # Bottleneck
-  b:  ResBlock(64 to 128)
-
-  # Decoder path (upsampling)
-  u3: ConvTranspose3d(128 to 64)
-  r3: ResBlock(128 to 64)  # Skip connection from e3
-  u2: ConvTranspose3d(64 to 32)
-  r2: ResBlock(64 to 32)   # Skip connection from e2
-  u1: ConvTranspose3d(32 to 16)
-  r1: ResBlock(32 to 16)   # Skip connection from e1
-
-  # Output: 3-class segmentation
-  out: Conv3d(16 to 3)
-```
-
-**Segmentation Classes (BraTS Standard)**:
-
-- **WT (Whole Tumour)**: All abnormal tissue
-- **TC (Tumour Core)**: Central necrotic/cystic areas
-- **ET (Enhancing Tumour)**: Active, contrast-enhancing regions
-
-### Training Methodology
-
-All comparative analyses followed rigorous standardised protocols:
-
-#### Standardised Training Configuration
-
-| Parameter       | Value                      | Rationale                                         |
-| --------------- | -------------------------- | ------------------------------------------------- |
-| Epochs          | 10                         | Sufficient for convergence with transfer learning |
-| Optimizer       | AdamW                      | Improved weight decay handling                    |
-| Learning Rate   | 3e-4                       | Standard for fine-tuning                          |
-| Scheduler       | Cosine Annealing           | Smooth learning rate decay                        |
-| Loss Function   | Cross-Entropy / Dice + BCE | Task-appropriate                                  |
-| Mixed Precision | FP16                       | Faster training, lower memory                     |
-
-#### Multi-GPU Strategy
-
-- **Parallelisation**: `nn.DataParallel` for data parallelism across 2 GPUs
-- **Synchronisation**: Automatic gradient averaging
-- **Hardware**: 2 x NVIDIA Tesla T4 (16GB each)
-
-#### Data Sources
-
-Training data compiled from multiple public datasets:
-
-- **Sartaj Bhuvaji's Brain Tumour Classification MRI** (Kaggle)
-- **Jun Cheng's Brain Tumour MRI Dataset** (Kaggle)
-- **BraTS Challenge Data** (MICCAI)
-
-#### Preprocessing Pipeline
-
-1. **Deduplication** (Perceptual Hashing)
-   - Algorithm: pHash (64-bit fingerprint)
-   - Threshold: Hamming distance less than or equal to 5
-   - Result: 19.3% reduction (5,828 to 4,705 unique images)
-
-2. **Data Augmentation** (Training only)
-   - Random horizontal flip
-   - Random rotation (±10 degrees)
-   - Colour jitter (brightness, contrast)
-   - Normalisation: ImageNet statistics
-
-3. **Train/Validation/Test Split**
-   - 70% training
-   - 15% validation
-   - 15% test (stratified by class)
-
----
-
-## Installation and Setup
+NeuroScan AI is a full-stack web application and research repository for brain tumour analysis from MRI scans. A user uploads MRI files in NIfTI format, and the backend runs three PyTorch models in sequence:
+
+1. **Detection**: an EfficientNet-B0 decides whether a tumour is present.
+2. **Classification**: a second EfficientNet-B0 labels the tumour as glioma, meningioma or pituitary.
+3. **Segmentation**: a 3D VNet outlines the Whole Tumour (WT), Tumour Core (TC) and Enhancing Tumour (ET) when all four modalities (FLAIR, T1, T1CE, T2) are uploaded.
+
+The React frontend shows the results, a 2D slice viewer with the segmentation overlay and a 3D volume viewer. The repository also holds the Kaggle notebooks that benchmarked 21 model runs across the three tasks, and the LaTeX sources of the related papers.
+
+No clinical validation is recorded in this repository. Treat every output as a research result, not a diagnosis.
+
+## Contents
+
+- [Quick start (Windows)](#quick-start-windows)
+- [How it works](#how-it-works)
+- [Technology stack](#technology-stack)
+- [Repository structure](#repository-structure)
+- [Configuration](#configuration)
+- [Running the application](#running-the-application)
+- [API reference](#api-reference)
+- [Data storage](#data-storage)
+- [Research notebooks and results](#research-notebooks-and-results)
+- [Papers and presentation materials](#papers-and-presentation-materials)
+- [Testing and code quality](#testing-and-code-quality)
+- [Troubleshooting](#troubleshooting)
+- [Known limitations](#known-limitations)
+- [Security notes](#security-notes)
+- [Project metrics](#project-metrics)
+- [Contributing](#contributing)
+
+## Quick start (Windows)
+
+These steps start the backend on port 8000 and the frontend on port 8080 on one Windows machine. Run every command from the repository root in PowerShell unless a step says otherwise.
 
 ### Prerequisites
 
-| Software   | Minimum Version | Recommended | Download              |
-| ---------- | --------------- | ----------- | --------------------- |
-| Node.js    | 18.x            | 20.x LTS    | nodejs.org            |
-| Python     | 3.11            | 3.11.x      | python.org            |
-| Git        | 2.30            | Latest      | git-scm.com           |
-| PowerShell | 5.1             | 7.x         | Included with Windows |
+| Tool    | Version                              | Why                                                                            |
+| ------- | ------------------------------------ | ------------------------------------------------------------------------------ |
+| Python  | 3.11 (the local `.venv` uses 3.11.9) | Runs the FastAPI backend and PyTorch                                           |
+| Node.js | 20.19 or newer, or 22.12 or newer    | Vite 7.3.1 declares `"node": "^20.19.0 \|\| >=22.12.0"` in its `engines` field |
+| npm     | Comes with Node.js                   | Installs frontend packages (`package-lock.json` is committed)                  |
+| Git     | Any recent version                   | Clones the repository                                                          |
 
-### Step-by-Step Setup
+### Steps
 
-#### Step 1: Clone Repository
+1. **Create the Python virtual environment** in the repository root.
 
-```bash
-git clone https://github.com/yourusername/neuroscan-ai.git
-cd "neuroscan-ai"
+   ```powershell
+   python -m venv .venv
+   ```
+
+   Expected result: a `.venv` folder appears. `start.ps1` refuses to run without it.
+
+2. **Install the backend dependencies.**
+
+   ```powershell
+   .\.venv\Scripts\pip install -r Backend\requirements.txt
+   ```
+
+   Expected result: pip installs FastAPI, PyTorch, nibabel, OpenCV and the other packages. `requirements.txt` has no version pins, so pip installs the latest releases. The CPU build of PyTorch is enough; the backend falls back to CPU when CUDA is not available.
+
+3. **Install the frontend dependencies.**
+
+   ```powershell
+   cd Frontend
+   npm install
+   cd ..
+   ```
+
+   Expected result: a `Frontend/node_modules` folder appears.
+
+4. **Place the three model weight files.** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. The backend expects exactly these paths:
+
+   | File                                          | Size (bytes) | Used for         |
+   | --------------------------------------------- | ------------ | ---------------- |
+   | `Backend/Binary Detection/EfficientNetB0.pth` | 16,342,545   | Tumour detection |
+   | `Backend/Classification/EfficientNetB0.pth`   | 16,359,363   | Tumour type      |
+   | `Backend/Segmentation/VNet.pth`               | 5,617,589    | 3D segmentation  |
+
+   No download location is recorded in the repository. Obtain the files from the project maintainer.
+
+5. **(Optional) Create a `.env` file** from the template. Without a `.env`, the backend allows all CORS origins and uses a built-in JWT secret, which is fine for local testing only. The template allows only `http://localhost:8080`, the Vite dev server (see [Configuration](#configuration)).
+
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+6. **Start both services.**
+
+   ```powershell
+   .\start.ps1
+   ```
+
+   Expected result: the script prints the Node.js and Python versions, starts the backend and frontend as PowerShell background jobs, opens `http://localhost:8080` in the browser, and streams both logs with `[NeuroScan-Backend]` and `[NeuroScan-Frontend]` prefixes. Press `Ctrl+C` to stop both.
+
+7. **Use the app.** Register an account at `http://localhost:8080/register`, then upload the four modality files of one case on the Upload page. The interactive API documentation is at `http://localhost:8000/docs`.
+
+If something fails, see [Troubleshooting](#troubleshooting).
+
+## How it works
+
+### Architecture
+
+```mermaid
+flowchart LR
+    U[Browser] -->|HTTP, JWT bearer token| F[React SPA<br/>Vite dev server :8080]
+    F -->|fetch http://localhost:8000/api/...| B[FastAPI backend :8000]
+    B --> P[BrainProcessor<br/>processor.py]
+    P --> M1[EfficientNet-B0<br/>detection]
+    P --> M2[EfficientNet-B0<br/>classification]
+    P --> M3[VNet3D<br/>segmentation]
+    B --> DB[(SQLite<br/>Backend/neuroscan.db)]
+    B --> FS[Backend/uploads/scan-id/<br/>MRI files and segmentation.nii]
 ```
 
-#### Step 2: Create Python Virtual Environment
+At start-up, the backend creates the database tables and loads the three models from the paths above. If any model fails to load, the error is swallowed and the server still starts; uploads then fail with `503 AI models not loaded.`
 
-```bash
-# Windows
-python -m venv .venv
-.venv\Scripts\activate
+### What happens when a scan is uploaded
 
-# macOS/Linux
-python3 -m venv .venv
-source .venv/bin/activate
+`POST /api/process-mri` in [`Backend/main.py`](Backend/main.py) does the following:
+
+1. Creates `Backend/uploads/scan-<6 hex chars>/` and saves every uploaded file there under its original filename.
+2. Assigns each file to a modality from its filename, case-insensitively, in this order: contains `FLAIR` -> flair; contains `T1CE` or `T1C` -> t1ce; contains `T2` -> t2; contains `T1` -> t1. Files that match nothing are saved but ignored.
+3. Picks one representative file (flair first, then t1ce, t2, t1), takes the **middle slice** along the third axis, rescales it to 0-255 and converts it to a 3-channel image.
+4. **Detection:** crops the brain with an OpenCV threshold and contour, resizes to 224 x 224, applies ImageNet normalisation and runs the detection model. `sigmoid(output) > 0.5` means a tumour is present.
+5. **Classification:** runs the classification model on the same slice and takes the softmax argmax over `glioma`, `meningioma`, `pituitary`. The class is reported only if detection found a tumour; otherwise the result says `No Tumour Detected` with confidence `1 - P(tumour)`.
+6. **Segmentation** (only when all four modalities are present): z-scores each volume over non-zero voxels, resizes it to 128 x 128 x 128, runs VNet, thresholds each output channel at 0.5, and saves `segmentation.nii` resized back to the FLAIR volume's shape (label 1 = WT, 2 = TC, 3 = ET, later labels overwriting earlier ones).
+7. Stores a `Scan` row with the results and returns it.
+
+The reported volumes (`wtVolume`, `tcVolume`, `etVolume`, `tumorVolume`) are the number of voxels above 0.5 in the 128^3 grid divided by 1,000. They are not scaled by the scan's voxel spacing, even though the frontend labels them as cubic centimetres.
+
+### Frontend pages
+
+Routes are defined in [`Frontend/src/App.tsx`](Frontend/src/App.tsx). Everything except login and registration requires a token.
+
+| Route                 | Page                        | Purpose                                                                        |
+| --------------------- | --------------------------- | ------------------------------------------------------------------------------ |
+| `/login`, `/register` | `Login.tsx`, `Register.tsx` | Sign in or create an account                                                   |
+| `/`                   | `Index.tsx`                 | Dashboard: stats cards, recent scans, tumour volume chart                      |
+| `/upload`             | `Upload.tsx`                | Drag-and-drop upload and processing                                            |
+| `/scans`              | `ScanLibrary.tsx`           | List, search, edit and delete scans                                            |
+| `/scan/:id`           | `ScanDetail.tsx`            | 2D slice viewer with overlay, 3D viewer (vtk.js), pipeline view and report tab |
+| `/reports`            | `Reports.tsx`               | List of completed scans                                                        |
+| `/settings`           | `Settings.tsx`              | Profile settings                                                               |
+
+## Technology stack
+
+### Backend
+
+`Backend/requirements.txt` lists packages without versions. The "local version" column is what `pip list` reports in this repository's `.venv`, not a requirement.
+
+| Package                | Local version | Role in this project                                                 |
+| ---------------------- | ------------- | -------------------------------------------------------------------- |
+| FastAPI                | 0.141.1       | HTTP API, request parsing, dependency injection and the `/docs` page |
+| Uvicorn                | 0.53.0        | ASGI server that runs `main:app`                                     |
+| SQLModel               | 0.0.42        | Table models (`User`, `Scan`) and sessions on SQLite                 |
+| Pydantic               | 2.13.5        | Request and response validation (through FastAPI and SQLModel)       |
+| python-jose            | 3.5.0         | Creates and verifies HS256 JWT access tokens                         |
+| bcrypt                 | 5.0.0         | Password hashing                                                     |
+| python-multipart       | not checked   | Parses multipart uploads and the login form                          |
+| python-dotenv          | not checked   | Loads `.env`                                                         |
+| PyTorch                | 2.14.0        | Runs the three models; uses CUDA when available, otherwise CPU       |
+| torchvision            | 0.29.0        | EfficientNet-B0 architecture and image transforms                    |
+| nibabel                | 5.4.2         | Reads and writes NIfTI files                                         |
+| opencv-python-headless | not checked   | Brain cropping, slice rotation, JPEG and PNG encoding                |
+| NumPy                  | 2.4.6         | Array handling                                                       |
+| Pillow                 | not checked   | Converts slices for torchvision transforms                           |
+| scikit-image, black    | not checked   | Listed in `requirements.txt` but not imported by the backend code    |
+
+### Frontend
+
+Versions are the ranges in [`Frontend/package.json`](Frontend/package.json).
+
+| Package                                                             | Version range      | Role                                               |
+| ------------------------------------------------------------------- | ------------------ | -------------------------------------------------- |
+| React, React DOM                                                    | ^18.3.1            | UI                                                 |
+| TypeScript                                                          | ^5.6.0             | Type checking                                      |
+| Vite with `@vitejs/plugin-react-swc`                                | ^7.3.1             | Dev server on port 8080 and production build       |
+| vite-plugin-glsl                                                    | ^1.5.5             | Loads the `.glsl` shaders that vtk.js imports      |
+| React Router DOM                                                    | ^6.30.1            | Client-side routing                                |
+| TanStack React Query                                                | ^5.83.0            | Fetches and caches the scan list                   |
+| Tailwind CSS, tailwindcss-animate                                   | ^3.4.17, ^1.0.7    | Styling                                            |
+| Radix UI primitives, class-variance-authority, clsx, tailwind-merge | see `package.json` | shadcn/ui-style components in `src/components/ui/` |
+| @kitware/vtk.js                                                     | ^35.2.0            | 3D volume rendering                                |
+| nifti-reader-js                                                     | ^0.8.0             | Parses NIfTI files downloaded for the 3D viewer    |
+| Recharts                                                            | ^2.15.4            | Dashboard volume chart                             |
+| sonner                                                              | ^1.7.4             | Toast notifications                                |
+| lucide-react                                                        | ^0.462.0           | Icons                                              |
+| Vitest, Testing Library, jsdom                                      | ^3.2.4             | Test runner                                        |
+| ESLint with typescript-eslint                                       | ^9.32.0            | Linting                                            |
+
+### Research notebooks
+
+The notebooks run on Kaggle with 2x Tesla T4 GPUs. Binary Detection and Classification runs record Python 3.12.13, torch 2.10.0+cu128 and CUDA 12.8, and use torchvision, timm, scikit-learn, imagehash and TensorBoard. Segmentation notebooks use plain PyTorch, nibabel and scikit-learn. See each folder's README for details.
+
+## Repository structure
+
+```text
+NeuroScan-AI/
+|-- README.md                 This file
+|-- AGENTS.md                 Conventions for coding agents working in this repository
+|-- .env.example              Template for the root .env file
+|-- start.ps1                 Starts backend and frontend together on Windows
+|-- Backend/
+|   |-- main.py               FastAPI app: auth, scan and upload routes, CORS, model loading
+|   |-- processor.py          BrainProcessor: preprocessing, detection, classification, VNet3D segmentation, slice rendering
+|   |-- models.py             SQLModel tables (User, Scan) and request schemas
+|   |-- database.py           SQLite engine and session dependency
+|   |-- requirements.txt      Backend Python packages (unpinned)
+|   |-- Binary Detection/     9 detection notebooks, their outputs, and the deployed EfficientNetB0.pth
+|   |-- Classification/       6 classification notebooks, their outputs, and the deployed EfficientNetB0.pth
+|   |-- Segmentation/         7 segmentation notebooks and the deployed VNet.pth
+|   |-- Materials/            LaTeX papers, report, review decks and build-latex.ps1
+|   |-- uploads/              Runtime: one folder per scan (Git-ignored)
+|   |-- Input/                Local sample BraTS files (Git-ignored)
+|   `-- neuroscan.db          Runtime SQLite database (Git-ignored)
+`-- Frontend/
+    |-- package.json          npm scripts and dependencies
+    |-- vite.config.ts        Port 8080, GLSL plugin, @ alias to src/
+    |-- vitest.config.ts      jsdom test environment
+    `-- src/
+        |-- App.tsx           Routes and the ProtectedRoute guard
+        |-- pages/            Route pages listed above
+        |-- components/       auth, dashboard, layout, scan, upload, ui
+        |-- hooks/            use-data (scan query), use-config, use-toast
+        |-- lib/              api.ts, config.ts (UI text and navigation), types.ts, utils.ts, mock-data.ts (not imported)
+        `-- test/             Vitest setup and one example test
 ```
 
-#### Step 3: Install Python Dependencies
+## Configuration
 
-```bash
-cd Backend
-pip install -r requirements.txt
-```
+The backend calls `load_dotenv()`, which searches for a `.env` file starting in `Backend/` and moving up to parent folders, so a `.env` in the repository root is used. The frontend reads `VITE_API_URL` from `Frontend/.env`, because Vite loads env files from the `Frontend/` folder.
 
-**Key Dependencies**:
+| Variable       | Used by                   | Required    | Default when unset                               | Purpose and format                                                                                                                       | Safe example                        |
+| -------------- | ------------------------- | ----------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `JWT_SECRET`   | `Backend/main.py`         | Recommended | `neuroscan-secret-key-change-this-in-production` | Secret used to sign HS256 tokens. Use a long random string and never commit it.                                                          | `replace-with-a-long-random-string` |
+| `CORS_ORIGINS` | `Backend/main.py`         | No          | `*` (all origins)                                | Comma-separated list of allowed browser origins, no spaces                                                                               | `http://localhost:8080`             |
+| `DATABASE_URL` | `Backend/database.py`     | No          | `sqlite:///<Backend folder>/neuroscan.db`        | SQLAlchemy URL. The engine sets `check_same_thread=False`, which is SQLite-specific.                                                     | `sqlite:///C:/path/to/neuroscan.db` |
+| `VITE_API_URL` | `Frontend/src/lib/api.ts` | No          | `http://localhost:8000/api`                      | API base URL baked into the frontend at build time. Only the functions in `api.ts` use it (see [Known limitations](#known-limitations)). | `http://localhost:8000/api`         |
 
-- `fastapi` — Web framework
-- `uvicorn[standard]` — ASGI server
-- `torch` — PyTorch for ML
-- `torchvision` — Computer vision utilities
-- `opencv-python-headless` — Image processing
-- `nibabel` — NIfTI file I/O
-- `sqlmodel` — Database ORM
-- `python-jose[cryptography]` — JWT tokens
-- `bcrypt` — Password hashing
+`.env.example` sets `CORS_ORIGINS=http://localhost:8080`. Add any other origin you open the frontend from, such as `http://localhost:4173` for `npm run preview`.
 
-#### Step 4: Install Node.js Dependencies
+Other fixed settings in code: token lifetime 30 minutes (`ACCESS_TOKEN_EXPIRE_MINUTES`), JWT algorithm HS256, backend port 8000, frontend dev port 8080, and model paths as listed in the [Quick start](#quick-start-windows).
 
-```bash
-cd ../Frontend
-npm install
-```
+## Running the application
 
-**Key Dependencies**:
+### Option 1: `start.ps1` (Windows)
 
-- `react` — UI framework
-- `typescript` — Type safety
-- `vite` — Build tool
-- `tailwindcss` — Styling
-- `@tanstack/react-query` — State management
-- `react-router-dom` — Navigation
+See [Quick start](#quick-start-windows). What the script does, from [`start.ps1`](start.ps1):
 
-#### Step 5: Download Pre-trained Models
+- Exits if `.venv` or `.venv\Scripts` is missing. It does not create the environment.
+- In the backend job, runs `python -c "import fastapi, uvicorn, torch, nibabel, sqlmodel"` and runs `pip install -r requirements.txt` if that import fails.
+- In the frontend job, runs `npm install` if `node_modules` is missing.
+- Starts `python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000` in `Backend/` and `npm run dev` in `Frontend/`.
+- Opens `http://localhost:8080` and prints combined, prefixed logs until `Ctrl+C`.
 
-The model weights are included in the repository:
+### Option 2: two terminals
 
-- `Backend/Binary Detection/EfficientNetB0.pth` (Tumour detection)
-- `Backend/Classification/EfficientNetB0.pth` (Tumour classification)
-- `Backend/Segmentation/VNet.pth` (3D segmentation)
-
-### Running the Application
-
-#### Option A: One-Command Startup (Windows)
+Backend, from the repository root:
 
 ```powershell
-.\start.ps1
-```
-
-#### Option B: Manual Terminal Sessions
-
-**Terminal 1 — Backend:**
-
-```bash
+.\.venv\Scripts\Activate.ps1
 cd Backend
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
-# API available at http://localhost:8000
-# Docs at http://localhost:8000/docs
 ```
 
-**Terminal 2 — Frontend:**
+Frontend, in a second terminal:
 
-```bash
+```powershell
 cd Frontend
 npm run dev
-# App available at http://localhost:8080
 ```
 
-#### Verify Installation
+On macOS or Linux, activate the environment with `source .venv/bin/activate` instead; the other commands are the same. `start.ps1` is Windows-only.
 
-1. Open browser to `http://localhost:8080`
-2. Click "Register" to create account
-3. Log in with credentials
-4. Upload test MRI files (T1, T1CE, T2, FLAIR)
-5. View AI-generated analysis
+### Production build of the frontend
 
----
-
-## Usage Guide
-
-### For Medical Professionals
-
-#### Uploading MRI Scans
-
-1. Navigate to **Dashboard** → "New Scan"
-2. Enter **Patient Information** (name, ID)
-3. Drag-and-drop or select 4 MRI files:
-   - **FLAIR** — Fluid-attenuated inversion recovery
-   - **T1** — Standard T1-weighted
-   - **T1CE** — T1 with contrast enhancement
-   - **T2** — T2-weighted
-4. Click **"Process MRI"** and wait 10-30 seconds
-
-#### Interpreting Results
-
-The system displays:
-
-- **Detection**: Probability of tumour presence
-- **Classification**: Tumour type (Glioma/Meningioma/Pituitary)
-- **Confidence Score**: Model certainty (0-100%)
-- **Volumetrics**: WT, TC, ET volumes in cubic centimetres
-- **Segmentation**: Colour-coded overlay on MRI slices
-
-#### Generating Reports
-
-1. Open any completed scan
-2. Click **"View Report"** tab
-3. Review automated findings
-4. Click **"Download PDF"** for documentation
-
-### For Developers
-
-#### API Usage Examples
-
-**Authentication:**
-
-```bash
-# Get JWT token
-curl -X POST http://localhost:8000/api/auth/login \
-  -d "username=doctor1&password=securepass" \
-  -H "Content-Type: application/x-www-form-urlencoded"
-
-# Response: {"access_token": "eyJhbG...", "token_type": "bearer"}
+```powershell
+cd Frontend
+npm run build
 ```
 
-**Upload Scan:**
+Output goes to `Frontend/dist/`. `npm run preview` serves the built files locally.
 
-```bash
-curl -X POST http://localhost:8000/api/process-mri \
-  -H "Authorization: Bearer <token>" \
-  -F "files=@flair.nii" \
-  -F "files=@t1.nii" \
-  -F "files=@t1ce.nii" \
-  -F "files=@t2.nii" \
-  -F "patientName=John Doe" \
-  -F "patientId=PT-001"
+## API reference
+
+All routes are in [`Backend/main.py`](Backend/main.py) under the `/api` prefix. FastAPI also serves generated documentation at `/docs` and `/openapi.json`.
+
+**Authentication.** Protected routes accept a JWT in either the `Authorization: Bearer <token>` header or a `token` query parameter. Tokens are HS256, carry the username in `sub`, and expire after 30 minutes. A missing, invalid or expired token, or a token for a deleted user, returns `401 {"detail": "Could not validate credentials"}`. Scan routes return `404` when the scan does not exist and `403 {"detail": "Access denied"}` when it belongs to another user.
+
+| Method | Route                                           | Auth | Purpose                                     |
+| ------ | ----------------------------------------------- | ---- | ------------------------------------------- |
+| POST   | `/api/auth/register`                            | No   | Create an account and receive a token       |
+| POST   | `/api/auth/login`                               | No   | Exchange username and password for a token  |
+| GET    | `/api/auth/me`                                  | Yes  | Current user                                |
+| PUT    | `/api/auth/me`                                  | Yes  | Update profile fields                       |
+| GET    | `/api/scans`                                    | Yes  | List your scans, newest first               |
+| GET    | `/api/scans/{scan_id}`                          | Yes  | One scan                                    |
+| POST   | `/api/process-mri`                              | Yes  | Upload MRI files and run the pipeline       |
+| GET    | `/api/scans/{scan_id}/slice/{slice_idx}`        | Yes  | One MRI slice as JPEG                       |
+| GET    | `/api/scans/{scan_id}/segmentation/{slice_idx}` | Yes  | One segmentation slice as a coloured PNG    |
+| GET    | `/api/scans/{scan_id}/download/{key}`           | Yes  | Download a stored file                      |
+| PUT    | `/api/scans/{scan_id}`                          | Yes  | Rename the patient or change the patient ID |
+| DELETE | `/api/scans/{scan_id}`                          | Yes  | Delete a scan and its files                 |
+
+### POST /api/auth/register
+
+JSON body (`UserCreate` in [`models.py`](Backend/models.py)). All fields are strings with no length or format checks in the backend.
+
+| Field                                | Required            |
+| ------------------------------------ | ------------------- |
+| `username`                           | Yes, must be unique |
+| `email`                              | Yes, must be unique |
+| `password`                           | Yes                 |
+| `fullName`                           | Yes                 |
+| `title`, `department`, `institution` | No                  |
+
+Responses:
+
+- `200` with `{"access_token": "...", "token_type": "bearer", "user": {"id", "username", "fullName", "email", "title"}}`.
+- `400 {"detail": "Username already registered"}`.
+- A duplicate email is not checked before insert, so it fails at the database unique constraint and returns `500`.
+
+```powershell
+Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/auth/register -ContentType "application/json" `
+  -Body '{"username":"demo","email":"demo@example.com","password":"change-me","fullName":"Demo User"}'
 ```
 
-**Get Scan Results:**
+### POST /api/auth/login
 
-```bash
-curl http://localhost:8000/api/scans/scan-abc123 \
-  -H "Authorization: Bearer <token>"
+Form body (`application/x-www-form-urlencoded`) with `username` and `password`, as defined by `OAuth2PasswordRequestForm`.
+
+- `200` with the same shape as register.
+- `401 {"detail": "Incorrect username or password"}`.
+
+```powershell
+curl.exe -X POST http://localhost:8000/api/auth/login -d "username=demo&password=change-me"
 ```
 
-#### Extending the Pipeline
+### GET /api/auth/me and PUT /api/auth/me
 
-To add a new AI model:
+- `GET` returns the full `User` row: `id`, `username`, `email`, `hashed_password`, `fullName`, `title`, `department`, `institution`, `createdAt`. See [Security notes](#security-notes) about `hashed_password`.
+- `PUT` takes a JSON body with any of `fullName`, `email`, `title`, `department`, `institution`. Only fields that are present and not `null` are changed. Returns the updated `User`, or `400 {"detail": "Email already in use"}`.
 
-1. **Train your model** and save weights to `Backend/YourModel/`
-2. **Add loading code** in `processor.py`:
-   ```python
-   def load_models(self, ..., yourmodel_path: str):
-       self.yourmodel = YourModel().to(self.device)
-       self.yourmodel.load_state_dict(torch.load(yourmodel_path))
-   ```
-3. **Add inference method**:
-   ```python
-   def run_yourmodel(self, image):
-       # Your inference logic
-       return results
-   ```
-4. **Update API endpoint** in `main.py` to call new method
+### GET /api/scans and GET /api/scans/{scan_id}
 
-### For Researchers
+Return `Scan` objects. Fields:
 
-#### Reproducing Training Results
+| Field                                | Type                | Notes                                                                                                                                                                                                                                                        |
+| ------------------------------------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `id`                                 | string              | `scan-` followed by 6 hex characters                                                                                                                                                                                                                         |
+| `patientId`                          | string              | Given at upload, or generated as `PT-2026-` plus 4 hex characters                                                                                                                                                                                            |
+| `patientName`                        | string              | Default `Uploaded Scan`                                                                                                                                                                                                                                      |
+| `scanDate`                           | string              | Upload date, `YYYY-MM-DD`                                                                                                                                                                                                                                    |
+| `modalities`                         | list of strings     | Detected modalities in upper case, for example `["FLAIR", "T1", "T1CE", "T2"]`                                                                                                                                                                               |
+| `filePaths`                          | object              | Modality -> path relative to `Backend/uploads`                                                                                                                                                                                                               |
+| `status`, `progress`, `pipelineStep` | string, int, string | Always `completed`, `100`, `complete` after a successful upload                                                                                                                                                                                              |
+| `results`                            | object              | `detected` (bool), `classification` (`glioma`, `meningioma`, `pituitary` or `No Tumour Detected`), `confidence` (0-1, 4 decimals), `tumorVolume`, `wtVolume`, `tcVolume`, `etVolume` (2 decimals, see [How it works](#what-happens-when-a-scan-is-uploaded)) |
+| `createdAt`                          | datetime            | UTC                                                                                                                                                                                                                                                          |
+| `userId`                             | int                 | Owner                                                                                                                                                                                                                                                        |
 
-All training notebooks are in `Backend/` subdirectories:
+### POST /api/process-mri
 
-**Detection Models (9 architectures)**:
+Multipart form data:
 
-- `Backend/Binary Detection/` — ResNet50, VGG16, DenseNet121, EfficientNetB0, MobileNetV3, InceptionV3, ViT-B/16, Swin Base, CoaTNet-0
+| Field         | Required         | Notes                                                                                                                           |
+| ------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `files`       | Yes, one or more | NIfTI files. Filenames must contain `FLAIR`, `T1CE`/`T1C`, `T2` or `T1` to be recognised. All four are needed for segmentation. |
+| `patientName` | No               | Default `Uploaded Scan`                                                                                                         |
+| `patientId`   | No               | Generated when missing                                                                                                          |
 
-**Classification Models (6 architectures)**:
+Responses:
 
-- `Backend/Classification/` — EfficientNetB0, InceptionV3, ResNet50, Swin-Base, ViT-B16, CoaTNet0
+- `200` with the new `Scan`.
+- `503 {"detail": "AI models not loaded."}` when the detection or classification model did not load.
+- `500` with the error text for any processing failure. The scan folder is deleted in that case. A request with no recognisable modality also ends up as `500` with detail `"400: No valid MRI modality found."`, because the internal `400` error is caught by the general error handler.
+- A segmentation error is only printed to the server log; the scan is still saved with all volumes set to `0.0`.
 
-**Segmentation Models (6 architectures)**:
+```powershell
+curl.exe -X POST http://localhost:8000/api/process-mri -H "Authorization: Bearer <token>" `
+  -F "files=@BraTS20_Training_001_flair.nii" -F "files=@BraTS20_Training_001_t1.nii" `
+  -F "files=@BraTS20_Training_001_t1ce.nii" -F "files=@BraTS20_Training_001_t2.nii" `
+  -F "patientName=Case 001"
+```
 
-- `Backend/Segmentation/` — UNet, nnU-Net, VNet, UNETR, Swin-UNETR, TransBTS
+### GET /api/scans/{scan_id}/slice/{slice_idx}
 
-Each notebook includes:
+- Query parameter `modality` (default `flair`). An unknown modality falls back to the first stored one.
+- Returns `image/jpeg` of axial slice `slice_idx` (third axis), intensity-clipped at the 99.5th percentile and rotated 90 degrees counter-clockwise, with header `X-Total-Slices`.
+- `404` if the scan or file is missing; `500 {"detail": "Failed to extract slice"}` for an out-of-range index.
 
-- Complete preprocessing pipeline
-- Model architecture definition
-- Training loop with metrics logging
-- Evaluation on test set
-- Visualisation of results
+### GET /api/scans/{scan_id}/segmentation/{slice_idx}
 
----
+Returns `image/png` of the saved `segmentation.nii` slice, rotated to match the MRI slice. Colours: WT voxels outside TC red, TC voxels outside ET yellow, ET white, background black. `404 {"detail": "Segmentation not found"}` when segmentation did not run.
 
-## Detailed Research Documentation
+### GET /api/scans/{scan_id}/download/{key}
 
-The repository contains three comprehensive research papers documenting our comparative analyses:
+`key` is `segmentation`, a stored modality (`flair`, `t1`, `t1ce`, `t2`), or a filename inside that scan's folder (checked with `realpath` to stay inside `Backend/uploads`). Returns the file as `application/octet-stream`, or `404 {"detail": "File not found"}`. The 3D viewer uses this route.
 
-### 1. Binary Detection Research
+### PUT /api/scans/{scan_id} and DELETE /api/scans/{scan_id}
 
-**Location**: `Backend/Binary Detection/README.md`
+- `PUT` takes JSON with optional `patientName` and `patientId` and returns the updated `Scan`.
+- `DELETE` removes the scan folder and the database row and returns `{"message": "Scan deleted successfully"}`.
 
-Documents the comparative study of 9 deep learning architectures for binary brain tumour detection. Key findings include:
+## Data storage
 
-- CoaTNet-0 and EfficientNetB0 achieving 99.59% accuracy
-- Comprehensive analysis across CNN and transformer families
-- Parameter efficiency analysis showing EfficientNetB0 as optimal
-- Detailed training dynamics and convergence analysis
+- **Database:** SQLite at `Backend/neuroscan.db` (Git-ignored), created on start-up with `SQLModel.metadata.create_all`. There are no migrations; schema changes need a new database or a manual migration. Tables: `user` and `scan` (`scan.userId` references `user.id`). `models.py` also defines `UserLogin` and `ScanCreate`, which no route uses.
+- **Files:** `Backend/uploads/<scan_id>/` holds the uploaded files under their original names and `segmentation.nii` when segmentation ran. The folder is Git-ignored.
 
-### 2. Classification Research
+## Research notebooks and results
 
-**Location**: `Backend/Classification/README.md`
+Each research folder has its own README with the full cell-by-cell walkthrough, every metric and every saved plot. The notebooks target Kaggle and were not executed for these READMEs; all numbers come from their saved outputs.
 
-Presents a comparative study of 6 state-of-the-art architectures for multi-class brain tumour classification (Glioma, Meningioma, Pituitary). Key findings include:
+| Stage                                              | Folder                                                           | Notebooks                                                                                                      | Best test result                                                                             | Deployed model  |
+| -------------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------- |
+| Detection (tumour vs no tumour, 2D)                | [Backend/Binary Detection](Backend/Binary%20Detection/README.md) | 9 (EfficientNetB0, DenseNet121, ResNet50, CoAtNet-0, InceptionV3, SwinBase, ViT-B16, MobileNetV3-Large, VGG16) | Accuracy 0.9939 on 488 images, shared by DenseNet121, ResNet50, EfficientNetB0 and CoAtNet-0 | EfficientNet-B0 |
+| Classification (glioma, meningioma, pituitary, 2D) | [Backend/Classification](Backend/Classification/README.md)       | 6 (EfficientNetB0, ResNet50, InceptionV3, CoAtNet-0, SwinBase, ViT-B16)                                        | Accuracy 0.9858 on 706 images (SwinBase); EfficientNetB0 0.9759                              | EfficientNet-B0 |
+| Segmentation (WT, TC, ET, 3D BraTS 2020)           | [Backend/Segmentation](Backend/Segmentation/README.md)           | 7 (UNet, nnU-Net style, VNet, VNet re-run with plots, UNETR, Swin-UNETR, TransBTS)                             | Mean Dice 0.7999 on 56 cases (3D UNet); VNet 0.7655                                          | VNet            |
 
-- InceptionV3 and Swin-Base achieving 98.58% accuracy
-- Perceptual hashing deduplication methodology
-- Cross-architecture performance comparison under identical conditions
-- Clinical deployment recommendations
+Points to keep in mind:
 
-### 3. Segmentation Research
+- **The deployed `.pth` files are not traced to a notebook run.** The detection and classification weights have the same byte size as the EfficientNetB0 notebook outputs but different MD5 hashes, and no notebook writes `VNet.pth`. Their exact test scores are therefore not recorded. The folder READMEs give the details.
+- **Training and serving preprocessing differ.** The notebooks resize whole 2D JPG slices; the backend takes the middle slice of a NIfTI volume and crops the brain with an OpenCV contour before resizing. How this affects accuracy was not measured.
+- **The Swin-UNETR notebook has no test result** because its test cell failed.
 
-**Location**: `Backend/Segmentation/README.md`
+## Papers and presentation materials
 
-Comprehensive benchmark of 6 state-of-the-art 3D segmentation architectures on BraTS 2020 dataset. Key findings include:
+[`Backend/Materials/`](Backend/Materials/) contains three LaTeX paper projects (each with `main.tex`, `highlights.tex`, `graphical_abstract.tex` and a `figures/` folder), a project report (`Report.md`, `Report.pdf`), review decks and templates.
 
-- UNet achieving highest mean Dice (0.7999)
-- VNet demonstrating exceptional parameter efficiency (1.4M parameters, 0.7655 Dice)
-- Transformer underperformance analysis (UNETR: 0.6234, TransBTS: 0.5109)
-- Per-region performance analysis (WT, TC, ET)
+`build-latex.ps1` compiles `main.tex` (or every `.tex` file) in each project folder with a local `tectonic.exe`. The `.exe` is Git-ignored, so download [Tectonic](https://tectonic-typesetting.github.io/) and place `tectonic.exe` in `Backend/Materials/` first.
 
----
+```powershell
+.\Backend\Materials\build-latex.ps1              # all projects
+.\Backend\Materials\build-latex.ps1 -Project Revised   # folders whose name contains "Revised"
+```
+
+The paper texts were not reviewed for this README; their numbers may differ from the notebook outputs.
+
+## Testing and code quality
+
+| Check            | Command (run in `Frontend/`) | Result when this README was written                                                                                |
+| ---------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Unit tests       | `npm run test`               | 1 test file, 1 test passed. The only test is a placeholder (`expect(true).toBe(true)`).                            |
+| Lint             | `npm run lint`               | 1 error (`@typescript-eslint/no-explicit-any` in `src/components/scan/VolumeViewer3D.tsx`) and 4 warnings          |
+| Production build | `npm run build`              | Succeeds, with a warning that the main chunk is 1,364.78 kB (380.39 kB gzipped), above Vite's 500 kB warning limit |
+| Watch mode       | `npm run test:watch`         | Not run                                                                                                            |
+
+The backend has no automated tests. Loading the three weight files into `BrainProcessor` was checked manually and succeeds on CPU. `black` is listed in `requirements.txt` for formatting; no configuration file for it is committed. Frontend formatting uses Prettier with `prettier-plugin-tailwindcss` ([`.prettierrc.json`](.prettierrc.json)).
+
+## Troubleshooting
+
+| Problem                                                      | Likely cause                                                                                | How to check                                                                  | Fix                                                                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `start.ps1` prints `Virtual environment not found`           | `.venv` does not exist in the repository root                                               | `Test-Path .venv`                                                             | `python -m venv .venv`, then install requirements                                                      |
+| Upload returns `503 AI models not loaded.`                   | A `.pth` file is missing or does not match the architecture; the start-up error is silenced | `Test-Path "Backend\Binary Detection\EfficientNetB0.pth"` (and the other two) | Place all three weight files at the exact paths in the [Quick start](#quick-start-windows) and restart |
+| Browser console shows CORS errors on `http://localhost:8080` | `.env` sets `CORS_ORIGINS` without `http://localhost:8080`                                  | `Get-Content .env`                                                            | Add `http://localhost:8080` to `CORS_ORIGINS`, or remove the line to allow all origins locally         |
+| Login works but every page returns to `/login`               | Token expired (30 minutes) or `JWT_SECRET` changed                                          | Browser dev tools, Application > Local Storage > `token`                      | Log in again                                                                                           |
+| Upload succeeds but volumes are `0.0` and no overlay appears | Fewer than four modalities recognised, or segmentation failed                               | Check the scan's `modalities`; read the backend log for `Segmentation error:` | Name the files so they contain `flair`, `t1`, `t1ce` and `t2`                                          |
+| Upload returns `500` with `No valid MRI modality found`      | No filename contains FLAIR, T1CE, T1C, T2 or T1                                             | Check the filenames                                                           | Rename the files                                                                                       |
+| DICOM upload fails                                           | The upload box accepts `.dcm`, but the backend reads files only with nibabel (NIfTI)        | Backend log                                                                   | Convert DICOM to NIfTI first                                                                           |
+| `npm run dev` fails with a Node.js version error             | Node.js older than 20.19                                                                    | `node --version`                                                              | Install Node.js 20.19+ or 22.12+                                                                       |
+| Frontend cannot reach the API from another machine           | Most components call `http://localhost:8000` directly                                       | Browser network tab                                                           | Open the app on the machine running the backend, or change the hard-coded URLs to use `VITE_API_URL`   |
+| `build-latex.ps1` says `tectonic.exe not found`              | The binary is Git-ignored                                                                   | `Test-Path Backend\Materials\tectonic.exe`                                    | Download Tectonic and place `tectonic.exe` there                                                       |
+
+## Known limitations
+
+- **Hard-coded API URL in the frontend.** Only `fetchScans`, `fetchScan` and `processMRI` in `src/lib/api.ts` use `VITE_API_URL`. Login, registration, profile, upload (`DropZone.tsx`), scan edit and delete, slice viewer and 3D viewer call `http://localhost:8000/api/...` directly. The app therefore works only when the browser can reach the backend at `localhost:8000`.
+- **Report export is not implemented.** The "Download PDF", "Export CSV", "PDF", "CSV" and "Export All" buttons on the scan detail and Reports pages have no action.
+- **DICOM is not supported** by the backend, although the upload box accepts `.dcm` files.
+- **Detection and classification use a single 2D slice** (the middle slice of one modality), not the whole volume.
+- **Volumes are voxel counts at 128^3 divided by 1,000**, not physical volumes.
+- **Processing is synchronous.** The upload request blocks until all three models finish; there is no job queue.
+- **`src/lib/mock-data.ts` is not imported** anywhere.
+
+## Security notes
+
+These are observations from reading the code, not the result of a security audit.
+
+- `GET /api/auth/me` and `PUT /api/auth/me` return the `User` table model, which includes `hashed_password`.
+- If `JWT_SECRET` is unset, tokens are signed with a default secret that is visible in `main.py`.
+- Without `CORS_ORIGINS`, every origin is allowed.
+- `POST /api/process-mri` writes each upload to `os.path.join(scan_dir, file.filename)` without sanitising the filename.
+- There is no upload size limit, rate limiting or password policy in the backend.
+- Tokens are stored in browser `localStorage` and can also be passed in the URL query string, where they may appear in logs.
+
+Follow the [Configuration](#configuration) section and keep `.env` out of Git (it is already ignored).
+
+## Project metrics
+
+| Metric                              | Value                                                                                                                          | Source                                                            |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| API routes                          | 12                                                                                                                             | `Backend/main.py`                                                 |
+| Database tables                     | 2 (`user`, `scan`)                                                                                                             | `Backend/models.py`                                               |
+| Frontend routes                     | 9 including the 404 page                                                                                                       | `Frontend/src/App.tsx`                                            |
+| Environment variables               | 4                                                                                                                              | `main.py`, `database.py`, `api.ts`                                |
+| npm scripts                         | 7 (`dev`, `build`, `build:dev`, `lint`, `preview`, `test`, `test:watch`)                                                       | `Frontend/package.json`                                           |
+| Frontend tests                      | 1 placeholder test                                                                                                             | `Frontend/src/test/example.test.ts`                               |
+| Backend tests                       | 0                                                                                                                              | Repository search                                                 |
+| Research notebooks                  | 22 (9 detection, 6 classification, 7 segmentation)                                                                             | `Backend/*/*.ipynb`                                               |
+| Deployed model parameters           | Detection and classification: EfficientNet-B0 (4,008,829 and 4,011,391 in the notebook versions); segmentation: VNet 1,398,761 | Notebook `model_profile.json` files and `processor.py` load check |
+| JWT lifetime                        | 30 minutes                                                                                                                     | `ACCESS_TOKEN_EXPIRE_MINUTES` in `main.py`                        |
+| Ports                               | 8000 (API), 8080 (Vite dev)                                                                                                    | `main.py`, `vite.config.ts`                                       |
+| End-to-end processing time per scan | Not measured in the current repository.                                                                                        |                                                                   |
 
 ## Contributing
 
-We welcome contributions from the community. Areas of interest:
+- Read [`AGENTS.md`](AGENTS.md) for the coding conventions: typed Python, device-agnostic PyTorch, ownership checks on scan routes, `@/` imports and shared types in `src/lib/types.ts` on the frontend.
+- Keep API response shapes in `Backend/models.py` and `Frontend/src/lib/types.ts` in sync.
+- Do not commit `.pth`, `.db`, `.nii` or `.nii.gz` files; `.gitignore` already excludes them.
+- Changing `VNet3D` or the EfficientNet head in `processor.py` breaks loading of the existing weight files.
+- Before opening a pull request, run `npm run lint`, `npm run test` and `npm run build` in `Frontend/`.
 
-- **Bug fixes** — Report issues via GitHub Issues
-- **New features** — Propose enhancements
-- **Documentation** — Improve guides and tutorials
-- **Model improvements** — Better accuracy or efficiency
-- **UI/UX** — Design improvements
-- **Internationalization** — Multi-language support
-
-### Development Workflow
-
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/your-feature`
-3. Make changes with clear commit messages
-4. Add tests if applicable
-5. Submit Pull Request with detailed description
+No licence file is present in the repository.
