@@ -82,7 +82,7 @@ These steps start the backend on `127.0.0.1:8000` and the frontend on `localhost
    .\start.ps1
    ```
 
-   On first run the script writes a development `.env` with freshly generated `JWT_SECRET` and `DATA_ENCRYPTION_KEY` values (the file is Git-ignored). It then starts the backend and frontend as background jobs, opens `http://localhost:8080`, and streams both logs with `[NeuroScan-Backend]` and `[NeuroScan-Frontend]` prefixes. Press `Ctrl+C` to stop both.
+   On first run the script writes a development `.env` with freshly generated `JWT_SECRET` and `DATA_ENCRYPTION_KEY` values (the file is Git-ignored). It then opens a separate PowerShell window for the backend and one for the frontend, each showing that service's logs, and opens `http://localhost:8080` once the frontend responds. Press `Ctrl+C` in the window where you ran the script, or close that window, to stop both services and close their windows.
 
 6. **Use the app.** Register at `http://localhost:8080/register`, then upload the four modality files of one case on the Upload page. Processing runs in the background; the scan page updates itself until the results appear. In development mode the API documentation is at `http://127.0.0.1:8000/docs`.
 
@@ -252,6 +252,7 @@ See [Quick start](#quick-start-windows). The script:
 - Exits if `.venv` is missing; creates a development `.env` with random secrets if there is none.
 - Installs Python requirements if the imports fail, and runs `npm ci` if `node_modules` is missing.
 - Starts `uvicorn main:app --reload --host 127.0.0.1 --port 8000` in `Backend/` and `npm run dev` in `Frontend/`.
+- Runs each service in its own window; `Ctrl+C` or closing the launching window kills both process trees through a Windows job object.
 
 ### Option 2: two terminals
 

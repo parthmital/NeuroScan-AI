@@ -1,5 +1,5 @@
-# Start NeuroScan AI services in the current IDE terminal as background jobs
-# Combined output with prefixes, colors, and clean UTF-8 formatting
+# Start NeuroScan AI services, each in its own PowerShell window for dedicated logs.
+# Ctrl+C or closing this window stops every service and closes their windows.
 
 # Force UTF-8 at the system level
 chcp 65001 | Out-Null
@@ -8,26 +8,6 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 
 $RootPath = $PSScriptRoot
 $VenvPath = Join-Path $RootPath ".venv"
-
-# Colors for each service
-$Colors = @{
-    "NeuroScan-Backend" = "Cyan"
-    "NeuroScan-Frontend" = "Green"
-}
-
-# Cleanup function to stop background jobs when this script exits
-function Stop-All-Jobs {
-    Write-Host "`nStopping all background services..." -ForegroundColor Red
-    Get-Job | Stop-Job
-    Get-Job | Remove-Job -Force
-    Write-Host "All jobs stopped." -ForegroundColor Green
-}
-
-# Trap Ctrl+C (SIGINT) and other termination to clean up
-trap { Stop-All-Jobs; exit }
-
-Write-Host "Cleaning up old processes..." -ForegroundColor Gray
-Get-Job | Remove-Job -Force
 
 Write-Host "----------------------------------------------------------------------" -ForegroundColor Gray
 Write-Host "Starting NeuroScan AI Services" -ForegroundColor White
@@ -103,99 +83,145 @@ try {
     exit 1
 }
 
-# Launch each service as a background job
-foreach ($Service in $Services) {
-    Write-Host "Launching [$($Service.Name)]..." -ForegroundColor Gray
-    
-    # Check if service directory exists
-    if (-not (Test-Path $Service.Path)) {
-        Write-Host "Directory not found: $($Service.Path)" -ForegroundColor Red
-        continue
+# Commands each service window runs. Windows stay open (-NoExit) so crash logs remain visible.
+$ServiceCommands = @{
+    backend = @"
+`$env:PYTHONIOENCODING = 'utf-8'
+Write-Host 'Checking Python dependencies...' -ForegroundColor Gray
+& '$VenvScripts\python.exe' -c 'import fastapi, uvicorn, torch, nibabel, sqlmodel, jwt, pyotp, alembic, reportlab' 2>`$null
+if (`$LASTEXITCODE -ne 0) {
+    Write-Host 'Installing Python dependencies...' -ForegroundColor Yellow
+    & '$VenvScripts\pip.exe' install -r requirements.txt
+}
+# Localhost only; the frontend dev server proxies /api to this port.
+& '$VenvScripts\python.exe' -m uvicorn main:app --reload --host 127.0.0.1 --port 8000 --log-level info
+"@
+    frontend = @"
+`$env:NODE_ENV = 'development'
+if (-not (Test-Path 'node_modules')) {
+    Write-Host 'Installing Node.js dependencies from the lockfile...' -ForegroundColor Yellow
+    npm ci
+}
+npm run dev
+"@
+}
+
+# A kill-on-close job object: Windows terminates every process in it (and everything they
+# spawn) as soon as this launcher exits, whether by Ctrl+C, closing the window, or a crash.
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+public static class ServiceJob {
+    [StructLayout(LayoutKind.Sequential)]
+    struct BasicLimits {
+        public long PerProcessUserTimeLimit, PerJobUserTimeLimit;
+        public uint LimitFlags;
+        public UIntPtr MinimumWorkingSetSize, MaximumWorkingSetSize;
+        public uint ActiveProcessLimit;
+        public UIntPtr Affinity;
+        public uint PriorityClass, SchedulingClass;
     }
-    
-    Start-Job -Name $Service.Name -ScriptBlock {
-        Param($Path, $Kind, $VenvScripts)
-        
-        # Force UTF-8 encoding INSIDE the job process
-        chcp 65001 | Out-Null
-        [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-        $OutputEncoding = [System.Text.Encoding]::UTF8
-        
-        # Ensure common dev tools use UTF-8/Colors
-        $env:PYTHONIOENCODING = "utf-8"
-        $env:FORCE_COLOR = "1"
-        $env:NODE_ENV = "development"
-        
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct ExtendedLimits {
+        public BasicLimits Basic;
+        public ulong ReadOperationCount, WriteOperationCount, OtherOperationCount;
+        public ulong ReadTransferCount, WriteTransferCount, OtherTransferCount;
+        public UIntPtr ProcessMemoryLimit, JobMemoryLimit, PeakProcessMemoryUsed, PeakJobMemoryUsed;
+    }
+
+    const int ExtendedLimitInformation = 9;
+    const uint KillOnJobClose = 0x2000;
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    static extern IntPtr CreateJobObject(IntPtr attributes, string name);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    static extern bool SetInformationJobObject(IntPtr job, int infoClass, ref ExtendedLimits info, uint length);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    static extern bool AssignProcessToJobObject(IntPtr job, IntPtr process);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    static extern bool TerminateJobObject(IntPtr job, uint exitCode);
+
+    static IntPtr handle = IntPtr.Zero;
+
+    public static void Add(IntPtr process) {
+        if (handle == IntPtr.Zero) {
+            handle = CreateJobObject(IntPtr.Zero, null);
+            var info = new ExtendedLimits();
+            info.Basic.LimitFlags = KillOnJobClose;
+            if (handle == IntPtr.Zero || !SetInformationJobObject(handle, ExtendedLimitInformation, ref info, (uint)Marshal.SizeOf(info)))
+                throw new System.ComponentModel.Win32Exception();
+        }
+        if (!AssignProcessToJobObject(handle, process))
+            throw new System.ComponentModel.Win32Exception();
+    }
+
+    public static void Terminate() {
+        if (handle != IntPtr.Zero) TerminateJobObject(handle, 1);
+    }
+}
+"@
+
+function Stop-AllServices {
+    Write-Host "`nStopping all services..." -ForegroundColor Red
+    [ServiceJob]::Terminate()
+    Write-Host "All services stopped." -ForegroundColor Green
+}
+
+try {
+    # Launch each service in its own window
+    foreach ($Service in $Services) {
+        if (-not (Test-Path $Service.Path)) {
+            Write-Host "Directory not found: $($Service.Path)" -ForegroundColor Red
+            continue
+        }
+        Write-Host "Launching [$($Service.Name)] in a new window..." -ForegroundColor Gray
+
+        $Script = "`$Host.UI.RawUI.WindowTitle = '$($Service.Name)'`n" +
+            "chcp 65001 | Out-Null`n" +
+            "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`n" +
+            "Set-Location -LiteralPath '$($Service.Path)'`n" +
+            $ServiceCommands[$Service.Kind]
+        # Encoded so paths with spaces or quotes survive the command line intact.
+        $Encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($Script))
+        $Process = Start-Process powershell.exe -PassThru -ArgumentList @(
+            "-NoLogo", "-NoProfile", "-ExecutionPolicy", "Bypass", "-NoExit", "-EncodedCommand", $Encoded
+        )
+        [ServiceJob]::Add($Process.Handle)
+    }
+
+    # Open the browser once the frontend answers, so it does not load a half-started dev server.
+    Write-Host "Waiting for the frontend at http://localhost:8080..." -ForegroundColor Gray
+    $Deadline = (Get-Date).AddSeconds(60)
+    $FrontendUp = $false
+    while (-not $FrontendUp -and (Get-Date) -lt $Deadline) {
         try {
-            Set-Location $Path
-            Write-Host "Changed directory to: $Path" -ForegroundColor Gray
-            
-            if ($Kind -eq "backend") {
-                Write-Host "Checking Python dependencies..." -ForegroundColor Gray
-                & "$VenvScripts\python.exe" -c "import fastapi, uvicorn, torch, nibabel, sqlmodel, jwt, pyotp, alembic, reportlab" 2>$null
-                if ($LASTEXITCODE -ne 0) {
-                    Write-Host "Installing Python dependencies..." -ForegroundColor Yellow
-                    & "$VenvScripts\pip.exe" install -r requirements.txt
-                }
-                # Localhost only; the frontend dev server proxies /api to this port.
-                & "$VenvScripts\python.exe" -m uvicorn main:app --reload --host 127.0.0.1 --port 8000 --log-level info 2>&1
-            }
-            else {
-                if (-not (Test-Path "node_modules")) {
-                    Write-Host "Installing Node.js dependencies from the lockfile..." -ForegroundColor Yellow
-                    npm ci
-                }
-                npm run dev 2>&1
-            }
+            Invoke-WebRequest "http://localhost:8080" -UseBasicParsing -TimeoutSec 2 | Out-Null
+            $FrontendUp = $true
+        } catch {
+            Start-Sleep -Milliseconds 500
         }
-        catch {
-            Write-Host "Error starting service: $_" -ForegroundColor Red
-        }
-    } -ArgumentList $Service.Path, $Service.Kind, $VenvScripts | Out-Null
-}
+    }
+    if ($FrontendUp) {
+        Start-Process "http://localhost:8080"
+    } else {
+        Write-Host "Frontend did not respond within 60 seconds; check its window. Open http://localhost:8080 manually." -ForegroundColor Yellow
+    }
 
-# Wait a moment for services to start
-Start-Sleep -Seconds 3
+    Write-Host "`nReady! Logs are in the service windows." -ForegroundColor White
+    Write-Host "Backend API: http://127.0.0.1:8000 (proxied at http://localhost:8080/api)" -ForegroundColor Cyan
+    Write-Host "Frontend: http://localhost:8080" -ForegroundColor Green
+    Write-Host "Press Ctrl+C or close this window to stop everything." -ForegroundColor White
 
-# Automatically open the browser for the frontend
-Write-Host "`nOpening browser at http://localhost:8080..." -ForegroundColor Gray
-try {
-    Start-Process "http://localhost:8080"
-} catch {
-    Write-Host "Could not open browser automatically. Please navigate to http://localhost:8080" -ForegroundColor Yellow
-}
-
-Write-Host "`nReady! Combined logs below (Ctrl+C to quit):" -ForegroundColor White
-Write-Host "Backend API: http://127.0.0.1:8000 (proxied at http://localhost:8080/api)" -ForegroundColor Cyan
-Write-Host "Frontend: http://localhost:8080" -ForegroundColor Green
-Write-Host "----------------------------------------------------------------------`n"
-
-# Real-time combined output loop with prefixes
-try {
+    # Ctrl+C interrupts this loop and runs the finally block.
     while ($true) {
-        foreach ($Service in $Services) {
-            $Job = Get-Job -Name $Service.Name -ErrorAction SilentlyContinue
-            if ($Job) {
-                $Outputs = $Job | Receive-Job -ErrorAction SilentlyContinue
-                if ($Outputs) {
-                    foreach ($Line in $Outputs) {
-                        # Filter out messy PowerShell 'NativeCommandError' / RemoteException wrappers
-                        if ($Line -is [System.Management.Automation.ErrorRecord]) {
-                            $ActualMsg = $Line.Exception.Message
-                            if ($ActualMsg) { $Line = $ActualMsg }
-                        }
-                        
-                        if ($Line.ToString().Trim()) {
-                            Write-Host "[$($Service.Name)] " -NoNewline -ForegroundColor $Colors[$Service.Name]
-                            Write-Host $Line
-                        }
-                    }
-                }
-            }
-        }
-        Start-Sleep -Milliseconds 100
+        Start-Sleep -Seconds 1
     }
 }
 finally {
-    Stop-All-Jobs
+    Stop-AllServices
 }
