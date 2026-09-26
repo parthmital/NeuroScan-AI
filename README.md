@@ -287,30 +287,30 @@ Routes live in [`Backend/neuroscan/api/`](Backend/neuroscan/api/) under `/api`. 
 
 **Errors.** `401` when not signed in; scan routes return `404` both for missing scans and for other users' scans, so IDs cannot be probed. Validation errors return `422` without echoing submitted values. Unexpected errors return `500 {"detail": "Internal server error", "requestId": "..."}`; the same ID is in the `X-Request-ID` header and the JSON server log.
 
-| Method | Route | Purpose |
-| ------ | ----------------------------------------------- | ------------------------------------------------------------------------------- | --- | ---- | ---------------------------- |
-| POST | `/api/auth/register` | Create an account (`201`); `403` when registration is disabled |
-| POST | `/api/auth/login` | JSON `username`, `password`, optional `otp` |
-| POST | `/api/auth/logout` | End the session and revoke all tokens (`204`) |
-| GET | `/api/auth/me` | Current user |
-| PUT | `/api/auth/me` | Update `fullName`, `email`, `title`, `department`, `institution` |
-| POST | `/api/auth/password` | `currentPassword`, `newPassword` |
-| POST | `/api/auth/2fa/setup` | `password`; returns `secret`, `otpauthUri`, `qrSvg` |
-| POST | `/api/auth/2fa/enable` | `code` from the authenticator app |
-| POST | `/api/auth/2fa/disable` | `password` and `code` |
-| GET | `/api/scans?limit=&offset=` | Your scans, newest first; `limit` 1-500 (default 100), total in `X-Total-Count` |
-| GET | `/api/scans/export.csv` | All completed scans as CSV |
-| POST | `/api/process-mri` | Upload and queue (`202`) |
-| GET | `/api/scans/{scan_id}` | One scan (poll this for progress) |
-| PUT | `/api/scans/{scan_id}` | Change `patientName` or `patientId` |
-| DELETE | `/api/scans/{scan_id}` | Delete the scan and its files |
-| POST | `/api/scans/{scan_id}/retry` | Re-queue a failed scan (`202`); `409` otherwise |
-| GET | `/api/scans/{scan_id}/slice/{slice_idx}` | Axial MRI slice as JPEG, `?modality=flair                                       | t1  | t1ce | t2`, header `X-Total-Slices` |
-| GET | `/api/scans/{scan_id}/segmentation/{slice_idx}` | Segmentation slice as PNG |
-| GET | `/api/scans/{scan_id}/download/{key}` | `key` is `flair`, `t1`, `t1ce`, `t2` or `segmentation` |
-| GET | `/api/scans/{scan_id}/report.pdf` | PDF report (`409` until completed) |
-| GET | `/api/scans/{scan_id}/report.csv` | CSV report (`409` until completed) |
-| GET | `/api/health`, `/api/ready` | Liveness; readiness of database and models (`503` when not ready) |
+| Method | Route                                           | Purpose                                                                                         |
+| ------ | ----------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| POST   | `/api/auth/register`                            | Create an account (`201`); `403` when registration is disabled                                  |
+| POST   | `/api/auth/login`                               | JSON `username`, `password`, optional `otp`                                                     |
+| POST   | `/api/auth/logout`                              | End the session and revoke all tokens (`204`)                                                   |
+| GET    | `/api/auth/me`                                  | Current user                                                                                    |
+| PUT    | `/api/auth/me`                                  | Update `fullName`, `email`, `title`, `department`, `institution`                                |
+| POST   | `/api/auth/password`                            | `currentPassword`, `newPassword`                                                                |
+| POST   | `/api/auth/2fa/setup`                           | `password`; returns `secret`, `otpauthUri`, `qrSvg`                                             |
+| POST   | `/api/auth/2fa/enable`                          | `code` from the authenticator app                                                               |
+| POST   | `/api/auth/2fa/disable`                         | `password` and `code`                                                                           |
+| GET    | `/api/scans?limit=&offset=`                     | Your scans, newest first; `limit` 1-500 (default 100), total in `X-Total-Count`                 |
+| GET    | `/api/scans/export.csv`                         | All completed scans as CSV                                                                      |
+| POST   | `/api/process-mri`                              | Upload and queue (`202`)                                                                        |
+| GET    | `/api/scans/{scan_id}`                          | One scan (poll this for progress)                                                               |
+| PUT    | `/api/scans/{scan_id}`                          | Change `patientName` or `patientId`                                                             |
+| DELETE | `/api/scans/{scan_id}`                          | Delete the scan and its files                                                                   |
+| POST   | `/api/scans/{scan_id}/retry`                    | Re-queue a failed scan (`202`); `409` otherwise                                                 |
+| GET    | `/api/scans/{scan_id}/slice/{slice_idx}`        | Axial MRI slice as JPEG; `?modality=` is `flair`, `t1`, `t1ce` or `t2`; header `X-Total-Slices` |
+| GET    | `/api/scans/{scan_id}/segmentation/{slice_idx}` | Segmentation slice as PNG                                                                       |
+| GET    | `/api/scans/{scan_id}/download/{key}`           | `key` is `flair`, `t1`, `t1ce`, `t2` or `segmentation`                                          |
+| GET    | `/api/scans/{scan_id}/report.pdf`               | PDF report (`409` until completed)                                                              |
+| GET    | `/api/scans/{scan_id}/report.csv`               | CSV report (`409` until completed)                                                              |
+| GET    | `/api/health`, `/api/ready`                     | Liveness; readiness of database and models (`503` when not ready)                               |
 
 ### Rules worth knowing
 
