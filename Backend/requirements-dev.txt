@@ -1,6 +1,8 @@
 # Development and CI tooling: tests, lint/format, types, architecture contracts, security audits.
 -r requirements.txt
 bandit==1.9.4
+# Root-level `black .` formatting, including the research notebooks.
+black[jupyter]==26.5.1
 httpx==0.28.1
 import-linter==2.15
 mypy==2.3.1

@@ -12,7 +12,7 @@ No clinical validation is recorded in this repository. Treat every output as a r
 
 ## Contents
 
-- [Quick start (Windows)](#quick-start-windows)
+- [Quick start](#quick-start)
 - [How it works](#how-it-works)
 - [Technology stack](#technology-stack)
 - [Repository structure](#repository-structure)
@@ -29,44 +29,22 @@ No clinical validation is recorded in this repository. Treat every output as a r
 - [Project metrics](#project-metrics)
 - [Contributing](#contributing)
 
-## Quick start (Windows)
+## Quick start
 
-These steps start the backend on `127.0.0.1:8000` and the frontend on `localhost:8080` on one Windows machine. Run every command from the repository root in PowerShell unless a step says otherwise.
+These steps start the backend on `127.0.0.1:8000` and the frontend on `localhost:8080` on one machine. Run every command from the repository root.
 
 ### Prerequisites
 
 | Tool    | Version                                                        | Why                                                 |
 | ------- | -------------------------------------------------------------- | --------------------------------------------------- |
 | Python  | 3.11 (pinned in [`.python-version`](.python-version))          | Runs the FastAPI backend and PyTorch                |
-| Node.js | 22 or newer; CI uses 24 ([`Frontend/.nvmrc`](Frontend/.nvmrc)) | Vite 8 dev server and build                         |
+| Node.js | 22 or newer; CI uses 24 ([`Frontend/.nvmrc`](Frontend/.nvmrc)) | Runs `npm run dev`, the Vite 8 dev server and build |
 | npm     | Comes with Node.js                                             | Installs frontend packages from `package-lock.json` |
 | Git     | Any recent version                                             | Clones the repository                               |
 
 ### Steps
 
-1. **Create the Python virtual environment** in the repository root.
-
-   ```powershell
-   python -m venv .venv
-   ```
-
-2. **Install the backend dependencies** (all versions are pinned). Use `requirements-dev.txt` instead if you will run the tests and linters.
-
-   ```powershell
-   .\.venv\Scripts\pip install -r Backend\requirements.txt
-   ```
-
-   The CPU build of PyTorch is enough; the backend uses CUDA only when it is available.
-
-3. **Install the frontend dependencies** from the lockfile.
-
-   ```powershell
-   cd Frontend
-   npm ci
-   cd ..
-   ```
-
-4. **Place the three model weight files.** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. Default paths (override with the variables in [Configuration](#configuration)):
+1. **Place the three model weight files.** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. Default paths (override with the variables in [Configuration](#configuration)):
 
    | File                                          | Size (bytes) | Used for         |
    | --------------------------------------------- | ------------ | ---------------- |
@@ -74,17 +52,17 @@ These steps start the backend on `127.0.0.1:8000` and the frontend on `localhost
    | `Backend/Classification/EfficientNetB0.pth`   | 16,359,363   | Tumour type      |
    | `Backend/Segmentation/VNet.pth`               | 5,617,589    | 3D segmentation  |
 
-   No download location is recorded in the repository. Obtain the files from the project maintainer. The backend loads them with `torch.load(weights_only=True)`, so a weights file cannot run code.
+   No download location is recorded in the repository. Obtain the files from the project maintainer. The backend loads them with `torch.load(weights_only=True)`, so a weights file cannot run code. Without them the app still starts: missing detection or classification weights disable uploads, and a missing segmentation file skips segmentation.
 
-5. **Start both services.**
+2. **Set up and start everything.**
 
-   ```powershell
-   .\start.ps1
+   ```sh
+   npm run dev
    ```
 
-   On first run the script writes a development `.env` with freshly generated `JWT_SECRET` and `DATA_ENCRYPTION_KEY` values (the file is Git-ignored). It then opens a separate PowerShell window for the backend and one for the frontend, each showing that service's logs, and opens `http://localhost:8080` once the frontend responds. Press `Ctrl+C` in the window where you ran the script, or close that window, to stop both services and close their windows.
+   The first run creates `.venv`, installs `Backend/requirements-dev.txt` into it (PyTorch makes this a large download), runs `npm ci` in `Frontend/`, and writes a development `.env` with freshly generated `JWT_SECRET` and `DATA_ENCRYPTION_KEY` values (the file is Git-ignored). On Windows it then opens a separate PowerShell window for the backend and one for the frontend, each showing that service's logs; on macOS and Linux both run in the same terminal with each log line prefixed `[backend]` or `[frontend]`. It opens `http://localhost:8080` once both services respond. Press `Ctrl+C` in the terminal where you ran `npm run dev`, or close it, to stop both services and close their windows.
 
-6. **Use the app.** Register at `http://localhost:8080/register`, then upload the four modality files of one case on the Upload page. Processing runs in the background; the scan page updates itself until the results appear. In development mode the API documentation is at `http://127.0.0.1:8000/docs`.
+3. **Use the app.** Register at `http://localhost:8080/register`, then upload the four modality files of one case on the Upload page. Processing runs in the background; the scan page updates itself until the results appear. In development mode the API documentation is at `http://127.0.0.1:8000/docs`.
 
 If something fails, see [Troubleshooting](#troubleshooting).
 
@@ -195,7 +173,8 @@ NeuroScan-AI/
 |-- .pre-commit-config.yaml   gitleaks secret scan before each commit
 |-- .gitattributes            LF line endings on every OS, matching Prettier
 |-- pyproject.toml            black settings matching ruff, for `black .` from the root
-|-- start.ps1                 Starts backend and frontend together on Windows
+|-- package.json              `npm run dev`: sets up and starts backend and frontend
+|-- scripts/dev.mjs           The setup and launch script behind `npm run dev`
 |-- Backend/
 |   |-- main.py               ASGI entry point (uvicorn main:app)
 |   |-- neuroscan/            Application package (see ARCHITECTURE.md)
@@ -247,14 +226,17 @@ The frontend calls `/api` on its own origin. `VITE_API_URL` (in `Frontend/.env`)
 
 ## Running the application
 
-### Option 1: `start.ps1` (Windows)
+### Option 1: `npm run dev`
 
-See [Quick start](#quick-start-windows). The script:
+See [Quick start](#quick-start). [`scripts/dev.mjs`](scripts/dev.mjs) uses only Node.js built-ins and:
 
-- Exits if `.venv` is missing; creates a development `.env` with random secrets if there is none.
-- Installs Python requirements if the imports fail, and runs `npm ci` if `node_modules` is missing.
+- Creates `.venv` with Python 3.11 (or a newer Python 3 if 3.11 is missing) when it does not exist.
+- Installs `Backend/requirements-dev.txt` (the runtime `requirements.txt` plus test, lint and `black[jupyter]` tooling) into `.venv` and runs `npm ci` in `Frontend/` only when those files or `Frontend/package-lock.json` changed since the last install, tracked by SHA-256 stamps in `.venv/` and `Frontend/node_modules/`.
+- Creates a development `.env` with random secrets if there is none, and warns about missing model weights.
+- Keeps the pip and npm download caches in `.cache/` (Git-ignored) unless `PIP_CACHE_DIR` or `npm_config_cache` is already set.
 - Starts `uvicorn main:app --reload --host 127.0.0.1 --port 8000` in `Backend/` and `npm run dev` in `Frontend/`.
-- Runs each service in its own window; `Ctrl+C` or closing the launching window kills both process trees through a Windows job object.
+- On Windows, runs each service in its own PowerShell window that stays open after a crash so its log remains readable. `Ctrl+C`, `Ctrl+Break` or closing the launching terminal closes both windows and their process trees; closing both windows ends the launcher.
+- On macOS and Linux, runs both in the launching terminal with prefixed logs. If either service exits, the other is stopped; `Ctrl+C` stops both process trees.
 
 ### Option 2: two terminals
 
@@ -305,30 +287,30 @@ Routes live in [`Backend/neuroscan/api/`](Backend/neuroscan/api/) under `/api`. 
 
 **Errors.** `401` when not signed in; scan routes return `404` both for missing scans and for other users' scans, so IDs cannot be probed. Validation errors return `422` without echoing submitted values. Unexpected errors return `500 {"detail": "Internal server error", "requestId": "..."}`; the same ID is in the `X-Request-ID` header and the JSON server log.
 
-| Method | Route                                           | Purpose                                                                         |
+| Method | Route | Purpose |
 | ------ | ----------------------------------------------- | ------------------------------------------------------------------------------- | --- | ---- | ---------------------------- |
-| POST   | `/api/auth/register`                            | Create an account (`201`); `403` when registration is disabled                  |
-| POST   | `/api/auth/login`                               | JSON `username`, `password`, optional `otp`                                     |
-| POST   | `/api/auth/logout`                              | End the session and revoke all tokens (`204`)                                   |
-| GET    | `/api/auth/me`                                  | Current user                                                                    |
-| PUT    | `/api/auth/me`                                  | Update `fullName`, `email`, `title`, `department`, `institution`                |
-| POST   | `/api/auth/password`                            | `currentPassword`, `newPassword`                                                |
-| POST   | `/api/auth/2fa/setup`                           | `password`; returns `secret`, `otpauthUri`, `qrSvg`                             |
-| POST   | `/api/auth/2fa/enable`                          | `code` from the authenticator app                                               |
-| POST   | `/api/auth/2fa/disable`                         | `password` and `code`                                                           |
-| GET    | `/api/scans?limit=&offset=`                     | Your scans, newest first; `limit` 1-500 (default 100), total in `X-Total-Count` |
-| GET    | `/api/scans/export.csv`                         | All completed scans as CSV                                                      |
-| POST   | `/api/process-mri`                              | Upload and queue (`202`)                                                        |
-| GET    | `/api/scans/{scan_id}`                          | One scan (poll this for progress)                                               |
-| PUT    | `/api/scans/{scan_id}`                          | Change `patientName` or `patientId`                                             |
-| DELETE | `/api/scans/{scan_id}`                          | Delete the scan and its files                                                   |
-| POST   | `/api/scans/{scan_id}/retry`                    | Re-queue a failed scan (`202`); `409` otherwise                                 |
-| GET    | `/api/scans/{scan_id}/slice/{slice_idx}`        | Axial MRI slice as JPEG, `?modality=flair                                       | t1  | t1ce | t2`, header `X-Total-Slices` |
-| GET    | `/api/scans/{scan_id}/segmentation/{slice_idx}` | Segmentation slice as PNG                                                       |
-| GET    | `/api/scans/{scan_id}/download/{key}`           | `key` is `flair`, `t1`, `t1ce`, `t2` or `segmentation`                          |
-| GET    | `/api/scans/{scan_id}/report.pdf`               | PDF report (`409` until completed)                                              |
-| GET    | `/api/scans/{scan_id}/report.csv`               | CSV report (`409` until completed)                                              |
-| GET    | `/api/health`, `/api/ready`                     | Liveness; readiness of database and models (`503` when not ready)               |
+| POST | `/api/auth/register` | Create an account (`201`); `403` when registration is disabled |
+| POST | `/api/auth/login` | JSON `username`, `password`, optional `otp` |
+| POST | `/api/auth/logout` | End the session and revoke all tokens (`204`) |
+| GET | `/api/auth/me` | Current user |
+| PUT | `/api/auth/me` | Update `fullName`, `email`, `title`, `department`, `institution` |
+| POST | `/api/auth/password` | `currentPassword`, `newPassword` |
+| POST | `/api/auth/2fa/setup` | `password`; returns `secret`, `otpauthUri`, `qrSvg` |
+| POST | `/api/auth/2fa/enable` | `code` from the authenticator app |
+| POST | `/api/auth/2fa/disable` | `password` and `code` |
+| GET | `/api/scans?limit=&offset=` | Your scans, newest first; `limit` 1-500 (default 100), total in `X-Total-Count` |
+| GET | `/api/scans/export.csv` | All completed scans as CSV |
+| POST | `/api/process-mri` | Upload and queue (`202`) |
+| GET | `/api/scans/{scan_id}` | One scan (poll this for progress) |
+| PUT | `/api/scans/{scan_id}` | Change `patientName` or `patientId` |
+| DELETE | `/api/scans/{scan_id}` | Delete the scan and its files |
+| POST | `/api/scans/{scan_id}/retry` | Re-queue a failed scan (`202`); `409` otherwise |
+| GET | `/api/scans/{scan_id}/slice/{slice_idx}` | Axial MRI slice as JPEG, `?modality=flair                                       | t1  | t1ce | t2`, header `X-Total-Slices` |
+| GET | `/api/scans/{scan_id}/segmentation/{slice_idx}` | Segmentation slice as PNG |
+| GET | `/api/scans/{scan_id}/download/{key}` | `key` is `flair`, `t1`, `t1ce`, `t2` or `segmentation` |
+| GET | `/api/scans/{scan_id}/report.pdf` | PDF report (`409` until completed) |
+| GET | `/api/scans/{scan_id}/report.csv` | CSV report (`409` until completed) |
+| GET | `/api/health`, `/api/ready` | Liveness; readiness of database and models (`503` when not ready) |
 
 ### Rules worth knowing
 
@@ -415,20 +397,20 @@ From the repository root, `black .` and `npx prettier . --write` produce the sam
 
 ## Troubleshooting
 
-| Problem                                                                             | Likely cause                                                                                    | Fix                                                                               |
-| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Backend exits with a `ValidationError` naming `jwt_secret` or `data_encryption_key` | `.env` is missing, empty, or still has the example value                                        | Run `start.ps1` once, or generate the values with the commands in `.env.example`  |
-| `sqlite3.OperationalError: unable to open database file`                            | `DATABASE_URL` points to a folder that does not exist, or uses a Git Bash path such as `/d/...` | Use a Windows path such as `sqlite:///D:/data/neuroscan.db` and create the folder |
-| Upload returns `503 AI models are not loaded`                                       | A `.pth` file is missing or does not match the architecture                                     | Check the start-up log and `GET /api/ready`; place the weights and restart        |
-| Upload returns `400 Cannot tell the modality of ...`                                | A filename has none of FLAIR, T1CE, T1C, T2 or T1                                               | Rename the files                                                                  |
-| Upload returns `400 ... not a readable NIfTI image`                                 | The file is not NIfTI (for example DICOM)                                                       | Convert to NIfTI (`.nii` or `.nii.gz`) first                                      |
-| Upload returns `413`                                                                | A file is larger than `MAX_UPLOAD_FILE_MB`                                                      | Raise the limit in `.env` if the file is legitimate                               |
-| Scan stays `failed`                                                                 | The pipeline raised an error                                                                    | Find the scan ID in the backend's JSON log, fix the cause, then press Retry       |
-| Volumes are `0.0` and there is no overlay                                           | Fewer than four modalities, or segmentation failed                                              | Upload all four modalities; check the log for `Segmentation failed`               |
-| Every request returns `401` after login                                             | Browser blocked the `Secure` cookie on plain HTTP other than `localhost`                        | Use HTTPS, or `localhost` in development                                          |
-| `403 Missing or invalid X-Requested-With header`                                    | A script called the API without the CSRF header                                                 | Send `X-Requested-With: NeuroScan` on `POST`, `PUT` and `DELETE`                  |
-| Locked out, or lost the authenticator                                               | Lockout after 5 failures, or 2FA device lost                                                    | Wait 15 minutes, or use the [account recovery](#account-recovery) commands        |
-| `build-latex.ps1` says `tectonic.exe not found`                                     | The binary is Git-ignored                                                                       | Download Tectonic and place `tectonic.exe` in `Backend/Materials/`                |
+| Problem                                                                             | Likely cause                                                                                    | Fix                                                                                             |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Backend exits with a `ValidationError` naming `jwt_secret` or `data_encryption_key` | `.env` is missing, empty, or still has the example value                                        | Delete `.env` and run `npm run dev`, or generate the values with the commands in `.env.example` |
+| `sqlite3.OperationalError: unable to open database file`                            | `DATABASE_URL` points to a folder that does not exist, or uses a Git Bash path such as `/d/...` | Use a Windows path such as `sqlite:///D:/data/neuroscan.db` and create the folder               |
+| Upload returns `503 AI models are not loaded`                                       | A `.pth` file is missing or does not match the architecture                                     | Check the start-up log and `GET /api/ready`; place the weights and restart                      |
+| Upload returns `400 Cannot tell the modality of ...`                                | A filename has none of FLAIR, T1CE, T1C, T2 or T1                                               | Rename the files                                                                                |
+| Upload returns `400 ... not a readable NIfTI image`                                 | The file is not NIfTI (for example DICOM)                                                       | Convert to NIfTI (`.nii` or `.nii.gz`) first                                                    |
+| Upload returns `413`                                                                | A file is larger than `MAX_UPLOAD_FILE_MB`                                                      | Raise the limit in `.env` if the file is legitimate                                             |
+| Scan stays `failed`                                                                 | The pipeline raised an error                                                                    | Find the scan ID in the backend's JSON log, fix the cause, then press Retry                     |
+| Volumes are `0.0` and there is no overlay                                           | Fewer than four modalities, or segmentation failed                                              | Upload all four modalities; check the log for `Segmentation failed`                             |
+| Every request returns `401` after login                                             | Browser blocked the `Secure` cookie on plain HTTP other than `localhost`                        | Use HTTPS, or `localhost` in development                                                        |
+| `403 Missing or invalid X-Requested-With header`                                    | A script called the API without the CSRF header                                                 | Send `X-Requested-With: NeuroScan` on `POST`, `PUT` and `DELETE`                                |
+| Locked out, or lost the authenticator                                               | Lockout after 5 failures, or 2FA device lost                                                    | Wait 15 minutes, or use the [account recovery](#account-recovery) commands                      |
+| `build-latex.ps1` says `tectonic.exe not found`                                     | The binary is Git-ignored                                                                       | Download Tectonic and place `tectonic.exe` in `Backend/Materials/`                              |
 
 ## Known limitations
 
@@ -465,7 +447,7 @@ Keep `.env` out of Git (it is already ignored) and rotate `JWT_SECRET` and `DATA
 | Research notebooks        | 22 (9 detection, 6 classification, 7 segmentation)                                                                             | `Backend/*/*.ipynb`                                   |
 | Deployed model parameters | Detection and classification: EfficientNet-B0 (4,008,829 and 4,011,391 in the notebook versions); segmentation: VNet 1,398,761 | Notebook `model_profile.json` files                   |
 | Session lifetime          | 30 minutes by default                                                                                                          | `ACCESS_TOKEN_EXPIRE_MINUTES`                         |
-| Ports                     | 8000 (API, localhost only), 8080 (Vite dev)                                                                                    | `start.ps1`, `vite.config.ts`                         |
+| Ports                     | 8000 (API, localhost only), 8080 (Vite dev)                                                                                    | `scripts/dev.mjs`, `vite.config.ts`                   |
 | Processing time per scan  | About 4 seconds for one four-modality BraTS 2020 case on the development machine (CPU, no CUDA), measured once end to end      | Local end-to-end run                                  |
 
 ## Contributing

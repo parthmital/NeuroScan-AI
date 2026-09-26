@@ -101,8 +101,7 @@ interface AuthResponse {
 }
 
 export type LoginResult =
-	| { status: "ok"; user: User }
-	| { status: "otp-required" };
+	{ status: "ok"; user: User } | { status: "otp-required" };
 
 export const authApi = {
 	me: () => json<User>("/auth/me", {}, { authRequired: false }),
