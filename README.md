@@ -72,8 +72,8 @@ If something fails, see [Troubleshooting](#troubleshooting).
 
 ```mermaid
 flowchart LR
-    U[Browser] -->|"same origin, HttpOnly session cookie"| F["Vite dev server or reverse proxy :8080"]
-    F -->|"/api proxied"| B[FastAPI app<br/>neuroscan.api]
+    U[Browser] -->|"same origin<br/>HttpOnly session cookie"| F["Vite dev server or<br/>reverse proxy :8080"]
+    F -->|"proxies<br/>/api requests"| B[FastAPI app<br/>neuroscan.api]
     B --> Q[PipelineRunner<br/>one background worker]
     Q --> P[BrainProcessor<br/>neuroscan.inference]
     P --> M1[EfficientNet-B0<br/>detection]
