@@ -2,8 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Download, FileText, Loader2, RotateCcw } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
-import { SliceViewer } from "@/components/scan/SliceViewer";
-import { VolumeViewer3D } from "@/components/scan/VolumeViewer3D";
+import { ScanViewer } from "@/components/scan/viewer/ScanViewer";
 import { SegmentationControls } from "@/components/scan/SegmentationControls";
 import { ProcessingPipeline } from "@/components/scan/ProcessingPipeline";
 import { ModalityBadges } from "@/components/scan/ModalityBadges";
@@ -11,7 +10,6 @@ import { ResultStatus } from "@/components/scan/ResultStatus";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Segmented } from "@/components/ui/segmented";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { APP_CONFIG } from "@/lib/config";
@@ -22,11 +20,6 @@ import { useRetryScan, useScan } from "@/hooks/use-scans";
 import type { Overlays } from "@/lib/types";
 
 const config = APP_CONFIG.scanDetail;
-
-const VIEW_MODES = [
-	{ value: "2d", label: "2D" },
-	{ value: "3d", label: "3D" },
-] as const;
 
 /** One labelled value in a measurement or report list. */
 const Row = ({
@@ -71,8 +64,6 @@ const ScanDetail = () => {
 		et: true,
 		opacity: 0.6,
 	});
-
-	const [viewMode, setViewMode] = useState<"2d" | "3d">("2d");
 
 	if (isLoading) {
 		return (
@@ -205,72 +196,46 @@ const ScanDetail = () => {
 				</TabsList>
 
 				<TabsContent value="viewer">
-					<div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-						<div className="min-w-0">
-							<div className="mb-3 flex items-center justify-between gap-3">
-								<h2 className="text-[13px] font-semibold text-foreground">
-									Scan Visualisation
-								</h2>
-								<Segmented
-									aria-label="View mode"
-									options={VIEW_MODES}
-									value={viewMode}
-									onChange={setViewMode}
-								/>
-							</div>
-
-							{viewMode === "2d" ? (
-								<SliceViewer
-									scanId={scan.id}
-									hasSegmentation={scan.hasSegmentation}
-									modalities={scan.modalities}
+					<ScanViewer
+						scanId={scan.id}
+						modalities={scan.modalities}
+						hasSegmentation={scan.hasSegmentation}
+						overlays={overlays}
+						overlayColors={overlayColors}
+						aside={
+							<>
+								<SegmentationControls
 									overlays={overlays}
+									onOverlaysChange={setOverlays}
 									overlayColors={overlayColors}
 								/>
-							) : (
-								<VolumeViewer3D
-									scanId={scan.id}
-									modalities={scan.modalities}
-									overlays={overlays}
-									overlayColors={overlayColors}
-									hasSegmentation={scan.hasSegmentation}
-								/>
-							)}
-						</div>
-
-						<div className="space-y-6">
-							<SegmentationControls
-								overlays={overlays}
-								onOverlaysChange={setOverlays}
-								overlayColors={overlayColors}
-							/>
-
-							{scan.results && (
-								<Card>
-									<CardHeader>
-										<CardTitle>{config.measurementsTitle}</CardTitle>
-									</CardHeader>
-									<dl className="divide-y divide-border px-5 py-1">
-										<Row label="Classification">
-											<span className="font-sans">
-												{scan.results.classification}
-											</span>
-										</Row>
-										<Row label="Confidence">
-											{formatPercent(scan.results.confidence)}
-										</Row>
-										<Row label="Total volume">
-											{scan.results.tumorVolume} cm³
-										</Row>
-										<Row label="WT / TC / ET">
-											{scan.results.wtVolume} / {scan.results.tcVolume} /{" "}
-											{scan.results.etVolume}
-										</Row>
-									</dl>
-								</Card>
-							)}
-						</div>
-					</div>
+								{scan.results && (
+									<Card>
+										<CardHeader>
+											<CardTitle>{config.measurementsTitle}</CardTitle>
+										</CardHeader>
+										<dl className="divide-y divide-border px-5 py-1">
+											<Row label="Classification">
+												<span className="font-sans">
+													{scan.results.classification}
+												</span>
+											</Row>
+											<Row label="Confidence">
+												{formatPercent(scan.results.confidence)}
+											</Row>
+											<Row label="Total volume">
+												{scan.results.tumorVolume} cm³
+											</Row>
+											<Row label="WT / TC / ET">
+												{scan.results.wtVolume} / {scan.results.tcVolume} /{" "}
+												{scan.results.etVolume}
+											</Row>
+										</dl>
+									</Card>
+								)}
+							</>
+						}
+					/>
 				</TabsContent>
 
 				<TabsContent value="pipeline">

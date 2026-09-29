@@ -48,7 +48,7 @@ export const APP_CONFIG: AppConfig = {
 		retryButton: "Retry",
 		exportButton: "Export",
 		reportButton: "Report",
-		viewerTab: "2D Viewer",
+		viewerTab: "Viewer",
 		pipelineTab: "Pipeline",
 		reportTab: "Report",
 		measurementsTitle: "Measurements",

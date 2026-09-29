@@ -6,7 +6,7 @@ NeuroScan AI is a full-stack web application and research repository for brain t
 2. **Classification**: a second EfficientNet-B0 labels the tumour as glioma, meningioma or pituitary.
 3. **Segmentation**: a 3D VNet outlines the Whole Tumour (WT), Tumour Core (TC) and Enhancing Tumour (ET) when all four modalities (FLAIR, T1, T1CE, T2) are uploaded.
 
-The React frontend shows the results, a 2D slice viewer with the segmentation overlay and a 3D volume viewer. The repository also holds the Kaggle notebooks that benchmarked 21 model runs across the three tasks, and the LaTeX sources of the related papers.
+The React frontend shows the results in a multi-planar viewer: linked axial, coronal and sagittal views with the segmentation overlay, plus a 3D volume rendering. The repository also holds the Kaggle notebooks that benchmarked 21 model runs across the three tasks, and the LaTeX sources of the related papers.
 
 No clinical validation is recorded in this repository. Treat every output as a research result, not a diagnosis.
 
@@ -118,7 +118,7 @@ Routes are defined in [`Frontend/src/App.tsx`](Frontend/src/App.tsx). Everything
 | `/`                   | `Index.tsx`                 | Dashboard: stats cards, recent scans, tumour volume chart                                        |
 | `/upload`             | `Upload.tsx`                | Drag-and-drop NIfTI upload                                                                       |
 | `/scans`              | `ScanLibrary.tsx`           | List, search, edit and delete scans                                                              |
-| `/scan/:id`           | `ScanDetail.tsx`            | Live processing status, retry, 2D slice viewer with overlay, 3D viewer (vtk.js), PDF/CSV reports |
+| `/scan/:id`           | `ScanDetail.tsx`            | Live processing status, retry, multi-planar viewer (axial, coronal, sagittal, 3D) with overlay, PDF/CSV reports |
 | `/reports`            | `Reports.tsx`               | Completed scans with PDF reports (open in a new tab), CSV downloads, and "Export All" as one CSV |
 | `/settings`           | `Settings.tsx`              | Profile, theme and overlay colours, password change, two-factor authentication                   |
 
@@ -155,7 +155,7 @@ Ranges from [`Frontend/package.json`](Frontend/package.json); exact versions are
 | React Router DOM                                        | ^7.18.4         | Client-side routing                                       |
 | TanStack React Query                                    | ^5.103.1        | Scan queries, polling while processing, mutations         |
 | Tailwind CSS 4, Radix UI primitives                     | see file        | Styling and accessible components in `src/components/ui/` |
-| @kitware/vtk.js, nifti-reader-js                        | ^37.3.0, ^0.8.0 | 3D volume rendering                                       |
+| @kitware/vtk.js, nifti-reader-js                        | ^37.3.0, ^0.8.0 | Volume parsing and 3D rendering in the viewer             |
 | Recharts, sonner, lucide-react                          | see file        | Chart, toasts, icons                                      |
 | Vitest, Testing Library, jsdom, ESLint, Prettier, jscpd | see file        | Tests, lint, format, duplicate detection                  |
 

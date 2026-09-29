@@ -207,22 +207,6 @@ export const scansApi = {
 		return json<MRIScan>("/process-mri", { method: "POST", body: form });
 	},
 
-	async sliceImage(id: string, index: number, modality: string) {
-		const response = await send(
-			`/scans/${encodeURIComponent(id)}/slice/${index}?modality=${encodeURIComponent(modality.toLowerCase())}`,
-		);
-		return {
-			image: await response.blob(),
-			totalSlices: Number(response.headers.get("X-Total-Slices") ?? 0),
-		};
-	},
-
-	async segmentationImage(id: string, index: number) {
-		return (
-			await send(`/scans/${encodeURIComponent(id)}/segmentation/${index}`)
-		).blob();
-	},
-
 	async volume(id: string, key: string) {
 		return (
 			await send(
