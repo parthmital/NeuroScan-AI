@@ -2,7 +2,7 @@
 
 import logging
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import cv2
@@ -35,6 +35,8 @@ _NORMALISE = transforms.Compose(
 class Classification:
     label: str
     confidence: float
+    # Probability of every class, keyed by class name.
+    probabilities: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -111,7 +113,11 @@ class BrainProcessor:
             logits = self.classification_model(self._preprocess_2d(image))
             probs = torch.softmax(logits, dim=1).cpu().numpy()[0]
         index = int(np.argmax(probs))
-        return Classification(label=CLASSES[index], confidence=float(probs[index]))
+        return Classification(
+            label=CLASSES[index],
+            confidence=float(probs[index]),
+            probabilities={name: float(p) for name, p in zip(CLASSES, probs, strict=True)},
+        )
 
     @staticmethod
     def _preprocess_3d(path: Path) -> np.ndarray:

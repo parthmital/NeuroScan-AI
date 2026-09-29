@@ -100,11 +100,14 @@ def _file_for(scan: Scan, key: str, storage: ScanStorage) -> Path:
     return path
 
 
-def _attachment(content: bytes | str, media_type: str, filename: str) -> Response:
+def _attachment(
+    content: bytes | str, media_type: str, filename: str, inline: bool = False
+) -> Response:
+    disposition = "inline" if inline else "attachment"
     return Response(
         content=content,
         media_type=media_type,
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers={"Content-Disposition": f'{disposition}; filename="{filename}"'},
     )
 
 
@@ -265,12 +268,22 @@ def download_file(
 
 
 @router.get("/scans/{scan_id}/report.pdf")
-def report_pdf(scan: Scan = Depends(owned_scan)) -> Response:
+def report_pdf(
+    scan: Scan = Depends(owned_scan),
+    user: User = Depends(get_current_user),
+    storage: ScanStorage = Depends(get_storage),
+) -> Response:
     if scan.status != ScanStatus.COMPLETED.value:
         raise HTTPException(
             status.HTTP_409_CONFLICT, "Report is available once processing completes"
         )
-    return _attachment(exports.scan_to_pdf(scan), "application/pdf", f"{scan.id}-report.pdf")
+    # Inline, so the browser shows it in a tab; its viewer can still save it under this name.
+    return _attachment(
+        exports.scan_to_pdf(scan, user, storage),
+        "application/pdf",
+        f"{scan.id}-report.pdf",
+        inline=True,
+    )
 
 
 @router.get("/scans/{scan_id}/report.csv")

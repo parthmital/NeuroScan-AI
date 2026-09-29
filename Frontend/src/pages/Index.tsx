@@ -14,7 +14,7 @@ const Index = () => {
 
 	if (!user) {
 		return (
-			<div className="space-y-8">
+			<div className="animate-pulse space-y-8">
 				<div className="h-20 w-1/3 rounded-xl bg-muted" />
 				<div className="grid grid-cols-4 gap-4">
 					{[1, 2, 3, 4].map((i) => (

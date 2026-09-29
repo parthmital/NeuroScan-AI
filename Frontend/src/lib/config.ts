@@ -55,7 +55,7 @@ export const APP_CONFIG: AppConfig = {
 		reportTitle: "AI Analysis Report",
 		findingsTitle: "Findings",
 		volumetricTitle: "Volumetric Analysis",
-		downloadPDF: "Download PDF",
+		openPDF: "Open PDF",
 		exportCSV: "Export CSV",
 		notAvailable: "Report not available",
 		processingRequired:

@@ -38,7 +38,9 @@ export const RecentScans = () => {
 	const [deletingScan, setDeletingScan] = useState<MRIScan | null>(null);
 
 	if (isLoading || !scans) {
-		return <div className="h-64 rounded-xl border border-border bg-card" />;
+		return (
+			<div className="h-64 animate-pulse rounded-xl border border-border bg-card" />
+		);
 	}
 
 	return (

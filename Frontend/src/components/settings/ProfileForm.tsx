@@ -124,7 +124,7 @@ export const ProfileForm = ({ user }: { user: User }) => {
 				))}
 			</div>
 			{error && (
-				<p role="alert" className="text-xs text-destructive">
+				<p role="alert" className="animate-fade-in text-xs text-destructive">
 					{error}
 				</p>
 			)}

@@ -1,5 +1,7 @@
-"""Security headers, error handling, health probes, configuration validation, and migrations."""
+"""Security headers, error handling, health probes, configuration validation, migrations, logs."""
 
+import json
+import logging
 import sqlite3
 from collections.abc import Callable
 from pathlib import Path
@@ -13,6 +15,7 @@ from sqlalchemy import inspect
 from neuroscan.config import Settings
 from neuroscan.db import build_engine, migrate
 from neuroscan.inference import volumes
+from neuroscan.observability import JsonFormatter, PrettyFormatter, request_id_var
 
 
 def test_security_headers_on_api_responses(client: TestClient) -> None:
@@ -204,3 +207,21 @@ def test_four_dimensional_series_uses_first_frame(tmp_path: Path) -> None:
     assert volumes.validate_volume(path) == (8, 8, 4, 2)
     image = volumes.representative_slice(path)
     assert image.shape == (8, 8, 3) and image.max() == 255
+
+
+def _access_record() -> logging.LogRecord:
+    record = logging.LogRecord("neuroscan.access", logging.INFO, "", 0, "request", None, None)
+    record.fields = {"method": "GET", "path": "/api/scans", "status": 200, "durationMs": 6.0}
+    return record
+
+
+def test_log_formats() -> None:
+    token = request_id_var.set("853e59a8cbe74bf2ac7074a23bc43c9f")
+    try:
+        pretty = PrettyFormatter(colour=False).format(_access_record())
+        entry = json.loads(JsonFormatter().format(_access_record()))
+    finally:
+        request_id_var.reset(token)
+    assert pretty.endswith("access                GET /api/scans 200 6.0 ms  [853e59a8]")
+    assert "[" not in pretty
+    assert entry["status"] == 200 and entry["requestId"] == "853e59a8cbe74bf2ac7074a23bc43c9f"

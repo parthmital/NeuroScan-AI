@@ -86,7 +86,10 @@ export const EditScanDialog = ({ scan, onClose }: ScanDialogProps) => {
 							/>
 						</div>
 						{error && (
-							<p role="alert" className="text-xs text-destructive">
+							<p
+								role="alert"
+								className="animate-fade-in text-xs text-destructive"
+							>
 								{error}
 							</p>
 						)}

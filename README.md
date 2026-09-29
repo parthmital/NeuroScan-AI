@@ -119,7 +119,7 @@ Routes are defined in [`Frontend/src/App.tsx`](Frontend/src/App.tsx). Everything
 | `/upload`             | `Upload.tsx`                | Drag-and-drop NIfTI upload                                                                       |
 | `/scans`              | `ScanLibrary.tsx`           | List, search, edit and delete scans                                                              |
 | `/scan/:id`           | `ScanDetail.tsx`            | Live processing status, retry, 2D slice viewer with overlay, 3D viewer (vtk.js), PDF/CSV reports |
-| `/reports`            | `Reports.tsx`               | Completed scans with PDF and CSV downloads, and "Export All" as one CSV                          |
+| `/reports`            | `Reports.tsx`               | Completed scans with PDF reports (open in a new tab), CSV downloads, and "Export All" as one CSV |
 | `/settings`           | `Settings.tsx`              | Profile, theme and overlay colours, password change, two-factor authentication                   |
 
 ## Technology stack
@@ -234,7 +234,7 @@ See [Quick start](#quick-start). [`scripts/dev.mjs`](scripts/dev.mjs) uses only 
 - Installs `Backend/requirements-dev.txt` (the runtime `requirements.txt` plus test, lint and `black[jupyter]` tooling) into `.venv` and runs `npm ci` in `Frontend/` only when those files or `Frontend/package-lock.json` changed since the last install, tracked by SHA-256 stamps in `.venv/` and `Frontend/node_modules/`.
 - Creates a development `.env` with random secrets if there is none, and warns about missing model weights.
 - Keeps the pip and npm download caches in `.cache/` (Git-ignored) unless `PIP_CACHE_DIR` or `npm_config_cache` is already set.
-- Starts `uvicorn main:app --reload --host 127.0.0.1 --port 8000` in `Backend/` and `npm run dev` in `Frontend/`.
+- Starts `uvicorn main:app --reload --host 127.0.0.1 --port 8000 --log-config log-config.dev.json` in `Backend/` (the log config gives the reloader the same readable format as the app) and `npm run dev` in `Frontend/`.
 - On Windows, runs each service in its own PowerShell window that stays open after a crash so its log remains readable. `Ctrl+C`, `Ctrl+Break` or closing the launching terminal closes both windows and their process trees; closing both windows ends the launcher.
 - On macOS and Linux, runs both in the launching terminal with prefixed logs. If either service exits, the other is stopped; `Ctrl+C` stops both process trees.
 
@@ -285,7 +285,9 @@ Routes live in [`Backend/neuroscan/api/`](Backend/neuroscan/api/) under `/api`. 
 
 **CSRF.** Every `POST`, `PUT` and `DELETE` must send `X-Requested-With: NeuroScan`, or the API returns `403`.
 
-**Errors.** `401` when not signed in; scan routes return `404` both for missing scans and for other users' scans, so IDs cannot be probed. Validation errors return `422` without echoing submitted values. Unexpected errors return `500 {"detail": "Internal server error", "requestId": "..."}`; the same ID is in the `X-Request-ID` header and the JSON server log.
+**Errors.** `401` when not signed in; scan routes return `404` both for missing scans and for other users' scans, so IDs cannot be probed. Validation errors return `422` without echoing submitted values. Unexpected errors return `500 {"detail": "Internal server error", "requestId": "..."}`; the same ID is in the `X-Request-ID` header and the server log.
+
+**Logs.** In production the backend writes one JSON object per line. With `ENVIRONMENT=development` it writes aligned, coloured lines instead (time, level, source, message, fields, and the first 8 characters of the request ID); `NO_COLOR` turns colour off and `FORCE_COLOR` turns it on for piped output. Each request is logged once, by the app, with its status and duration.
 
 | Method | Route                                           | Purpose                                                                                         |
 | ------ | ----------------------------------------------- | ----------------------------------------------------------------------------------------------- |
@@ -308,12 +310,13 @@ Routes live in [`Backend/neuroscan/api/`](Backend/neuroscan/api/) under `/api`. 
 | GET    | `/api/scans/{scan_id}/slice/{slice_idx}`        | Axial MRI slice as JPEG; `?modality=` is `flair`, `t1`, `t1ce` or `t2`; header `X-Total-Slices` |
 | GET    | `/api/scans/{scan_id}/segmentation/{slice_idx}` | Segmentation slice as PNG                                                                       |
 | GET    | `/api/scans/{scan_id}/download/{key}`           | `key` is `flair`, `t1`, `t1ce`, `t2` or `segmentation`                                          |
-| GET    | `/api/scans/{scan_id}/report.pdf`               | PDF report (`409` until completed)                                                              |
+| GET    | `/api/scans/{scan_id}/report.pdf`               | Formal MRI brain report, see below (`409` until completed)                                      |
 | GET    | `/api/scans/{scan_id}/report.csv`               | CSV report (`409` until completed)                                                              |
 | GET    | `/api/health`, `/api/ready`                     | Liveness; readiness of database and models (`503` when not ready)                               |
 
 ### Rules worth knowing
 
+- **PDF report:** a paginated MRI brain report with a letterhead (the requesting user's department and institution), patient and study details, an impression, the sequences received with matrix size and voxel spacing, detection probability, per-class probabilities, WT/TC/ET volumes with their axial extent, key images with the segmentation overlay, methodology, limitations and a radiologist sign-off block. It is served inline, so the app opens it in a new browser tab, and it is marked preliminary until a radiologist signs it. Per-class and detection probabilities are stored for scans processed after this report version; older scans show only the predicted class and its confidence.
 - **Passwords:** 12 to 72 bytes (bcrypt's limit). Usernames: 3 to 32 of `A-Z a-z 0-9 _ . -`, unique regardless of case; emails are stored lower case and unique.
 - **Login protection:** 5 wrong passwords or codes lock the account for 15 minutes; the lock message is shown only to someone who then enters the right password. Login, registration, password and 2FA routes also allow `AUTH_RATE_LIMIT_PER_MINUTE` requests per client per minute (`429` beyond that).
 - **2FA codes** are standard 30-second TOTP codes with one step of clock drift allowed; a code cannot be used twice.
@@ -405,7 +408,7 @@ From the repository root, `black .` and `npx prettier . --write` produce the sam
 | Upload returns `400 Cannot tell the modality of ...`                                | A filename has none of FLAIR, T1CE, T1C, T2 or T1                                               | Rename the files                                                                                |
 | Upload returns `400 ... not a readable NIfTI image`                                 | The file is not NIfTI (for example DICOM)                                                       | Convert to NIfTI (`.nii` or `.nii.gz`) first                                                    |
 | Upload returns `413`                                                                | A file is larger than `MAX_UPLOAD_FILE_MB`                                                      | Raise the limit in `.env` if the file is legitimate                                             |
-| Scan stays `failed`                                                                 | The pipeline raised an error                                                                    | Find the scan ID in the backend's JSON log, fix the cause, then press Retry                     |
+| Scan stays `failed`                                                                 | The pipeline raised an error                                                                    | Find the scan ID in the backend log, fix the cause, then press Retry                            |
 | Volumes are `0.0` and there is no overlay                                           | Fewer than four modalities, or segmentation failed                                              | Upload all four modalities; check the log for `Segmentation failed`                             |
 | Every request returns `401` after login                                             | Browser blocked the `Secure` cookie on plain HTTP other than `localhost`                        | Use HTTPS, or `localhost` in development                                                        |
 | `403 Missing or invalid X-Requested-With header`                                    | A script called the API without the CSRF header                                                 | Send `X-Requested-With: NeuroScan` on `POST`, `PUT` and `DELETE`                                |

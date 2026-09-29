@@ -109,7 +109,7 @@ export interface AppConfig {
 		reportTitle: string;
 		findingsTitle: string;
 		volumetricTitle: string;
-		downloadPDF: string;
+		openPDF: string;
 		exportCSV: string;
 		notAvailable: string;
 		processingRequired: string;

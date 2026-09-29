@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, FileText, Search } from "lucide-react";
+import { Download, FileText, Loader2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ModalityBadges } from "@/components/scan/ModalityBadges";
@@ -16,7 +16,8 @@ const Reports = () => {
 	const navigate = useNavigate();
 	const [search, setSearch] = useState("");
 	const { data: scans, isLoading } = useScans();
-	const { pending, downloadPdf, downloadCsv, exportAll } = useReportDownload();
+	const { pending, pendingId, openPdf, downloadCsv, exportAll } =
+		useReportDownload();
 
 	if (isLoading || !scans) {
 		return (
@@ -52,7 +53,11 @@ const Reports = () => {
 					disabled={completed.length === 0 || pending !== null}
 					onClick={exportAll}
 				>
-					<Download className="h-3.5 w-3.5" />
+					{pending === "all" ? (
+						<Loader2 className="h-3.5 w-3.5 animate-spin" />
+					) : (
+						<Download className="h-3.5 w-3.5" />
+					)}
 					{pending === "all" ? "Exporting..." : config.exportAll}
 				</Button>
 			</div>
@@ -107,14 +112,13 @@ const Reports = () => {
 								variant="outline"
 								size="sm"
 								className="gap-1.5 text-xs"
-								disabled={pending !== null}
-								aria-label={`Download PDF report for ${scan.patientName}`}
+								aria-label={`Open PDF report for ${scan.patientName}`}
 								onClick={(e) => {
 									e.stopPropagation();
-									downloadPdf(scan.id);
+									openPdf(scan.id);
 								}}
 							>
-								<Download className="h-3.5 w-3.5" />
+								<FileText className="h-3.5 w-3.5" />
 								PDF
 							</Button>
 							<Button
@@ -128,7 +132,11 @@ const Reports = () => {
 									downloadCsv(scan.id);
 								}}
 							>
-								<Download className="h-3.5 w-3.5" />
+								{pending === "csv" && pendingId === scan.id ? (
+									<Loader2 className="h-3.5 w-3.5 animate-spin" />
+								) : (
+									<Download className="h-3.5 w-3.5" />
+								)}
 								CSV
 							</Button>
 						</div>

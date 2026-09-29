@@ -44,7 +44,7 @@ const ScanLibrary = () => {
 
 	if (isLoading || !scans) {
 		return (
-			<div className="space-y-6">
+			<div className="animate-pulse space-y-6">
 				<div className="h-20 w-1/3 rounded-xl bg-muted" />
 				<div className="grid grid-cols-3 gap-4">
 					{[1, 2, 3].map((i) => (

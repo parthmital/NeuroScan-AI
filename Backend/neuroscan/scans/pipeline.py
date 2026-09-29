@@ -97,6 +97,11 @@ def process_scan(
         "wtVolume": round(wt, 2),
         "tcVolume": round(tc, 2),
         "etVolume": round(et, 2),
+        # Kept for the PDF report; the API response omits them.
+        "detectionProbability": round(probability, 4),
+        "classProbabilities": {
+            name: round(value, 4) for name, value in classification.probabilities.items()
+        },
     }
     scan.status = ScanStatus.COMPLETED.value
     _update(session, scan, PipelineStep.COMPLETE, 100)

@@ -96,7 +96,7 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 	};
 
 	const errorLine = error && (
-		<p role="alert" className="text-xs text-destructive">
+		<p role="alert" className="animate-fade-in text-xs text-destructive">
 			{error}
 		</p>
 	);
@@ -137,7 +137,11 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 			</div>
 
 			{step === "confirm-password" && (
-				<form onSubmit={startSetup} noValidate className="space-y-3">
+				<form
+					onSubmit={startSetup}
+					noValidate
+					className="animate-fade-in space-y-3"
+				>
 					<div className="space-y-2">
 						<Label
 							htmlFor="twofa-password"
@@ -178,7 +182,11 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 			)}
 
 			{step === "scan-code" && setup && (
-				<form onSubmit={enable} noValidate className="space-y-4">
+				<form
+					onSubmit={enable}
+					noValidate
+					className="animate-fade-in space-y-4"
+				>
 					<div className="flex flex-col gap-4 sm:flex-row sm:items-start">
 						<img
 							src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(setup.qrSvg)}`}
@@ -228,7 +236,11 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 			)}
 
 			{step === "disable" && (
-				<form onSubmit={disable} noValidate className="space-y-3">
+				<form
+					onSubmit={disable}
+					noValidate
+					className="animate-fade-in space-y-3"
+				>
 					<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 						<div className="space-y-2">
 							<Label

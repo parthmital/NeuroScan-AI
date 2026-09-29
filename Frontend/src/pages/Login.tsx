@@ -111,7 +111,7 @@ const Login = () => {
 							/>
 						</div>
 						{needsOtp && (
-							<div className="space-y-2">
+							<div className="animate-fade-in space-y-2">
 								<Label htmlFor="otp">Authentication code</Label>
 								<Input
 									id="otp"
@@ -130,7 +130,10 @@ const Login = () => {
 							</div>
 						)}
 						{error && (
-							<p role="alert" className="text-sm text-destructive">
+							<p
+								role="alert"
+								className="animate-fade-in text-sm text-destructive"
+							>
 								{error}
 							</p>
 						)}
@@ -175,7 +178,7 @@ const Login = () => {
 						</Link>
 					</div>
 					<div className="flex w-full items-center justify-center gap-2 border-t border-border/50 pt-4 text-xs text-muted-foreground">
-						<ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+						<ShieldCheck className="h-5 w-5 shrink-0" />
 						<span>
 							Forgot your password or lost your authenticator? Ask your
 							NeuroScan administrator to reset it.

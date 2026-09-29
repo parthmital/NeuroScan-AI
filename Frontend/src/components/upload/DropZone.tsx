@@ -1,6 +1,13 @@
 import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertCircle, CheckCircle2, FileImage, Upload, X } from "lucide-react";
+import {
+	AlertCircle,
+	CheckCircle2,
+	FileImage,
+	Loader2,
+	Upload,
+	X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -191,7 +198,7 @@ export const DropZone = () => {
 
 			{/* Patient Details */}
 			{files.length > 0 && (
-				<div className="grid grid-cols-1 gap-4 rounded-2xl border border-border bg-muted/30 p-5 sm:grid-cols-2">
+				<div className="grid animate-fade-in grid-cols-1 gap-4 rounded-2xl border border-border bg-muted/30 p-5 sm:grid-cols-2">
 					<div className="space-y-2">
 						<label
 							htmlFor="patient-name"
@@ -253,7 +260,7 @@ export const DropZone = () => {
 
 			{/* Missing modality warning */}
 			{files.length > 0 && missingModalities.length > 0 && (
-				<div className="flex items-start gap-3 rounded-xl border border-warning/20 bg-warning/10 p-4">
+				<div className="flex animate-fade-in items-start gap-3 rounded-xl border border-warning/20 bg-warning/10 p-4">
 					<AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
 					<div>
 						<p className="text-sm font-medium text-foreground">
@@ -288,7 +295,7 @@ export const DropZone = () => {
 						{files.map((file) => (
 							<div
 								key={file.id}
-								className="group flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-3"
+								className="group flex animate-fade-in items-center gap-3 rounded-lg border border-border bg-muted/30 p-3"
 							>
 								<FileImage className="h-4 w-4 shrink-0 text-medical" />
 								<div className="min-w-0 flex-1">
@@ -328,13 +335,17 @@ export const DropZone = () => {
 
 			{/* Action */}
 			{files.length > 0 && (
-				<div className="flex justify-end">
+				<div className="flex animate-fade-in justify-end">
 					<Button
 						onClick={handleStartProcessing}
 						disabled={files.some((f) => f.status === "processing")}
 						className="gap-2 bg-medical px-8 text-medical-foreground hover:bg-medical/90"
 					>
-						<Upload className="h-4 w-4" />
+						{files.some((f) => f.status === "processing") ? (
+							<Loader2 className="h-4 w-4 animate-spin" />
+						) : (
+							<Upload className="h-4 w-4" />
+						)}
 						{files.some((f) => f.status === "processing")
 							? "Processing..."
 							: `Start Processing (${files.length} file${files.length > 1 ? "s" : ""})`}

@@ -11,7 +11,7 @@ const Settings = () => {
 
 	if (!user) {
 		return (
-			<div className="max-w-3xl space-y-6">
+			<div className="max-w-3xl animate-pulse space-y-6">
 				<div className="h-20 w-1/3 rounded-xl bg-muted" />
 				<div className="h-64 rounded-xl bg-muted" />
 			</div>

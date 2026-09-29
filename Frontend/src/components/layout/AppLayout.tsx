@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AppSidebar } from "./AppSidebar";
 import { useAuth } from "../auth/useAuth";
 import { LogOut, Settings, Search } from "lucide-react";
@@ -18,6 +18,7 @@ import { initials } from "@/lib/user-format";
 export const AppLayout = () => {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
+	const { pathname } = useLocation();
 	const [searchQuery, setSearchQuery] = useState("");
 
 	return (
@@ -90,7 +91,8 @@ export const AppLayout = () => {
 				</header>
 
 				{/* Main content */}
-				<main className="p-8">
+				{/* Keyed by path so each page fades in when navigated to. */}
+				<main key={pathname} className="animate-fade-in p-8">
 					<Outlet />
 				</main>
 			</div>

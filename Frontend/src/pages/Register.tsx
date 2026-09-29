@@ -195,7 +195,10 @@ const Register = () => {
 							))}
 						</div>
 						{error && (
-							<p role="alert" className="text-sm text-destructive">
+							<p
+								role="alert"
+								className="animate-fade-in text-sm text-destructive"
+							>
 								{error}
 							</p>
 						)}

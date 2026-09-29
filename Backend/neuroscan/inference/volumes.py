@@ -47,6 +47,15 @@ def load_first_volume(path: Path) -> tuple[np.ndarray, np.ndarray]:
     return np.asarray(data, dtype=np.float32), np.asarray(image.affine)
 
 
+def geometry(path: Path) -> tuple[tuple[int, ...], tuple[float, ...]]:
+    """Spatial matrix size and voxel spacing in mm, read from the header."""
+    image = _load(path)
+    return (
+        tuple(int(d) for d in image.shape[:3]),
+        tuple(float(z) for z in image.header.get_zooms()[:3]),
+    )
+
+
 def slice_count(path: Path) -> int:
     return int(_load(path).shape[2])
 

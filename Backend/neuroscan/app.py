@@ -48,7 +48,7 @@ def create_app(
     settings: Settings | None = None, processor: InferenceEngine | None = None
 ) -> FastAPI:
     settings = settings or get_settings()
-    configure_logging(settings.log_level)
+    configure_logging(settings.log_level, pretty=not settings.is_production)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:

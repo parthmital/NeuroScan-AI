@@ -215,6 +215,9 @@ const BACKEND_ARGS = [
 	"127.0.0.1",
 	"--port",
 	"8000",
+	// Readable, aligned log lines from the reloader too (the app sets the same format itself).
+	"--log-config",
+	"log-config.dev.json",
 ];
 
 // Windows: each service in its own PowerShell window for dedicated logs, as start.ps1 did.
@@ -371,10 +374,15 @@ function startInTerminal() {
 		"backend",
 		"magenta",
 		VENV_PYTHON,
-		["-m", "uvicorn", ...BACKEND_ARGS, ...(tty ? ["--use-colors"] : [])],
+		["-m", "uvicorn", ...BACKEND_ARGS],
 		{
 			cwd: BACKEND,
-			env: { ...process.env, PYTHONIOENCODING: "utf-8", PYTHONUNBUFFERED: "1" },
+			env: {
+				...process.env,
+				PYTHONIOENCODING: "utf-8",
+				PYTHONUNBUFFERED: "1",
+				...(tty ? { FORCE_COLOR: "1" } : {}),
+			},
 		},
 	);
 	const [npm, npmArgs, npmOptions] = npmCommand(["run", "dev"]);

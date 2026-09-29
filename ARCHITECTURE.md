@@ -10,7 +10,7 @@ NeuroScan AI is one deployable web application (a FastAPI backend and a React si
 | ------------------ | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
 | `app.py`           | Composition root: builds settings, engine, storage, models, pipeline, middleware, routers; owns the lifespan | `create_app(settings=None, processor=None)`                |
 | `config.py`        | Reads and validates every setting from the environment once                                                  | `Settings`, `get_settings()`                               |
-| `observability.py` | JSON log formatter and the request-ID context variable                                                       | `configure_logging`, `request_id_var`                      |
+| `observability.py` | JSON (production) and readable (development) log formatters, and the request-ID context variable             | `configure_logging`, `request_id_var`                      |
 | `db.py`            | Engine construction (SQLite pragmas) and running Alembic migrations                                          | `build_engine`, `migrate`                                  |
 | `models.py`        | Database tables and the status/step/modality enums                                                           | `User`, `Scan`, `ScanStatus`, `PipelineStep`, `Modality`   |
 | `schemas.py`       | Request and response shapes, including input rules (password policy, patterns)                               | `UserCreate`, `ScanPublic`, ...                            |

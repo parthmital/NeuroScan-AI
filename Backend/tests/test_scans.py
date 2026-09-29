@@ -225,4 +225,5 @@ def test_pdf_report(user_client: TestClient) -> None:
     response = user_client.get(f"/api/scans/{scan_id}/report.pdf")
     assert response.status_code == 200
     assert response.headers["content-type"] == "application/pdf"
+    assert response.headers["content-disposition"].startswith("inline;")
     assert response.content.startswith(b"%PDF")

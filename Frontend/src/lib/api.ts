@@ -233,8 +233,16 @@ export const scansApi = {
 };
 
 export const reportsApi = {
-	pdf: (id: string) =>
-		download(`/scans/${encodeURIComponent(id)}/report.pdf`, `${id}-report.pdf`),
+	/**
+	 * Opens the PDF in a new tab. A plain navigation carries the session cookie, and opening
+	 * synchronously inside the click handler keeps pop-up blockers from stopping it.
+	 */
+	openPdf: (id: string) =>
+		window.open(
+			`${API_BASE_URL}/scans/${encodeURIComponent(id)}/report.pdf`,
+			"_blank",
+			"noopener",
+		),
 	csv: (id: string) =>
 		download(`/scans/${encodeURIComponent(id)}/report.csv`, `${id}-report.csv`),
 	exportAll: () => download("/scans/export.csv", "neuroscan-reports.csv"),

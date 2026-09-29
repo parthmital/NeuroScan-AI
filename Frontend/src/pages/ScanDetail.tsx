@@ -1,5 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Download, FileText, RotateCcw } from "lucide-react";
+import {
+	ArrowLeft,
+	Download,
+	FileText,
+	Loader2,
+	RotateCcw,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { SliceViewer } from "@/components/scan/SliceViewer";
@@ -24,7 +30,7 @@ const ScanDetail = () => {
 	const navigate = useNavigate();
 	const { data: scan, isLoading, isError } = useScan(id);
 	const { colors: overlayColors } = useOverlayColors();
-	const { pending, downloadPdf, downloadCsv } = useReportDownload();
+	const { pending, openPdf, downloadCsv } = useReportDownload();
 	const retryScan = useRetryScan();
 
 	const [overlays, setOverlays] = useState<Overlays>({
@@ -38,7 +44,11 @@ const ScanDetail = () => {
 
 	if (isLoading) {
 		return (
-			<div className="space-y-6">
+			<div
+				role="status"
+				aria-label="Loading scan"
+				className="animate-pulse space-y-6"
+			>
 				<div className="h-10 w-24 rounded-xl bg-muted" />
 				<div className="h-20 w-1/2 rounded-xl bg-muted" />
 				<div className="h-64 rounded-xl bg-muted" />
@@ -125,15 +135,18 @@ const ScanDetail = () => {
 								disabled={pending !== null}
 								onClick={() => downloadCsv(scan.id)}
 							>
-								<Download className="h-3.5 w-3.5" />
+								{pending === "csv" ? (
+									<Loader2 className="h-3.5 w-3.5 animate-spin" />
+								) : (
+									<Download className="h-3.5 w-3.5" />
+								)}
 								{config.exportButton}
 							</Button>
 							<Button
 								variant="outline"
 								size="sm"
 								className="gap-1.5 text-xs"
-								disabled={pending !== null}
-								onClick={() => downloadPdf(scan.id)}
+								onClick={() => openPdf(scan.id)}
 							>
 								<FileText className="h-3.5 w-3.5" />
 								{config.reportButton}
@@ -183,6 +196,7 @@ const ScanDetail = () => {
 										<button
 											key={mode}
 											onClick={() => setViewMode(mode)}
+											aria-pressed={viewMode === mode}
 											className={cn(
 												"rounded-md border px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all",
 												viewMode === mode
@@ -403,11 +417,10 @@ const ScanDetail = () => {
 							<div className="flex gap-3 border-t border-border pt-4">
 								<Button
 									className="gap-2 bg-medical text-medical-foreground hover:bg-medical/90"
-									disabled={pending !== null}
-									onClick={() => downloadPdf(scan.id)}
+									onClick={() => openPdf(scan.id)}
 								>
-									<Download className="h-4 w-4" />
-									{pending === "pdf" ? "Preparing..." : config.downloadPDF}
+									<FileText className="h-4 w-4" />
+									{config.openPDF}
 								</Button>
 								<Button
 									variant="outline"
@@ -415,7 +428,11 @@ const ScanDetail = () => {
 									disabled={pending !== null}
 									onClick={() => downloadCsv(scan.id)}
 								>
-									<Download className="h-4 w-4" />
+									{pending === "csv" ? (
+										<Loader2 className="h-4 w-4 animate-spin" />
+									) : (
+										<Download className="h-4 w-4" />
+									)}
 									{pending === "csv" ? "Preparing..." : config.exportCSV}
 								</Button>
 							</div>
