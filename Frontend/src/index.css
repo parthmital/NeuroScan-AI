@@ -1,6 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap")
-layer(base);
-
 @import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
@@ -29,7 +26,11 @@ layer(base);
 	--text-3xl--line-height: 2.25rem;
 	--text-4xl--line-height: 2.5rem;
 
-	--font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+	--font-sans:
+		"IBM Plex Sans Variable", "IBM Plex Sans", system-ui, -apple-system,
+		"Segoe UI", sans-serif;
+	--font-mono:
+		"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
 	--color-border: hsl(var(--border));
 	--color-input: hsl(var(--input));
@@ -68,9 +69,6 @@ layer(base);
 	--color-warning: hsl(var(--warning));
 	--color-warning-foreground: hsl(var(--warning-foreground));
 
-	--color-info: hsl(var(--info));
-	--color-info-foreground: hsl(var(--info-foreground));
-
 	--color-sidebar: hsl(var(--sidebar-background));
 	--color-sidebar-foreground: hsl(var(--sidebar-foreground));
 	--color-sidebar-primary: hsl(var(--sidebar-primary));
@@ -81,26 +79,11 @@ layer(base);
 	--color-sidebar-ring: hsl(var(--sidebar-ring));
 
 	--animate-fade-in: fade-in 0.3s ease-out both;
-	--animate-slide-in-left: slide-in-left 0.3s ease-out both;
-	--animate-pulse-medical: pulse-medical 2s ease-in-out infinite;
 
 	@keyframes fade-in {
 		from {
 			opacity: 0;
 			transform: translateY(4px);
-		}
-	}
-
-	@keyframes slide-in-left {
-		from {
-			opacity: 0;
-			transform: translateX(-8px);
-		}
-	}
-
-	@keyframes pulse-medical {
-		50% {
-			box-shadow: 0 0 0 6px hsl(var(--medical) / 0.15);
 		}
 	}
 
@@ -127,145 +110,115 @@ layer(base);
 	}
 }
 
-@utility medical-gradient {
-	background: linear-gradient(
-		135deg,
-		hsl(var(--medical)) 0%,
-		hsl(185 72% 30%) 100%
-	);
-}
-
-@utility sidebar-gradient {
-	background: linear-gradient(
-		180deg,
-		hsl(var(--sidebar-background)) 0%,
-		hsl(220 65% 8%) 100%
-	);
-}
-
-@utility scan-overlay-wt {
-	background-color: hsl(50 100% 50% / 0.4);
-}
-
-@utility scan-overlay-tc {
-	background-color: hsl(0 100% 50% / 0.5);
-}
-
-@utility scan-overlay-et {
-	background-color: hsl(220 100% 60% / 0.6);
-}
-
 @layer base {
+	/*
+	  Palette
+	  Graphite  neutral ink and surfaces, low chroma so greyscale MRI reads true.
+	  Cobalt    the single accent: selection, focus, active navigation, progress.
+	  Moss / Ochre / Brick  clinical states: clear, flagged, failed.
+	*/
 	:root {
-		--background: 210 20% 98%;
-		--foreground: 220 25% 10%;
+		--background: 220 14% 97%;
+		--foreground: 222 20% 11%;
 
 		--card: 0 0% 100%;
-		--card-foreground: 220 25% 10%;
+		--card-foreground: 222 20% 11%;
 
 		--popover: 0 0% 100%;
-		--popover-foreground: 220 25% 10%;
+		--popover-foreground: 222 20% 11%;
 
-		--primary: 220 65% 18%;
-		--primary-foreground: 210 40% 98%;
+		--primary: 222 20% 11%;
+		--primary-foreground: 0 0% 100%;
 
-		--secondary: 210 15% 93%;
-		--secondary-foreground: 220 25% 20%;
+		--secondary: 220 13% 93%;
+		--secondary-foreground: 222 20% 16%;
 
-		--muted: 210 15% 95%;
-		--muted-foreground: 215 15% 50%;
+		--muted: 220 14% 94.5%;
+		--muted-foreground: 220 9% 40%;
 
-		--accent: 185 72% 38%;
-		--accent-foreground: 0 0% 100%;
+		--accent: 220 14% 93.5%;
+		--accent-foreground: 222 20% 11%;
 
-		--destructive: 0 72% 51%;
+		--destructive: 4 68% 44%;
 		--destructive-foreground: 0 0% 100%;
 
-		--border: 214 20% 90%;
-		--input: 214 20% 90%;
-		--ring: 185 72% 38%;
+		--border: 220 13% 89%;
+		--input: 220 11% 84%;
+		--ring: 226 71% 48%;
 
-		--radius: 0.75rem;
+		--radius: 0.5rem;
 
-		--medical: 185 72% 38%;
+		--medical: 226 71% 48%;
 		--medical-foreground: 0 0% 100%;
-		--medical-light: 185 55% 95%;
+		--medical-light: 226 85% 96.5%;
 
-		--success: 152 69% 39%;
+		--success: 148 46% 30%;
 		--success-foreground: 0 0% 100%;
 
-		--warning: 38 92% 50%;
-		--warning-foreground: 38 92% 15%;
+		--warning: 32 88% 36%;
+		--warning-foreground: 0 0% 100%;
 
-		--info: 210 92% 55%;
-		--info-foreground: 0 0% 100%;
+		--sidebar-background: 220 14% 95%;
+		--sidebar-foreground: 222 12% 30%;
+		--sidebar-primary: 222 20% 11%;
+		--sidebar-primary-foreground: 222 20% 11%;
+		--sidebar-accent: 0 0% 100%;
+		--sidebar-accent-foreground: 222 20% 11%;
+		--sidebar-border: 220 13% 88%;
+		--sidebar-ring: 226 71% 48%;
 
-		--sidebar-background: 220 65% 12%;
-		--sidebar-foreground: 210 20% 85%;
-		--sidebar-primary: 185 72% 45%;
-		--sidebar-primary-foreground: 0 0% 100%;
-		--sidebar-accent: 220 50% 18%;
-		--sidebar-accent-foreground: 210 20% 90%;
-		--sidebar-border: 220 40% 20%;
-		--sidebar-ring: 185 72% 45%;
-
-		--chart-1: 185 72% 38%;
-		--chart-2: 220 65% 18%;
-		--chart-3: 152 69% 39%;
-		--chart-4: 38 92% 50%;
-		--chart-5: 0 72% 51%;
+		--scrollbar: 220 9% 78%;
 	}
 
 	.dark {
-		--background: 222 47% 6%;
-		--foreground: 210 20% 92%;
+		--background: 220 10% 7%;
+		--foreground: 220 12% 91%;
 
-		--card: 222 40% 9%;
-		--card-foreground: 210 20% 92%;
+		--card: 220 9% 9.5%;
+		--card-foreground: 220 12% 91%;
 
-		--popover: 222 40% 9%;
-		--popover-foreground: 210 20% 92%;
+		--popover: 220 9% 11%;
+		--popover-foreground: 220 12% 91%;
 
-		--primary: 185 72% 45%;
-		--primary-foreground: 220 65% 8%;
+		--primary: 220 14% 93%;
+		--primary-foreground: 220 12% 8%;
 
-		--secondary: 220 30% 15%;
-		--secondary-foreground: 210 20% 85%;
+		--secondary: 220 8% 14%;
+		--secondary-foreground: 220 12% 86%;
 
-		--muted: 220 25% 14%;
-		--muted-foreground: 215 15% 55%;
+		--muted: 220 8% 13%;
+		--muted-foreground: 220 7% 60%;
 
-		--accent: 185 72% 38%;
-		--accent-foreground: 0 0% 100%;
+		--accent: 220 8% 15%;
+		--accent-foreground: 220 12% 93%;
 
-		--destructive: 0 62% 40%;
-		--destructive-foreground: 0 0% 100%;
+		--destructive: 4 72% 60%;
+		--destructive-foreground: 220 12% 8%;
 
-		--border: 220 25% 18%;
-		--input: 220 25% 18%;
-		--ring: 185 72% 45%;
+		--border: 220 8% 16.5%;
+		--input: 220 8% 22%;
+		--ring: 226 92% 70%;
 
-		--medical: 185 72% 45%;
-		--medical-foreground: 0 0% 100%;
-		--medical-light: 185 40% 15%;
+		--medical: 226 92% 70%;
+		--medical-foreground: 226 55% 10%;
+		--medical-light: 226 40% 15%;
 
-		--success: 152 60% 42%;
-		--success-foreground: 0 0% 100%;
+		--success: 148 42% 56%;
+		--success-foreground: 148 50% 8%;
 
-		--warning: 38 85% 55%;
-		--warning-foreground: 38 92% 10%;
+		--warning: 38 86% 62%;
+		--warning-foreground: 38 80% 9%;
 
-		--info: 210 85% 58%;
-		--info-foreground: 0 0% 100%;
+		--sidebar-background: 220 10% 5.5%;
+		--sidebar-foreground: 220 8% 68%;
+		--sidebar-primary: 220 14% 93%;
+		--sidebar-primary-foreground: 220 14% 93%;
+		--sidebar-accent: 220 8% 12%;
+		--sidebar-accent-foreground: 220 14% 93%;
+		--sidebar-border: 220 8% 13%;
+		--sidebar-ring: 226 92% 70%;
 
-		--sidebar-background: 222 50% 5%;
-		--sidebar-foreground: 210 15% 75%;
-		--sidebar-primary: 185 72% 45%;
-		--sidebar-primary-foreground: 0 0% 100%;
-		--sidebar-accent: 222 40% 12%;
-		--sidebar-accent-foreground: 210 15% 85%;
-		--sidebar-border: 222 30% 14%;
-		--sidebar-ring: 185 72% 45%;
+		--scrollbar: 220 7% 26%;
 	}
 }
 
@@ -274,13 +227,72 @@ layer(base);
 		@apply border-border;
 	}
 
+	html {
+		-webkit-text-size-adjust: 100%;
+		text-rendering: optimizeLegibility;
+	}
+
 	body {
-		@apply bg-background text-foreground antialiased;
-		font-family:
-			"Plus Jakarta Sans",
-			system-ui,
-			-apple-system,
-			sans-serif;
+		@apply bg-background font-sans text-foreground antialiased;
+		font-feature-settings: "kern", "calt";
+	}
+
+	h1,
+	h2,
+	h3 {
+		text-wrap: balance;
+	}
+
+	::selection {
+		background-color: hsl(var(--medical) / 0.22);
+	}
+
+	input,
+	textarea {
+		caret-color: hsl(var(--medical));
+	}
+
+	::placeholder {
+		color: hsl(var(--muted-foreground) / 0.7);
+		opacity: 1;
+	}
+
+	/* Keep autofilled fields on the app's surface instead of the browser's yellow or blue. */
+	input:-webkit-autofill,
+	input:-webkit-autofill:hover,
+	input:-webkit-autofill:focus {
+		-webkit-text-fill-color: hsl(var(--foreground));
+		box-shadow: 0 0 0 1000px hsl(var(--card)) inset;
+		transition: background-color 9999s ease-out 0s;
+	}
+
+	input[type="search"]::-webkit-search-cancel-button {
+		appearance: none;
+	}
+
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: hsl(var(--scrollbar)) transparent;
+	}
+
+	::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	::-webkit-scrollbar-thumb {
+		border: 3px solid transparent;
+		border-radius: 999px;
+		background: hsl(var(--scrollbar)) padding-box;
+	}
+
+	/* Lucide icons: one lighter stroke everywhere, closer to the Plex letterforms. */
+	svg.lucide {
+		stroke-width: 1.75;
 	}
 }
 

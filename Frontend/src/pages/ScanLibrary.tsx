@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Pencil, Search, Trash2 } from "lucide-react";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { ModalityBadges } from "@/components/scan/ModalityBadges";
+import { PatientCell } from "@/components/scan/PatientCell";
+import { ResultStatus } from "@/components/scan/ResultStatus";
+import {
+	DeleteScanDialog,
+	EditScanDialog,
+} from "@/components/scan/ScanDialogs";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
 	Table,
@@ -11,19 +20,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { ModalityBadges } from "@/components/scan/ModalityBadges";
-import { PatientCell } from "@/components/scan/PatientCell";
-import {
-	DeleteScanDialog,
-	EditScanDialog,
-} from "@/components/scan/ScanDialogs";
 import { useScans } from "@/hooks/use-scans";
 import { APP_CONFIG } from "@/lib/config";
-import { matchesSearch, resultLabel } from "@/lib/scan-format";
+import { matchesSearch } from "@/lib/scan-format";
 import type { MRIScan } from "@/lib/types";
 
-const headClass =
-	"px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground";
 const config = APP_CONFIG.scanLibrary;
 
 const ScanLibrary = () => {
@@ -45,12 +46,9 @@ const ScanLibrary = () => {
 	if (isLoading || !scans) {
 		return (
 			<div className="animate-pulse space-y-6">
-				<div className="h-20 w-1/3 rounded-xl bg-muted" />
-				<div className="grid grid-cols-3 gap-4">
-					{[1, 2, 3].map((i) => (
-						<div key={i} className="h-48 rounded-xl bg-muted" />
-					))}
-				</div>
+				<div className="h-14 w-1/3 rounded-lg bg-muted" />
+				<div className="h-9 w-72 rounded-md bg-muted" />
+				<div className="h-96 rounded-lg bg-muted" />
 			</div>
 		);
 	}
@@ -59,93 +57,99 @@ const ScanLibrary = () => {
 
 	return (
 		<div className="space-y-6">
-			<div>
-				<h1 className="text-2xl font-bold tracking-tight text-foreground">
-					{config.title}
-				</h1>
-				<p className="mt-1 text-sm text-muted-foreground">{config.subtitle}</p>
-			</div>
+			<PageHeader title={config.title} description={config.subtitle} />
 
-			<div className="relative w-72">
-				<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-				<Input
-					aria-label="Search scans"
-					placeholder={config.searchPlaceholder}
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-					className="h-9 border-none bg-muted/50 pl-9 text-sm"
-				/>
-			</div>
-
-			<div className="overflow-x-auto">
+			<Card className="overflow-hidden">
+				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
+					<div className="relative w-full sm:w-72">
+						<Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+						<Input
+							type="search"
+							aria-label="Search scans"
+							placeholder={config.searchPlaceholder}
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
+							className="h-8 pl-8 text-[13px]"
+						/>
+					</div>
+					<p className="font-mono text-xs text-muted-foreground tabular-nums">
+						{filtered.length} of {scans.length} scans
+					</p>
+				</div>
 				<Table>
 					<TableHeader>
 						<TableRow className="hover:bg-transparent">
-							<TableHead className={headClass}>Patient</TableHead>
-							<TableHead className={headClass}>Modalities</TableHead>
-							<TableHead className={headClass}>Date</TableHead>
-							<TableHead className={headClass}>Result</TableHead>
-							<TableHead className={headClass}>Edit</TableHead>
-							<TableHead className={headClass}>Delete</TableHead>
+							<TableHead className="pl-5">Patient</TableHead>
+							<TableHead className="hidden md:table-cell">Modalities</TableHead>
+							<TableHead className="hidden sm:table-cell">Date</TableHead>
+							<TableHead>Result</TableHead>
+							<TableHead className="pr-3 text-right">
+								<span className="sr-only">Actions</span>
+							</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{filtered.map((scan) => (
 							<TableRow
 								key={scan.id}
-								className="group cursor-pointer hover:bg-muted/50"
+								className="cursor-pointer"
 								onClick={() => navigate(`/scan/${scan.id}`)}
 							>
 								<PatientCell scan={scan} />
-								<TableCell className="px-6 py-4">
+								<TableCell className="hidden md:table-cell">
 									<ModalityBadges modalities={scan.modalities} />
 								</TableCell>
-								<TableCell className="px-6 py-4 text-sm text-muted-foreground">
+								<TableCell className="hidden whitespace-nowrap font-mono text-xs sm:table-cell text-muted-foreground tabular-nums">
 									{scan.scanDate}
 								</TableCell>
-								<TableCell className="px-6 py-4 text-sm text-muted-foreground">
-									{resultLabel(scan)}
+								<TableCell className="whitespace-nowrap">
+									<ResultStatus scan={scan} />
 								</TableCell>
-								<TableCell className="px-6 py-4">
-									<Button
-										variant="ghost"
-										size="sm"
-										className="text-xs text-muted-foreground"
-										onClick={(e) => {
-											e.stopPropagation();
-											setEditingScan(scan);
-										}}
-									>
-										<Pencil className="mr-1 h-3.5 w-3.5" />
-										Edit
-									</Button>
-								</TableCell>
-								<TableCell className="px-6 py-4">
-									<Button
-										variant="ghost"
-										size="sm"
-										className="text-xs text-destructive hover:text-destructive"
-										onClick={(e) => {
-											e.stopPropagation();
-											setDeletingScan(scan);
-										}}
-									>
-										<Trash2 className="mr-1 h-3.5 w-3.5" />
-										Delete
-									</Button>
+								<TableCell className="pr-3">
+									<div className="flex justify-end gap-1">
+										<Button
+											variant="ghost"
+											size="sm"
+											aria-label={`Edit ${scan.patientName}`}
+											onClick={(e) => {
+												e.stopPropagation();
+												setEditingScan(scan);
+											}}
+										>
+											<Pencil />
+											<span className="hidden sm:inline">Edit</span>
+										</Button>
+										<Button
+											variant="ghost"
+											size="sm"
+											aria-label={`Delete ${scan.patientName}`}
+											className="hover:bg-destructive/10 hover:text-destructive"
+											onClick={(e) => {
+												e.stopPropagation();
+												setDeletingScan(scan);
+											}}
+										>
+											<Trash2 />
+											<span className="hidden sm:inline">Delete</span>
+										</Button>
+									</div>
 								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
 				</Table>
-			</div>
 
-			{filtered.length === 0 && (
-				<div className="py-16 text-center text-muted-foreground">
-					<p className="text-sm font-medium">{config.noScansFound}</p>
-					<p className="mt-1 text-xs">{config.adjustFilters}</p>
-				</div>
-			)}
+				{filtered.length === 0 && (
+					<div className="px-6 py-16 text-center">
+						<p className="text-sm font-medium text-foreground">
+							{config.noScansFound}
+						</p>
+						<p className="mt-1 text-[13px] text-muted-foreground">
+							{config.adjustFilters}
+						</p>
+					</div>
+				)}
+			</Card>
 
 			<EditScanDialog scan={editingScan} onClose={() => setEditingScan(null)} />
 			<DeleteScanDialog

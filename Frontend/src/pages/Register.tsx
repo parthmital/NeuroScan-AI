@@ -1,22 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Loader2, UserPlus } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/components/auth/useAuth";
+import { AuthShell } from "@/components/layout/AuthShell";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { passwordProblem } from "@/lib/password";
-
-const inputClass = "border-border/50 bg-background/50 focus:border-medical/50";
 
 type Field =
 	| "fullName"
@@ -140,97 +131,77 @@ const Register = () => {
 	};
 
 	return (
-		<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background/50 px-4 py-12 sm:px-8">
-			<Card className="w-full max-w-2xl border-border/40 bg-card/50 shadow-2xl backdrop-blur-xl">
-				<CardHeader className="space-y-3 text-center">
-					<div className="mb-5 flex justify-center">
-						<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-medical/20 text-medical shadow-lg shadow-medical/10">
-							<UserPlus className="h-6 w-6" />
-						</div>
-					</div>
-					<CardTitle className="text-3xl font-bold tracking-tight">
-						Create Medical Account
-					</CardTitle>
-					<CardDescription className="text-base text-muted-foreground">
-						Join the network of neuroradiology professionals
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<form onSubmit={handleSubmit} noValidate className="space-y-6">
-						<div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-							{FIELDS.map((field) => (
-								<div
-									key={field.id}
-									className={
-										field.wide ? "space-y-2 sm:col-span-2" : "space-y-2"
-									}
-								>
-									<Label htmlFor={field.id}>
-										{field.label}
-										{!field.required && (
-											<span className="ml-1 text-xs font-normal text-muted-foreground">
-												(optional)
-											</span>
-										)}
-									</Label>
-									<Input
-										id={field.id}
-										type={field.type ?? "text"}
-										placeholder={field.placeholder}
-										value={form[field.id]}
-										onChange={(e) =>
-											setForm({ ...form, [field.id]: e.target.value })
-										}
-										autoComplete={field.autoComplete}
-										spellCheck={false}
-										maxLength={field.id === "password" ? 72 : 120}
-										className={inputClass}
-									/>
-									{field.id === "password" && (
-										<p className="text-xs text-muted-foreground">
-											At least 12 characters.
-										</p>
-									)}
-								</div>
-							))}
-						</div>
-						{error && (
-							<p
-								role="alert"
-								className="animate-fade-in text-sm text-destructive"
-							>
-								{error}
-							</p>
-						)}
-						<Button
-							type="submit"
-							className="h-11 w-full bg-medical text-base font-medium text-white shadow-lg shadow-medical/20 hover:bg-medical/90"
-							disabled={isLoading}
+		<AuthShell
+			title="Create your account"
+			description="For radiologists and clinicians reviewing MRI studies in NeuroScan."
+			className="max-w-[560px]"
+		>
+			<form onSubmit={handleSubmit} noValidate className="space-y-6">
+				<div className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
+					{FIELDS.map((field) => (
+						<div
+							key={field.id}
+							className={
+								field.wide ? "space-y-1.5 sm:col-span-2" : "space-y-1.5"
+							}
 						>
-							{isLoading ? (
-								<Loader2 className="h-5 w-5 animate-spin" />
-							) : (
-								<>
-									Complete Registration
-									<ArrowRight className="ml-2 h-4 w-4" />
-								</>
+							<Label htmlFor={field.id}>
+								{field.label}
+								{!field.required && (
+									<span className="ml-1.5 font-normal text-muted-foreground">
+										Optional
+									</span>
+								)}
+							</Label>
+							<Input
+								id={field.id}
+								type={field.type ?? "text"}
+								placeholder={field.placeholder}
+								value={form[field.id]}
+								onChange={(e) =>
+									setForm({ ...form, [field.id]: e.target.value })
+								}
+								autoComplete={field.autoComplete}
+								spellCheck={false}
+								maxLength={field.id === "password" ? 72 : 120}
+							/>
+							{field.id === "password" && (
+								<p className="text-xs text-muted-foreground">
+									At least 12 characters.
+								</p>
 							)}
-						</Button>
-					</form>
-				</CardContent>
-				<CardFooter className="flex flex-col space-y-4 pt-2">
-					<div className="text-center text-sm text-muted-foreground">
-						Already have an account?{" "}
-						<Link
-							to="/login"
-							className="font-medium text-medical hover:underline"
-						>
-							Sign in instead
-						</Link>
-					</div>
-				</CardFooter>
-			</Card>
-		</div>
+						</div>
+					))}
+				</div>
+				{error && (
+					<p
+						role="alert"
+						className="animate-fade-in rounded-md border border-destructive/30 bg-destructive/[0.06] px-3 py-2 text-[13px] text-destructive"
+					>
+						{error}
+					</p>
+				)}
+				<Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+					{isLoading ? (
+						<Loader2 className="animate-spin" />
+					) : (
+						<>
+							Complete Registration
+							<ArrowRight />
+						</>
+					)}
+				</Button>
+			</form>
+			<p className="mt-8 border-t border-border pt-6 text-sm text-muted-foreground">
+				Already have an account?{" "}
+				<Link
+					to="/login"
+					className="font-medium text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+				>
+					Sign in instead
+				</Link>
+			</p>
+		</AuthShell>
 	);
 };
 

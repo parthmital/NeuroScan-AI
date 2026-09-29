@@ -62,8 +62,8 @@ export const EditScanDialog = ({ scan, onClose }: ScanDialogProps) => {
 							Update patient information for this scan.
 						</DialogDescription>
 					</DialogHeader>
-					<div className="space-y-4 py-2">
-						<div className="space-y-2">
+					<div className="space-y-4">
+						<div className="space-y-1.5">
 							<Label htmlFor="edit-patientName">Patient Name</Label>
 							<Input
 								id="edit-patientName"
@@ -74,7 +74,7 @@ export const EditScanDialog = ({ scan, onClose }: ScanDialogProps) => {
 								}
 							/>
 						</div>
-						<div className="space-y-2">
+						<div className="space-y-1.5">
 							<Label htmlFor="edit-patientId">Patient ID</Label>
 							<Input
 								id="edit-patientId"
@@ -88,7 +88,7 @@ export const EditScanDialog = ({ scan, onClose }: ScanDialogProps) => {
 						{error && (
 							<p
 								role="alert"
-								className="animate-fade-in text-xs text-destructive"
+								className="animate-fade-in text-[13px] text-destructive"
 							>
 								{error}
 							</p>
@@ -98,11 +98,7 @@ export const EditScanDialog = ({ scan, onClose }: ScanDialogProps) => {
 						<Button type="button" variant="outline" onClick={onClose}>
 							Cancel
 						</Button>
-						<Button
-							type="submit"
-							disabled={updateScan.isPending}
-							className="bg-medical text-white"
-						>
+						<Button type="submit" disabled={updateScan.isPending}>
 							{updateScan.isPending ? "Saving..." : "Save Changes"}
 						</Button>
 					</DialogFooter>

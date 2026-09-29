@@ -1,8 +1,9 @@
 import { StatsCards } from "@/components/dashboard/StatsCards";
 import { RecentScans } from "@/components/dashboard/RecentScans";
 import { VolumeChart } from "@/components/dashboard/VolumeChart";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { ArrowUpFromLine } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { APP_CONFIG as config } from "@/lib/config";
 
@@ -15,12 +16,8 @@ const Index = () => {
 	if (!user) {
 		return (
 			<div className="animate-pulse space-y-8">
-				<div className="h-20 w-1/3 rounded-xl bg-muted" />
-				<div className="grid grid-cols-4 gap-4">
-					{[1, 2, 3, 4].map((i) => (
-						<div key={i} className="h-32 rounded-xl bg-muted" />
-					))}
-				</div>
+				<div className="h-14 w-1/3 rounded-lg bg-muted" />
+				<div className="h-[92px] rounded-lg bg-muted" />
 			</div>
 		);
 	}
@@ -32,32 +29,24 @@ const Index = () => {
 
 	return (
 		<div className="space-y-8">
-			{/* Header */}
-			<div className="flex items-center justify-between gap-4">
-				<div>
-					<h1 className="text-2xl font-bold tracking-tight text-foreground">
-						Dashboard
-					</h1>
-					<p className="mt-1 text-sm text-muted-foreground">{welcomeMessage}</p>
-				</div>
-				<Button
-					onClick={() => navigate("/upload")}
-					className="gap-2 bg-medical text-medical-foreground hover:bg-medical/90"
-				>
-					<Upload className="h-4 w-4" />
-					{config.dashboard.newScanButtonLabel}
-				</Button>
-			</div>
+			<PageHeader
+				title="Dashboard"
+				description={welcomeMessage}
+				actions={
+					<Button onClick={() => navigate("/upload")}>
+						<ArrowUpFromLine />
+						{config.dashboard.newScanButtonLabel}
+					</Button>
+				}
+			/>
 
-			{/* Stats */}
 			<StatsCards />
 
-			{/* Main grid */}
-			<div className="grid grid-cols-3 gap-6">
-				<div className="col-span-2">
+			<div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+				<div className="min-w-0 xl:col-span-2">
 					<RecentScans />
 				</div>
-				<div className="space-y-6">
+				<div className="min-w-0">
 					<VolumeChart />
 				</div>
 			</div>

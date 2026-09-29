@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Segmented } from "@/components/ui/segmented";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { scansApi } from "@/lib/api";
@@ -121,8 +122,8 @@ const drawFrame = (
 	if (layer) ctx.drawImage(layer, x, y, width, height);
 
 	// Orientation markers
-	ctx.fillStyle = "rgba(0, 200, 180, 0.5)";
-	ctx.font = "13px monospace";
+	ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
+	ctx.font = "500 12px 'IBM Plex Mono', ui-monospace, monospace";
 	ctx.fillText("A", canvas.width / 2 - 4, 18);
 	ctx.fillText("P", canvas.width / 2 - 4, canvas.height - 8);
 	ctx.fillText("R", 8, canvas.height / 2 + 4);
@@ -291,8 +292,8 @@ export const SliceViewer = ({
 
 	return (
 		<div className="space-y-3">
-			<div className="flex items-center gap-3 px-1 sm:gap-4">
-				<span className="w-14 shrink-0 font-mono text-xs text-muted-foreground">
+			<div className="flex items-center gap-3 sm:gap-4">
+				<span className="w-16 shrink-0 font-mono text-xs text-muted-foreground tabular-nums">
 					Slice {slice + 1}
 				</span>
 				<Slider
@@ -304,20 +305,20 @@ export const SliceViewer = ({
 					step={1}
 					className="flex-1"
 				/>
-				<span className="w-8 shrink-0 text-right font-mono text-xs text-muted-foreground">
+				<span className="w-8 shrink-0 text-right font-mono text-xs text-muted-foreground tabular-nums">
 					{totalSlices}
 				</span>
 			</div>
 			<div
 				ref={containerRef}
 				aria-busy={waiting}
-				className="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-border bg-black"
+				className="relative flex aspect-square items-center justify-center overflow-hidden rounded-lg border border-border bg-[#0a0a0a]"
 			>
 				{firstLoad && (
 					<div className="absolute inset-0 z-10 flex items-center justify-center">
 						<div className="flex flex-col items-center gap-2">
-							<div className="h-8 w-8 animate-spin rounded-full border-2 border-medical border-t-transparent" />
-							<p className="font-mono text-[10px] uppercase tracking-widest text-medical">
+							<div className="h-6 w-6 animate-spin rounded-full border-2 border-white/60 border-t-transparent" />
+							<p className="font-mono text-[10px] uppercase tracking-[0.12em] text-white/60">
 								Loading slice
 							</p>
 						</div>
@@ -331,20 +332,18 @@ export const SliceViewer = ({
 				/>
 
 				{/* HUD Overlay */}
-				<div className="pointer-events-none absolute left-4 top-4">
-					<p className="font-mono text-[10px] text-medical/80">
+				<div className="pointer-events-none absolute left-3 top-3 space-y-0.5 font-mono text-[10.5px] leading-4 text-white/60 tabular-nums">
+					<p>
 						Slice: {slice + 1}/{totalSlices}
 					</p>
-					<p className="font-mono text-[10px] text-medical/80">
-						Modality: {selectedModality}
-					</p>
+					<p>Modality: {selectedModality}</p>
 				</div>
 				{/* Shown only when a slice takes noticeably long, so quick steps never flicker. */}
 				<div
 					role="status"
 					className={cn(
-						"pointer-events-none absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest transition-opacity duration-200",
-						failed ? "text-destructive" : "text-medical",
+						"pointer-events-none absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] transition-opacity duration-200",
+						failed ? "text-red-400" : "text-white/70",
 						(waiting && !firstLoad) || failed
 							? "opacity-100 delay-200"
 							: "opacity-0",
@@ -354,7 +353,7 @@ export const SliceViewer = ({
 						"Slice unavailable"
 					) : (
 						<>
-							<span className="h-2.5 w-2.5 animate-spin rounded-full border border-medical border-t-transparent" />
+							<span className="h-2.5 w-2.5 animate-spin rounded-full border border-white/70 border-t-transparent" />
 							Loading
 						</>
 					)}
@@ -362,22 +361,13 @@ export const SliceViewer = ({
 			</div>
 			{/* Modality Selector */}
 			{modalities && modalities.length > 0 && (
-				<div className="flex justify-center gap-2 pt-1">
-					{modalities.map((m) => (
-						<button
-							key={m}
-							onClick={() => setSelectedModality(m)}
-							aria-pressed={selectedModality === m}
-							className={cn(
-								"rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
-								selectedModality === m
-									? "border-medical bg-medical text-medical-foreground shadow-xs"
-									: "border-border bg-card text-muted-foreground hover:border-medical/50 hover:bg-muted/50",
-							)}
-						>
-							{m}
-						</button>
-					))}
+				<div className="flex justify-center pt-1">
+					<Segmented
+						aria-label="Modality"
+						options={modalities.map((m) => ({ value: m, label: m }))}
+						value={selectedModality}
+						onChange={setSelectedModality}
+					/>
 				</div>
 			)}
 		</div>

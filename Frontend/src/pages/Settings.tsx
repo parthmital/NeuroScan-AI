@@ -1,9 +1,11 @@
-import { Palette, Shield, User as UserIcon } from "lucide-react";
+import { KeyRound, Palette, UserRound } from "lucide-react";
 import { useAuth } from "@/components/auth/useAuth";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { AppearanceSettings } from "@/components/settings/AppearanceSettings";
 import { PasswordForm } from "@/components/settings/PasswordForm";
 import { ProfileForm } from "@/components/settings/ProfileForm";
 import { TwoFactorSettings } from "@/components/settings/TwoFactorSettings";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Settings = () => {
@@ -12,35 +14,31 @@ const Settings = () => {
 	if (!user) {
 		return (
 			<div className="max-w-3xl animate-pulse space-y-6">
-				<div className="h-20 w-1/3 rounded-xl bg-muted" />
-				<div className="h-64 rounded-xl bg-muted" />
+				<div className="h-14 w-1/3 rounded-lg bg-muted" />
+				<div className="h-64 rounded-lg bg-muted" />
 			</div>
 		);
 	}
 
 	return (
-		<div className="w-full space-y-6">
-			<div>
-				<h1 className="text-2xl font-bold tracking-tight text-foreground">
-					Settings
-				</h1>
-				<p className="mt-1 text-sm text-muted-foreground">
-					Manage your account, preferences, and application settings.
-				</p>
-			</div>
+		<div className="max-w-3xl space-y-6">
+			<PageHeader
+				title="Settings"
+				description="Manage your account, preferences, and application settings."
+			/>
 
 			<Tabs defaultValue="profile" className="flex flex-col gap-6">
-				<TabsList className="gap-1 self-start bg-muted/50 p-1">
-					<TabsTrigger value="profile" className="gap-1.5 text-xs">
-						<UserIcon className="h-3.5 w-3.5" />
+				<TabsList>
+					<TabsTrigger value="profile">
+						<UserRound />
 						Profile
 					</TabsTrigger>
-					<TabsTrigger value="appearance" className="gap-1.5 text-xs">
-						<Palette className="h-3.5 w-3.5" />
+					<TabsTrigger value="appearance">
+						<Palette />
 						Appearance
 					</TabsTrigger>
-					<TabsTrigger value="security" className="gap-1.5 text-xs">
-						<Shield className="h-3.5 w-3.5" />
+					<TabsTrigger value="security">
+						<KeyRound />
 						Security
 					</TabsTrigger>
 				</TabsList>
@@ -54,12 +52,14 @@ const Settings = () => {
 				</TabsContent>
 
 				<TabsContent value="security">
-					<div className="space-y-8 rounded-xl border border-border bg-card p-6">
-						<PasswordForm />
-						<div className="border-t border-border pt-6">
+					<Card className="divide-y divide-border">
+						<div className="p-5">
+							<PasswordForm />
+						</div>
+						<div className="p-5">
 							<TwoFactorSettings user={user} />
 						</div>
-					</div>
+					</Card>
 				</TabsContent>
 			</Tabs>
 		</div>

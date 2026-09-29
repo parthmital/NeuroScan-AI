@@ -42,10 +42,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 	if (isLoading) {
 		return (
-			<div className="flex h-screen w-screen items-center justify-center bg-black">
-				<div role="status" className="flex flex-col items-center gap-4">
-					<Loader2 className="h-10 w-10 animate-spin text-medical" />
-					<p className="text-sm uppercase tracking-widest text-white/50">
+			<div className="flex h-screen w-screen items-center justify-center bg-background">
+				<div role="status" className="flex flex-col items-center gap-3">
+					<Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+					<p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
 						Checking session
 					</p>
 				</div>

@@ -1,3 +1,4 @@
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import type { OverlayColors, Overlays, TumourRegion } from "@/lib/types";
@@ -42,46 +43,41 @@ export const SegmentationControls = ({
 	};
 
 	return (
-		<div className="space-y-5">
-			<div>
-				<h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-					Segmentation Overlay
-				</h3>
-				<div className="space-y-3">
-					{regions.map((region) => (
-						<div
-							key={region.key}
-							className="flex items-start gap-3 rounded-lg border border-border bg-muted/30 p-3"
-						>
-							<div
-								className="mt-0.5 h-3 w-3 shrink-0 rounded-sm"
-								style={{ backgroundColor: region.color }}
-							/>
-							<div className="min-w-0 flex-1">
-								<p className="text-sm font-medium text-foreground">
-									{region.label}
-								</p>
-								<p className="text-xs text-muted-foreground">
-									{region.description}
-								</p>
-							</div>
-							<Switch
-								checked={overlays[region.key]}
-								aria-label={`Show ${region.label}`}
-								onCheckedChange={() => toggleRegion(region.key)}
-								className="shrink-0"
-							/>
+		<Card>
+			<CardHeader>
+				<CardTitle>Segmentation Overlay</CardTitle>
+			</CardHeader>
+			<ul className="divide-y divide-border">
+				{regions.map((region) => (
+					<li key={region.key} className="flex items-start gap-3 px-5 py-3">
+						<span
+							className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-[2px]"
+							style={{ backgroundColor: region.color }}
+						/>
+						<div className="min-w-0 flex-1">
+							<p className="text-[13px] font-medium text-foreground">
+								{region.label}
+							</p>
+							<p className="text-xs text-muted-foreground">
+								{region.description}
+							</p>
 						</div>
-					))}
-				</div>
-			</div>
+						<Switch
+							checked={overlays[region.key]}
+							aria-label={`Show ${region.label}`}
+							onCheckedChange={() => toggleRegion(region.key)}
+							className="mt-0.5 shrink-0"
+						/>
+					</li>
+				))}
+			</ul>
 
-			<div>
-				<div className="mb-2 flex items-center justify-between">
-					<h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-						Overlay Opacity
-					</h3>
-					<span className="font-mono text-xs text-muted-foreground">
+			<div className="border-t border-border px-5 py-4">
+				<div className="mb-3 flex items-center justify-between">
+					<p className="text-[13px] font-medium text-foreground">
+						Overlay opacity
+					</p>
+					<span className="font-mono text-xs text-muted-foreground tabular-nums">
 						{Math.round(overlays.opacity * 100)}%
 					</span>
 				</div>
@@ -94,6 +90,6 @@ export const SegmentationControls = ({
 					step={0.05}
 				/>
 			</div>
-		</div>
+		</Card>
 	);
 };

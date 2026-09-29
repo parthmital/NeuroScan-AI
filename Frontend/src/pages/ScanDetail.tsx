@@ -1,19 +1,17 @@
 import { useParams, useNavigate } from "react-router-dom";
-import {
-	ArrowLeft,
-	Download,
-	FileText,
-	Loader2,
-	RotateCcw,
-} from "lucide-react";
-import { useState } from "react";
+import { Download, FileText, Loader2, RotateCcw } from "lucide-react";
+import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { SliceViewer } from "@/components/scan/SliceViewer";
 import { VolumeViewer3D } from "@/components/scan/VolumeViewer3D";
 import { SegmentationControls } from "@/components/scan/SegmentationControls";
 import { ProcessingPipeline } from "@/components/scan/ProcessingPipeline";
 import { ModalityBadges } from "@/components/scan/ModalityBadges";
+import { ResultStatus } from "@/components/scan/ResultStatus";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Segmented } from "@/components/ui/segmented";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { APP_CONFIG } from "@/lib/config";
@@ -24,6 +22,40 @@ import { useRetryScan, useScan } from "@/hooks/use-scans";
 import type { Overlays } from "@/lib/types";
 
 const config = APP_CONFIG.scanDetail;
+
+const VIEW_MODES = [
+	{ value: "2d", label: "2D" },
+	{ value: "3d", label: "3D" },
+] as const;
+
+/** One labelled value in a measurement or report list. */
+const Row = ({
+	label,
+	children,
+	swatch,
+}: {
+	label: string;
+	children: ReactNode;
+	swatch?: string;
+}) => (
+	<div className="flex items-baseline justify-between gap-4 py-2.5">
+		<dt className="flex items-center gap-2 text-[13px] text-muted-foreground">
+			{swatch && (
+				<span
+					className="h-2 w-2 shrink-0 rounded-[2px]"
+					style={{ background: swatch }}
+				/>
+			)}
+			{label}
+		</dt>
+		<dd className="text-right font-mono text-[13px] font-medium text-foreground tabular-nums">
+			{children}
+		</dd>
+	</div>
+);
+
+const sectionLabel =
+	"text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground";
 
 const ScanDetail = () => {
 	const { id } = useParams();
@@ -49,21 +81,27 @@ const ScanDetail = () => {
 				aria-label="Loading scan"
 				className="animate-pulse space-y-6"
 			>
-				<div className="h-10 w-24 rounded-xl bg-muted" />
-				<div className="h-20 w-1/2 rounded-xl bg-muted" />
-				<div className="h-64 rounded-xl bg-muted" />
+				<div className="h-8 w-20 rounded-md bg-muted" />
+				<div className="h-14 w-1/2 rounded-lg bg-muted" />
+				<div className="h-96 rounded-lg bg-muted" />
 			</div>
 		);
 	}
 
 	if (isError || !scan) {
 		return (
-			<div className="py-20 text-center">
-				<p className="text-lg font-semibold text-foreground">Scan not found</p>
+			<div className="py-24 text-center">
+				<p className="text-base font-semibold text-foreground">
+					Scan not found
+				</p>
 				<p className="mt-1 text-sm text-muted-foreground">
 					The requested scan could not be located.
 				</p>
-				<Button variant="ghost" className="mt-4" onClick={() => navigate("/")}>
+				<Button
+					variant="outline"
+					className="mt-5"
+					onClick={() => navigate("/")}
+				>
 					Return to Dashboard
 				</Button>
 			</div>
@@ -84,130 +122,101 @@ const ScanDetail = () => {
 
 	return (
 		<div className="space-y-6">
-			{/* Header */}
-			<div className="flex items-center gap-4">
-				<Button
-					variant="ghost"
-					size="sm"
-					onClick={() => navigate(-1)}
-					className="text-muted-foreground"
-				>
-					<ArrowLeft className="mr-1 h-4 w-4" />
-					{config.backButton}
-				</Button>
-			</div>
-
-			<div className="flex items-start justify-between gap-4">
-				<div>
-					<div className="mb-1 flex items-center gap-3">
-						<h1 className="text-2xl font-bold tracking-tight text-foreground">
-							{scan.patientName}
-						</h1>
-					</div>
-					<div className="flex items-center gap-4 text-sm text-muted-foreground">
-						<span>{scan.patientId}</span>
-						<span>·</span>
-						<span>{scan.scanDate}</span>
-						<span>·</span>
+			<PageHeader
+				back={{ label: config.backButton, onClick: () => navigate(-1) }}
+				title={scan.patientName}
+				description={
+					<div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+						<span className="font-mono text-xs tabular-nums">
+							{scan.patientId}
+						</span>
+						<span className="font-mono text-xs tabular-nums">
+							{scan.scanDate}
+						</span>
 						<ModalityBadges modalities={scan.modalities} />
+						<ResultStatus scan={scan} />
 					</div>
-				</div>
-
-				<div className="flex shrink-0 gap-2">
-					{scan.status === "failed" && (
-						<Button
-							variant="outline"
-							size="sm"
-							className="gap-1.5 text-xs"
-							disabled={retryScan.isPending}
-							onClick={retry}
-						>
-							<RotateCcw className="h-3.5 w-3.5" />
-							{config.retryButton}
-						</Button>
-					)}
-					{completed && (
-						<>
+				}
+				actions={
+					<>
+						{scan.status === "failed" && (
 							<Button
 								variant="outline"
 								size="sm"
-								className="gap-1.5 text-xs"
-								disabled={pending !== null}
-								onClick={() => downloadCsv(scan.id)}
+								disabled={retryScan.isPending}
+								onClick={retry}
 							>
-								{pending === "csv" ? (
-									<Loader2 className="h-3.5 w-3.5 animate-spin" />
-								) : (
-									<Download className="h-3.5 w-3.5" />
-								)}
-								{config.exportButton}
+								<RotateCcw />
+								{config.retryButton}
 							</Button>
-							<Button
-								variant="outline"
-								size="sm"
-								className="gap-1.5 text-xs"
-								onClick={() => openPdf(scan.id)}
-							>
-								<FileText className="h-3.5 w-3.5" />
-								{config.reportButton}
-							</Button>
-						</>
-					)}
-				</div>
-			</div>
+						)}
+						{completed && (
+							<>
+								<Button
+									variant="outline"
+									size="sm"
+									disabled={pending !== null}
+									onClick={() => downloadCsv(scan.id)}
+								>
+									{pending === "csv" ? (
+										<Loader2 className="animate-spin" />
+									) : (
+										<Download />
+									)}
+									{config.exportButton}
+								</Button>
+								<Button size="sm" onClick={() => openPdf(scan.id)}>
+									<FileText />
+									{config.reportButton}
+								</Button>
+							</>
+						)}
+					</>
+				}
+			/>
 
 			{isInProgress(scan) && (
 				<div
 					role="status"
-					className="flex items-center gap-3 rounded-xl border border-medical/20 bg-medical/5 p-4 text-sm text-foreground"
+					className="flex items-center gap-3 rounded-md border border-medical/25 bg-medical-light px-4 py-3 text-[13px] text-foreground"
 				>
-					<div className="h-4 w-4 animate-spin rounded-full border-2 border-medical border-t-transparent" />
-					Processing: {scan.pipelineStep} ({scan.progress}%). Results appear
-					here automatically.
+					<Loader2 className="h-4 w-4 shrink-0 animate-spin text-medical" />
+					<span>
+						Processing: {scan.pipelineStep}{" "}
+						<span className="font-mono tabular-nums">({scan.progress}%)</span>.
+						Results appear here automatically.
+					</span>
 				</div>
 			)}
 			{scan.status === "failed" && scan.errorMessage && (
 				<div
 					role="alert"
-					className="rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive"
+					className="rounded-md border border-destructive/30 bg-destructive/[0.06] px-4 py-3 text-[13px] text-destructive"
 				>
 					{scan.errorMessage}
 				</div>
 			)}
 
-			{/* Main content */}
 			<Tabs defaultValue="viewer" className="flex flex-col gap-6">
-				<TabsList className="self-start bg-muted/50">
+				<TabsList>
 					<TabsTrigger value="viewer">{config.viewerTab}</TabsTrigger>
 					<TabsTrigger value="pipeline">{config.pipelineTab}</TabsTrigger>
 					<TabsTrigger value="report">{config.reportTab}</TabsTrigger>
 				</TabsList>
 
-				<TabsContent value="viewer" className="space-y-0">
-					<div className="grid grid-cols-3 gap-6">
-						<div className="col-span-2">
-							<div className="mb-4 flex items-center justify-between">
-								<h2 className="text-sm font-semibold text-foreground">
+				<TabsContent value="viewer">
+					<div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+						<div className="min-w-0">
+							<div className="mb-3 flex items-center justify-between gap-3">
+								<h2 className="text-[13px] font-semibold text-foreground">
 									Scan Visualisation
 								</h2>
-								{/* 2D / 3D view toggle */}
-								<div className="flex gap-1.5">
-									{(["2d", "3d"] as const).map((mode) => (
-										<button
-											key={mode}
-											onClick={() => setViewMode(mode)}
-											aria-pressed={viewMode === mode}
-											className={cn(
-												"rounded-md border px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all",
-												viewMode === mode
-													? "border-medical bg-medical text-medical-foreground shadow-xs"
-													: "border-border bg-card text-muted-foreground hover:border-medical/50 hover:bg-muted/50",
-											)}
-										>
-											{mode}
-										</button>
-									))}
-								</div>
+								<Segmented
+									aria-label="View mode"
+									options={VIEW_MODES}
+									value={viewMode}
+									onChange={setViewMode}
+								/>
 							</div>
 
 							{viewMode === "2d" ? (
@@ -228,6 +237,7 @@ const ScanDetail = () => {
 								/>
 							)}
 						</div>
+
 						<div className="space-y-6">
 							<SegmentationControls
 								overlays={overlays}
@@ -235,48 +245,29 @@ const ScanDetail = () => {
 								overlayColors={overlayColors}
 							/>
 
-							{/* Scan metrics */}
 							{scan.results && (
-								<div>
-									<h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-										{config.measurementsTitle}
-									</h3>
-									<div className="grid grid-cols-2 gap-2">
-										<div className="rounded-lg border border-border bg-muted/30 p-3">
-											<p className="text-xs text-muted-foreground">
-												Classification
-											</p>
-											<p className="mt-0.5 text-sm font-semibold text-foreground">
+								<Card>
+									<CardHeader>
+										<CardTitle>{config.measurementsTitle}</CardTitle>
+									</CardHeader>
+									<dl className="divide-y divide-border px-5 py-1">
+										<Row label="Classification">
+											<span className="font-sans">
 												{scan.results.classification}
-											</p>
-										</div>
-										<div className="rounded-lg border border-border bg-muted/30 p-3">
-											<p className="text-xs text-muted-foreground">
-												Confidence
-											</p>
-											<p className="mt-0.5 text-sm font-semibold text-foreground">
-												{formatPercent(scan.results.confidence)}
-											</p>
-										</div>
-										<div className="rounded-lg border border-border bg-muted/30 p-3">
-											<p className="text-xs text-muted-foreground">
-												Total Volume
-											</p>
-											<p className="mt-0.5 text-sm font-semibold text-foreground">
-												{scan.results.tumorVolume} cm³
-											</p>
-										</div>
-										<div className="rounded-lg border border-border bg-muted/30 p-3">
-											<p className="text-xs text-muted-foreground">
-												WT / TC / ET
-											</p>
-											<p className="mt-0.5 text-sm font-semibold text-foreground">
-												{scan.results.wtVolume} / {scan.results.tcVolume} /{" "}
-												{scan.results.etVolume}
-											</p>
-										</div>
-									</div>
-								</div>
+											</span>
+										</Row>
+										<Row label="Confidence">
+											{formatPercent(scan.results.confidence)}
+										</Row>
+										<Row label="Total volume">
+											{scan.results.tumorVolume} cm³
+										</Row>
+										<Row label="WT / TC / ET">
+											{scan.results.wtVolume} / {scan.results.tcVolume} /{" "}
+											{scan.results.etVolume}
+										</Row>
+									</dl>
+								</Card>
 							)}
 						</div>
 					</div>
@@ -290,158 +281,118 @@ const ScanDetail = () => {
 
 				<TabsContent value="report">
 					{results ? (
-						<div className="max-w-2xl space-y-6 rounded-xl border border-border bg-card p-8">
-							<div className="border-b border-border pb-4">
-								<h2 className="text-lg font-bold text-foreground">
+						<Card className="max-w-3xl">
+							<div className="flex flex-col gap-1 border-b border-border px-8 py-6">
+								<p className={sectionLabel}>NeuroScan AI</p>
+								<h2 className="text-lg font-semibold tracking-[-0.01em] text-foreground">
 									{config.reportTitle}
 								</h2>
-								<p className="mt-1 text-xs text-muted-foreground">
+								<p className="font-mono text-xs text-muted-foreground">
 									Generated on {scan.scanDate}
 								</p>
 							</div>
 
-							<div className="grid grid-cols-2 gap-4 text-sm">
-								<div>
-									<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-										Patient
-									</p>
-									<p className="mt-1 font-medium text-foreground">
-										{scan.patientName}
-									</p>
-									<p className="text-xs text-muted-foreground">
-										{scan.patientId}
-									</p>
+							<div className="space-y-8 px-8 py-6">
+								<div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+									<div>
+										<p className={sectionLabel}>Patient</p>
+										<p className="mt-2 text-sm font-medium text-foreground">
+											{scan.patientName}
+										</p>
+										<p className="font-mono text-xs text-muted-foreground">
+											{scan.patientId}
+										</p>
+									</div>
+									<div>
+										<p className={sectionLabel}>Scan Date</p>
+										<p className="mt-2 font-mono text-sm font-medium text-foreground">
+											{scan.scanDate}
+										</p>
+										<p className="text-xs text-muted-foreground">
+											Modalities:{" "}
+											<span className="font-mono">
+												{scan.modalities.join(", ")}
+											</span>
+										</p>
+									</div>
 								</div>
-								<div>
-									<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-										Scan Date
-									</p>
-									<p className="mt-1 font-medium text-foreground">
-										{scan.scanDate}
-									</p>
-									<p className="text-xs text-muted-foreground">
-										Modalities: {scan.modalities.join(", ")}
-									</p>
-								</div>
-							</div>
 
-							<div className="space-y-3">
-								<h3 className="text-sm font-semibold text-foreground">
-									{config.findingsTitle}
-								</h3>
-								<div className="space-y-2 rounded-lg border border-border bg-muted/30 p-4">
-									<div className="flex items-center justify-between">
-										<span className="text-sm text-muted-foreground">
-											Tumour Detected
-										</span>
-										<span
-											className={cn(
-												"text-sm font-semibold",
-												results.detected ? "text-warning" : "text-success",
-											)}
-										>
-											{results.detected ? "Yes" : "No"}
-										</span>
-									</div>
-									<div className="flex items-center justify-between">
-										<span className="text-sm text-muted-foreground">
-											Classification
-										</span>
-										<span className="text-sm font-semibold text-foreground">
-											{results.classification}
-										</span>
-									</div>
-									<div className="flex items-center justify-between">
-										<span className="text-sm text-muted-foreground">
-											Confidence Score
-										</span>
-										<span className="text-sm font-semibold text-foreground">
-											{formatPercent(results.confidence)}
-										</span>
-									</div>
-								</div>
-							</div>
-
-							{results.detected && (
-								<div className="space-y-3">
-									<h3 className="text-sm font-semibold text-foreground">
-										{config.volumetricTitle}
+								<section>
+									<h3 className={cn(sectionLabel, "mb-1")}>
+										{config.findingsTitle}
 									</h3>
-									<div className="space-y-2 rounded-lg border border-border bg-muted/30 p-4">
-										<div className="flex items-center justify-between">
-											<div className="flex items-center gap-2">
-												<div
-													className="h-2.5 w-2.5 rounded-sm"
-													style={{ background: overlayColors.wt }}
-												/>
-												<span className="text-sm text-muted-foreground">
-													Whole Tumour (WT)
-												</span>
-											</div>
-											<span className="text-sm font-semibold text-foreground">
-												{results.wtVolume} cm³
+									<dl className="divide-y divide-border border-y border-border">
+										<Row label="Tumour detected">
+											<span
+												className={cn(
+													"font-sans font-semibold",
+													results.detected ? "text-warning" : "text-success",
+												)}
+											>
+												{results.detected ? "Yes" : "No"}
 											</span>
-										</div>
-										<div className="flex items-center justify-between">
-											<div className="flex items-center gap-2">
-												<div
-													className="h-2.5 w-2.5 rounded-sm"
-													style={{ background: overlayColors.tc }}
-												/>
-												<span className="text-sm text-muted-foreground">
-													Tumour Core (TC)
-												</span>
-											</div>
-											<span className="text-sm font-semibold text-foreground">
-												{results.tcVolume} cm³
+										</Row>
+										<Row label="Classification">
+											<span className="font-sans">
+												{results.classification}
 											</span>
-										</div>
-										<div className="flex items-center justify-between">
-											<div className="flex items-center gap-2">
-												<div
-													className="h-2.5 w-2.5 rounded-sm"
-													style={{ background: overlayColors.et }}
-												/>
-												<span className="text-sm text-muted-foreground">
-													Enhancing Tumour (ET)
-												</span>
-											</div>
-											<span className="text-sm font-semibold text-foreground">
-												{results.etVolume} cm³
-											</span>
-										</div>
-									</div>
-								</div>
-							)}
+										</Row>
+										<Row label="Confidence score">
+											{formatPercent(results.confidence)}
+										</Row>
+									</dl>
+								</section>
 
-							<div className="flex gap-3 border-t border-border pt-4">
-								<Button
-									className="gap-2 bg-medical text-medical-foreground hover:bg-medical/90"
-									onClick={() => openPdf(scan.id)}
-								>
-									<FileText className="h-4 w-4" />
+								{results.detected && (
+									<section>
+										<h3 className={cn(sectionLabel, "mb-1")}>
+											{config.volumetricTitle}
+										</h3>
+										<dl className="divide-y divide-border border-y border-border">
+											<Row label="Whole Tumour (WT)" swatch={overlayColors.wt}>
+												{results.wtVolume} cm³
+											</Row>
+											<Row label="Tumour Core (TC)" swatch={overlayColors.tc}>
+												{results.tcVolume} cm³
+											</Row>
+											<Row
+												label="Enhancing Tumour (ET)"
+												swatch={overlayColors.et}
+											>
+												{results.etVolume} cm³
+											</Row>
+										</dl>
+									</section>
+								)}
+							</div>
+
+							<div className="flex flex-wrap gap-2 border-t border-border px-8 py-4">
+								<Button onClick={() => openPdf(scan.id)}>
+									<FileText />
 									{config.openPDF}
 								</Button>
 								<Button
 									variant="outline"
-									className="gap-2"
 									disabled={pending !== null}
 									onClick={() => downloadCsv(scan.id)}
 								>
 									{pending === "csv" ? (
-										<Loader2 className="h-4 w-4 animate-spin" />
+										<Loader2 className="animate-spin" />
 									) : (
-										<Download className="h-4 w-4" />
+										<Download />
 									)}
 									{pending === "csv" ? "Preparing..." : config.exportCSV}
 								</Button>
 							</div>
-						</div>
+						</Card>
 					) : (
-						<div className="py-16 text-center text-muted-foreground">
-							<FileText className="mx-auto mb-3 h-10 w-10 opacity-30" />
-							<p className="text-sm font-medium">{config.notAvailable}</p>
-							<p className="mt-1 text-xs">{config.processingRequired}</p>
+						<div className="rounded-lg border border-dashed border-border px-6 py-16 text-center">
+							<p className="text-sm font-medium text-foreground">
+								{config.notAvailable}
+							</p>
+							<p className="mt-1 text-[13px] text-muted-foreground">
+								{config.processingRequired}
+							</p>
 						</div>
 					)}
 				</TabsContent>

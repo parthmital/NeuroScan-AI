@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download, FileText, Loader2, Search } from "lucide-react";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ModalityBadges } from "@/components/scan/ModalityBadges";
+import { ResultStatus } from "@/components/scan/ResultStatus";
 import { useReportDownload } from "@/hooks/use-report-download";
 import { useScans } from "@/hooks/use-scans";
 import { APP_CONFIG } from "@/lib/config";
-import { matchesSearch, resultLabel } from "@/lib/scan-format";
-import { cn } from "@/lib/utils";
+import { matchesSearch } from "@/lib/scan-format";
 
 const config = APP_CONFIG.reports;
 
@@ -22,12 +24,8 @@ const Reports = () => {
 	if (isLoading || !scans) {
 		return (
 			<div className="animate-pulse space-y-6">
-				<div className="h-20 w-1/2 rounded-xl bg-muted" />
-				<div className="space-y-3">
-					{[1, 2, 3].map((i) => (
-						<div key={i} className="h-24 rounded-xl bg-muted" />
-					))}
-				</div>
+				<div className="h-14 w-1/3 rounded-lg bg-muted" />
+				<div className="h-96 rounded-lg bg-muted" />
 			</div>
 		);
 	}
@@ -37,120 +35,116 @@ const Reports = () => {
 
 	return (
 		<div className="space-y-6">
-			<div className="flex items-center justify-between gap-4">
-				<div>
-					<h1 className="text-2xl font-bold tracking-tight text-foreground">
-						{config.title}
-					</h1>
-					<p className="mt-1 text-sm text-muted-foreground">
-						{config.subtitle}
+			<PageHeader
+				title={config.title}
+				description={config.subtitle}
+				actions={
+					<Button
+						variant="outline"
+						size="sm"
+						disabled={completed.length === 0 || pending !== null}
+						onClick={exportAll}
+					>
+						{pending === "all" ? (
+							<Loader2 className="animate-spin" />
+						) : (
+							<Download />
+						)}
+						{pending === "all" ? "Exporting..." : config.exportAll}
+					</Button>
+				}
+			/>
+
+			<Card className="overflow-hidden">
+				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
+					<div className="relative w-full sm:w-72">
+						<Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+						<Input
+							type="search"
+							aria-label="Search reports"
+							placeholder={config.searchPlaceholder}
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
+							className="h-8 pl-8 text-[13px]"
+						/>
+					</div>
+					<p className="font-mono text-xs text-muted-foreground tabular-nums">
+						{filtered.length} of {completed.length} reports
 					</p>
 				</div>
-				<Button
-					variant="outline"
-					size="sm"
-					className="gap-1.5 text-xs"
-					disabled={completed.length === 0 || pending !== null}
-					onClick={exportAll}
-				>
-					{pending === "all" ? (
-						<Loader2 className="h-3.5 w-3.5 animate-spin" />
-					) : (
-						<Download className="h-3.5 w-3.5" />
-					)}
-					{pending === "all" ? "Exporting..." : config.exportAll}
-				</Button>
-			</div>
 
-			<div className="relative w-72">
-				<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-				<Input
-					aria-label="Search reports"
-					placeholder={config.searchPlaceholder}
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-					className="h-9 border-none bg-muted/50 pl-9 text-sm"
-				/>
-			</div>
-
-			<div className="space-y-3">
-				{filtered.map((scan) => (
-					<div
-						key={scan.id}
-						className="flex cursor-pointer items-center gap-4 rounded-xl border border-border bg-card p-5 transition-all hover:border-medical/30 hover:shadow-md"
-						onClick={() => navigate(`/scan/${scan.id}`)}
-					>
-						<div className="flex min-w-0 flex-1 items-center gap-3">
-							<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-medical/10">
-								<FileText className="h-5 w-5 text-medical" />
-							</div>
-							<div className="min-w-0">
-								<p className="truncate text-sm font-semibold text-foreground">
-									{scan.patientName} — AI Analysis Report
-								</p>
-								<div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
-									<span>{scan.patientId}</span>
-									<span>·</span>
-									<span>{scan.scanDate}</span>
-									<span>·</span>
-									<span
-										className={cn(
-											"font-medium",
-											scan.results?.detected ? "text-warning" : "text-success",
-										)}
-									>
-										{resultLabel(scan)}
+				<ul className="divide-y divide-border">
+					{filtered.map((scan) => (
+						<li
+							key={scan.id}
+							className="flex cursor-pointer flex-col gap-3 px-5 py-3.5 transition-colors hover:bg-muted/60 sm:flex-row sm:items-center sm:gap-6"
+							onClick={() => navigate(`/scan/${scan.id}`)}
+						>
+							<div className="min-w-0 flex-1">
+								<p className="truncate text-[13px] font-medium text-foreground">
+									{scan.patientName}
+									<span className="font-normal text-muted-foreground">
+										{" "}
+										· AI analysis report
 									</span>
-								</div>
+								</p>
+								<p className="mt-0.5 font-mono text-[11px] text-muted-foreground tabular-nums">
+									{scan.patientId} · {scan.scanDate}
+								</p>
 							</div>
-						</div>
 
-						<ModalityBadges modalities={scan.modalities} />
+							<ResultStatus scan={scan} className="sm:w-40" />
 
-						<div className="flex shrink-0 items-center gap-2">
-							<Button
-								variant="outline"
-								size="sm"
-								className="gap-1.5 text-xs"
-								aria-label={`Open PDF report for ${scan.patientName}`}
-								onClick={(e) => {
-									e.stopPropagation();
-									openPdf(scan.id);
-								}}
-							>
-								<FileText className="h-3.5 w-3.5" />
-								PDF
-							</Button>
-							<Button
-								variant="outline"
-								size="sm"
-								className="gap-1.5 text-xs"
-								disabled={pending !== null}
-								aria-label={`Download CSV report for ${scan.patientName}`}
-								onClick={(e) => {
-									e.stopPropagation();
-									downloadCsv(scan.id);
-								}}
-							>
-								{pending === "csv" && pendingId === scan.id ? (
-									<Loader2 className="h-3.5 w-3.5 animate-spin" />
-								) : (
-									<Download className="h-3.5 w-3.5" />
-								)}
-								CSV
-							</Button>
-						</div>
+							<div className="sm:w-44">
+								<ModalityBadges modalities={scan.modalities} />
+							</div>
+
+							<div className="flex shrink-0 items-center gap-1.5">
+								<Button
+									variant="outline"
+									size="sm"
+									aria-label={`Open PDF report for ${scan.patientName}`}
+									onClick={(e) => {
+										e.stopPropagation();
+										openPdf(scan.id);
+									}}
+								>
+									<FileText />
+									PDF
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									disabled={pending !== null}
+									aria-label={`Download CSV report for ${scan.patientName}`}
+									onClick={(e) => {
+										e.stopPropagation();
+										downloadCsv(scan.id);
+									}}
+								>
+									{pending === "csv" && pendingId === scan.id ? (
+										<Loader2 className="animate-spin" />
+									) : (
+										<Download />
+									)}
+									CSV
+								</Button>
+							</div>
+						</li>
+					))}
+				</ul>
+
+				{filtered.length === 0 && (
+					<div className="px-6 py-16 text-center">
+						<p className="text-sm font-medium text-foreground">
+							{config.noReportsFound}
+						</p>
+						<p className="mt-1 text-[13px] text-muted-foreground">
+							{config.autoGenerated}
+						</p>
 					</div>
-				))}
-			</div>
-
-			{filtered.length === 0 && (
-				<div className="py-16 text-center text-muted-foreground">
-					<FileText className="mx-auto mb-3 h-10 w-10 opacity-30" />
-					<p className="text-sm font-medium">{config.noReportsFound}</p>
-					<p className="mt-1 text-xs">{config.autoGenerated}</p>
-				</div>
-			)}
+				)}
+			</Card>
 		</div>
 	);
 };

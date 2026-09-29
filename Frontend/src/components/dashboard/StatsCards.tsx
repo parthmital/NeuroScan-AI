@@ -1,10 +1,3 @@
-import {
-	AlertTriangle,
-	Brain,
-	CheckCircle2,
-	Loader2,
-	type LucideIcon,
-} from "lucide-react";
 import { useScans } from "@/hooks/use-scans";
 import { isInProgress } from "@/lib/scan-format";
 import { cn } from "@/lib/utils";
@@ -12,78 +5,60 @@ import { cn } from "@/lib/utils";
 interface Stat {
 	label: string;
 	value: number;
-	icon: LucideIcon;
-	colour: string;
+	/** Status dot matching the result colours used in scan tables. */
+	dot?: string;
 }
+
+const cellClass = "bg-card px-5 py-4";
 
 export const StatsCards = () => {
 	const { data: scans, isLoading } = useScans();
 
 	if (isLoading || !scans) {
 		return (
-			<div className="grid grid-cols-4 gap-5">
+			<div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-4">
 				{[1, 2, 3, 4].map((i) => (
-					<div
-						key={i}
-						className="h-32 animate-pulse rounded-xl border border-border bg-card p-5"
-					/>
+					<div key={i} className={cn(cellClass, "h-[92px]")}>
+						<div className="h-3 w-20 animate-pulse rounded bg-muted" />
+						<div className="mt-4 h-7 w-12 animate-pulse rounded bg-muted" />
+					</div>
 				))}
 			</div>
 		);
 	}
 
 	const stats: Stat[] = [
-		{
-			label: "Total Scans",
-			value: scans.length,
-			icon: Brain,
-			colour: "text-medical bg-medical-light",
-		},
+		{ label: "Total scans", value: scans.length },
 		{
 			label: "Processing",
 			value: scans.filter(isInProgress).length,
-			icon: Loader2,
-			colour: "text-info bg-info/10",
+			dot: "bg-medical",
 		},
 		{
 			label: "Completed",
 			value: scans.filter((s) => s.status === "completed").length,
-			icon: CheckCircle2,
-			colour: "text-success bg-success/10",
+			dot: "bg-success",
 		},
 		{
 			label: "Flagged",
 			value: scans.filter((s) => s.results?.detected).length,
-			icon: AlertTriangle,
-			colour: "text-warning bg-warning/10",
+			dot: "bg-warning",
 		},
 	];
 
 	return (
-		<div className="grid grid-cols-4 gap-5">
-			{stats.map(({ label, value, icon: Icon, colour }) => (
-				<div
-					key={label}
-					className="rounded-xl border border-border bg-card p-5"
-				>
-					<div className="mb-3 flex items-center justify-between">
-						<span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-							{label}
-						</span>
-						<div
-							className={cn(
-								"flex h-9 w-9 items-center justify-center rounded-lg",
-								colour,
-							)}
-						>
-							<Icon className="h-4 w-4" />
-						</div>
-					</div>
-					<p className="text-3xl font-bold tracking-tight text-foreground">
+		<dl className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-4">
+			{stats.map(({ label, value, dot }) => (
+				<div key={label} className={cellClass}>
+					<dt className="flex items-center gap-2 text-[13px] text-muted-foreground">
+						{dot && <span className={cn("h-1.5 w-1.5 rounded-full", dot)} />}
+						{label}
+					</dt>
+					<dd className="mt-2 font-mono text-[28px] font-medium leading-9 tracking-[-0.02em] text-foreground tabular-nums">
 						{value}
-					</p>
+					</dd>
 				</div>
 			))}
-		</div>
+		</dl>
 	);
 };

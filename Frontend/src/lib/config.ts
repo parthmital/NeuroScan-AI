@@ -2,13 +2,13 @@ import { AppConfig } from "./types";
 
 export const APP_CONFIG: AppConfig = {
 	appName: "NeuroScan AI",
-	appSubtitle: "Medical Imaging",
+	appSubtitle: "Neuroradiology",
 	navItems: [
-		{ to: "/", icon: "LayoutDashboard", label: "Dashboard" },
-		{ to: "/upload", icon: "Upload", label: "Upload Scan" },
-		{ to: "/scans", icon: "Images", label: "Scan Library" },
+		{ to: "/", icon: "LayoutGrid", label: "Dashboard" },
+		{ to: "/upload", icon: "ArrowUpFromLine", label: "Upload Scan" },
+		{ to: "/scans", icon: "Layers", label: "Scan Library" },
 		{ to: "/reports", icon: "FileText", label: "Reports" },
-		{ to: "/settings", icon: "Settings", label: "Settings" },
+		{ to: "/settings", icon: "Settings2", label: "Settings" },
 	],
 	dashboard: {
 		welcomeMessage: "Welcome back, {userName}. Here's your imaging overview.",

@@ -42,13 +42,8 @@ export const PasswordForm = () => {
 		label: string,
 		autoComplete: string,
 	) => (
-		<div className="space-y-2">
-			<Label
-				htmlFor={`password-${key}`}
-				className="text-xs leading-6 font-medium text-muted-foreground"
-			>
-				{label}
-			</Label>
+		<div className="space-y-1.5">
+			<Label htmlFor={`password-${key}`}>{label}</Label>
 			<Input
 				id={`password-${key}`}
 				type="password"
@@ -56,7 +51,6 @@ export const PasswordForm = () => {
 				maxLength={key === "current" ? 256 : 72}
 				value={form[key]}
 				onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-				className="h-9 text-sm"
 			/>
 		</div>
 	);
@@ -82,11 +76,7 @@ export const PasswordForm = () => {
 				</p>
 			)}
 			<div className="flex justify-end">
-				<Button
-					type="submit"
-					disabled={saving}
-					className="bg-medical text-xs text-medical-foreground hover:bg-medical/90"
-				>
+				<Button type="submit" disabled={saving}>
 					{saving ? "Updating..." : "Update Password"}
 				</Button>
 			</div>

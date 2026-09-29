@@ -1,4 +1,4 @@
-import { Check, Loader2, AlertCircle, Clock } from "lucide-react";
+import { Check, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PipelineStep, MRIScan } from "@/lib/types";
 
@@ -36,30 +36,30 @@ const getStepStatus = (
 	return "pending";
 };
 
-const statusIcon = (status: StepStatus) => {
+const statusIcon = (status: StepStatus, step: number) => {
 	switch (status) {
 		case "complete":
-			return <Check className="h-4 w-4" />;
+			return <Check className="h-3.5 w-3.5" strokeWidth={2.25} />;
 		case "processing":
-			return <Loader2 className="h-4 w-4 animate-spin" />;
+			return <Loader2 className="h-3.5 w-3.5 animate-spin" />;
 		case "failed":
-			return <AlertCircle className="h-4 w-4" />;
+			return <X className="h-3.5 w-3.5" strokeWidth={2.25} />;
 		default:
-			return <Clock className="h-4 w-4" />;
+			return <span className="font-mono text-[11px]">{step}</span>;
 	}
 };
 
 const statusColors: Record<StepStatus, string> = {
-	complete: "bg-success text-success-foreground",
-	processing: "bg-medical text-medical-foreground",
+	complete: "bg-foreground text-background",
+	processing: "border border-medical bg-medical-light text-medical",
 	failed: "bg-destructive text-destructive-foreground",
-	pending: "bg-muted text-muted-foreground",
+	pending: "border border-input bg-card text-muted-foreground",
 };
 
 const lineColors: Record<StepStatus, string> = {
-	complete: "bg-success",
-	processing: "bg-medical animate-pulse-medical",
-	failed: "bg-destructive",
+	complete: "bg-foreground/70",
+	processing: "bg-border",
+	failed: "bg-border",
 	pending: "bg-border",
 };
 
@@ -93,11 +93,11 @@ export const ProcessingPipeline = ({ scan }: ProcessingPipelineProps) => {
 	];
 
 	return (
-		<div className="space-y-1">
-			<h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+		<div>
+			<h3 className="mb-5 text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
 				Processing Pipeline
 			</h3>
-			<div className="space-y-0">
+			<ol>
 				{steps.map((step, idx) => {
 					const status = getStepStatus(
 						step.key,
@@ -105,21 +105,21 @@ export const ProcessingPipeline = ({ scan }: ProcessingPipelineProps) => {
 						scan.status,
 					);
 					return (
-						<div key={step.key} className="flex gap-4">
+						<li key={step.key} className="flex gap-4">
 							{/* Timeline */}
 							<div className="flex flex-col items-center">
 								<div
 									className={cn(
-										"flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors",
+										"flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-colors",
 										statusColors[status],
 									)}
 								>
-									{statusIcon(status)}
+									{statusIcon(status, idx + 1)}
 								</div>
 								{idx < steps.length - 1 && (
 									<div
 										className={cn(
-											"min-h-[40px] w-0.5 flex-1 transition-colors",
+											"my-1 min-h-[36px] w-px flex-1 transition-colors",
 											lineColors[status],
 										)}
 									/>
@@ -127,10 +127,10 @@ export const ProcessingPipeline = ({ scan }: ProcessingPipelineProps) => {
 							</div>
 
 							{/* Content */}
-							<div className="pb-6 pt-1">
+							<div className="min-w-0 pb-7">
 								<p
 									className={cn(
-										"text-sm font-semibold",
+										"text-sm font-medium leading-6",
 										status === "pending"
 											? "text-muted-foreground"
 											: "text-foreground",
@@ -142,24 +142,24 @@ export const ProcessingPipeline = ({ scan }: ProcessingPipelineProps) => {
 									{step.description}
 								</p>
 								{step.result && status === "complete" && (
-									<div className="mt-2 rounded-lg border border-border bg-muted/50 px-3 py-2">
-										<p className="text-xs font-medium text-foreground">
+									<div className="mt-2.5 rounded-md border border-border bg-card px-3 py-2">
+										<p className="font-mono text-xs text-foreground">
 											{step.result}
 										</p>
 									</div>
 								)}
 								{status === "failed" && (
-									<div className="mt-2 rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2">
+									<div className="mt-2.5 rounded-md border border-destructive/30 bg-destructive/[0.06] px-3 py-2">
 										<p className="text-xs font-medium text-destructive">
 											Processing failed. Check input data and retry.
 										</p>
 									</div>
 								)}
 							</div>
-						</div>
+						</li>
 					);
 				})}
-			</div>
+			</ol>
 		</div>
 	);
 };

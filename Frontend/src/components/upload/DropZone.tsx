@@ -1,17 +1,20 @@
 import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-	AlertCircle,
+	AlertTriangle,
+	ArrowUpFromLine,
+	Check,
 	CheckCircle2,
-	FileImage,
+	CircleAlert,
+	FileBox,
 	Loader2,
-	Upload,
 	X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useUploadScan } from "@/hooks/use-scans";
 import type { Modality } from "@/lib/types";
 
@@ -25,6 +28,8 @@ interface UploadedFile {
 }
 
 const MODALITIES: Modality[] = ["FLAIR", "T1", "T1CE", "T2"];
+const sectionLabel =
+	"text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground";
 const ACCEPTED = /\.nii(\.gz)?$/i;
 
 /** Same file-name rules the server uses to assign modalities. */
@@ -144,17 +149,17 @@ export const DropZone = () => {
 	);
 
 	return (
-		<div className="space-y-6">
+		<div className="space-y-8">
 			{/* Drop area */}
 			<div
 				onDragOver={handleDragOver}
 				onDragLeave={handleDragLeave}
 				onDrop={handleDrop}
 				className={cn(
-					"group relative cursor-pointer rounded-2xl border-2 border-dashed p-12 text-center transition-all duration-200",
+					"group relative cursor-pointer rounded-lg border border-dashed px-8 py-12 text-center transition-colors duration-150 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
 					isDragging
-						? "scale-[1.01] border-medical bg-medical-light/50"
-						: "border-border hover:border-medical/40 hover:bg-muted/30",
+						? "border-medical bg-medical-light"
+						: "border-input bg-card hover:border-foreground/30",
 				)}
 				onClick={() => fileInputRef.current?.click()}
 				onKeyDown={(e) => {
@@ -177,99 +182,108 @@ export const DropZone = () => {
 				/>
 				<div
 					className={cn(
-						"mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl transition-colors",
+						"mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-md border transition-colors",
 						isDragging
-							? "bg-medical text-medical-foreground"
-							: "bg-muted text-muted-foreground group-hover:bg-medical/10 group-hover:text-medical",
+							? "border-medical/40 text-medical"
+							: "border-border bg-muted/60 text-muted-foreground group-hover:text-foreground",
 					)}
 				>
-					<Upload className="h-7 w-7" />
+					<ArrowUpFromLine className="h-5 w-5" />
 				</div>
-				<h3 className="mb-1 text-lg font-semibold text-foreground">
-					Drop your MRI files here
+				<h3 className="text-[15px] font-semibold text-foreground">
+					Drop MRI volumes here, or{" "}
+					<span className="text-medical underline-offset-4 group-hover:underline">
+						browse files
+					</span>
 				</h3>
-				<p className="mb-3 text-sm text-muted-foreground">
-					or click to browse. Supports NIfTI volumes (.nii, .nii.gz).
-				</p>
-				<p className="text-xs text-muted-foreground/70">
-					Batch upload supported · Multi-modal MRI (FLAIR, T1, T1CE, T2)
+				<p className="mt-1.5 text-[13px] text-muted-foreground">
+					NIfTI volumes (<span className="font-mono">.nii</span>,{" "}
+					<span className="font-mono">.nii.gz</span>). Batch upload of FLAIR,
+					T1, T1CE, and T2 is supported.
 				</p>
 			</div>
 
 			{/* Patient Details */}
 			{files.length > 0 && (
-				<div className="grid animate-fade-in grid-cols-1 gap-4 rounded-2xl border border-border bg-muted/30 p-5 sm:grid-cols-2">
-					<div className="space-y-2">
-						<label
-							htmlFor="patient-name"
-							className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
-						>
-							Patient Name
-						</label>
-						<Input
-							id="patient-name"
-							maxLength={120}
-							placeholder="e.g. John Doe"
-							value={patientName}
-							onChange={(e) => setPatientName(e.target.value)}
-							className="border-border/50 bg-background"
-						/>
-					</div>
-					<div className="space-y-2">
-						<label
-							htmlFor="patient-id"
-							className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
-						>
-							Patient ID (Optional)
-						</label>
-						<Input
-							id="patient-id"
-							maxLength={64}
-							placeholder="e.g. PT-10492"
-							value={patientId}
-							onChange={(e) => setPatientId(e.target.value)}
-							className="border-border/50 bg-background"
-						/>
+				<div className="animate-fade-in">
+					<p className={cn(sectionLabel, "mb-3")}>Patient</p>
+					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+						<div className="space-y-1.5">
+							<Label htmlFor="patient-name">Patient name</Label>
+							<Input
+								id="patient-name"
+								maxLength={120}
+								placeholder="e.g. John Doe"
+								value={patientName}
+								onChange={(e) => setPatientName(e.target.value)}
+							/>
+						</div>
+						<div className="space-y-1.5">
+							<Label htmlFor="patient-id">
+								Patient ID
+								<span className="ml-1.5 font-normal text-muted-foreground">
+									Optional
+								</span>
+							</Label>
+							<Input
+								id="patient-id"
+								maxLength={64}
+								placeholder="e.g. PT-10492"
+								value={patientId}
+								onChange={(e) => setPatientId(e.target.value)}
+								className="font-mono"
+							/>
+						</div>
 					</div>
 				</div>
 			)}
 
 			{/* Modality selector */}
 			<div>
-				<p className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-					Expected Modalities
-				</p>
-				<div className="flex gap-2">
-					{MODALITIES.map((mod) => (
-						<button
-							key={mod}
-							onClick={() => toggleModality(mod)}
-							aria-pressed={selectedModalities.has(mod)}
-							className={cn(
-								"rounded-lg px-4 py-2 text-sm font-medium transition-all",
-								selectedModalities.has(mod)
-									? "bg-medical text-medical-foreground shadow-xs"
-									: "bg-muted text-muted-foreground hover:bg-muted/80",
-							)}
-						>
-							{mod}
-						</button>
-					))}
+				<p className={cn(sectionLabel, "mb-3")}>Expected modalities</p>
+				<div className="flex flex-wrap gap-2">
+					{MODALITIES.map((mod) => {
+						const selected = selectedModalities.has(mod);
+						return (
+							<button
+								key={mod}
+								type="button"
+								onClick={() => toggleModality(mod)}
+								aria-pressed={selected}
+								className={cn(
+									"inline-flex h-8 items-center gap-1.5 rounded-md border px-3 font-mono text-xs font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring",
+									selected
+										? "border-medical/40 bg-medical-light text-medical"
+										: "border-input bg-card text-muted-foreground hover:border-foreground/25 hover:text-foreground",
+								)}
+							>
+								<Check
+									className={cn(
+										"h-3.5 w-3.5 transition-opacity",
+										selected ? "opacity-100" : "opacity-0",
+									)}
+								/>
+								{mod}
+							</button>
+						);
+					})}
 				</div>
 			</div>
 
 			{/* Missing modality warning */}
 			{files.length > 0 && missingModalities.length > 0 && (
-				<div className="flex animate-fade-in items-start gap-3 rounded-xl border border-warning/20 bg-warning/10 p-4">
-					<AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+				<div className="flex animate-fade-in items-start gap-3 rounded-md border border-warning/30 bg-warning/[0.06] px-4 py-3">
+					<AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
 					<div>
-						<p className="text-sm font-medium text-foreground">
-							Missing modalities detected
+						<p className="text-[13px] font-medium text-foreground">
+							Missing modalities
 						</p>
-						<p className="mt-0.5 text-xs text-muted-foreground">
+						<p className="mt-0.5 text-[13px] text-muted-foreground">
 							The following expected modalities have not been uploaded:{" "}
-							<strong>{missingModalities.join(", ")}</strong>. This may affect
-							processing accuracy.
+							<strong className="font-mono font-medium text-foreground">
+								{missingModalities.join(", ")}
+							</strong>
+							. This may affect processing accuracy.
 						</p>
 					</div>
 				</div>
@@ -277,45 +291,48 @@ export const DropZone = () => {
 
 			{/* File list */}
 			{files.length > 0 && (
-				<div className="space-y-2">
-					<div className="flex items-center justify-between">
-						<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-							Uploaded Files ({files.length})
+				<div>
+					<div className="mb-2 flex items-center justify-between">
+						<p className={sectionLabel}>
+							Files{" "}
+							<span className="font-mono tabular-nums">({files.length})</span>
 						</p>
 						<Button
 							variant="ghost"
 							size="sm"
-							className="text-xs text-muted-foreground"
+							className="-mr-2.5"
 							onClick={() => setFiles([])}
 						>
-							Clear All
+							Clear all
 						</Button>
 					</div>
-					<div className="space-y-1.5">
+					<ul className="divide-y divide-border overflow-hidden rounded-lg border border-border bg-card">
 						{files.map((file) => (
-							<div
+							<li
 								key={file.id}
-								className="group flex animate-fade-in items-center gap-3 rounded-lg border border-border bg-muted/30 p-3"
+								className="flex animate-fade-in items-center gap-3 px-4 py-2.5"
 							>
-								<FileImage className="h-4 w-4 shrink-0 text-medical" />
-								<div className="min-w-0 flex-1">
-									<p className="truncate text-sm font-medium text-foreground">
-										{file.name}
-									</p>
-									<p className="text-xs text-muted-foreground">
-										{formatSize(file.size)}
-										{file.modality && (
-											<span className="ml-2 rounded bg-medical/10 px-1.5 py-0.5 text-[10px] font-semibold text-medical">
-												{file.modality}
-											</span>
-										)}
-									</p>
-								</div>
+								<FileBox className="h-4 w-4 shrink-0 text-muted-foreground" />
+								<p className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-foreground">
+									{file.name}
+								</p>
+								{file.modality ? (
+									<span className="rounded-[4px] border border-medical/30 bg-medical-light px-1.5 py-px font-mono text-[10.5px] font-medium text-medical">
+										{file.modality}
+									</span>
+								) : (
+									<span className="font-mono text-[10.5px] text-muted-foreground">
+										Unassigned
+									</span>
+								)}
+								<span className="hidden w-16 shrink-0 text-right font-mono text-[11px] text-muted-foreground tabular-nums sm:inline">
+									{formatSize(file.size)}
+								</span>
 								{file.status === "done" && (
 									<CheckCircle2 className="h-4 w-4 text-success" />
 								)}
 								{file.status === "error" && (
-									<AlertCircle
+									<CircleAlert
 										className="h-4 w-4 text-destructive"
 										aria-label="Upload failed"
 									/>
@@ -323,28 +340,28 @@ export const DropZone = () => {
 								<button
 									onClick={() => removeFile(file.id)}
 									aria-label={`Remove ${file.name}`}
-									className="rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:text-foreground focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100"
+									className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
 								>
 									<X className="h-3.5 w-3.5" />
 								</button>
-							</div>
+							</li>
 						))}
-					</div>
+					</ul>
 				</div>
 			)}
 
 			{/* Action */}
 			{files.length > 0 && (
-				<div className="flex animate-fade-in justify-end">
+				<div className="flex animate-fade-in justify-end border-t border-border pt-6">
 					<Button
+						size="lg"
 						onClick={handleStartProcessing}
 						disabled={files.some((f) => f.status === "processing")}
-						className="gap-2 bg-medical px-8 text-medical-foreground hover:bg-medical/90"
 					>
 						{files.some((f) => f.status === "processing") ? (
-							<Loader2 className="h-4 w-4 animate-spin" />
+							<Loader2 className="animate-spin" />
 						) : (
-							<Upload className="h-4 w-4" />
+							<ArrowUpFromLine />
 						)}
 						{files.some((f) => f.status === "processing")
 							? "Processing..."

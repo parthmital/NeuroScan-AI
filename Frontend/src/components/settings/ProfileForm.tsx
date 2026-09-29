@@ -3,6 +3,13 @@ import { Save } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authApi } from "@/lib/api";
@@ -90,54 +97,51 @@ export const ProfileForm = ({ user }: { user: User }) => {
 	};
 
 	return (
-		<form
-			onSubmit={save}
-			noValidate
-			className="space-y-6 rounded-xl border border-border bg-card p-6"
-		>
-			<h2 className="text-sm font-semibold text-foreground">
-				Profile Information
-			</h2>
-			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-				{FIELDS.map((field) => (
-					<div
-						key={field.id}
-						className={field.wide ? "space-y-2 sm:col-span-2" : "space-y-2"}
-					>
-						<Label
-							htmlFor={`profile-${field.id}`}
-							className="text-xs leading-6 font-medium text-muted-foreground"
-						>
-							{field.label}
-						</Label>
-						<Input
-							id={`profile-${field.id}`}
-							type={field.id === "email" ? "email" : "text"}
-							value={form[field.id]}
-							maxLength={120}
-							autoComplete={field.autoComplete}
-							placeholder={field.placeholder}
-							onChange={(e) => setForm({ ...form, [field.id]: e.target.value })}
-							className="h-9 text-sm"
-						/>
+		<Card>
+			<form onSubmit={save} noValidate>
+				<CardHeader>
+					<CardTitle>Profile Information</CardTitle>
+				</CardHeader>
+				<CardContent className="space-y-4">
+					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+						{FIELDS.map((field) => (
+							<div
+								key={field.id}
+								className={
+									field.wide ? "space-y-1.5 sm:col-span-2" : "space-y-1.5"
+								}
+							>
+								<Label htmlFor={`profile-${field.id}`}>{field.label}</Label>
+								<Input
+									id={`profile-${field.id}`}
+									type={field.id === "email" ? "email" : "text"}
+									value={form[field.id]}
+									maxLength={120}
+									autoComplete={field.autoComplete}
+									placeholder={field.placeholder}
+									onChange={(e) =>
+										setForm({ ...form, [field.id]: e.target.value })
+									}
+								/>
+							</div>
+						))}
 					</div>
-				))}
-			</div>
-			{error && (
-				<p role="alert" className="animate-fade-in text-xs text-destructive">
-					{error}
-				</p>
-			)}
-			<div className="flex justify-end border-t border-border pt-4">
-				<Button
-					type="submit"
-					disabled={saving}
-					className="gap-1.5 bg-medical text-xs text-medical-foreground hover:bg-medical/90"
-				>
-					<Save className="h-3.5 w-3.5" />
-					{saving ? "Saving..." : "Save Changes"}
-				</Button>
-			</div>
-		</form>
+					{error && (
+						<p
+							role="alert"
+							className="animate-fade-in text-[13px] text-destructive"
+						>
+							{error}
+						</p>
+					)}
+				</CardContent>
+				<CardFooter className="justify-end">
+					<Button type="submit" size="sm" disabled={saving}>
+						<Save />
+						{saving ? "Saving..." : "Save Changes"}
+					</Button>
+				</CardFooter>
+			</form>
+		</Card>
 	);
 };

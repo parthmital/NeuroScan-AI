@@ -30,7 +30,7 @@ const CodeInput = ({
 		placeholder="123456"
 		value={value}
 		onChange={(e) => onChange(e.target.value.replace(/\D/g, ""))}
-		className="h-9 w-40 text-sm tracking-widest"
+		className="w-40 font-mono tracking-[0.3em]"
 	/>
 );
 
@@ -112,13 +112,13 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 				</p>
 			</div>
 
-			<div className="flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-3">
+			<div className="flex items-center gap-3 rounded-md border border-border px-4 py-3">
 				{user.totpEnabled ? (
-					<ShieldCheck className="h-5 w-5 shrink-0 text-success" />
+					<ShieldCheck className="h-4 w-4 shrink-0 text-success" />
 				) : (
-					<Shield className="h-5 w-5 shrink-0 text-muted-foreground" />
+					<Shield className="h-4 w-4 shrink-0 text-muted-foreground" />
 				)}
-				<p className="flex-1 text-sm font-medium text-foreground">
+				<p className="flex-1 text-[13px] font-medium text-foreground">
 					{user.totpEnabled ? "On" : "Off"}
 				</p>
 				{step === "idle" && (
@@ -126,7 +126,6 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 						type="button"
 						variant="outline"
 						size="sm"
-						className="text-xs"
 						onClick={() =>
 							setStep(user.totpEnabled ? "disable" : "confirm-password")
 						}
@@ -143,10 +142,7 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 					className="animate-fade-in space-y-3"
 				>
 					<div className="space-y-2">
-						<Label
-							htmlFor="twofa-password"
-							className="text-xs leading-6 text-muted-foreground"
-						>
+						<Label htmlFor="twofa-password">
 							Confirm your password to continue
 						</Label>
 						<Input
@@ -155,26 +151,14 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 							autoComplete="current-password"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
-							className="h-9 text-sm"
 						/>
 					</div>
 					{errorLine}
 					<div className="flex gap-2">
-						<Button
-							type="submit"
-							size="sm"
-							disabled={busy}
-							className="bg-medical text-xs text-medical-foreground"
-						>
+						<Button type="submit" size="sm" disabled={busy}>
 							Continue
 						</Button>
-						<Button
-							type="button"
-							size="sm"
-							variant="ghost"
-							className="text-xs"
-							onClick={reset}
-						>
+						<Button type="button" size="sm" variant="ghost" onClick={reset}>
 							Cancel
 						</Button>
 					</div>
@@ -191,44 +175,28 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 						<img
 							src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(setup.qrSvg)}`}
 							alt="QR code for your authenticator app"
-							className="h-40 w-40 rounded-lg bg-white p-2"
+							className="h-40 w-40 rounded-md border border-border bg-white p-2"
 						/>
 						<div className="min-w-0 space-y-2 text-xs text-muted-foreground">
 							<p>
 								Scan the QR code with an authenticator app, or enter this key
 								manually:
 							</p>
-							<code className="block break-all rounded bg-muted px-2 py-1 font-mono text-sm text-foreground">
+							<code className="block break-all rounded-md border border-border bg-muted/60 px-2.5 py-1.5 font-mono text-[13px] text-foreground">
 								{setup.secret}
 							</code>
 						</div>
 					</div>
 					<div className="space-y-2">
-						<Label
-							htmlFor="twofa-enable-code"
-							className="text-xs leading-6 text-muted-foreground"
-						>
-							Code from the app
-						</Label>
+						<Label htmlFor="twofa-enable-code">Code from the app</Label>
 						<CodeInput id="twofa-enable-code" value={code} onChange={setCode} />
 					</div>
 					{errorLine}
 					<div className="flex gap-2">
-						<Button
-							type="submit"
-							size="sm"
-							disabled={busy}
-							className="bg-medical text-xs text-medical-foreground"
-						>
+						<Button type="submit" size="sm" disabled={busy}>
 							Turn on
 						</Button>
-						<Button
-							type="button"
-							size="sm"
-							variant="ghost"
-							className="text-xs"
-							onClick={reset}
-						>
+						<Button type="button" size="sm" variant="ghost" onClick={reset}>
 							Cancel
 						</Button>
 					</div>
@@ -243,28 +211,17 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 				>
 					<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 						<div className="space-y-2">
-							<Label
-								htmlFor="twofa-disable-password"
-								className="text-xs leading-6 text-muted-foreground"
-							>
-								Password
-							</Label>
+							<Label htmlFor="twofa-disable-password">Password</Label>
 							<Input
 								id="twofa-disable-password"
 								type="password"
 								autoComplete="current-password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
-								className="h-9 text-sm"
 							/>
 						</div>
 						<div className="space-y-2">
-							<Label
-								htmlFor="twofa-disable-code"
-								className="text-xs leading-6 text-muted-foreground"
-							>
-								Code from the app
-							</Label>
+							<Label htmlFor="twofa-disable-code">Code from the app</Label>
 							<CodeInput
 								id="twofa-disable-code"
 								value={code}
@@ -279,17 +236,10 @@ export const TwoFactorSettings = ({ user }: { user: User }) => {
 							size="sm"
 							variant="destructive"
 							disabled={busy}
-							className="text-xs"
 						>
 							Turn off
 						</Button>
-						<Button
-							type="button"
-							size="sm"
-							variant="ghost"
-							className="text-xs"
-							onClick={reset}
-						>
+						<Button type="button" size="sm" variant="ghost" onClick={reset}>
 							Cancel
 						</Button>
 					</div>

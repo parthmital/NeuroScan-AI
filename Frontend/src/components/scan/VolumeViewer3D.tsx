@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import { cn } from "@/lib/utils";
 import { RotateCcw, Sun, Contrast } from "lucide-react";
+import { Segmented } from "@/components/ui/segmented";
 import { Slider } from "@/components/ui/slider";
 import {
 	Tooltip,
@@ -446,14 +446,14 @@ export const VolumeViewer3D = ({
 			{/* Canvas container — same aspect-square + border style as SliceViewer */}
 			<div
 				ref={containerRef}
-				className="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-border bg-[#0d0d0d]"
+				className="relative flex aspect-square items-center justify-center overflow-hidden rounded-lg border border-border bg-[#0a0a0a]"
 			>
 				{/* Loading overlay */}
 				{isLoading && (
 					<div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-xs">
 						<div className="flex flex-col items-center gap-2">
-							<div className="h-8 w-8 animate-spin rounded-full border-2 border-medical border-t-transparent" />
-							<p className="font-mono text-[10px] uppercase tracking-widest text-medical">
+							<div className="h-6 w-6 animate-spin rounded-full border-2 border-white/60 border-t-transparent" />
+							<p className="font-mono text-[10px] uppercase tracking-[0.12em] text-white/60">
 								Loading 3D Volume
 							</p>
 						</div>
@@ -463,32 +463,26 @@ export const VolumeViewer3D = ({
 				{/* Error overlay */}
 				{error && !isLoading && (
 					<div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-black/80 px-6 text-center">
-						<p className="font-mono text-xs text-destructive">
+						<p className="font-mono text-xs text-red-400">
 							Failed to load 3D volume
 						</p>
-						<p className="font-mono text-[10px] text-muted-foreground">
-							{error}
-						</p>
+						<p className="font-mono text-[10px] text-white/50">{error}</p>
 					</div>
 				)}
 
 				{/* HUD overlay — only when loaded */}
 				{!isLoading && !error && (
 					<>
-						<div className="pointer-events-none absolute left-4 top-4 z-10">
-							<p className="font-mono text-[10px] text-medical/80">
-								3D Volume Render
-							</p>
-							<p className="font-mono text-[10px] text-medical/80">
-								Modality: {selectedModality}
-							</p>
+						<div className="pointer-events-none absolute left-3 top-3 z-10 space-y-0.5 font-mono text-[10.5px] leading-4 text-white/60">
+							<p>3D Volume Render</p>
+							<p>Modality: {selectedModality}</p>
 						</div>
 
 						{/* Orientation hints */}
-						<span className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 font-mono text-[13px] text-medical/50">
+						<span className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 font-mono text-xs text-white/45">
 							S
 						</span>
-						<span className="pointer-events-none absolute bottom-3 left-1/2 z-10 -translate-x-1/2 font-mono text-[13px] text-medical/50">
+						<span className="pointer-events-none absolute bottom-3 left-1/2 z-10 -translate-x-1/2 font-mono text-xs text-white/45">
 							I
 						</span>
 
@@ -498,7 +492,7 @@ export const VolumeViewer3D = ({
 								<button
 									onClick={resetCamera}
 									aria-label="Reset camera"
-									className="absolute bottom-4 right-4 z-10 flex items-center gap-1 rounded-md border border-border bg-card/80 px-2 py-1 text-[10px] font-medium text-muted-foreground backdrop-blur-xs transition-colors hover:border-medical/50 hover:text-medical focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+									className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 rounded-md border border-white/15 bg-black/50 px-2 py-1 font-mono text-[10.5px] text-white/70 backdrop-blur-xs transition-colors hover:border-white/30 hover:text-white focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
 								>
 									<RotateCcw className="h-3 w-3" />
 									Reset
@@ -513,26 +507,15 @@ export const VolumeViewer3D = ({
 			{/* Modality and Contrast Controls */}
 			<div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
 				{modalities && modalities.length > 0 && (
-					<div className="flex gap-2">
-						{modalities.map((m) => (
-							<button
-								key={m}
-								onClick={() => setSelectedModality(m)}
-								aria-pressed={selectedModality === m}
-								className={cn(
-									"rounded-md border px-3 py-1.5 text-xs font-semibold transition-all",
-									selectedModality === m
-										? "border-medical bg-medical text-medical-foreground shadow-xs"
-										: "border-border bg-card text-muted-foreground hover:border-medical/50 hover:bg-muted/50",
-								)}
-							>
-								{m}
-							</button>
-						))}
-					</div>
+					<Segmented
+						aria-label="Modality"
+						options={modalities.map((m) => ({ value: m, label: m }))}
+						value={selectedModality}
+						onChange={setSelectedModality}
+					/>
 				)}
 
-				<div className="flex flex-1 items-center gap-6 px-2 sm:max-w-[320px]">
+				<div className="flex flex-1 items-center gap-6 sm:max-w-[320px]">
 					<div className="flex flex-1 items-center gap-2">
 						<Sun className="h-3.5 w-3.5 text-muted-foreground" />
 						<Slider
