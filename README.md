@@ -10,8 +10,41 @@ The React frontend shows the results in a multi-planar viewer: linked axial, cor
 
 No clinical validation is recorded in this repository. Treat every output as a research result, not a diagnosis.
 
+## Screenshots
+
+### Scan viewer
+
+Linked axial, coronal and sagittal views with the WT/TC/ET segmentation overlay, a 3D rendering, display controls and measurements.
+
+![Scan viewer](docs/screenshots/scan-viewer.png)
+
+### Dashboard
+
+Scan counts, recent scans and the tumour volume chart.
+
+![Dashboard](docs/screenshots/dashboard.png)
+
+### Upload scan
+
+Drag-and-drop upload of FLAIR, T1, T1CE and T2 NIfTI volumes.
+
+![Upload scan](docs/screenshots/upload-scan.png)
+
+### Scan library
+
+Search, edit and delete processed scans.
+
+![Scan library](docs/screenshots/scan-library.png)
+
+### Reports
+
+PDF and CSV reports for completed scans, with "Export All".
+
+![Reports](docs/screenshots/reports.png)
+
 ## Contents
 
+- [Screenshots](#screenshots)
 - [Quick start](#quick-start)
 - [How it works](#how-it-works)
 - [Technology stack](#technology-stack)
@@ -112,15 +145,15 @@ The reported volumes (`wtVolume`, `tcVolume`, `etVolume`, `tumorVolume`) are the
 
 Routes are defined in [`Frontend/src/App.tsx`](Frontend/src/App.tsx). Everything except login and registration requires a session; signed-in pages are loaded on demand.
 
-| Route                 | Page                        | Purpose                                                                                          |
-| --------------------- | --------------------------- | ------------------------------------------------------------------------------------------------ |
-| `/login`, `/register` | `Login.tsx`, `Register.tsx` | Sign in (with a second step for the authenticator code when 2FA is on) or create an account      |
-| `/`                   | `Index.tsx`                 | Dashboard: stats cards, recent scans, tumour volume chart                                        |
-| `/upload`             | `Upload.tsx`                | Drag-and-drop NIfTI upload                                                                       |
-| `/scans`              | `ScanLibrary.tsx`           | List, search, edit and delete scans                                                              |
+| Route                 | Page                        | Purpose                                                                                                         |
+| --------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `/login`, `/register` | `Login.tsx`, `Register.tsx` | Sign in (with a second step for the authenticator code when 2FA is on) or create an account                     |
+| `/`                   | `Index.tsx`                 | Dashboard: stats cards, recent scans, tumour volume chart                                                       |
+| `/upload`             | `Upload.tsx`                | Drag-and-drop NIfTI upload                                                                                      |
+| `/scans`              | `ScanLibrary.tsx`           | List, search, edit and delete scans                                                                             |
 | `/scan/:id`           | `ScanDetail.tsx`            | Live processing status, retry, multi-planar viewer (axial, coronal, sagittal, 3D) with overlay, PDF/CSV reports |
-| `/reports`            | `Reports.tsx`               | Completed scans with PDF reports (open in a new tab), CSV downloads, and "Export All" as one CSV |
-| `/settings`           | `Settings.tsx`              | Profile, theme and overlay colours, password change, two-factor authentication                   |
+| `/reports`            | `Reports.tsx`               | Completed scans with PDF reports (open in a new tab), CSV downloads, and "Export All" as one CSV                |
+| `/settings`           | `Settings.tsx`              | Profile, theme and overlay colours, password change, two-factor authentication                                  |
 
 ## Technology stack
 
