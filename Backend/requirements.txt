@@ -15,9 +15,9 @@ python-dotenv==1.2.3
 python-multipart==0.0.32
 qrcode==8.2
 reportlab==5.0.1
-SQLAlchemy==2.0.54
-sqlmodel==0.0.42
-starlette==1.6.0
+SQLAlchemy==2.1.1
+sqlmodel==0.0.47
+starlette==1.7.0
 torch==2.14.0
 torchvision==0.29.0
-uvicorn[standard]==0.53.0
+uvicorn[standard]==0.54.0
