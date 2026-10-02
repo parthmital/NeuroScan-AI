@@ -1,6 +1,14 @@
 # Architecture
 
-NeuroScan AI is one deployable web application (a FastAPI backend and a React single-page app) plus self-contained Kaggle research notebooks. This document says where code lives, which way dependencies may point, and when the design should change. The README covers setup and the API.
+NeuroScan AI is one deployable web application (a FastAPI backend and a React single-page app) plus self-contained Kaggle research notebooks. This document says where code lives, which way dependencies may point, and when the design should change.
+
+| Document                              | Owns                                                    |
+| ------------------------------------- | ------------------------------------------------------- |
+| [README.md](README.md)                | Setup, configuration, API reference, troubleshooting    |
+| ARCHITECTURE.md                       | Module map, dependency rules, decisions, growth signals |
+| [DESIGN.md](DESIGN.md)                | Frontend design system and UI decisions                 |
+| [SECURITY.md](SECURITY.md)            | Threat model, controls, review results, residual risks  |
+| `Backend/<research folder>/README.md` | Notebook walkthroughs and results                       |
 
 ## Module map
 
@@ -22,6 +30,10 @@ NeuroScan AI is one deployable web application (a FastAPI backend and a React si
 | `cli.py`           | Operator account-recovery commands                                                                           | `python -m neuroscan.cli ...`                              |
 
 `Backend/main.py` is only the ASGI entry point.
+
+### Research and materials
+
+`Backend/Binary Detection/`, `Backend/Classification/` and `Backend/Segmentation/` hold Kaggle notebooks and their saved outputs. The application never imports them; it only reads the deployed `.pth` files from these folders by default (paths are configurable). `Backend/Materials/` holds papers and decks and is not code.
 
 ### Frontend (`Frontend/src/`)
 
@@ -55,6 +67,10 @@ Enforcement:
 - Duplication: `npm run lint:dupes` runs jscpd over `Frontend/src` and `Backend/neuroscan` and fails on any clone of 60+ tokens.
 
 All of these run in CI.
+
+## Local development launch
+
+`npm run dev` at the root is the only launcher. [`scripts/dev.mjs`](scripts/dev.mjs) uses only Node.js built-ins: it creates `.venv` and installs Python packages, runs `npm ci`, and writes a development `.env` on first run, skips setup later unless a requirements file or the npm lockfile hash changed, then starts the backend and frontend (one window each on Windows, prefixed output elsewhere) and opens the browser once both respond. The README describes its behaviour in full.
 
 ## Where new code goes
 
@@ -93,6 +109,20 @@ All of these run in CI.
 | Kaggle notebooks repeating setup and training code                                           | Each notebook must run standalone on Kaggle; shared code is defined once per notebook, in an early cell.                                            |
 | `migrations/versions/0001_baseline.py` restating the original tables                         | Applied migrations are history and are never edited.                                                                                                |
 | shadcn components in `components/ui/`                                                        | Vendored generator output; excluded from the clone check.                                                                                           |
+| Security headers in `api/middleware.py` and `Frontend/vite.config.ts`                        | Different processes and languages; the API sends a stricter CSP than the page. Change the shared headers together.                                  |
+
+## Current fit
+
+Re-evaluated on 2 October 2026 at commit `0a5a530`. The modular monolith still fits: one deployment, 3,436 lines in 30 backend files (`Backend/neuroscan/`) and 7,960 lines in 67 frontend files (`Frontend/src/` without tests), and every boundary check passes (3 import contracts kept, 0 frontend clones, strict mypy and TypeScript clean). No restructuring was needed in this pass.
+
+Files to split the next time they change, because each now mixes several jobs:
+
+| File                                                 | Lines | Mix                                                       | Split into                                                                 |
+| ---------------------------------------------------- | ----- | --------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `Backend/neuroscan/scans/exports.py`                 | 786   | CSV export, PDF layout and canvas, clinical findings text | `scans/exports/csv.py` and `scans/exports/pdf.py`                          |
+| `Frontend/src/components/scan/viewer/SliceView.tsx`  | 646   | Canvas drawing, pointer tools, keyboard, pane chrome      | Drawing helpers next to `slicing.ts`; the component keeps state and events |
+| `Frontend/src/components/scan/viewer/VolumeView.tsx` | 565   | vtk.js scene setup, render presets, input handling        | A scene module without React; the component keeps lifecycle                |
+| `Frontend/src/components/scan/viewer/ScanViewer.tsx` | 543   | Pane layout, tool state, measurements, capture            | Keep layout; move tool and measurement state into a hook                   |
 
 ## Growth signals
 
@@ -103,3 +133,4 @@ Revisit this design when any of these become true:
 - **A second client or external consumers use the API**: generate `lib/types.ts` from the OpenAPI schema instead of maintaining it by hand, and version the API.
 - **Several user roles or tenants appear**: add an authorisation layer next to `owned_scan` in `api/scans.py` rather than per-route checks.
 - **Email becomes available**: replace operator-only recovery with a verified email reset flow.
+- **A module passes about 500 lines or a second report format is added**: split it as in [Current fit](#current-fit).

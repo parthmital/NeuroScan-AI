@@ -143,7 +143,7 @@ The reported volumes (`wtVolume`, `tcVolume`, `etVolume`, `tumorVolume`) are the
 
 ### Frontend pages
 
-Routes are defined in [`Frontend/src/App.tsx`](Frontend/src/App.tsx). Everything except login and registration requires a session; signed-in pages are loaded on demand.
+Routes are defined in [`Frontend/src/App.tsx`](Frontend/src/App.tsx). Everything except login and registration requires a session; signed-in pages are loaded on demand. The palette, type, components and viewer conventions are in [`DESIGN.md`](DESIGN.md).
 
 | Route                 | Page                        | Purpose                                                                                                         |
 | --------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -200,7 +200,10 @@ The notebooks run on Kaggle with 2x Tesla T4 GPUs. Binary Detection and Classifi
 
 ```text
 NeuroScan-AI/
-|-- README.md, ARCHITECTURE.md
+|-- README.md               Setup, configuration and API (this file)
+|-- ARCHITECTURE.md         Module map, dependency rules, design decisions
+|-- DESIGN.md               Frontend design system
+|-- SECURITY.md             Vulnerability reporting, threat model, controls, residual risks
 |-- .env.example              Every backend setting, with how to generate secrets
 |-- .github/                  CI workflow (SHA-pinned actions) and Dependabot
 |-- .pre-commit-config.yaml   gitleaks secret scan before each commit
@@ -421,12 +424,12 @@ CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs all of these on
 
 | Check                     | Command                                                                                   | Result when this README was written                                              |
 | ------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| Backend tests             | `pytest` (in `Backend/`)                                                                  | 60 passed; they use a fake inference engine, so no weights are needed            |
+| Backend tests             | `pytest` (in `Backend/`)                                                                  | 61 passed; they use a fake inference engine, so no weights are needed            |
 | Backend lint and format   | `ruff check neuroscan tests main.py`, `ruff format --check ...`                           | Clean                                                                            |
 | Backend types             | `mypy` (strict)                                                                           | Clean                                                                            |
 | Architecture contracts    | `lint-imports`                                                                            | 3 contracts kept                                                                 |
 | Backend security          | `bandit -q -r neuroscan main.py`, `pip-audit -r requirements.txt -r requirements-dev.txt` | No findings                                                                      |
-| Everything frontend       | `npm run check` (in `Frontend/`)                                                          | Strict typecheck, lint, Prettier, jscpd (0 clones), 18 tests, and build all pass |
+| Everything frontend       | `npm run check` (in `Frontend/`)                                                          | Strict typecheck, lint, Prettier, jscpd (0 clones), 39 tests, and build all pass |
 | Frontend dependency audit | `npm audit`                                                                               | 0 vulnerabilities                                                                |
 
 From the repository root, `black .` and `npx prettier . --write` produce the same output CI checks: black uses ruff's 100-character line length from the root `pyproject.toml`, and `.gitattributes` checks files out with LF so Prettier does not rewrite line endings on Windows.
@@ -458,16 +461,7 @@ From the repository root, `black .` and `npx prettier . --write` produce the sam
 
 ## Security notes
 
-A security review of the whole repository (code, dependencies, and Git history) was carried out and its findings fixed. What protects the application now:
-
-- Passwords hashed with bcrypt (cost 12), a 12-character minimum, account lockout, per-client rate limits, and timing-equalised login for unknown users.
-- Sessions in `HttpOnly`, `SameSite=Strict`, `Secure` cookies with revocable, audience- and issuer-bound JWTs; nothing sensitive in `localStorage`; a required CSRF header on state-changing requests.
-- Optional TOTP two-factor authentication with encrypted secrets and replay protection.
-- Every scan route checks ownership and hides other users' scans behind `404`; response models never include password hashes, secrets or file paths.
-- Uploads are streamed with size limits, stored under server-chosen names, and validated as bounded NIfTI volumes before any processing; model weights load with `weights_only=True`.
-- Security headers on every response (CSP, `nosniff`, `X-Frame-Options`, `Referrer-Policy`, `no-store`, HSTS in production), API docs off in production, generic error bodies with request IDs, and structured audit logs for sign-in and account events.
-- Configuration is validated at start-up; example secrets and wildcard CORS are refused.
-- Pinned dependencies with no known vulnerabilities at the time of writing, Dependabot updates, CI with SHA-pinned actions and a read-only token, and gitleaks in CI and as a pre-commit hook.
+[`SECURITY.md`](SECURITY.md) covers how to report a vulnerability privately, the threat model, every control with its source file, the latest scan results, residual risks, and the actions an operator must take before deployment. In short: bcrypt passwords with lockout and rate limits, `HttpOnly` cookie sessions with a CSRF header, optional TOTP, owner checks on every scan route, validated and size-capped uploads, and secret, dependency and static scans in CI.
 
 Keep `.env` out of Git (it is already ignored) and rotate `JWT_SECRET` and `DATA_ENCRYPTION_KEY` if they are ever exposed.
 
@@ -478,8 +472,8 @@ Keep `.env` out of Git (it is already ignored) and rotate `JWT_SECRET` and `DATA
 | API routes                | 23                                                                                                                             | `Backend/neuroscan/api/`                              |
 | Database tables           | 2 (`user`, `scan`), 2 migrations                                                                                               | `Backend/neuroscan/models.py`, `migrations/versions/` |
 | Frontend routes           | 9 including the 404 page                                                                                                       | `Frontend/src/App.tsx`                                |
-| Backend tests             | 60                                                                                                                             | `Backend/tests/`                                      |
-| Frontend tests            | 18                                                                                                                             | `Frontend/src/test/`                                  |
+| Backend tests             | 61                                                                                                                             | `Backend/tests/`                                      |
+| Frontend tests            | 39                                                                                                                             | `Frontend/src/test/`                                  |
 | Research notebooks        | 22 (9 detection, 6 classification, 7 segmentation)                                                                             | `Backend/*/*.ipynb`                                   |
 | Deployed model parameters | Detection and classification: EfficientNet-B0 (4,008,829 and 4,011,391 in the notebook versions); segmentation: VNet 1,398,761 | Notebook `model_profile.json` files                   |
 | Session lifetime          | 30 minutes by default                                                                                                          | `ACCESS_TOKEN_EXPIRE_MINUTES`                         |
@@ -488,7 +482,8 @@ Keep `.env` out of Git (it is already ignored) and rotate `JWT_SECRET` and `DATA
 
 ## Contributing
 
-- Read [`ARCHITECTURE.md`](ARCHITECTURE.md) for where new code goes and which imports are allowed.
+- Read [`ARCHITECTURE.md`](ARCHITECTURE.md) for where new code goes and which imports are allowed, and [`DESIGN.md`](DESIGN.md) before changing the UI.
+- Report security problems privately as described in [`SECURITY.md`](SECURITY.md), not in public issues.
 - Keep API response shapes in `Backend/neuroscan/schemas.py` and `Frontend/src/lib/types.ts` in sync.
 - Schema changes need a new Alembic migration; never edit an applied one.
 - Do not commit `.pth`, `.db`, `.nii` or `.nii.gz` files; `.gitignore` already excludes them. Install the pre-commit hook with `pre-commit install`.
