@@ -6,12 +6,18 @@ Elsevier `elsarticle` (ScienceDirect) submission package, rebuilt from the proof
 
 ## Files
 
-| File                     | Purpose                                             |
-| ------------------------ | --------------------------------------------------- |
-| `main.tex`               | The paper. Compile with pdfLaTeX.                   |
-| `highlights.tex`         | Standalone highlights file (compile separately).    |
-| `graphical_abstract.tex` | Standalone graphical abstract (compile separately). |
-| `figures/`               | 31 PNGs copied from the rerun notebook outputs.     |
+| File                     | Purpose                                                                                                          |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `main.tex`               | The paper. Compile with pdfLaTeX.                                                                                |
+| `supplementary.tex`      | Supplementary Material (Tables S4–S10, Figures S1–S16); compile separately.                                      |
+| `highlights.tex`         | Standalone highlights file (compile separately).                                                                 |
+| `graphical_abstract.tex` | Standalone graphical abstract (compile separately).                                                              |
+| `figures/`               | 30 PNGs copied from the rerun notebook outputs, plus 6 cropped main-text panels (`*_test.png`, `*_overlay.png`). |
+| `figures/supp/`          | Per-model training, ROC/PR and calibration plots for all 15 runs, used by the supplement.                        |
+
+Supplementary item numbers follow the reviewer's mapping table (Comments-V2, Table M1), so
+`supplementary.tex` sets each number explicitly; numbers the mapping does not assign
+(Tables S1–S3 and S8, Figure S5) are unused.
 
 `main.tex` uses a manual `thebibliography` block, so there is no `.bib` file and no BibTeX
 pass is required. Two pdfLaTeX runs are enough to resolve all cross-references.
@@ -32,18 +38,20 @@ best multiclass model, and **ResNet50** as the binary contrast case.
 | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | `binary_class_distribution`, `binary_samples`, `binary_split`, `binary_augmentation`, `binary_image_properties`, `binary_resnet_confusion`        | `binary-detection-resnet50/plots/`       |
 | `binary_training_curves`, `binary_confusion`, `binary_roc_pr`, `binary_calibration`, `binary_per_class`, `binary_predictions`, `binary_gradcam_*` | `binary-detection-efficientnetb0/plots/` |
-| `cls_class_distribution`, `cls_samples`, `cls_deduplication`, `cls_split`, `cls_augmentation`, `cls_image_properties`                             | `classification-inceptionv3/plots/`      |
+| `cls_samples`, `cls_deduplication`, `cls_split`, `cls_augmentation`, `cls_image_properties`                                                       | `classification-inceptionv3/plots/`      |
 | `cls_training_curves`, `cls_confusion`, `cls_roc_pr`, `cls_calibration`, `cls_per_class`, `cls_predictions`, `cls_gradcam_*`                      | `classification-efficientnetb0/plots/`   |
 | `cls_swin_confusion`, `cls_swin_roc`, `cls_swin_gradcam`                                                                                          | `classification-swinbase/plots/`         |
+| `*_confusion_test` (test-count panel), `*_gradcam_correct_overlay` (header and overlay rows)                                                      | Cropped from the files above             |
+| `supp/<run>_{training_curves,roc_pr_curves,calibration}`                                                                                          | `<run>/plots/07_*`, `09_*`, `10_*`       |
 
 ### What was deliberately left out
 
 The two folders hold roughly 200 plots across 15 runs. Including all of them would bury the
 argument, so each added figure had to do work the existing ones did not:
 
-- **Not included:** training curves, calibration plots, per-class metric plots and prediction
-  samples for the other eleven runs. These are per-model repetitions of figures already shown,
-  and the numbers they encode are already in the results tables.
+- **Superseded (Comments-V2):** training curves, ROC/PR curves and calibration plots for every
+  run are now in the supplement (Figures S7–S11). Per-class metric plots and prediction
+  samples remain EfficientNetB0-only.
 - **Not included:** `calibration_bins_*.csv` and `predictions_*.csv`. The first is summarised
   by the ECE column in `tab:calibration`; the second is raw per-image output, not paper
   material.
