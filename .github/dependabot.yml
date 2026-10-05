@@ -10,6 +10,11 @@ updates:
     groups:
       python:
         patterns: ["*"]
+    ignore:
+      # sqlmodel (through 0.0.47) requires SQLAlchemy <2.1.0, so a 2.1 bump makes `pip install` fail.
+      # Remove once sqlmodel declares SQLAlchemy 2.1 support.
+      - dependency-name: sqlalchemy
+        versions: [">=2.1"]
   - package-ecosystem: npm
     directory: /Frontend
     schedule:
