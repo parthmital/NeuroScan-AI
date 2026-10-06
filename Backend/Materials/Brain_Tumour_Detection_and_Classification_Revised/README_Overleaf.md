@@ -9,15 +9,39 @@ Elsevier `elsarticle` (ScienceDirect) submission package, rebuilt from the proof
 | File                     | Purpose                                                                                                          |
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------- |
 | `main.tex`               | The paper. Compile with pdfLaTeX.                                                                                |
-| `supplementary.tex`      | Supplementary Material (Tables S4–S10, Figures S1–S16); compile separately.                                      |
+| `supplementary.tex`      | Supplementary Material (Tables S4–S12, Figures S1–S25); compile separately.                                      |
 | `highlights.tex`         | Standalone highlights file (compile separately).                                                                 |
 | `graphical_abstract.tex` | Standalone graphical abstract (compile separately).                                                              |
 | `figures/`               | 30 PNGs copied from the rerun notebook outputs, plus 6 cropped main-text panels (`*_test.png`, `*_overlay.png`). |
 | `figures/supp/`          | Per-model training, ROC/PR and calibration plots for all 15 runs, used by the supplement.                        |
+| `figures/audit/`         | The 9 plots of `Backend/Revision Audit/plots/`, used by the supplement as Figures S17–S25.                         |
 
 Supplementary item numbers follow the reviewer's mapping table (Comments-V2, Table M1), so
 `supplementary.tex` sets each number explicitly; numbers the mapping does not assign
-(Tables S1–S3 and S8, Figure S5) are unused.
+(Tables S1–S3 and S8, Figure S5) are unused. Items added for the revision audit continue
+after the mapped range (Tables S11–S12, Figures S17–S25).
+
+## Revision audit
+
+`Backend/Revision Audit/revision-audit.ipynb` (run on Kaggle, outputs in `metrics/`, `plots/`
+and `logs/` beside it) answers the Comments-V2 questions that need no retraining. Its results
+were carried into the paper as follows; every number comes from `metrics/*.csv` or
+`metrics/revision_audit_summary.json`.
+
+| Finding                                                                                     | Where it now appears                                       |
+| ------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Per-source survival, Bhuvaji training/testing folders, native resolution per source         | `tab:provenance`, Section 3.2, Table S11, Figure S17       |
+| Multiclass removals: 3 cross-source, 1,120 within-source, 23 cross-label                    | Sections 3.2–3.3, Table S11                                |
+| Cross-label pairs: 31 (8 label conflicts, 23 hash false positives); label-aware pool        | Section 3.6, Figure S18                                    |
+| Binary pass: 1,187 kept, 2,066 removed (731 cross-source); 82.6% test images leaked         | Abstract, Sections 3.3, 4.1, 4.5, conclusion, Figure S20   |
+| pHash vs NCC: recall 96.9% / 89.0% at tolerance 5                                           | Section 3.3, Figure S19                                    |
+| Leakage-free test accuracy (binary 85 images; multiclass 265 and 703)                       | `tab:binary-results` "Acc. LF", Sections 4.1–4.2, Table S12, Figure S21 |
+| EfficientNetB0 Grad-CAM outside-head fraction and masking test                              | Section 4.4, Figures S23–S25                               |
+| Latency and throughput re-measured, mean ± SD over three repeats                            | `tab:efficiency`, Section 4.3, Tables S9–S10, Figure S22, abstract |
+
+Not carried in because the audit could not produce it: retrained binary or label-aware
+models, the background-only training ablation, and any Swin-Base or ViT-B/16 attention
+measurement (only the EfficientNetB0 checkpoints were available to the audit).
 
 `main.tex` uses a manual `thebibliography` block, so there is no `.bib` file and no BibTeX
 pass is required. Two pdfLaTeX runs are enough to resolve all cross-references.
@@ -67,7 +91,7 @@ argument, so each added figure had to do work the existing ones did not:
 | --------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | C0                    | Add overall methodology with a flowchart                | New Section 3.1 plus a five-stage TikZ flowchart (Figure 1)                                                                                                   |
 | C1–C4                 | Add dataset references                                  | Four dataset entries added (`ds1`–`ds4`) and cited in Section 3.2                                                                                             |
-| C5                    | Deduplication not done for binary                       | Stated explicitly in Section 3.3, with rationale, and flagged as future work                                                                                  |
+| C5                    | Deduplication not done for binary                       | Stated explicitly in Section 3.3; the revision audit runs the same pass post hoc and reports its outcome; retraining remains future work                      |
 | C6                    | Write hyperparameter full names                         | Section 3.5 spells every term out; new Table 4 (`tab:hyperparams`) lists them                                                                                 |
 | C7                    | Restructure Results into subsections                    | Results now 4.1–4.5 in the requested order                                                                                                                    |
 | C8                    | Inconsistent model naming                               | One convention throughout: ResNet50, VGG16, DenseNet121, EfficientNetB0, MobileNetV3-Large, InceptionV3, ViT-B/16, Swin-Base, CoAtNet-0                       |
@@ -153,7 +177,7 @@ the paper had been describing incorrectly or not at all.
 | InceptionV3 binary adds `0.4 × auxiliary loss`; no other model does                                                                                                    | Sections 3.6, Table 5                                               |
 | InceptionV3 binary ran on **one** GPU despite the DataParallel wrapper (peak memory on the second device is 0 MB), so its 4.9-minute training time is not comparable   | Section 3.6, Section 4.3, `tab:efficiency` caption                  |
 | InceptionV3 multiclass retains a disabled 1000-class auxiliary head, adding 769k parameters — this is why its binary and multiclass counts differ (24.35 M vs 25.12 M) | Section 3.6                                                         |
-| Deduplication is order-dependent and label-blind; glioma always wins cross-class ties, and such removals are not counted                                               | Section 3.6, conclusion                                             |
+| Deduplication is order-dependent and label-blind; glioma always wins cross-class ties (23 such removals, counted by the revision audit)                                | Section 3.6                                                         |
 | The Bhuvaji official test split was merged into the training pool before resplitting, so multiclass results are not comparable with studies using that partition       | Sections 3.6 and 4.5                                                |
 | Top four binary models are statistically indistinguishable (one error = 0.20 pp; single seed, no confidence intervals)                                                 | Section 4.1, conclusion                                             |
 | MobileNetV3-Large's Youden-optimal threshold is 0.00044, three orders of magnitude below the 0.5 decision point actually used                                          | Section 4.1                                                         |

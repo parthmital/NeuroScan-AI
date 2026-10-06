@@ -1,0 +1,1413 @@
+key,split,label,source,min_hamming_to_train,max_ncc_to_train
+brain-tumor-classification-mri/Testing/glioma_tumor/image(33).jpg,val,0,Testing,16,0.68761593
+brain-tumor-classification-mri/Testing/glioma_tumor/image(25).jpg,val,0,Testing,16,0.46272144
+brain-tumor-classification-mri/Testing/glioma_tumor/image(88).jpg,val,0,Testing,12,0.8149456
+brain-tumor-classification-mri/Testing/glioma_tumor/image(53).jpg,val,0,Testing,16,0.67348176
+brain-tumor-classification-mri/Testing/glioma_tumor/image(94).jpg,val,0,Testing,14,0.4611648
+brain-tumor-classification-mri/Testing/glioma_tumor/image(27).jpg,val,0,Testing,16,0.7700746
+brain-tumor-classification-mri/Testing/glioma_tumor/image(66).jpg,val,0,Testing,10,0.9223565
+brain-tumor-classification-mri/Testing/glioma_tumor/image(100).jpg,val,0,Testing,14,0.63502616
+brain-tumor-classification-mri/Testing/glioma_tumor/image(17).jpg,val,0,Testing,16,0.6537406
+brain-tumor-classification-mri/Testing/glioma_tumor/image(18).jpg,val,0,Testing,14,0.66373926
+brain-tumor-classification-mri/Testing/glioma_tumor/image(16).jpg,val,0,Testing,16,0.6273366
+brain-tumor-classification-mri/Testing/glioma_tumor/image(63).jpg,val,0,Testing,10,0.90795356
+brain-tumor-classification-mri/Testing/glioma_tumor/image(45).jpg,val,0,Testing,12,0.7840236
+brain-tumor-classification-mri/Training/glioma_tumor/gg (23).jpg,val,0,Training,10,0.9037853
+brain-tumor-classification-mri/Training/glioma_tumor/gg (161).jpg,val,0,Training,6,0.9052389
+brain-tumor-classification-mri/Training/glioma_tumor/gg (143).jpg,val,0,Training,10,0.7611759
+brain-tumor-classification-mri/Training/glioma_tumor/gg (30).jpg,val,0,Training,8,0.71319896
+brain-tumor-classification-mri/Training/glioma_tumor/gg (89).jpg,val,0,Training,10,0.91713697
+brain-tumor-classification-mri/Training/glioma_tumor/gg (575).jpg,val,0,Training,10,0.80322814
+brain-tumor-classification-mri/Training/glioma_tumor/gg (259).jpg,val,0,Training,8,0.78831
+brain-tumor-classification-mri/Training/glioma_tumor/gg (798).jpg,val,0,Training,6,0.9081563
+brain-tumor-classification-mri/Training/glioma_tumor/gg (351).jpg,val,0,Training,6,0.90861344
+brain-tumor-classification-mri/Training/glioma_tumor/gg (297).jpg,val,0,Training,10,0.9028562
+brain-tumor-classification-mri/Training/glioma_tumor/gg (229).jpg,val,0,Training,8,0.8517301
+brain-tumor-classification-mri/Training/glioma_tumor/gg (329).jpg,val,0,Training,14,0.8133116
+brain-tumor-classification-mri/Training/glioma_tumor/gg (600).jpg,val,0,Training,8,0.9317327
+brain-tumor-classification-mri/Training/glioma_tumor/gg (757).jpg,val,0,Training,8,0.82726836
+brain-tumor-classification-mri/Training/glioma_tumor/gg (253).jpg,val,0,Training,12,0.88394743
+brain-tumor-classification-mri/Training/glioma_tumor/gg (301).jpg,val,0,Training,14,0.8775121
+brain-tumor-classification-mri/Training/glioma_tumor/gg (249).jpg,val,0,Training,8,0.8232109
+brain-tumor-classification-mri/Training/glioma_tumor/gg (281).jpg,val,0,Training,8,0.8498088
+brain-tumor-classification-mri/Training/glioma_tumor/gg (452).jpg,val,0,Training,6,0.8505802
+brain-tumor-classification-mri/Training/glioma_tumor/gg (32).jpg,val,0,Training,10,0.7758697
+brain-tumor-classification-mri/Training/glioma_tumor/gg (390).jpg,val,0,Training,12,0.8171357
+brain-tumor-classification-mri/Training/glioma_tumor/gg (13).jpg,val,0,Training,8,0.9580333
+brain-tumor-classification-mri/Training/glioma_tumor/gg (464).jpg,val,0,Training,8,0.81490284
+brain-tumor-classification-mri/Training/glioma_tumor/gg (210).jpg,val,0,Training,10,0.8536562
+brain-tumor-classification-mri/Training/glioma_tumor/gg (415).jpg,val,0,Training,8,0.88445944
+brain-tumor-classification-mri/Training/glioma_tumor/gg (256).jpg,val,0,Training,8,0.8513988
+brain-tumor-classification-mri/Training/glioma_tumor/gg (698).jpg,val,0,Training,8,0.9390405
+brain-tumor-classification-mri/Training/glioma_tumor/gg (500).jpg,val,0,Training,12,0.9304953
+brain-tumor-classification-mri/Training/glioma_tumor/gg (717).jpg,val,0,Training,6,0.90690017
+brain-tumor-classification-mri/Training/glioma_tumor/gg (191).jpg,val,0,Training,6,0.8961393
+brain-tumor-classification-mri/Training/glioma_tumor/gg (136).jpg,val,0,Training,8,0.90569186
+brain-tumor-classification-mri/Training/glioma_tumor/gg (488).jpg,val,0,Training,6,0.91278505
+brain-tumor-classification-mri/Training/glioma_tumor/gg (536).jpg,val,0,Training,8,0.9283401
+brain-tumor-classification-mri/Training/glioma_tumor/gg (330).jpg,val,0,Training,8,0.9246405
+brain-tumor-classification-mri/Training/glioma_tumor/gg (450).jpg,val,0,Training,6,0.85872203
+brain-tumor-classification-mri/Training/glioma_tumor/gg (254).jpg,val,0,Training,8,0.8502301
+brain-tumor-classification-mri/Training/glioma_tumor/gg (689).jpg,val,0,Training,8,0.88192147
+brain-tumor-classification-mri/Training/glioma_tumor/gg (644).jpg,val,0,Training,6,0.9165937
+brain-tumor-classification-mri/Training/glioma_tumor/gg (193).jpg,val,0,Training,6,0.856229
+brain-tumor-classification-mri/Training/glioma_tumor/gg (625).jpg,val,0,Training,8,0.9381523
+brain-tumor-classification-mri/Training/glioma_tumor/gg (409).jpg,val,0,Training,6,0.9476266
+brain-tumor-classification-mri/Training/glioma_tumor/gg (304).jpg,val,0,Training,10,0.8342134
+brain-tumor-classification-mri/Training/glioma_tumor/gg (194).jpg,val,0,Training,8,0.8426597
+brain-tumor-classification-mri/Training/glioma_tumor/gg (216).jpg,val,0,Training,6,0.88199955
+brain-tumor-classification-mri/Training/glioma_tumor/gg (60).jpg,val,0,Training,6,0.87581426
+brain-tumor-classification-mri/Training/glioma_tumor/gg (102).jpg,val,0,Training,6,0.74392366
+brain-tumor-classification-mri/Training/glioma_tumor/gg (523).jpg,val,0,Training,10,0.90430075
+brain-tumor-classification-mri/Training/glioma_tumor/gg (744).jpg,val,0,Training,10,0.9355311
+brain-tumor-classification-mri/Training/glioma_tumor/gg (237).jpg,val,0,Training,6,0.7839567
+brain-tumor-classification-mri/Training/glioma_tumor/gg (123).jpg,val,0,Training,8,0.8681275
+brain-tumor-classification-mri/Training/glioma_tumor/gg (606).jpg,val,0,Training,12,0.80938035
+brain-tumor-classification-mri/Training/glioma_tumor/gg (605).jpg,val,0,Training,10,0.8787514
+brain-tumor-classification-mri/Training/glioma_tumor/gg (648).jpg,val,0,Training,12,0.89646035
+brain-tumor-classification-mri/Training/glioma_tumor/gg (582).jpg,val,0,Training,12,0.883048
+brain-tumor-classification-mri/Training/glioma_tumor/gg (375).jpg,val,0,Training,10,0.9230532
+brain-tumor-classification-mri/Training/glioma_tumor/gg (44).jpg,val,0,Training,10,0.80319554
+brain-tumor-classification-mri/Training/glioma_tumor/gg (754).jpg,val,0,Training,6,0.9195867
+brain-tumor-classification-mri/Training/glioma_tumor/gg (439).jpg,val,0,Training,6,0.9641135
+brain-tumor-classification-mri/Training/glioma_tumor/gg (686).jpg,val,0,Training,8,0.92804056
+brain-tumor-classification-mri/Training/glioma_tumor/gg (609).jpg,val,0,Training,6,0.9651049
+brain-tumor-classification-mri/Training/glioma_tumor/gg (397).jpg,val,0,Training,6,0.876735
+brain-tumor-classification-mri/Training/glioma_tumor/gg (72).jpg,val,0,Training,8,0.92270535
+brain-tumor-classification-mri/Training/glioma_tumor/gg (680).jpg,val,0,Training,10,0.9311773
+brain-tumor-classification-mri/Training/glioma_tumor/gg (690).jpg,val,0,Training,6,0.9378801
+brain-tumor-classification-mri/Training/glioma_tumor/gg (502).jpg,val,0,Training,8,0.9064062
+brain-tumor-classification-mri/Training/glioma_tumor/gg (27).jpg,val,0,Training,8,0.8410031
+brain-tumor-classification-mri/Training/glioma_tumor/gg (99).jpg,val,0,Training,10,0.81195694
+brain-tumor-classification-mri/Training/glioma_tumor/gg (40).jpg,val,0,Training,8,0.88526416
+brain-tumor-classification-mri/Training/glioma_tumor/gg (666).jpg,val,0,Training,10,0.94788635
+brain-tumor-classification-mri/Training/glioma_tumor/gg (455).jpg,val,0,Training,8,0.9158847
+brain-tumor-classification-mri/Training/glioma_tumor/gg (224).jpg,val,0,Training,8,0.8051575
+brain-tumor-classification-mri/Training/glioma_tumor/gg (134).jpg,val,0,Training,10,0.9108165
+brain-tumor-classification-mri/Training/glioma_tumor/gg (347).jpg,val,0,Training,8,0.89085644
+brain-tumor-classification-mri/Training/glioma_tumor/gg (724).jpg,val,0,Training,10,0.9125092
+brain-tumor-classification-mri/Training/glioma_tumor/gg (14).jpg,val,0,Training,12,0.95146096
+brain-tumor-classification-mri/Training/glioma_tumor/gg (251).jpg,val,0,Training,10,0.8765531
+brain-tumor-classification-mri/Training/glioma_tumor/gg (784).jpg,val,0,Training,10,0.92557377
+brain-tumor-classification-mri/Training/glioma_tumor/gg (87).jpg,val,0,Training,8,0.7844628
+brain-tumor-classification-mri/Training/glioma_tumor/gg (137).jpg,val,0,Training,8,0.9268328
+brain-tumor-classification-mri/Training/glioma_tumor/gg (389).jpg,val,0,Training,12,0.8263182
+brain-tumor-classification-mri/Training/glioma_tumor/gg (411).jpg,val,0,Training,6,0.9621329
+brain-tumor-classification-mri/Training/glioma_tumor/gg (232).jpg,val,0,Training,6,0.9127556
+brain-tumor-classification-mri/Training/glioma_tumor/gg (114).jpg,val,0,Training,12,0.8041696
+brain-tumor-classification-mri/Training/glioma_tumor/gg (581).jpg,val,0,Training,14,0.8566605
+brain-tumor-classification-mri/Training/glioma_tumor/gg (733).jpg,val,0,Training,10,0.93401265
+brain-tumor-classification-mri/Training/glioma_tumor/gg (257).jpg,val,0,Training,6,0.79613733
+brain-tumor-classification-mri/Training/glioma_tumor/gg (38).jpg,val,0,Training,8,0.84491533
+brain-tumor-classification-mri/Training/glioma_tumor/gg (824).jpg,val,0,Training,8,0.9002133
+brain-tumor-classification-mri/Training/glioma_tumor/gg (283).jpg,val,0,Training,8,0.89524335
+brain-tumor-classification-mri/Training/glioma_tumor/gg (400).jpg,val,0,Training,8,0.86418146
+brain-tumor-classification-mri/Training/glioma_tumor/gg (474).jpg,val,0,Training,6,0.9637548
+brain-tumor-classification-mri/Training/glioma_tumor/gg (543).jpg,val,0,Training,8,0.9024053
+brain-tumor-classification-mri/Training/glioma_tumor/gg (45).jpg,val,0,Training,10,0.87151766
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2061_MR052550.jpg,val,0,Cheng,14,0.9143088
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2659_MR029209E.jpg,val,0,Cheng,8,0.8865011
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1957_MR050135B.jpg,val,0,Cheng,8,0.97108954
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2667_MR053110E.jpg,val,0,Cheng,8,0.9088194
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2139_MR049019G.jpg,val,0,Cheng,6,0.929086
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2380_MR040240D.jpg,val,0,Cheng,12,0.9431315
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1880_MR049104.jpg,val,0,Cheng,10,0.9352955
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2349_MR024780E.jpg,val,0,Cheng,8,0.89784104
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2520_MR040240C.jpg,val,0,Cheng,14,0.87828404
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2953_MR051796.jpg,val,0,Cheng,6,0.77422416
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1961_MR050135B.jpg,val,0,Cheng,8,0.88626087
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2109_MR056144.jpg,val,0,Cheng,6,0.9254937
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1888_MR048994B.jpg,val,0,Cheng,6,0.925055
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2258_MR048944B.jpg,val,0,Cheng,6,0.95250624
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0760_101020.jpg,val,0,Cheng,14,0.78585154
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2440_MR048994.jpg,val,0,Cheng,6,0.9470888
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2588_MR051796B.jpg,val,0,Cheng,10,0.8433632
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2657_MR029209E.jpg,val,0,Cheng,8,0.8985208
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2951_MR051796.jpg,val,0,Cheng,8,0.8125823
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1966_MR050687.jpg,val,0,Cheng,8,0.9152012
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2772_MR037458B.jpg,val,0,Cheng,6,0.82603127
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2698_MR032322C.jpg,val,0,Cheng,6,0.90244436
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2824_MR048297.jpg,val,0,Cheng,8,0.7953334
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1931_MR024780G.jpg,val,0,Cheng,6,0.9582688
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2662_MR029209E.jpg,val,0,Cheng,14,0.80905133
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2902_MR050687.jpg,val,0,Cheng,10,0.81589454
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2259_MR048944B.jpg,val,0,Cheng,6,0.9379982
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2394_MR029209I.jpg,val,0,Cheng,8,0.8899496
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2767_MR032322C.jpg,val,0,Cheng,8,0.8704331
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2455_MR040240B.jpg,val,0,Cheng,6,0.9316543
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1933_MR024780G.jpg,val,0,Cheng,6,0.97258604
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2082_MR052585B.jpg,val,0,Cheng,8,0.9648338
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2968_MR051644B.jpg,val,0,Cheng,8,0.86923105
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2524_MR017260F.jpg,val,0,Cheng,12,0.8447525
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2852_MR048994.jpg,val,0,Cheng,6,0.8697932
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2739_MR053110E.jpg,val,0,Cheng,6,0.8470407
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2485_MR033420.jpg,val,0,Cheng,6,0.92602485
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2607_MR051644C.jpg,val,0,Cheng,8,0.91214395
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2225_MR036496B.jpg,val,0,Cheng,6,0.9169597
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2727_MR037458C.jpg,val,0,Cheng,10,0.9041782
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2443_MR040240.jpg,val,0,Cheng,6,0.92716944
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0902_95142.jpg,val,0,Cheng,6,0.7071333
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2842_MR048944.jpg,val,0,Cheng,6,0.87473166
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1865_MR048944.jpg,val,0,Cheng,6,0.93302584
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2275_MR049453.jpg,val,0,Cheng,8,0.9161063
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2545_MR048294.jpg,val,0,Cheng,10,0.8114009
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2800_MR029209G.jpg,val,0,Cheng,6,0.8340693
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2519_MR040240C.jpg,val,0,Cheng,14,0.8905326
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2654_MR034997.jpg,val,0,Cheng,8,0.8966685
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2987_MR051644C.jpg,val,0,Cheng,8,0.9234409
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2542_MR048294.jpg,val,0,Cheng,6,0.7981538
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1904_MR049358.jpg,val,0,Cheng,6,0.9696943
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2710_MR039473.jpg,val,0,Cheng,10,0.8129513
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2264_MR049358.jpg,val,0,Cheng,8,0.91498613
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2244_MR049104.jpg,val,0,Cheng,8,0.9290708
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0823_100820.jpg,val,0,Cheng,8,0.8230083
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2641_MR049242C.jpg,val,0,Cheng,10,0.95887864
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1947_MR048294B.jpg,val,0,Cheng,10,0.92650735
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2418_MR048294B.jpg,val,0,Cheng,8,0.92737204
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2661_MR029209E.jpg,val,0,Cheng,14,0.84396505
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2165_MR032322C.jpg,val,0,Cheng,6,0.87721217
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2911_MR050791B.jpg,val,0,Cheng,10,0.8847708
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2166_MR037458B.jpg,val,0,Cheng,10,0.8637978
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0855_107747.jpg,val,0,Cheng,8,0.91292024
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1989_MR026175C.jpg,val,0,Cheng,6,0.96015847
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1954_MR050135B.jpg,val,0,Cheng,8,0.89056504
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0740_112105.jpg,val,0,Cheng,6,0.90208566
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1881_MR049142.jpg,val,0,Cheng,10,0.9028592
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2372_MR040240C.jpg,val,0,Cheng,12,0.9093425
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2389_MR017260F.jpg,val,0,Cheng,6,0.96676236
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1856_MR048621B.jpg,val,0,Cheng,6,0.9762936
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2171_MR037458B.jpg,val,0,Cheng,8,0.8829746
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2134_MR049019G.jpg,val,0,Cheng,12,0.8979161
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2106_MR050687C.jpg,val,0,Cheng,8,0.9345215
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1885_MR048994B.jpg,val,0,Cheng,6,0.9654983
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2984_MR051644C.jpg,val,0,Cheng,8,0.87531906
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3035_MR033389B.jpg,val,0,Cheng,8,0.7627887
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2686_MR038469.jpg,val,0,Cheng,6,0.88951504
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2685_MR038469.jpg,val,0,Cheng,8,0.8964057
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2945_MR051651.jpg,val,0,Cheng,8,0.8731938
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2533_MR029209I.jpg,val,0,Cheng,8,0.90137947
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1853_MR048294B.jpg,val,0,Cheng,10,0.9124578
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0796_88670.jpg,val,0,Cheng,6,0.93338495
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0897_95142.jpg,val,0,Cheng,8,0.92458034
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2384_MR017260F.jpg,val,0,Cheng,6,0.9475913
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2193_MR037458C.jpg,val,0,Cheng,10,0.91307044
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2094_MR034694.jpg,val,0,Cheng,6,0.96815056
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2265_MR049358.jpg,val,0,Cheng,14,0.85552025
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0764_103148.jpg,val,0,Cheng,8,0.8995069
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2671_MR053110E.jpg,val,0,Cheng,8,0.92863953
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2104_MR050687C.jpg,val,0,Cheng,12,0.87013
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3003_MR053110B.jpg,val,0,Cheng,10,0.7963525
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2564_MR051644.jpg,val,0,Cheng,8,0.92674744
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3027_MR034997.jpg,val,0,Cheng,8,0.8151411
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0910_97609.jpg,val,0,Cheng,6,0.8928754
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2271_MR049453.jpg,val,0,Cheng,6,0.9290852
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2198_MR040240.jpg,val,0,Cheng,6,0.9633259
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2137_MR049019G.jpg,val,0,Cheng,8,0.90025294
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2925_MR051586.jpg,val,0,Cheng,8,0.81526756
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3005_MR034694.jpg,val,0,Cheng,10,0.8720405
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2029_MR051644.jpg,val,0,Cheng,8,0.9677963
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1927_MR024780G.jpg,val,0,Cheng,8,0.8313206
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2689_MR032322C.jpg,val,0,Cheng,8,0.7968183
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2518_MR040240C.jpg,val,0,Cheng,6,0.9471512
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2172_MR037458B.jpg,val,0,Cheng,6,0.9105641
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2130_MR053110E.jpg,val,0,Cheng,14,0.90989506
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2339_MR051461.jpg,val,0,Cheng,6,0.9350442
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2499_MR026175E.jpg,val,0,Cheng,12,0.7900841
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2558_MR051644.jpg,val,0,Cheng,12,0.8337104
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2522_MR040240C.jpg,val,0,Cheng,6,0.9203531
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2304_MR050135B.jpg,val,0,Cheng,8,0.8716159
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2371_MR040240C.jpg,val,0,Cheng,6,0.93805236
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3048_MR040240D.jpg,val,0,Cheng,8,0.8622705
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2777_MR039473.jpg,val,0,Cheng,6,0.9049287
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2949_MR051796.jpg,val,0,Cheng,8,0.8456334
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2647_MR053241C.jpg,val,0,Cheng,8,0.7924219
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0906_96587.jpg,val,0,Cheng,10,0.81482035
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2799_MR040240B.jpg,val,0,Cheng,8,0.815095
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2983_MR051644C.jpg,val,0,Cheng,6,0.8243091
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2840_MR048944.jpg,val,0,Cheng,6,0.8402419
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2413_MR048297.jpg,val,0,Cheng,6,0.9150239
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2913_MR050791B.jpg,val,0,Cheng,10,0.77297354
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2249_MR049142.jpg,val,0,Cheng,8,0.9243407
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2816_MR033420.jpg,val,0,Cheng,6,0.8269464
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2405_MR048294.jpg,val,0,Cheng,8,0.8848845
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2779_MR039473.jpg,val,0,Cheng,8,0.8861934
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2012_MR051461B.jpg,val,0,Cheng,8,0.90701246
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2866_MR049358.jpg,val,0,Cheng,8,0.8237549
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1981_MR050791B.jpg,val,0,Cheng,10,0.93530184
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2912_MR050791B.jpg,val,0,Cheng,12,0.7783223
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0747_100820.jpg,val,0,Cheng,8,0.8732493
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2666_MR053110E.jpg,val,0,Cheng,12,0.9199983
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2835_MR048294B.jpg,val,0,Cheng,8,0.7914532
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0789_112105.jpg,val,0,Cheng,10,0.87942535
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2976_MR052550.jpg,val,0,Cheng,8,0.80897045
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0739_107747.jpg,val,0,Cheng,10,0.9383165
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2882_MR049453.jpg,val,0,Cheng,8,0.8288398
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2764_MR032322C.jpg,val,0,Cheng,8,0.90274423
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2048_MR051651B.jpg,val,0,Cheng,6,0.89575195
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0833_101020.jpg,val,0,Cheng,8,0.82877886
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2247_MR049142.jpg,val,0,Cheng,8,0.93322366
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2637_MR050687C.jpg,val,0,Cheng,8,0.91205066
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0842_103148.jpg,val,0,Cheng,8,0.8837382
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2451_MR040240.jpg,val,0,Cheng,6,0.91999704
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2805_MR036496B.jpg,val,0,Cheng,10,0.7796355
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2577_MR051796.jpg,val,0,Cheng,10,0.871624
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0846_106494.jpg,val,0,Cheng,12,0.84139466
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2476_MR033420.jpg,val,0,Cheng,8,0.8445082
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2634_MR050687C.jpg,val,0,Cheng,6,0.88821584
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2353_MR026175E.jpg,val,0,Cheng,10,0.91063964
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0738_107747.jpg,val,0,Cheng,6,0.9223887
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1975_MR050791B.jpg,val,0,Cheng,14,0.89552295
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2746_MR049019G.jpg,val,0,Cheng,12,0.6729811
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1882_MR049142.jpg,val,0,Cheng,6,0.90100044
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2464_MR029209G.jpg,val,0,Cheng,10,0.8906068
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2711_MR039473.jpg,val,0,Cheng,8,0.82516384
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1852_MR048297.jpg,val,0,Cheng,10,0.9382717
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2426_MR048944.jpg,val,0,Cheng,6,0.93733287
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0803_90284.jpg,val,0,Cheng,8,0.9212324
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0759_101020.jpg,val,0,Cheng,10,0.7900149
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2572_MR051651.jpg,val,0,Cheng,8,0.83047974
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1921_MR024780G.jpg,val,0,Cheng,6,0.909914
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2563_MR051644.jpg,val,0,Cheng,6,0.9229708
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2885_MR024780G.jpg,val,0,Cheng,6,0.82728183
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2195_MR037458C.jpg,val,0,Cheng,10,0.9510743
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2660_MR029209E.jpg,val,0,Cheng,12,0.7894669
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2502_MR026175E.jpg,val,0,Cheng,10,0.87786996
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0878_90284.jpg,val,0,Cheng,8,0.8464557
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2555_MR051644.jpg,val,0,Cheng,10,0.90690225
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2787_MR040240.jpg,val,0,Cheng,8,0.88675296
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2288_MR049453B.jpg,val,0,Cheng,6,0.929746
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2731_MR029209E.jpg,val,0,Cheng,6,0.8091313
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2191_MR037458C.jpg,val,0,Cheng,8,0.94133514
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2042_MR051796.jpg,val,0,Cheng,10,0.9047578
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2416_MR048294B.jpg,val,0,Cheng,10,0.9227926
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3002_MR053110B.jpg,val,0,Cheng,8,0.77036357
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3057_MR029209I.jpg,val,0,Cheng,6,0.78690237
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2629_MR034694.jpg,val,0,Cheng,14,0.87550086
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3024_MR034997.jpg,val,0,Cheng,6,0.7891869
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2496_MR024780E.jpg,val,0,Cheng,6,0.8447903
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0782_112105.jpg,val,0,Cheng,6,0.9077853
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0827_100820.jpg,val,0,Cheng,10,0.8835448
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2975_MR052550.jpg,val,0,Cheng,12,0.8127572
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3056_MR029209I.jpg,val,0,Cheng,10,0.8296036
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2058_MR051796B.jpg,val,0,Cheng,10,0.9280987
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2319_MR050791B.jpg,val,0,Cheng,10,0.8532236
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0851_106494.jpg,val,0,Cheng,8,0.8730363
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2808_MR036496B.jpg,val,0,Cheng,10,0.80685085
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2278_MR049453.jpg,val,0,Cheng,8,0.90155077
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2648_MR053241C.jpg,val,0,Cheng,8,0.8469249
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2814_MR033420.jpg,val,0,Cheng,6,0.79255253
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2335_MR051461.jpg,val,0,Cheng,6,0.92297673
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1986_MR049019C.jpg,val,0,Cheng,8,0.9069903
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2707_MR037458B.jpg,val,0,Cheng,6,0.87684304
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(44).jpg,val,1,Testing,10,0.6716742
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(69).jpg,val,1,Testing,14,0.7287032
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(15).jpg,val,1,Testing,16,0.6401492
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(5).jpg,val,1,Testing,16,0.6829128
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(94).jpg,val,1,Testing,12,0.77673995
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(28).jpg,val,1,Testing,10,0.80677587
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(37).jpg,val,1,Testing,14,0.6078707
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(34).jpg,val,1,Testing,12,0.60219574
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(59).jpg,val,1,Testing,14,0.40773162
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(78).jpg,val,1,Testing,16,0.6337562
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(23).jpg,val,1,Testing,16,0.5221527
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(127).jpg,val,1,Testing,14,0.6984652
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(86).jpg,val,1,Testing,8,0.8075376
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(98).jpg,val,1,Testing,12,0.7632816
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (11).jpg,val,1,Training,14,0.64835805
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (109).jpg,val,1,Training,8,0.89894027
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (80).jpg,val,1,Training,10,0.9053227
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (128).jpg,val,1,Training,10,0.8675398
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (31).jpg,val,1,Training,6,0.8689806
+brain-tumor-classification-mri/Training/meningioma_tumor/m (32).jpg,val,1,Training,10,0.9497038
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (27).jpg,val,1,Training,12,0.7297067
+brain-tumor-classification-mri/Training/meningioma_tumor/m (66).jpg,val,1,Training,6,0.8643058
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (150).jpg,val,1,Training,6,0.7795553
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (180).jpg,val,1,Training,12,0.75239867
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (23).jpg,val,1,Training,6,0.9681584
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(69).jpg,val,1,Training,12,0.90246856
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (36).jpg,val,1,Training,6,0.8590316
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (171).jpg,val,1,Training,8,0.9219152
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (139).jpg,val,1,Training,8,0.89191896
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (32).jpg,val,1,Training,8,0.9306641
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (9).jpg,val,1,Training,6,0.86179554
+brain-tumor-classification-mri/Training/meningioma_tumor/m (189).jpg,val,1,Training,10,0.8689432
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (30).jpg,val,1,Training,10,0.89995545
+brain-tumor-classification-mri/Training/meningioma_tumor/m (58).jpg,val,1,Training,10,0.8608063
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(64).jpg,val,1,Training,8,0.91183186
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (45).jpg,val,1,Training,8,0.9124731
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (13).jpg,val,1,Training,12,0.87258416
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (194).jpg,val,1,Training,6,0.94869345
+brain-tumor-classification-mri/Training/meningioma_tumor/m (83).jpg,val,1,Training,8,0.92039484
+brain-tumor-classification-mri/Training/meningioma_tumor/m (74).jpg,val,1,Training,8,0.9182656
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(85).jpg,val,1,Training,6,0.9069934
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (24).jpg,val,1,Training,6,0.8700761
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (88).jpg,val,1,Training,12,0.8340491
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (199).jpg,val,1,Training,12,0.7842618
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (137).jpg,val,1,Training,12,0.7477565
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (113).jpg,val,1,Training,10,0.8935557
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (64).jpg,val,1,Training,8,0.87104064
+brain-tumor-classification-mri/Training/meningioma_tumor/m (12).jpg,val,1,Training,10,0.8424327
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (10).jpg,val,1,Training,10,0.85413104
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (121).jpg,val,1,Training,10,0.7830631
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (20).jpg,val,1,Training,8,0.78839517
+brain-tumor-classification-mri/Training/meningioma_tumor/m (91).jpg,val,1,Training,8,0.9167781
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (110).jpg,val,1,Training,8,0.9122373
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (37).jpg,val,1,Training,8,0.89495456
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(97).jpg,val,1,Training,6,0.9440362
+brain-tumor-classification-mri/Training/meningioma_tumor/m (99).jpg,val,1,Training,8,0.8608418
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (215).jpg,val,1,Training,6,0.9456738
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (45).jpg,val,1,Training,8,0.8252386
+brain-tumor-classification-mri/Training/meningioma_tumor/m (190).jpg,val,1,Training,12,0.9215332
+brain-tumor-classification-mri/Training/meningioma_tumor/m (5).jpg,val,1,Training,10,0.8690711
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (8).jpg,val,1,Training,6,0.8275732
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (4).jpg,val,1,Training,10,0.8031595
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (47).jpg,val,1,Training,8,0.9137353
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (48).jpg,val,1,Training,12,0.75957
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (153).jpg,val,1,Training,10,0.8178661
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (157).jpg,val,1,Training,8,0.83580196
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (238).jpg,val,1,Training,10,0.838352
+brain-tumor-classification-mri/Training/meningioma_tumor/m (46).jpg,val,1,Training,10,0.9283681
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(42).jpg,val,1,Training,10,0.89393675
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (61).jpg,val,1,Training,6,0.88234496
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (104).jpg,val,1,Training,10,0.80285937
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (25).jpg,val,1,Training,10,0.7490988
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(74).jpg,val,1,Training,6,0.8850016
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(51).jpg,val,1,Training,10,0.9130975
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (82).jpg,val,1,Training,10,0.86961806
+brain-tumor-classification-mri/Training/meningioma_tumor/m (144).jpg,val,1,Training,8,0.89514077
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (98).jpg,val,1,Training,6,0.8544636
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(20).jpg,val,1,Training,8,0.94124067
+brain-tumor-classification-mri/Training/meningioma_tumor/m (154).jpg,val,1,Training,10,0.80830395
+brain-tumor-classification-mri/Training/meningioma_tumor/m (42).jpg,val,1,Training,10,0.9417484
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (36).jpg,val,1,Training,8,0.7658689
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (174).jpg,val,1,Training,12,0.8434306
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(41).jpg,val,1,Training,8,0.95016205
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (159).jpg,val,1,Training,10,0.84927475
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (189).jpg,val,1,Training,6,0.88836765
+brain-tumor-classification-mri/Training/meningioma_tumor/m (198).jpg,val,1,Training,12,0.94220793
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (232).jpg,val,1,Training,8,0.7805623
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (56).jpg,val,1,Training,8,0.7794271
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (37).jpg,val,1,Training,12,0.83845174
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(71).jpg,val,1,Training,6,0.87845147
+brain-tumor-classification-mri/Training/meningioma_tumor/m (81).jpg,val,1,Training,6,0.9250627
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (86).jpg,val,1,Training,8,0.93097204
+brain-tumor-classification-mri/Training/meningioma_tumor/m (71).jpg,val,1,Training,8,0.94213957
+brain-tumor-classification-mri/Training/meningioma_tumor/m (169).jpg,val,1,Training,8,0.94840807
+brain-tumor-classification-mri/Training/meningioma_tumor/m (21).jpg,val,1,Training,6,0.91022164
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (129).jpg,val,1,Training,12,0.86903185
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (151).jpg,val,1,Training,8,0.7534435
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(73).jpg,val,1,Training,10,0.8120981
+brain-tumor-classification-mri/Training/meningioma_tumor/m (132).jpg,val,1,Training,8,0.8970429
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(82).jpg,val,1,Training,6,0.9303502
+brain-tumor-classification-mri/Training/meningioma_tumor/m (56).jpg,val,1,Training,8,0.9073334
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (222).jpg,val,1,Training,16,0.8180518
+brain-tumor-classification-mri/Training/meningioma_tumor/m (191).jpg,val,1,Training,6,0.97470975
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0482_102714.jpg,val,1,Cheng,8,0.8351891
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0511_104281.jpg,val,1,Cheng,10,0.8321174
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0692_99089.jpg,val,1,Cheng,6,0.90371484
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0548_106914.jpg,val,1,Cheng,6,0.8336675
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0163_113805.jpg,val,1,Cheng,12,0.9169497
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0672_97737.jpg,val,1,Cheng,6,0.946083
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0018_101127.jpg,val,1,Cheng,8,0.95485264
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0289_105937.jpg,val,1,Cheng,12,0.91128564
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0126_111077.jpg,val,1,Cheng,8,0.9595322
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0245_102714.jpg,val,1,Cheng,10,0.91016984
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0142_112252.jpg,val,1,Cheng,12,0.92570156
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0703_99815.jpg,val,1,Cheng,6,0.88305575
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0170_114359.jpg,val,1,Cheng,6,0.9404784
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0660_97374.jpg,val,1,Cheng,10,0.90529996
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0103_107494.jpg,val,1,Cheng,8,0.9252085
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0441_99308.jpg,val,1,Cheng,6,0.87055534
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0635_113614.jpg,val,1,Cheng,8,0.77874607
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0175_97607.jpg,val,1,Cheng,8,0.93154085
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0594_111532.jpg,val,1,Cheng,8,0.9239996
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0330_108514.jpg,val,1,Cheng,8,0.84637845
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0294_106442.jpg,val,1,Cheng,10,0.87003726
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0601_112002.jpg,val,1,Cheng,6,0.8690759
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0304_106720.jpg,val,1,Cheng,12,0.83889437
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0088_106914.jpg,val,1,Cheng,8,0.91610265
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0620_112650.jpg,val,1,Cheng,6,0.7981776
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0119_109411.jpg,val,1,Cheng,8,0.8662472
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0494_102960.jpg,val,1,Cheng,12,0.7316937
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0138_112002.jpg,val,1,Cheng,8,0.8984698
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0186_97875.jpg,val,1,Cheng,8,0.90523416
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0051_104281.jpg,val,1,Cheng,10,0.86248916
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0272_104167.jpg,val,1,Cheng,6,0.91038305
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0484_102714.jpg,val,1,Cheng,8,0.8487432
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0493_102960.jpg,val,1,Cheng,6,0.8274991
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0049_104281.jpg,val,1,Cheng,10,0.8430446
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0192_98241.jpg,val,1,Cheng,6,0.92593706
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0623_113098.jpg,val,1,Cheng,10,0.82478404
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0364_112002.jpg,val,1,Cheng,10,0.88786244
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0267_103925.jpg,val,1,Cheng,10,0.9202389
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0199_99017.jpg,val,1,Cheng,8,0.9120012
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0155_113435.jpg,val,1,Cheng,6,0.93075097
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0673_97793.jpg,val,1,Cheng,10,0.78003573
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0312_106914.jpg,val,1,Cheng,6,0.88852626
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0328_108514.jpg,val,1,Cheng,10,0.8883401
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0453_100920.jpg,val,1,Cheng,6,0.84421146
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_3063_95969.jpg,val,1,Cheng,8,0.8794531
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0510_104281.jpg,val,1,Cheng,8,0.83207935
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0399_114359.jpg,val,1,Cheng,6,0.89857596
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0695_99162.jpg,val,1,Cheng,10,0.8220932
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0630_113435.jpg,val,1,Cheng,6,0.92374134
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0603_112062.jpg,val,1,Cheng,10,0.74782246
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0248_102929.jpg,val,1,Cheng,8,0.92948496
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0625_113435.jpg,val,1,Cheng,8,0.80489707
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0651_114359.jpg,val,1,Cheng,8,0.81947726
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0255_103673.jpg,val,1,Cheng,8,0.9298016
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0586_111077.jpg,val,1,Cheng,6,0.8273198
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0098_107248.jpg,val,1,Cheng,8,0.87617373
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0435_99089.jpg,val,1,Cheng,6,0.9514588
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0497_103673.jpg,val,1,Cheng,6,0.9214828
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0648_114359.jpg,val,1,Cheng,8,0.8405414
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0688_99089.jpg,val,1,Cheng,8,0.9170588
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0247_102929.jpg,val,1,Cheng,10,0.9415312
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0335_108590.jpg,val,1,Cheng,8,0.8438046
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0050_104281.jpg,val,1,Cheng,10,0.86102724
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0220_100572.jpg,val,1,Cheng,10,0.9330407
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0540_106720.jpg,val,1,Cheng,20,0.7734633
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0407_97607.jpg,val,1,Cheng,12,0.84461045
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0133_111532.jpg,val,1,Cheng,6,0.91355824
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0574_108945.jpg,val,1,Cheng,6,0.885288
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0342_109968.jpg,val,1,Cheng,8,0.93285066
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0530_106534.jpg,val,1,Cheng,6,0.918759
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0295_106442.jpg,val,1,Cheng,14,0.81922394
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0513_104281.jpg,val,1,Cheng,6,0.81239784
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0164_114018.jpg,val,1,Cheng,6,0.92268276
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0428_98241.jpg,val,1,Cheng,6,0.85751724
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0093_107248.jpg,val,1,Cheng,8,0.8849128
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0025_102420.jpg,val,1,Cheng,10,0.81092787
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0449_100572.jpg,val,1,Cheng,10,0.9040896
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0357_111532.jpg,val,1,Cheng,10,0.85649955
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0329_108514.jpg,val,1,Cheng,12,0.8045643
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0064_106284.jpg,val,1,Cheng,6,0.87722105
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0261_103925.jpg,val,1,Cheng,8,0.9067031
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_3064_88510.jpg,val,1,Cheng,12,0.8405192
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0467_101797.jpg,val,1,Cheng,6,0.9262292
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0524_106284.jpg,val,1,Cheng,8,0.8354516
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0557_107494.jpg,val,1,Cheng,8,0.8370903
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0518_105555.jpg,val,1,Cheng,10,0.817122
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0004_100360.jpg,val,1,Cheng,8,0.9714754
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0571_108590.jpg,val,1,Cheng,6,0.8871336
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0443_100360.jpg,val,1,Cheng,8,0.8265858
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0372_112552.jpg,val,1,Cheng,8,0.8817844
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0377_112552.jpg,val,1,Cheng,10,0.8348687
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0622_113098.jpg,val,1,Cheng,12,0.86452895
+brain-tumor-classification-mri/Testing/pituitary_tumor/image(44).jpg,val,2,Testing,16,0.5973935
+brain-tumor-classification-mri/Testing/pituitary_tumor/image(3).jpg,val,2,Testing,10,0.667537
+brain-tumor-classification-mri/Training/pituitary_tumor/p (628).jpg,val,2,Training,10,0.9477494
+brain-tumor-classification-mri/Training/pituitary_tumor/p (34).jpg,val,2,Training,8,0.7572233
+brain-tumor-classification-mri/Training/pituitary_tumor/p (286).jpg,val,2,Training,8,0.80893135
+brain-tumor-classification-mri/Training/pituitary_tumor/p (256).jpg,val,2,Training,6,0.9207763
+brain-tumor-classification-mri/Training/pituitary_tumor/p (797).jpg,val,2,Training,10,0.8323456
+brain-tumor-classification-mri/Training/pituitary_tumor/p (771).jpg,val,2,Training,12,0.96720695
+brain-tumor-classification-mri/Training/pituitary_tumor/p (468).jpg,val,2,Training,8,0.9302756
+brain-tumor-classification-mri/Training/pituitary_tumor/p (398).jpg,val,2,Training,12,0.84541756
+brain-tumor-classification-mri/Training/pituitary_tumor/p (735).jpg,val,2,Training,12,0.9445229
+brain-tumor-classification-mri/Training/pituitary_tumor/p (660).jpg,val,2,Training,12,0.8846032
+brain-tumor-classification-mri/Training/pituitary_tumor/p (159).jpg,val,2,Training,10,0.879869
+brain-tumor-classification-mri/Training/pituitary_tumor/p (506).jpg,val,2,Training,6,0.94143057
+brain-tumor-classification-mri/Training/pituitary_tumor/p (694).jpg,val,2,Training,10,0.9658835
+brain-tumor-classification-mri/Training/pituitary_tumor/p (270).jpg,val,2,Training,6,0.87505186
+brain-tumor-classification-mri/Training/pituitary_tumor/p (523).jpg,val,2,Training,10,0.87296677
+brain-tumor-classification-mri/Training/pituitary_tumor/p (230).jpg,val,2,Training,6,0.9498926
+brain-tumor-classification-mri/Training/pituitary_tumor/p (585).jpg,val,2,Training,8,0.7440243
+brain-tumor-classification-mri/Training/pituitary_tumor/p (595).jpg,val,2,Training,6,0.9241742
+brain-tumor-classification-mri/Training/pituitary_tumor/p (632).jpg,val,2,Training,8,0.9517673
+brain-tumor-classification-mri/Training/pituitary_tumor/p (94).jpg,val,2,Training,10,0.94675094
+brain-tumor-classification-mri/Training/pituitary_tumor/p (652).jpg,val,2,Training,6,0.9691922
+brain-tumor-classification-mri/Training/pituitary_tumor/p (313).jpg,val,2,Training,6,0.93350315
+brain-tumor-classification-mri/Training/pituitary_tumor/p (60).jpg,val,2,Training,10,0.94390905
+brain-tumor-classification-mri/Training/pituitary_tumor/p (760).jpg,val,2,Training,8,0.95523083
+brain-tumor-classification-mri/Training/pituitary_tumor/p (460).jpg,val,2,Training,14,0.61899036
+brain-tumor-classification-mri/Training/pituitary_tumor/p (556).jpg,val,2,Training,8,0.8197837
+brain-tumor-classification-mri/Training/pituitary_tumor/p (676).jpg,val,2,Training,12,0.8032409
+brain-tumor-classification-mri/Training/pituitary_tumor/p (165).jpg,val,2,Training,8,0.91260517
+brain-tumor-classification-mri/Training/pituitary_tumor/p (763).jpg,val,2,Training,10,0.8826488
+brain-tumor-classification-mri/Training/pituitary_tumor/p (479).jpg,val,2,Training,10,0.8932302
+brain-tumor-classification-mri/Training/pituitary_tumor/p (467).jpg,val,2,Training,8,0.8701204
+brain-tumor-classification-mri/Training/pituitary_tumor/p (717).jpg,val,2,Training,6,0.96026874
+brain-tumor-classification-mri/Training/pituitary_tumor/p (654).jpg,val,2,Training,8,0.95531017
+brain-tumor-classification-mri/Training/pituitary_tumor/p (798).jpg,val,2,Training,8,0.9348519
+brain-tumor-classification-mri/Training/pituitary_tumor/p (741).jpg,val,2,Training,12,0.7317071
+brain-tumor-classification-mri/Training/pituitary_tumor/p (445).jpg,val,2,Training,6,0.9554254
+brain-tumor-classification-mri/Training/pituitary_tumor/p (639).jpg,val,2,Training,8,0.94695735
+brain-tumor-classification-mri/Training/pituitary_tumor/p (545).jpg,val,2,Training,12,0.8735421
+brain-tumor-classification-mri/Training/pituitary_tumor/p (1).jpg,val,2,Training,8,0.8066931
+brain-tumor-classification-mri/Training/pituitary_tumor/p (183).jpg,val,2,Training,8,0.89127517
+brain-tumor-classification-mri/Training/pituitary_tumor/p (739).jpg,val,2,Training,12,0.9412106
+brain-tumor-classification-mri/Training/pituitary_tumor/p (669).jpg,val,2,Training,10,0.92965555
+brain-tumor-classification-mri/Training/pituitary_tumor/p (529).jpg,val,2,Training,12,0.953312
+brain-tumor-classification-mri/Training/pituitary_tumor/p (108).jpg,val,2,Training,6,0.9052609
+brain-tumor-classification-mri/Training/pituitary_tumor/p (418).jpg,val,2,Training,6,0.9177578
+brain-tumor-classification-mri/Training/pituitary_tumor/p (637).jpg,val,2,Training,8,0.9348986
+brain-tumor-classification-mri/Training/pituitary_tumor/p (658).jpg,val,2,Training,12,0.90218586
+brain-tumor-classification-mri/Training/pituitary_tumor/p (430).jpg,val,2,Training,8,0.9123907
+brain-tumor-classification-mri/Training/pituitary_tumor/p (224).jpg,val,2,Training,8,0.94652015
+brain-tumor-classification-mri/Training/pituitary_tumor/p (259).jpg,val,2,Training,6,0.935238
+brain-tumor-classification-mri/Training/pituitary_tumor/p (338).jpg,val,2,Training,10,0.78120327
+brain-tumor-classification-mri/Training/pituitary_tumor/p (177).jpg,val,2,Training,6,0.9128965
+brain-tumor-classification-mri/Training/pituitary_tumor/p (795).jpg,val,2,Training,6,0.9654414
+brain-tumor-classification-mri/Training/pituitary_tumor/p (533).jpg,val,2,Training,6,0.942752
+brain-tumor-classification-mri/Training/pituitary_tumor/p (100).jpg,val,2,Training,8,0.9670959
+brain-tumor-classification-mri/Training/pituitary_tumor/p (605).jpg,val,2,Training,12,0.7665203
+brain-tumor-classification-mri/Training/pituitary_tumor/p (640).jpg,val,2,Training,10,0.9015982
+brain-tumor-classification-mri/Training/pituitary_tumor/p (525).jpg,val,2,Training,10,0.7480713
+brain-tumor-classification-mri/Training/pituitary_tumor/p (814).jpg,val,2,Training,12,0.94024646
+brain-tumor-classification-mri/Training/pituitary_tumor/p (743).jpg,val,2,Training,14,0.8425218
+brain-tumor-classification-mri/Training/pituitary_tumor/p (672).jpg,val,2,Training,6,0.97064805
+brain-tumor-classification-mri/Training/pituitary_tumor/p (630).jpg,val,2,Training,14,0.9537976
+brain-tumor-classification-mri/Training/pituitary_tumor/p (546).jpg,val,2,Training,14,0.9461776
+brain-tumor-classification-mri/Training/pituitary_tumor/p (649).jpg,val,2,Training,8,0.95718926
+brain-tumor-classification-mri/Training/pituitary_tumor/p (678).jpg,val,2,Training,10,0.9426166
+brain-tumor-classification-mri/Training/pituitary_tumor/p (309).jpg,val,2,Training,10,0.9095456
+brain-tumor-classification-mri/Training/pituitary_tumor/p (427).jpg,val,2,Training,8,0.7868468
+brain-tumor-classification-mri/Training/pituitary_tumor/p (621).jpg,val,2,Training,8,0.9732162
+brain-tumor-classification-mri/Training/pituitary_tumor/p (213).jpg,val,2,Training,8,0.91984844
+brain-tumor-classification-mri/Training/pituitary_tumor/p (292).jpg,val,2,Training,6,0.80722976
+brain-tumor-classification-mri/Training/pituitary_tumor/p (692).jpg,val,2,Training,6,0.95971984
+brain-tumor-classification-mri/Training/pituitary_tumor/p (7).jpg,val,2,Training,6,0.9442447
+brain-tumor-classification-mri/Training/pituitary_tumor/p (486).jpg,val,2,Training,6,0.95200235
+brain-tumor-classification-mri/Training/pituitary_tumor/p (16).jpg,val,2,Training,10,0.9633458
+brain-tumor-classification-mri/Training/pituitary_tumor/p (604).jpg,val,2,Training,12,0.74476933
+brain-tumor-classification-mri/Training/pituitary_tumor/p (769).jpg,val,2,Training,10,0.96339923
+brain-tumor-classification-mri/Training/pituitary_tumor/p (659).jpg,val,2,Training,14,0.8198772
+brain-tumor-classification-mri/Training/pituitary_tumor/p (343).jpg,val,2,Training,10,0.912738
+brain-tumor-classification-mri/Training/pituitary_tumor/p (330).jpg,val,2,Training,6,0.95804596
+brain-tumor-classification-mri/Training/pituitary_tumor/p (462).jpg,val,2,Training,12,0.5888951
+brain-tumor-classification-mri/Training/pituitary_tumor/p (102).jpg,val,2,Training,10,0.9434819
+brain-tumor-classification-mri/Training/pituitary_tumor/p (263).jpg,val,2,Training,6,0.9506946
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1022_114094.jpg,val,2,Cheng,8,0.94319135
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0971_109898.jpg,val,2,Cheng,10,0.8772034
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0712_106062.jpg,val,2,Cheng,6,0.94385755
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1547_104684.jpg,val,2,Cheng,6,0.9417667
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1603_98472.jpg,val,2,Cheng,8,0.767175
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1522_103731.jpg,val,2,Cheng,6,0.9580009
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1553_104912.jpg,val,2,Cheng,12,0.82562554
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1270_113741.jpg,val,2,Cheng,12,0.63499653
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1614_98871.jpg,val,2,Cheng,10,0.9374174
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0918_105936.jpg,val,2,Cheng,6,0.9369248
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1554_104912.jpg,val,2,Cheng,10,0.870443
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1210_109471.jpg,val,2,Cheng,8,0.9275806
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1774_97461.jpg,val,2,Cheng,6,0.9409282
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1101_110537.jpg,val,2,Cheng,12,0.9620258
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1645_101029.jpg,val,2,Cheng,8,0.7953983
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1398_97461.jpg,val,2,Cheng,8,0.95551926
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1621_98992.jpg,val,2,Cheng,6,0.90165585
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1534_104019.jpg,val,2,Cheng,12,0.89106643
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1449_99223.jpg,val,2,Cheng,8,0.9442404
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1837_99223.jpg,val,2,Cheng,8,0.89381236
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1075_108931.jpg,val,2,Cheng,12,0.9007944
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1263_112847.jpg,val,2,Cheng,8,0.9413732
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1763_105638.jpg,val,2,Cheng,6,0.8928705
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1348_104019.jpg,val,2,Cheng,12,0.9102245
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1378_105475.jpg,val,2,Cheng,10,0.79630435
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1528_103837.jpg,val,2,Cheng,12,0.7687754
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1060_107743.jpg,val,2,Cheng,6,0.95384544
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1085_109769.jpg,val,2,Cheng,8,0.9271834
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1239_111125.jpg,val,2,Cheng,8,0.9130643
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1116_111075.jpg,val,2,Cheng,6,0.94814074
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1546_104684.jpg,val,2,Cheng,6,0.94153184
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1392_97416.jpg,val,2,Cheng,6,0.9630221
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1114_111075.jpg,val,2,Cheng,6,0.94943064
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1745_104912.jpg,val,2,Cheng,6,0.899291
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1355_104558.jpg,val,2,Cheng,8,0.93639845
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1574_97416.jpg,val,2,Cheng,8,0.91939694
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1536_104019.jpg,val,2,Cheng,8,0.96621704
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1531_103837.jpg,val,2,Cheng,8,0.9341335
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1365_104684.jpg,val,2,Cheng,10,0.96314937
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1633_98995.jpg,val,2,Cheng,8,0.846228
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1482_101724.jpg,val,2,Cheng,10,0.8702215
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1699_103582.jpg,val,2,Cheng,10,0.82999635
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1505_103478.jpg,val,2,Cheng,6,0.92569417
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1668_102648.jpg,val,2,Cheng,8,0.9331306
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1612_98871.jpg,val,2,Cheng,8,0.8888025
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1463_101029.jpg,val,2,Cheng,8,0.9544903
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1410_97890.jpg,val,2,Cheng,8,0.96447486
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1245_111785.jpg,val,2,Cheng,6,0.9293978
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1151_113741.jpg,val,2,Cheng,10,0.9394453
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1806_98871.jpg,val,2,Cheng,6,0.92884785
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1777_97461.jpg,val,2,Cheng,6,0.9286812
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1558_105187.jpg,val,2,Cheng,8,0.78032315
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1020_114361.jpg,val,2,Cheng,8,0.92803377
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1577_97416.jpg,val,2,Cheng,10,0.95344436
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1000_112649.jpg,val,2,Cheng,6,0.95812196
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1441_98992.jpg,val,2,Cheng,6,0.98003083
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1285_101145.jpg,val,2,Cheng,6,0.9454065
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1433_98874.jpg,val,2,Cheng,8,0.9624906
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0976_110993.jpg,val,2,Cheng,8,0.86292624
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1566_105538.jpg,val,2,Cheng,12,0.7988426
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1054_107505.jpg,val,2,Cheng,6,0.95526564
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1794_97890.jpg,val,2,Cheng,8,0.9481713
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1256_112746.jpg,val,2,Cheng,8,0.9359669
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1395_97461.jpg,val,2,Cheng,6,0.9573442
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1600_98472.jpg,val,2,Cheng,10,0.8062908
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1514_103670.jpg,val,2,Cheng,10,0.88182366
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1557_105187.jpg,val,2,Cheng,14,0.7517138
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1074_108931.jpg,val,2,Cheng,12,0.83166665
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1503_103478.jpg,val,2,Cheng,6,0.9443667
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1425_98871.jpg,val,2,Cheng,6,0.9617002
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1337_103731.jpg,val,2,Cheng,10,0.9214379
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1066_108858.jpg,val,2,Cheng,6,0.9519675
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1204_108931.jpg,val,2,Cheng,6,0.8442874
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1571_105638.jpg,val,2,Cheng,10,0.92810494
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1605_98652.jpg,val,2,Cheng,8,0.93965894
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1322_103582.jpg,val,2,Cheng,10,0.96938735
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1447_99223.jpg,val,2,Cheng,8,0.9071283
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1382_105538.jpg,val,2,Cheng,8,0.94238734
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1494_103257.jpg,val,2,Cheng,8,0.9571208
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0947_107743.jpg,val,2,Cheng,6,0.95624745
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1011_113274.jpg,val,2,Cheng,6,0.9469076
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1502_103478.jpg,val,2,Cheng,6,0.89019364
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1218_109769.jpg,val,2,Cheng,10,0.88845336
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1010_113274.jpg,val,2,Cheng,10,0.86154974
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1454_99223.jpg,val,2,Cheng,12,0.9408795
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0975_110537.jpg,val,2,Cheng,10,0.8994711
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0923_106062.jpg,val,2,Cheng,6,0.9398633
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1357_104558.jpg,val,2,Cheng,6,0.9391797
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1713_103731.jpg,val,2,Cheng,8,0.93010503
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1118_111125.jpg,val,2,Cheng,6,0.9468112
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1358_104558.jpg,val,2,Cheng,8,0.96401244
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1761_105638.jpg,val,2,Cheng,8,0.9078211
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1130_112074.jpg,val,2,Cheng,6,0.93847656
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1563_105475.jpg,val,2,Cheng,8,0.9504047
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1698_103582.jpg,val,2,Cheng,6,0.93385834
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1654_101145.jpg,val,2,Cheng,6,0.9486635
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1353_104558.jpg,val,2,Cheng,14,0.9012694
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1644_101029.jpg,val,2,Cheng,8,0.7281292
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1455_99223.jpg,val,2,Cheng,12,0.89681494
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0962_109769.jpg,val,2,Cheng,10,0.84883535
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1584_97461.jpg,val,2,Cheng,6,0.95878214
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1716_103837.jpg,val,2,Cheng,6,0.9289837
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1292_101305.jpg,val,2,Cheng,12,0.9509976
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0990_111785.jpg,val,2,Cheng,6,0.9592433
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1352_104558.jpg,val,2,Cheng,12,0.7682215
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1818_98874.jpg,val,2,Cheng,8,0.9530634
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1526_103731.jpg,val,2,Cheng,10,0.8958011
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1024_114094.jpg,val,2,Cheng,6,0.9621957
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1787_97599.jpg,val,2,Cheng,8,0.93898964
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1112_111075.jpg,val,2,Cheng,8,0.7539716
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1154_114040.jpg,val,2,Cheng,10,0.94235265
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1174_106062.jpg,val,2,Cheng,6,0.92906195
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1131_112074.jpg,val,2,Cheng,8,0.94110316
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1555_104912.jpg,val,2,Cheng,6,0.9519063
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1409_97599.jpg,val,2,Cheng,12,0.8193005
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1272_113741.jpg,val,2,Cheng,12,0.63233155
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1575_97416.jpg,val,2,Cheng,10,0.8137336
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0989_111125.jpg,val,2,Cheng,10,0.87826806
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1651_101145.jpg,val,2,Cheng,6,0.90551156
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1652_101145.jpg,val,2,Cheng,6,0.95051765
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1670_102648.jpg,val,2,Cheng,6,0.91334504
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1551_104684.jpg,val,2,Cheng,10,0.9318963
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1567_105538.jpg,val,2,Cheng,14,0.7951384
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1562_105187.jpg,val,2,Cheng,14,0.91461676
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1460_101017.jpg,val,2,Cheng,8,0.9290104
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0943_107505.jpg,val,2,Cheng,8,0.9669814
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1206_108931.jpg,val,2,Cheng,12,0.7862528
+brain-tumor-classification-mri/Testing/glioma_tumor/image(44).jpg,test,0,Testing,16,0.5577405
+brain-tumor-classification-mri/Testing/glioma_tumor/image(35).jpg,test,0,Testing,14,0.7774018
+brain-tumor-classification-mri/Testing/glioma_tumor/image(81).jpg,test,0,Testing,14,0.7081385
+brain-tumor-classification-mri/Testing/glioma_tumor/image(32).jpg,test,0,Testing,12,0.8105589
+brain-tumor-classification-mri/Testing/glioma_tumor/image(68).jpg,test,0,Testing,10,0.91560334
+brain-tumor-classification-mri/Testing/glioma_tumor/image.jpg,test,0,Testing,18,0.5773681
+brain-tumor-classification-mri/Testing/glioma_tumor/image(60).jpg,test,0,Testing,6,0.83885777
+brain-tumor-classification-mri/Testing/glioma_tumor/image(56).jpg,test,0,Testing,10,0.8327521
+brain-tumor-classification-mri/Training/glioma_tumor/gg (546).jpg,test,0,Training,10,0.8929894
+brain-tumor-classification-mri/Training/glioma_tumor/gg (513).jpg,test,0,Training,6,0.9701586
+brain-tumor-classification-mri/Training/glioma_tumor/gg (105).jpg,test,0,Training,10,0.7949925
+brain-tumor-classification-mri/Training/glioma_tumor/gg (211).jpg,test,0,Training,10,0.77165323
+brain-tumor-classification-mri/Training/glioma_tumor/gg (434).jpg,test,0,Training,8,0.78464043
+brain-tumor-classification-mri/Training/glioma_tumor/gg (204).jpg,test,0,Training,6,0.79402786
+brain-tumor-classification-mri/Training/glioma_tumor/gg (800).jpg,test,0,Training,8,0.9249752
+brain-tumor-classification-mri/Training/glioma_tumor/gg (788).jpg,test,0,Training,8,0.9184547
+brain-tumor-classification-mri/Training/glioma_tumor/gg (317).jpg,test,0,Training,6,0.9137525
+brain-tumor-classification-mri/Training/glioma_tumor/gg (472).jpg,test,0,Training,10,0.71776193
+brain-tumor-classification-mri/Training/glioma_tumor/gg (571).jpg,test,0,Training,6,0.9372038
+brain-tumor-classification-mri/Training/glioma_tumor/gg (162).jpg,test,0,Training,10,0.8047572
+brain-tumor-classification-mri/Training/glioma_tumor/gg (168).jpg,test,0,Training,8,0.9258162
+brain-tumor-classification-mri/Training/glioma_tumor/gg (719).jpg,test,0,Training,6,0.93246883
+brain-tumor-classification-mri/Training/glioma_tumor/gg (616).jpg,test,0,Training,6,0.9712039
+brain-tumor-classification-mri/Training/glioma_tumor/gg (133).jpg,test,0,Training,8,0.9219419
+brain-tumor-classification-mri/Training/glioma_tumor/gg (88).jpg,test,0,Training,8,0.881368
+brain-tumor-classification-mri/Training/glioma_tumor/gg (5).jpg,test,0,Training,10,0.9281813
+brain-tumor-classification-mri/Training/glioma_tumor/gg (321).jpg,test,0,Training,8,0.9116512
+brain-tumor-classification-mri/Training/glioma_tumor/gg (639).jpg,test,0,Training,6,0.93072003
+brain-tumor-classification-mri/Training/glioma_tumor/gg (65).jpg,test,0,Training,8,0.7667851
+brain-tumor-classification-mri/Training/glioma_tumor/gg (822).jpg,test,0,Training,8,0.9348706
+brain-tumor-classification-mri/Training/glioma_tumor/gg (327).jpg,test,0,Training,6,0.93328923
+brain-tumor-classification-mri/Training/glioma_tumor/gg (31).jpg,test,0,Training,10,0.7206492
+brain-tumor-classification-mri/Training/glioma_tumor/gg (463).jpg,test,0,Training,6,0.8266629
+brain-tumor-classification-mri/Training/glioma_tumor/gg (459).jpg,test,0,Training,8,0.7960342
+brain-tumor-classification-mri/Training/glioma_tumor/gg (340).jpg,test,0,Training,12,0.8144555
+brain-tumor-classification-mri/Training/glioma_tumor/gg (485).jpg,test,0,Training,8,0.8715048
+brain-tumor-classification-mri/Training/glioma_tumor/gg (152).jpg,test,0,Training,6,0.871263
+brain-tumor-classification-mri/Training/glioma_tumor/gg (189).jpg,test,0,Training,6,0.86337495
+brain-tumor-classification-mri/Training/glioma_tumor/gg (667).jpg,test,0,Training,6,0.9675088
+brain-tumor-classification-mri/Training/glioma_tumor/gg (115).jpg,test,0,Training,12,0.8102732
+brain-tumor-classification-mri/Training/glioma_tumor/gg (356).jpg,test,0,Training,6,0.88340735
+brain-tumor-classification-mri/Training/glioma_tumor/gg (220).jpg,test,0,Training,8,0.90884167
+brain-tumor-classification-mri/Training/glioma_tumor/gg (669).jpg,test,0,Training,8,0.96422553
+brain-tumor-classification-mri/Training/glioma_tumor/gg (70).jpg,test,0,Training,6,0.9051628
+brain-tumor-classification-mri/Training/glioma_tumor/gg (371).jpg,test,0,Training,12,0.8734285
+brain-tumor-classification-mri/Training/glioma_tumor/gg (77).jpg,test,0,Training,6,0.93727404
+brain-tumor-classification-mri/Training/glioma_tumor/gg (735).jpg,test,0,Training,6,0.9309384
+brain-tumor-classification-mri/Training/glioma_tumor/gg (677).jpg,test,0,Training,8,0.94762003
+brain-tumor-classification-mri/Training/glioma_tumor/gg (493).jpg,test,0,Training,6,0.9621144
+brain-tumor-classification-mri/Training/glioma_tumor/gg (151).jpg,test,0,Training,10,0.9030426
+brain-tumor-classification-mri/Training/glioma_tumor/gg (641).jpg,test,0,Training,6,0.91076285
+brain-tumor-classification-mri/Training/glioma_tumor/gg (284).jpg,test,0,Training,8,0.9521614
+brain-tumor-classification-mri/Training/glioma_tumor/gg (398).jpg,test,0,Training,10,0.8546481
+brain-tumor-classification-mri/Training/glioma_tumor/gg (366).jpg,test,0,Training,8,0.7431619
+brain-tumor-classification-mri/Training/glioma_tumor/gg (382).jpg,test,0,Training,14,0.8117642
+brain-tumor-classification-mri/Training/glioma_tumor/gg (391).jpg,test,0,Training,6,0.8528898
+brain-tumor-classification-mri/Training/glioma_tumor/gg (236).jpg,test,0,Training,8,0.79638
+brain-tumor-classification-mri/Training/glioma_tumor/gg (674).jpg,test,0,Training,6,0.948401
+brain-tumor-classification-mri/Training/glioma_tumor/gg (532).jpg,test,0,Training,10,0.9042108
+brain-tumor-classification-mri/Training/glioma_tumor/gg (314).jpg,test,0,Training,10,0.8642917
+brain-tumor-classification-mri/Training/glioma_tumor/gg (483).jpg,test,0,Training,10,0.8496782
+brain-tumor-classification-mri/Training/glioma_tumor/gg (737).jpg,test,0,Training,8,0.96861607
+brain-tumor-classification-mri/Training/glioma_tumor/gg (756).jpg,test,0,Training,12,0.91473246
+brain-tumor-classification-mri/Training/glioma_tumor/gg (785).jpg,test,0,Training,8,0.9024799
+brain-tumor-classification-mri/Training/glioma_tumor/gg (729).jpg,test,0,Training,8,0.9670816
+brain-tumor-classification-mri/Training/glioma_tumor/gg (726).jpg,test,0,Training,10,0.92152107
+brain-tumor-classification-mri/Training/glioma_tumor/gg (178).jpg,test,0,Training,8,0.81338525
+brain-tumor-classification-mri/Training/glioma_tumor/gg (422).jpg,test,0,Training,6,0.82173663
+brain-tumor-classification-mri/Training/glioma_tumor/gg (767).jpg,test,0,Training,6,0.9401562
+brain-tumor-classification-mri/Training/glioma_tumor/gg (175).jpg,test,0,Training,8,0.7632025
+brain-tumor-classification-mri/Training/glioma_tumor/gg (157).jpg,test,0,Training,8,0.81938946
+brain-tumor-classification-mri/Training/glioma_tumor/gg (401).jpg,test,0,Training,10,0.9063868
+brain-tumor-classification-mri/Training/glioma_tumor/gg (291).jpg,test,0,Training,10,0.9233808
+brain-tumor-classification-mri/Training/glioma_tumor/gg (743).jpg,test,0,Training,8,0.9073316
+brain-tumor-classification-mri/Training/glioma_tumor/gg (107).jpg,test,0,Training,8,0.81571704
+brain-tumor-classification-mri/Training/glioma_tumor/gg (578).jpg,test,0,Training,6,0.9359994
+brain-tumor-classification-mri/Training/glioma_tumor/gg (490).jpg,test,0,Training,8,0.98157716
+brain-tumor-classification-mri/Training/glioma_tumor/gg (50).jpg,test,0,Training,10,0.77386284
+brain-tumor-classification-mri/Training/glioma_tumor/gg (467).jpg,test,0,Training,10,0.80177736
+brain-tumor-classification-mri/Training/glioma_tumor/gg (247).jpg,test,0,Training,14,0.7857025
+brain-tumor-classification-mri/Training/glioma_tumor/gg (144).jpg,test,0,Training,10,0.8667418
+brain-tumor-classification-mri/Training/glioma_tumor/gg (819).jpg,test,0,Training,6,0.9101708
+brain-tumor-classification-mri/Training/glioma_tumor/gg (246).jpg,test,0,Training,6,0.8175382
+brain-tumor-classification-mri/Training/glioma_tumor/gg (201).jpg,test,0,Training,6,0.87094104
+brain-tumor-classification-mri/Training/glioma_tumor/gg (642).jpg,test,0,Training,8,0.8186267
+brain-tumor-classification-mri/Training/glioma_tumor/gg (660).jpg,test,0,Training,8,0.97837013
+brain-tumor-classification-mri/Training/glioma_tumor/gg (579).jpg,test,0,Training,6,0.94844043
+brain-tumor-classification-mri/Training/glioma_tumor/gg (407).jpg,test,0,Training,14,0.69238317
+brain-tumor-classification-mri/Training/glioma_tumor/gg (234).jpg,test,0,Training,8,0.8262154
+brain-tumor-classification-mri/Training/glioma_tumor/gg (457).jpg,test,0,Training,10,0.8767451
+brain-tumor-classification-mri/Training/glioma_tumor/gg (524).jpg,test,0,Training,10,0.85002416
+brain-tumor-classification-mri/Training/glioma_tumor/gg (227).jpg,test,0,Training,8,0.8308275
+brain-tumor-classification-mri/Training/glioma_tumor/gg (179).jpg,test,0,Training,12,0.7569887
+brain-tumor-classification-mri/Training/glioma_tumor/gg (647).jpg,test,0,Training,10,0.97045827
+brain-tumor-classification-mri/Training/glioma_tumor/gg (206).jpg,test,0,Training,6,0.84071213
+brain-tumor-classification-mri/Training/glioma_tumor/gg (37).jpg,test,0,Training,6,0.8744452
+brain-tumor-classification-mri/Training/glioma_tumor/gg (761).jpg,test,0,Training,8,0.9249782
+brain-tumor-classification-mri/Training/glioma_tumor/gg (420).jpg,test,0,Training,12,0.86207
+brain-tumor-classification-mri/Training/glioma_tumor/gg (18).jpg,test,0,Training,6,0.95768005
+brain-tumor-classification-mri/Training/glioma_tumor/gg (501).jpg,test,0,Training,14,0.8696523
+brain-tumor-classification-mri/Training/glioma_tumor/gg (155).jpg,test,0,Training,8,0.8626718
+brain-tumor-classification-mri/Training/glioma_tumor/gg (363).jpg,test,0,Training,8,0.83548295
+brain-tumor-classification-mri/Training/glioma_tumor/gg (177).jpg,test,0,Training,6,0.91729593
+brain-tumor-classification-mri/Training/glioma_tumor/gg (749).jpg,test,0,Training,6,0.9509
+brain-tumor-classification-mri/Training/glioma_tumor/gg (292).jpg,test,0,Training,8,0.9319641
+brain-tumor-classification-mri/Training/glioma_tumor/gg (357).jpg,test,0,Training,8,0.79077196
+brain-tumor-classification-mri/Training/glioma_tumor/gg (109).jpg,test,0,Training,10,0.8160993
+brain-tumor-classification-mri/Training/glioma_tumor/gg (278).jpg,test,0,Training,6,0.92371917
+brain-tumor-classification-mri/Training/glioma_tumor/gg (692).jpg,test,0,Training,6,0.94581205
+brain-tumor-classification-mri/Training/glioma_tumor/gg (793).jpg,test,0,Training,6,0.9330345
+brain-tumor-classification-mri/Training/glioma_tumor/gg (305).jpg,test,0,Training,12,0.8400549
+brain-tumor-classification-mri/Training/glioma_tumor/gg (97).jpg,test,0,Training,8,0.85402703
+brain-tumor-classification-mri/Training/glioma_tumor/gg (384).jpg,test,0,Training,16,0.770307
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1889_MR048994B.jpg,test,0,Cheng,6,0.92021483
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0730_106494.jpg,test,0,Cheng,8,0.9582454
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2136_MR049019G.jpg,test,0,Cheng,10,0.919471
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0793_88670.jpg,test,0,Cheng,6,0.931743
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0874_90284.jpg,test,0,Cheng,8,0.8898172
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2117_MR034997.jpg,test,0,Cheng,6,0.9284942
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0770_106494.jpg,test,0,Cheng,6,0.844512
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0884_93329.jpg,test,0,Cheng,10,0.89934164
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2579_MR051651B.jpg,test,0,Cheng,8,0.8577859
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1934_MR024780G.jpg,test,0,Cheng,6,0.95447356
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2747_MR049019G.jpg,test,0,Cheng,10,0.6383364
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2802_MR029209G.jpg,test,0,Cheng,6,0.8400737
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2423_MR048621B.jpg,test,0,Cheng,8,0.92905563
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0818_100416.jpg,test,0,Cheng,6,0.84998286
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2233_MR033420.jpg,test,0,Cheng,6,0.96881074
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2829_MR048297.jpg,test,0,Cheng,6,0.88600755
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2869_MR049358.jpg,test,0,Cheng,6,0.78471583
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2374_MR040240D.jpg,test,0,Cheng,10,0.93156195
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2609_MR049942B.jpg,test,0,Cheng,14,0.7819255
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3015_MR050687C.jpg,test,0,Cheng,6,0.8113995
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2267_MR049358.jpg,test,0,Cheng,12,0.8394267
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2815_MR033420.jpg,test,0,Cheng,6,0.78733546
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2142_MR031409B.jpg,test,0,Cheng,6,0.87536967
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2415_MR048294B.jpg,test,0,Cheng,8,0.8642273
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2703_MR037458B.jpg,test,0,Cheng,8,0.9294317
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2182_MR039473B.jpg,test,0,Cheng,6,0.9245117
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0744_112105.jpg,test,0,Cheng,8,0.93932325
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2128_MR053110E.jpg,test,0,Cheng,10,0.8493971
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2547_MR051586.jpg,test,0,Cheng,8,0.84272105
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2261_MR049358.jpg,test,0,Cheng,8,0.91437757
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2813_MR033420.jpg,test,0,Cheng,6,0.8630343
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1982_MR050791B.jpg,test,0,Cheng,10,0.85749847
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2201_MR040240.jpg,test,0,Cheng,6,0.96669185
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0788_112105.jpg,test,0,Cheng,10,0.9451662
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2407_MR048294.jpg,test,0,Cheng,8,0.9470561
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2521_MR040240C.jpg,test,0,Cheng,12,0.8827678
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2289_MR049453B.jpg,test,0,Cheng,12,0.87196904
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2085_MR047953C.jpg,test,0,Cheng,10,0.9631622
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2676_MR049019G.jpg,test,0,Cheng,6,0.94159985
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0882_92897.jpg,test,0,Cheng,6,0.8603573
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3029_MR029209E.jpg,test,0,Cheng,14,0.8340534
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1916_MR049453.jpg,test,0,Cheng,6,0.95554507
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2550_MR051461B.jpg,test,0,Cheng,10,0.8738987
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2616_MR047953C.jpg,test,0,Cheng,8,0.8432707
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2168_MR037458B.jpg,test,0,Cheng,6,0.9648043
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0785_112105.jpg,test,0,Cheng,6,0.9444395
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2135_MR049019G.jpg,test,0,Cheng,10,0.8834134
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2999_MR053110B.jpg,test,0,Cheng,10,0.7533507
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1847_MR048294.jpg,test,0,Cheng,6,0.96105933
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2619_MR053110B.jpg,test,0,Cheng,6,0.89324504
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2460_MR040240B.jpg,test,0,Cheng,6,0.9207692
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2796_MR040240B.jpg,test,0,Cheng,6,0.91694885
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0762_102075.jpg,test,0,Cheng,10,0.9073563
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2583_MR051651B.jpg,test,0,Cheng,6,0.92968255
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2127_MR029209E.jpg,test,0,Cheng,6,0.9428594
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0814_97609.jpg,test,0,Cheng,10,0.8201322
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2917_MR049019C.jpg,test,0,Cheng,10,0.7741926
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2279_MR024780G.jpg,test,0,Cheng,10,0.80204755
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2459_MR040240B.jpg,test,0,Cheng,6,0.89139825
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2690_MR032322C.jpg,test,0,Cheng,14,0.81499887
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2470_MR036496B.jpg,test,0,Cheng,12,0.9141747
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2656_MR034997.jpg,test,0,Cheng,10,0.88582987
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2870_MR049358.jpg,test,0,Cheng,10,0.83025974
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2318_MR050791B.jpg,test,0,Cheng,14,0.7899256
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0817_97609.jpg,test,0,Cheng,10,0.8243491
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2197_MR040240.jpg,test,0,Cheng,8,0.9468688
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2806_MR036496B.jpg,test,0,Cheng,12,0.773504
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2439_MR048994.jpg,test,0,Cheng,8,0.93833154
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2750_MR024780D.jpg,test,0,Cheng,6,0.8606227
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2118_MR034997.jpg,test,0,Cheng,8,0.90541494
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2183_MR039473B.jpg,test,0,Cheng,6,0.97091174
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2610_MR049942B.jpg,test,0,Cheng,10,0.8855945
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2582_MR051651B.jpg,test,0,Cheng,8,0.8441578
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2748_MR031409B.jpg,test,0,Cheng,10,0.86913806
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2210_MR040240B.jpg,test,0,Cheng,6,0.9681272
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0903_95142.jpg,test,0,Cheng,8,0.7375258
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2194_MR037458C.jpg,test,0,Cheng,6,0.91739416
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2497_MR024780E.jpg,test,0,Cheng,8,0.8890372
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2387_MR017260F.jpg,test,0,Cheng,8,0.96998596
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0726_103148.jpg,test,0,Cheng,12,0.9693602
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1962_MR050135B.jpg,test,0,Cheng,6,0.9095334
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2556_MR051644.jpg,test,0,Cheng,6,0.9198363
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0792_88670.jpg,test,0,Cheng,10,0.8813605
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2340_MR051461.jpg,test,0,Cheng,6,0.94322217
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2002_MR051461.jpg,test,0,Cheng,6,0.9296317
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2627_MR034694.jpg,test,0,Cheng,12,0.90256405
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2809_MR033420.jpg,test,0,Cheng,6,0.82264936
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2535_MR029209I.jpg,test,0,Cheng,10,0.8511655
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2907_MR050791B.jpg,test,0,Cheng,10,0.8346324
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2872_MR049358.jpg,test,0,Cheng,8,0.851012
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1993_MR026175C.jpg,test,0,Cheng,6,0.98535156
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2447_MR040240.jpg,test,0,Cheng,12,0.92237574
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2622_MR053110B.jpg,test,0,Cheng,6,0.90729016
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2789_MR040240.jpg,test,0,Cheng,12,0.8786216
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2379_MR040240D.jpg,test,0,Cheng,12,0.9781818
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2624_MR034694.jpg,test,0,Cheng,12,0.90460956
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2865_MR048994B.jpg,test,0,Cheng,6,0.9019591
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2480_MR033420.jpg,test,0,Cheng,6,0.8738462
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2665_MR053110E.jpg,test,0,Cheng,10,0.91633517
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3000_MR053110B.jpg,test,0,Cheng,8,0.792302
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2854_MR049104.jpg,test,0,Cheng,8,0.90853304
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2075_MR051644C.jpg,test,0,Cheng,6,0.9658703
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2822_MR048294.jpg,test,0,Cheng,10,0.79452324
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0900_95142.jpg,test,0,Cheng,8,0.7954439
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2593_MR052550.jpg,test,0,Cheng,8,0.95142865
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0912_98889.jpg,test,0,Cheng,10,0.80119514
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1867_MR048944.jpg,test,0,Cheng,6,0.8974148
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2500_MR026175E.jpg,test,0,Cheng,12,0.86677563
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2154_MR032322C.jpg,test,0,Cheng,6,0.9101423
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2878_MR049453.jpg,test,0,Cheng,6,0.8253285
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2798_MR040240B.jpg,test,0,Cheng,6,0.87417144
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2817_MR024780B.jpg,test,0,Cheng,8,0.7928759
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0813_97609.jpg,test,0,Cheng,8,0.8697921
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2015_MR051461B.jpg,test,0,Cheng,6,0.8879002
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2876_MR049453.jpg,test,0,Cheng,10,0.8525809
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2129_MR053110E.jpg,test,0,Cheng,14,0.8558885
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0907_96587.jpg,test,0,Cheng,8,0.7900951
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2831_MR048294B.jpg,test,0,Cheng,8,0.8192099
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2346_MR033389B.jpg,test,0,Cheng,8,0.9342086
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0841_103148.jpg,test,0,Cheng,10,0.8586406
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2157_MR032322C.jpg,test,0,Cheng,10,0.9110187
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2845_MR048944.jpg,test,0,Cheng,8,0.77096117
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0829_101020.jpg,test,0,Cheng,8,0.85055065
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2381_MR040240D.jpg,test,0,Cheng,10,0.9583151
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2537_MR029209I.jpg,test,0,Cheng,8,0.8573208
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0790_112105.jpg,test,0,Cheng,12,0.91337126
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2921_MR051461.jpg,test,0,Cheng,6,0.8712892
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2111_MR056144.jpg,test,0,Cheng,6,0.93794733
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2849_MR048994.jpg,test,0,Cheng,6,0.9051076
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2158_MR032322C.jpg,test,0,Cheng,8,0.93298393
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2651_MR034997.jpg,test,0,Cheng,6,0.93474835
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2024_MR051644.jpg,test,0,Cheng,8,0.89030164
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3001_MR053110B.jpg,test,0,Cheng,6,0.8092291
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2536_MR029209I.jpg,test,0,Cheng,12,0.7797243
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3055_MR017260F.jpg,test,0,Cheng,6,0.78170735
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2782_MR039473B.jpg,test,0,Cheng,6,0.9244226
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2733_MR029209E.jpg,test,0,Cheng,8,0.80482405
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2760_MR032322C.jpg,test,0,Cheng,6,0.764167
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2402_MR029209I.jpg,test,0,Cheng,8,0.9229676
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3054_MR017260F.jpg,test,0,Cheng,8,0.86740935
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2083_MR047953C.jpg,test,0,Cheng,10,0.9378155
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2328_MR026175C.jpg,test,0,Cheng,8,0.85830176
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1994_MR026175C.jpg,test,0,Cheng,6,0.9777966
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2998_MR052585B.jpg,test,0,Cheng,6,0.9165663
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1945_MR048294B.jpg,test,0,Cheng,12,0.91256535
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3028_MR034997.jpg,test,0,Cheng,6,0.73354983
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2283_MR024780G.jpg,test,0,Cheng,6,0.9269259
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0804_90284.jpg,test,0,Cheng,8,0.9102341
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2222_MR029209G.jpg,test,0,Cheng,6,0.89340055
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2268_MR049358.jpg,test,0,Cheng,12,0.79585856
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2292_MR049453B.jpg,test,0,Cheng,8,0.84665495
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0909_97609.jpg,test,0,Cheng,10,0.8180623
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2730_MR037458C.jpg,test,0,Cheng,6,0.8824929
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2725_MR037458C.jpg,test,0,Cheng,6,0.9073752
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2569_MR051651.jpg,test,0,Cheng,6,0.9072931
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2643_MR049242C.jpg,test,0,Cheng,6,0.9569763
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2888_MR024780G.jpg,test,0,Cheng,6,0.80504876
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_3036_MR033389B.jpg,test,0,Cheng,8,0.80170816
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2302_MR050135B.jpg,test,0,Cheng,8,0.8391509
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2308_MR050135B.jpg,test,0,Cheng,6,0.9349776
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2548_MR051586.jpg,test,0,Cheng,6,0.8824925
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1970_MR050687.jpg,test,0,Cheng,8,0.9661183
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0849_106494.jpg,test,0,Cheng,10,0.770326
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2715_MR039473B.jpg,test,0,Cheng,6,0.8824077
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0847_106494.jpg,test,0,Cheng,12,0.7163944
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1878_MR048994.jpg,test,0,Cheng,6,0.95739716
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0810_93825.jpg,test,0,Cheng,6,0.92282534
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0719_101020.jpg,test,0,Cheng,6,0.9384042
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1948_MR048621B.jpg,test,0,Cheng,10,0.9003126
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2327_MR026175C.jpg,test,0,Cheng,10,0.8525247
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2367_MR040240C.jpg,test,0,Cheng,8,0.97292864
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0865_88670.jpg,test,0,Cheng,8,0.787723
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2844_MR048944.jpg,test,0,Cheng,8,0.8529973
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2428_MR048944.jpg,test,0,Cheng,6,0.9453509
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2446_MR040240.jpg,test,0,Cheng,14,0.9309868
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_1977_MR050791B.jpg,test,0,Cheng,6,0.9033818
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2691_MR032322C.jpg,test,0,Cheng,14,0.8279206
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0904_96587.jpg,test,0,Cheng,6,0.82606405
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2786_MR039473B.jpg,test,0,Cheng,8,0.9253591
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0834_101384.jpg,test,0,Cheng,6,0.8662044
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2005_MR051586.jpg,test,0,Cheng,6,0.86665475
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2857_MR049104.jpg,test,0,Cheng,8,0.88352126
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_0741_112105.jpg,test,0,Cheng,6,0.9692063
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2820_MR024780B.jpg,test,0,Cheng,6,0.7873179
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2376_MR040240D.jpg,test,0,Cheng,10,0.96044713
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2190_MR037458C.jpg,test,0,Cheng,6,0.9469041
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/2_glioma/scan_2207_MR040240B.jpg,test,0,Cheng,6,0.9335415
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(35).jpg,test,1,Testing,14,0.6634907
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(17).jpg,test,1,Testing,12,0.5336892
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(112).jpg,test,1,Testing,10,0.88693535
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(121).jpg,test,1,Testing,14,0.6196183
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(41).jpg,test,1,Testing,14,0.7193227
+brain-tumor-classification-mri/Testing/meningioma_tumor/image(8).jpg,test,1,Testing,12,0.643603
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (55).jpg,test,1,Training,6,0.9369968
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (133).jpg,test,1,Training,8,0.81924087
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (2).jpg,test,1,Training,8,0.798
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (173).jpg,test,1,Training,8,0.8724722
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(29).jpg,test,1,Training,8,0.95553887
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(58).jpg,test,1,Training,6,0.966929
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(38).jpg,test,1,Training,6,0.7628097
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (20).jpg,test,1,Training,10,0.8544078
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (133).jpg,test,1,Training,12,0.77080417
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (123).jpg,test,1,Training,6,0.9234774
+brain-tumor-classification-mri/Training/meningioma_tumor/m (3).jpg,test,1,Training,6,0.90643084
+brain-tumor-classification-mri/Training/meningioma_tumor/m (61).jpg,test,1,Training,12,0.914362
+brain-tumor-classification-mri/Training/meningioma_tumor/m (124).jpg,test,1,Training,10,0.9001306
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(66).jpg,test,1,Training,6,0.8896352
+brain-tumor-classification-mri/Training/meningioma_tumor/m (28).jpg,test,1,Training,6,0.93969256
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (14).jpg,test,1,Training,10,0.7311392
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (164).jpg,test,1,Training,12,0.81468594
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (39).jpg,test,1,Training,6,0.8968557
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (170).jpg,test,1,Training,10,0.9358786
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (26).jpg,test,1,Training,8,0.74452627
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (192).jpg,test,1,Training,10,0.81754696
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (138).jpg,test,1,Training,14,0.83920395
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (85).jpg,test,1,Training,6,0.87569135
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (226).jpg,test,1,Training,6,0.8333544
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (71).jpg,test,1,Training,8,0.9100973
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (71).jpg,test,1,Training,10,0.8202936
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(63).jpg,test,1,Training,8,0.92136633
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (151).jpg,test,1,Training,16,0.7938588
+brain-tumor-classification-mri/Training/meningioma_tumor/m (54).jpg,test,1,Training,8,0.9200407
+brain-tumor-classification-mri/Training/meningioma_tumor/m (186).jpg,test,1,Training,12,0.9397137
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (73).jpg,test,1,Training,10,0.89185375
+brain-tumor-classification-mri/Training/meningioma_tumor/m (36).jpg,test,1,Training,6,0.8956085
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (158).jpg,test,1,Training,8,0.8997504
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (221).jpg,test,1,Training,12,0.76722044
+brain-tumor-classification-mri/Training/meningioma_tumor/m (136).jpg,test,1,Training,6,0.9140256
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (111).jpg,test,1,Training,10,0.80217874
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (141).jpg,test,1,Training,6,0.91603416
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (96).jpg,test,1,Training,8,0.8894322
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (12).jpg,test,1,Training,12,0.85603774
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(18).jpg,test,1,Training,10,0.9376681
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (161).jpg,test,1,Training,10,0.69851834
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (51).jpg,test,1,Training,6,0.9241425
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (91).jpg,test,1,Training,10,0.9188134
+brain-tumor-classification-mri/Training/meningioma_tumor/m (114).jpg,test,1,Training,10,0.9424877
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (157).jpg,test,1,Training,12,0.8824093
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (216).jpg,test,1,Training,6,0.8823013
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (103).jpg,test,1,Training,12,0.82163507
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (223).jpg,test,1,Training,10,0.8502056
+brain-tumor-classification-mri/Training/meningioma_tumor/m (197).jpg,test,1,Training,10,0.93412256
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (122).jpg,test,1,Training,6,0.8829667
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (84).jpg,test,1,Training,10,0.8513707
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (68).jpg,test,1,Training,10,0.81304866
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(13).jpg,test,1,Training,12,0.6452149
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (139).jpg,test,1,Training,6,0.7447525
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (94).jpg,test,1,Training,10,0.9063393
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (34).jpg,test,1,Training,8,0.8094972
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(44).jpg,test,1,Training,6,0.9575655
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (102).jpg,test,1,Training,8,0.9130146
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (247).jpg,test,1,Training,12,0.94358754
+brain-tumor-classification-mri/Training/meningioma_tumor/m (199).jpg,test,1,Training,8,0.9123934
+brain-tumor-classification-mri/Training/meningioma_tumor/m (26).jpg,test,1,Training,10,0.9162177
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (78).jpg,test,1,Training,10,0.88509184
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (124).jpg,test,1,Training,10,0.85777843
+brain-tumor-classification-mri/Training/meningioma_tumor/m1(67).jpg,test,1,Training,8,0.92816716
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (115).jpg,test,1,Training,8,0.7722512
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (236).jpg,test,1,Training,6,0.82067233
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (165).jpg,test,1,Training,6,0.89940876
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (120).jpg,test,1,Training,8,0.9066269
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (52).jpg,test,1,Training,6,0.8800735
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (16).jpg,test,1,Training,6,0.9330418
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (58).jpg,test,1,Training,6,0.8239633
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (72).jpg,test,1,Training,6,0.9280568
+brain-tumor-classification-mri/Training/meningioma_tumor/m (10).jpg,test,1,Training,8,0.8569056
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (3).jpg,test,1,Training,8,0.732955
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (152).jpg,test,1,Training,12,0.80660766
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (12).jpg,test,1,Training,8,0.74035305
+brain-tumor-classification-mri/Training/meningioma_tumor/m (31).jpg,test,1,Training,8,0.8849398
+brain-tumor-classification-mri/Training/meningioma_tumor/m (188).jpg,test,1,Training,14,0.85438025
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (119).jpg,test,1,Training,6,0.783782
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (149).jpg,test,1,Training,10,0.8884886
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (126).jpg,test,1,Training,8,0.93325
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (160).jpg,test,1,Training,10,0.72849315
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (147).jpg,test,1,Training,6,0.89208466
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (101).jpg,test,1,Training,8,0.8581037
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (87).jpg,test,1,Training,8,0.92589116
+brain-tumor-classification-mri/Training/meningioma_tumor/m3 (173).jpg,test,1,Training,6,0.90497684
+brain-tumor-classification-mri/Training/meningioma_tumor/m (123).jpg,test,1,Training,12,0.8036696
+brain-tumor-classification-mri/Training/meningioma_tumor/m2 (163).jpg,test,1,Training,10,0.9192057
+brain-tumor-classification-mri/Training/meningioma_tumor/m (141).jpg,test,1,Training,6,0.8992262
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0353_111366.jpg,test,1,Cheng,6,0.861679
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0487_102818.jpg,test,1,Cheng,10,0.9310798
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0274_104167.jpg,test,1,Cheng,6,0.91596854
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0172_114359.jpg,test,1,Cheng,10,0.89769435
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0024_102420.jpg,test,1,Cheng,12,0.8244601
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0682_98241.jpg,test,1,Cheng,10,0.81683224
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0349_111077.jpg,test,1,Cheng,10,0.9385941
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0129_111366.jpg,test,1,Cheng,10,0.89605385
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0705_99815.jpg,test,1,Cheng,6,0.8848215
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0325_107494.jpg,test,1,Cheng,6,0.8981881
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0472_101801.jpg,test,1,Cheng,6,0.9208239
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0702_99308.jpg,test,1,Cheng,10,0.7895919
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0111_108550.jpg,test,1,Cheng,10,0.9420531
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0396_114018.jpg,test,1,Cheng,6,0.9055598
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0644_114018.jpg,test,1,Cheng,8,0.86237985
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0355_111366.jpg,test,1,Cheng,6,0.9153057
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0076_106665.jpg,test,1,Cheng,8,0.91750556
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0185_97875.jpg,test,1,Cheng,12,0.939297
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0300_106665.jpg,test,1,Cheng,12,0.8489753
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0026_102446.jpg,test,1,Cheng,6,0.79100746
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0358_111532.jpg,test,1,Cheng,6,0.9232454
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0656_114417.jpg,test,1,Cheng,8,0.8739956
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0334_108590.jpg,test,1,Cheng,8,0.8586288
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0242_102714.jpg,test,1,Cheng,10,0.8282841
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0032_102929.jpg,test,1,Cheng,10,0.89342177
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0655_114417.jpg,test,1,Cheng,8,0.73952883
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0275_104281.jpg,test,1,Cheng,8,0.9415664
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0683_98241.jpg,test,1,Cheng,10,0.86662287
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0150_112552.jpg,test,1,Cheng,8,0.9064719
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0378_112552.jpg,test,1,Cheng,10,0.8256372
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0222_101016.jpg,test,1,Cheng,6,0.909317
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0299_106665.jpg,test,1,Cheng,10,0.8503737
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0662_97374.jpg,test,1,Cheng,10,0.86908954
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0604_112062.jpg,test,1,Cheng,10,0.74773765
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0406_97607.jpg,test,1,Cheng,8,0.8716621
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0194_98241.jpg,test,1,Cheng,6,0.8945567
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0053_104281.jpg,test,1,Cheng,6,0.88897306
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0528_106442.jpg,test,1,Cheng,6,0.8521779
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0521_105937.jpg,test,1,Cheng,6,0.9484797
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0167_114018.jpg,test,1,Cheng,6,0.9594062
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0315_107190.jpg,test,1,Cheng,8,0.7766843
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0466_101797.jpg,test,1,Cheng,6,0.90670294
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0550_107190.jpg,test,1,Cheng,12,0.76639634
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0291_106284.jpg,test,1,Cheng,8,0.8421509
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0409_97737.jpg,test,1,Cheng,10,0.83003396
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0302_106665.jpg,test,1,Cheng,10,0.9092952
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0203_99288.jpg,test,1,Cheng,6,0.8992604
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0318_107248.jpg,test,1,Cheng,6,0.9044535
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0645_114018.jpg,test,1,Cheng,10,0.80382836
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0585_110808.jpg,test,1,Cheng,10,0.8051818
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0114_108590.jpg,test,1,Cheng,12,0.9130672
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0316_107248.jpg,test,1,Cheng,8,0.91241664
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0544_106914.jpg,test,1,Cheng,6,0.90426296
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0654_114359.jpg,test,1,Cheng,8,0.8914587
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0301_106665.jpg,test,1,Cheng,10,0.8366368
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0431_99017.jpg,test,1,Cheng,8,0.8944457
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0014_101016.jpg,test,1,Cheng,8,0.85579944
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0402_114359.jpg,test,1,Cheng,10,0.92736375
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0598_111710.jpg,test,1,Cheng,8,0.8214248
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0481_102714.jpg,test,1,Cheng,8,0.8012948
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0207_99308.jpg,test,1,Cheng,6,0.93011856
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0376_112552.jpg,test,1,Cheng,8,0.9218684
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0243_102714.jpg,test,1,Cheng,10,0.91010886
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0667_97607.jpg,test,1,Cheng,8,0.9307876
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0187_97943.jpg,test,1,Cheng,12,0.904468
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0253_102985.jpg,test,1,Cheng,10,0.7613439
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0128_111366.jpg,test,1,Cheng,10,0.79219687
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0383_113435.jpg,test,1,Cheng,10,0.9361221
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0636_113614.jpg,test,1,Cheng,10,0.75668967
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0030_102714.jpg,test,1,Cheng,6,0.9496543
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0646_114018.jpg,test,1,Cheng,8,0.89403915
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0089_106914.jpg,test,1,Cheng,6,0.96165776
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0284_105555.jpg,test,1,Cheng,10,0.89399433
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0265_103925.jpg,test,1,Cheng,8,0.9172141
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0555_107248.jpg,test,1,Cheng,6,0.8324703
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0615_112648.jpg,test,1,Cheng,10,0.8083718
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0073_106665.jpg,test,1,Cheng,6,0.9353052
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0285_105555.jpg,test,1,Cheng,12,0.81729347
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0092_107190.jpg,test,1,Cheng,16,0.7493373
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0177_97607.jpg,test,1,Cheng,8,0.92030925
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0525_106284.jpg,test,1,Cheng,14,0.7835274
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0060_105937.jpg,test,1,Cheng,6,0.9122569
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0708_99815.jpg,test,1,Cheng,10,0.80762535
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0091_107190.jpg,test,1,Cheng,12,0.8426904
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0532_106592.jpg,test,1,Cheng,12,0.81398475
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0605_112062.jpg,test,1,Cheng,10,0.728673
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0239_102446.jpg,test,1,Cheng,12,0.719613
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0100_107494.jpg,test,1,Cheng,8,0.9346736
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0579_109411.jpg,test,1,Cheng,6,0.78765166
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0564_108514.jpg,test,1,Cheng,12,0.82616514
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0151_112648.jpg,test,1,Cheng,10,0.90728176
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0041_103673.jpg,test,1,Cheng,8,0.8850572
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0512_104281.jpg,test,1,Cheng,8,0.8266535
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0701_99308.jpg,test,1,Cheng,8,0.7779241
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0445_100360.jpg,test,1,Cheng,6,0.8793105
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0077_106665.jpg,test,1,Cheng,6,0.9032654
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0408_97737.jpg,test,1,Cheng,6,0.82677424
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0690_99089.jpg,test,1,Cheng,8,0.9174828
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0305_106720.jpg,test,1,Cheng,10,0.9341687
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0034_102935.jpg,test,1,Cheng,6,0.8870332
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/1_meningioma/scan_0389_113435.jpg,test,1,Cheng,6,0.83262116
+brain-tumor-classification-mri/Testing/pituitary_tumor/image(15).jpg,test,2,Testing,16,0.5709116
+brain-tumor-classification-mri/Testing/pituitary_tumor/image(66).jpg,test,2,Testing,20,0.47248095
+brain-tumor-classification-mri/Testing/pituitary_tumor/image(11).jpg,test,2,Testing,14,0.6286861
+brain-tumor-classification-mri/Testing/pituitary_tumor/image(18).jpg,test,2,Testing,8,0.70158964
+brain-tumor-classification-mri/Testing/pituitary_tumor/image(97).jpg,test,2,Testing,18,0.5998903
+brain-tumor-classification-mri/Testing/pituitary_tumor/image(7).jpg,test,2,Testing,16,0.68665755
+brain-tumor-classification-mri/Training/pituitary_tumor/p (538).jpg,test,2,Training,10,0.94534004
+brain-tumor-classification-mri/Training/pituitary_tumor/p (76).jpg,test,2,Training,12,0.8315815
+brain-tumor-classification-mri/Training/pituitary_tumor/p (794).jpg,test,2,Training,10,0.9219754
+brain-tumor-classification-mri/Training/pituitary_tumor/p (730).jpg,test,2,Training,6,0.958152
+brain-tumor-classification-mri/Training/pituitary_tumor/p (90).jpg,test,2,Training,8,0.8504168
+brain-tumor-classification-mri/Training/pituitary_tumor/p (397).jpg,test,2,Training,10,0.92504656
+brain-tumor-classification-mri/Training/pituitary_tumor/p (276).jpg,test,2,Training,12,0.82097626
+brain-tumor-classification-mri/Training/pituitary_tumor/p (597).jpg,test,2,Training,6,0.9632945
+brain-tumor-classification-mri/Training/pituitary_tumor/p (484).jpg,test,2,Training,10,0.9357309
+brain-tumor-classification-mri/Training/pituitary_tumor/p (336).jpg,test,2,Training,8,0.93433094
+brain-tumor-classification-mri/Training/pituitary_tumor/p (118).jpg,test,2,Training,6,0.9395633
+brain-tumor-classification-mri/Training/pituitary_tumor/p (198).jpg,test,2,Training,6,0.8980826
+brain-tumor-classification-mri/Training/pituitary_tumor/p (403).jpg,test,2,Training,6,0.91793674
+brain-tumor-classification-mri/Training/pituitary_tumor/p (199).jpg,test,2,Training,8,0.939032
+brain-tumor-classification-mri/Training/pituitary_tumor/p (70).jpg,test,2,Training,10,0.9159819
+brain-tumor-classification-mri/Training/pituitary_tumor/p (520).jpg,test,2,Training,10,0.84119767
+brain-tumor-classification-mri/Training/pituitary_tumor/p (386).jpg,test,2,Training,16,0.77535915
+brain-tumor-classification-mri/Training/pituitary_tumor/p (687).jpg,test,2,Training,6,0.9157824
+brain-tumor-classification-mri/Training/pituitary_tumor/p (226).jpg,test,2,Training,8,0.9534286
+brain-tumor-classification-mri/Training/pituitary_tumor/p (708).jpg,test,2,Training,6,0.88533574
+brain-tumor-classification-mri/Training/pituitary_tumor/p (808).jpg,test,2,Training,10,0.9428021
+brain-tumor-classification-mri/Training/pituitary_tumor/p (140).jpg,test,2,Training,8,0.88839394
+brain-tumor-classification-mri/Training/pituitary_tumor/p (490).jpg,test,2,Training,12,0.94225377
+brain-tumor-classification-mri/Training/pituitary_tumor/p (591).jpg,test,2,Training,6,0.90658534
+brain-tumor-classification-mri/Training/pituitary_tumor/p (736).jpg,test,2,Training,8,0.8900924
+brain-tumor-classification-mri/Training/pituitary_tumor/p (208).jpg,test,2,Training,6,0.9267726
+brain-tumor-classification-mri/Training/pituitary_tumor/p (558).jpg,test,2,Training,10,0.8354254
+brain-tumor-classification-mri/Training/pituitary_tumor/p (818).jpg,test,2,Training,8,0.9522234
+brain-tumor-classification-mri/Training/pituitary_tumor/p (737).jpg,test,2,Training,8,0.8612443
+brain-tumor-classification-mri/Training/pituitary_tumor/p (181).jpg,test,2,Training,6,0.8931955
+brain-tumor-classification-mri/Training/pituitary_tumor/p (247).jpg,test,2,Training,12,0.9647488
+brain-tumor-classification-mri/Training/pituitary_tumor/p (764).jpg,test,2,Training,6,0.955449
+brain-tumor-classification-mri/Training/pituitary_tumor/p (527).jpg,test,2,Training,6,0.94694614
+brain-tumor-classification-mri/Training/pituitary_tumor/p (625).jpg,test,2,Training,6,0.96591103
+brain-tumor-classification-mri/Training/pituitary_tumor/p (229).jpg,test,2,Training,6,0.9539421
+brain-tumor-classification-mri/Training/pituitary_tumor/p (239).jpg,test,2,Training,10,0.8822271
+brain-tumor-classification-mri/Training/pituitary_tumor/p (671).jpg,test,2,Training,10,0.9185452
+brain-tumor-classification-mri/Training/pituitary_tumor/p (766).jpg,test,2,Training,6,0.9599595
+brain-tumor-classification-mri/Training/pituitary_tumor/p (189).jpg,test,2,Training,6,0.9323599
+brain-tumor-classification-mri/Training/pituitary_tumor/p (59).jpg,test,2,Training,10,0.88493633
+brain-tumor-classification-mri/Training/pituitary_tumor/p (23).jpg,test,2,Training,12,0.9291072
+brain-tumor-classification-mri/Training/pituitary_tumor/p (781).jpg,test,2,Training,8,0.92588174
+brain-tumor-classification-mri/Training/pituitary_tumor/p (443).jpg,test,2,Training,10,0.85571474
+brain-tumor-classification-mri/Training/pituitary_tumor/p (815).jpg,test,2,Training,12,0.91729355
+brain-tumor-classification-mri/Training/pituitary_tumor/p (711).jpg,test,2,Training,10,0.8662986
+brain-tumor-classification-mri/Training/pituitary_tumor/p (114).jpg,test,2,Training,6,0.8413211
+brain-tumor-classification-mri/Training/pituitary_tumor/p (162).jpg,test,2,Training,6,0.9430224
+brain-tumor-classification-mri/Training/pituitary_tumor/p (319).jpg,test,2,Training,8,0.9136497
+brain-tumor-classification-mri/Training/pituitary_tumor/p (41).jpg,test,2,Training,12,0.855974
+brain-tumor-classification-mri/Training/pituitary_tumor/p (563).jpg,test,2,Training,10,0.8310147
+brain-tumor-classification-mri/Training/pituitary_tumor/p (97).jpg,test,2,Training,10,0.9456469
+brain-tumor-classification-mri/Training/pituitary_tumor/p (13).jpg,test,2,Training,6,0.95933044
+brain-tumor-classification-mri/Training/pituitary_tumor/p (321).jpg,test,2,Training,8,0.93168575
+brain-tumor-classification-mri/Training/pituitary_tumor/p (500).jpg,test,2,Training,8,0.908627
+brain-tumor-classification-mri/Training/pituitary_tumor/p (46).jpg,test,2,Training,6,0.96006006
+brain-tumor-classification-mri/Training/pituitary_tumor/p (528).jpg,test,2,Training,10,0.8932873
+brain-tumor-classification-mri/Training/pituitary_tumor/p (439).jpg,test,2,Training,6,0.8745514
+brain-tumor-classification-mri/Training/pituitary_tumor/p (136).jpg,test,2,Training,8,0.7476431
+brain-tumor-classification-mri/Training/pituitary_tumor/p (507).jpg,test,2,Training,12,0.8610805
+brain-tumor-classification-mri/Training/pituitary_tumor/p (463).jpg,test,2,Training,12,0.59483665
+brain-tumor-classification-mri/Training/pituitary_tumor/p (367).jpg,test,2,Training,6,0.9285595
+brain-tumor-classification-mri/Training/pituitary_tumor/p (487).jpg,test,2,Training,8,0.8793938
+brain-tumor-classification-mri/Training/pituitary_tumor/p (150).jpg,test,2,Training,6,0.9263593
+brain-tumor-classification-mri/Training/pituitary_tumor/p (18).jpg,test,2,Training,8,0.95637614
+brain-tumor-classification-mri/Training/pituitary_tumor/p (728).jpg,test,2,Training,8,0.8328888
+brain-tumor-classification-mri/Training/pituitary_tumor/p (447).jpg,test,2,Training,10,0.9018059
+brain-tumor-classification-mri/Training/pituitary_tumor/p (342).jpg,test,2,Training,8,0.7756232
+brain-tumor-classification-mri/Training/pituitary_tumor/p (190).jpg,test,2,Training,10,0.8605359
+brain-tumor-classification-mri/Training/pituitary_tumor/p (478).jpg,test,2,Training,10,0.9429204
+brain-tumor-classification-mri/Training/pituitary_tumor/p (661).jpg,test,2,Training,10,0.9543076
+brain-tumor-classification-mri/Training/pituitary_tumor/p (791).jpg,test,2,Training,10,0.8739757
+brain-tumor-classification-mri/Training/pituitary_tumor/p (40).jpg,test,2,Training,12,0.822195
+brain-tumor-classification-mri/Training/pituitary_tumor/p (508).jpg,test,2,Training,12,0.9622321
+brain-tumor-classification-mri/Training/pituitary_tumor/p (517).jpg,test,2,Training,8,0.89211565
+brain-tumor-classification-mri/Training/pituitary_tumor/p (378).jpg,test,2,Training,6,0.8984236
+brain-tumor-classification-mri/Training/pituitary_tumor/p (810).jpg,test,2,Training,6,0.9629679
+brain-tumor-classification-mri/Training/pituitary_tumor/p (553).jpg,test,2,Training,8,0.96501637
+brain-tumor-classification-mri/Training/pituitary_tumor/p (88).jpg,test,2,Training,6,0.94476974
+brain-tumor-classification-mri/Training/pituitary_tumor/p (655).jpg,test,2,Training,8,0.9673604
+brain-tumor-classification-mri/Training/pituitary_tumor/p (20).jpg,test,2,Training,8,0.95349586
+brain-tumor-classification-mri/Training/pituitary_tumor/p (583).jpg,test,2,Training,8,0.9252973
+brain-tumor-classification-mri/Training/pituitary_tumor/p (572).jpg,test,2,Training,6,0.9540541
+brain-tumor-classification-mri/Training/pituitary_tumor/p (744).jpg,test,2,Training,10,0.9289917
+brain-tumor-classification-mri/Training/pituitary_tumor/p (36).jpg,test,2,Training,10,0.8623975
+brain-tumor-classification-mri/Training/pituitary_tumor/p (37).jpg,test,2,Training,10,0.9345342
+brain-tumor-classification-mri/Training/pituitary_tumor/p (622).jpg,test,2,Training,10,0.9446025
+brain-tumor-classification-mri/Training/pituitary_tumor/p (295).jpg,test,2,Training,6,0.91319215
+brain-tumor-classification-mri/Training/pituitary_tumor/p (543).jpg,test,2,Training,10,0.85113347
+brain-tumor-classification-mri/Training/pituitary_tumor/p (192).jpg,test,2,Training,6,0.9482766
+brain-tumor-classification-mri/Training/pituitary_tumor/p (277).jpg,test,2,Training,12,0.85732794
+brain-tumor-classification-mri/Training/pituitary_tumor/p (512).jpg,test,2,Training,8,0.9476471
+brain-tumor-classification-mri/Training/pituitary_tumor/p (278).jpg,test,2,Training,8,0.93067586
+brain-tumor-classification-mri/Training/pituitary_tumor/p (474).jpg,test,2,Training,12,0.8521022
+brain-tumor-classification-mri/Training/pituitary_tumor/p (79).jpg,test,2,Training,6,0.9571519
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1087_109769.jpg,test,2,Cheng,8,0.9081605
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1706_103671.jpg,test,2,Cheng,12,0.9438352
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1796_98472.jpg,test,2,Cheng,6,0.92683697
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1772_97416.jpg,test,2,Cheng,6,0.93459344
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1604_98472.jpg,test,2,Cheng,10,0.77197605
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1429_98871.jpg,test,2,Cheng,8,0.95976746
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0932_107495.jpg,test,2,Cheng,6,0.860758
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1002_112649.jpg,test,2,Cheng,8,0.9581064
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1073_108931.jpg,test,2,Cheng,12,0.9363227
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1283_101029.jpg,test,2,Cheng,6,0.96251255
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1325_103670.jpg,test,2,Cheng,8,0.9615775
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0979_110993.jpg,test,2,Cheng,10,0.9463245
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1167_105936.jpg,test,2,Cheng,10,0.5768133
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1113_111075.jpg,test,2,Cheng,10,0.8723398
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1401_97461.jpg,test,2,Cheng,6,0.9656679
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1376_105187.jpg,test,2,Cheng,8,0.97029364
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1616_98874.jpg,test,2,Cheng,10,0.8861719
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1320_103582.jpg,test,2,Cheng,8,0.95157844
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0996_112074.jpg,test,2,Cheng,10,0.94586307
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1663_101724.jpg,test,2,Cheng,6,0.8982963
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1147_112847.jpg,test,2,Cheng,6,0.86647743
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0938_107429.jpg,test,2,Cheng,12,0.9209533
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1817_98874.jpg,test,2,Cheng,6,0.94643474
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1043_107495.jpg,test,2,Cheng,8,0.94474554
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1227_110537.jpg,test,2,Cheng,6,0.95529294
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1143_112746.jpg,test,2,Cheng,8,0.9468561
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1749_105187.jpg,test,2,Cheng,8,0.93552256
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1148_113274.jpg,test,2,Cheng,8,0.748192
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0992_111785.jpg,test,2,Cheng,12,0.9607073
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1483_102648.jpg,test,2,Cheng,8,0.95272326
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1781_97481.jpg,test,2,Cheng,8,0.8475655
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1581_97461.jpg,test,2,Cheng,8,0.8854125
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1386_97416.jpg,test,2,Cheng,8,0.9607858
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1473_101305.jpg,test,2,Cheng,8,0.93022645
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1164_114094.jpg,test,2,Cheng,8,0.92297935
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1049_107429.jpg,test,2,Cheng,10,0.85138404
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1586_97461.jpg,test,2,Cheng,10,0.8975744
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1437_98992.jpg,test,2,Cheng,10,0.93961245
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0955_108931.jpg,test,2,Cheng,10,0.89639425
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1476_101305.jpg,test,2,Cheng,10,0.8484762
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1336_103731.jpg,test,2,Cheng,8,0.92555714
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1278_114361.jpg,test,2,Cheng,6,0.9501642
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1282_114094.jpg,test,2,Cheng,6,0.9372814
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0993_111785.jpg,test,2,Cheng,14,0.911099
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1108_110993.jpg,test,2,Cheng,8,0.8944385
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1769_97416.jpg,test,2,Cheng,6,0.93916845
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1527_103731.jpg,test,2,Cheng,14,0.83612466
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1525_103731.jpg,test,2,Cheng,10,0.9520208
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1759_105538.jpg,test,2,Cheng,6,0.91260606
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1305_103257.jpg,test,2,Cheng,6,0.9665687
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1513_103670.jpg,test,2,Cheng,8,0.9451739
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0966_109898.jpg,test,2,Cheng,8,0.8838006
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1260_112746.jpg,test,2,Cheng,8,0.90609974
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1667_102648.jpg,test,2,Cheng,8,0.9064078
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1157_114361.jpg,test,2,Cheng,6,0.93631953
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1166_105936.jpg,test,2,Cheng,12,0.59631205
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1007_112847.jpg,test,2,Cheng,6,0.97522444
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1457_101017.jpg,test,2,Cheng,6,0.9331591
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1038_106062.jpg,test,2,Cheng,6,0.9420065
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1549_104684.jpg,test,2,Cheng,8,0.93620604
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1288_101145.jpg,test,2,Cheng,6,0.9810645
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1005_112746.jpg,test,2,Cheng,8,0.96248716
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1045_107495.jpg,test,2,Cheng,6,0.93664885
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0984_111075.jpg,test,2,Cheng,6,0.9539762
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1815_98874.jpg,test,2,Cheng,6,0.94791037
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1390_97416.jpg,test,2,Cheng,6,0.96085656
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1647_101029.jpg,test,2,Cheng,6,0.9349179
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1595_97599.jpg,test,2,Cheng,8,0.9372332
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1318_103582.jpg,test,2,Cheng,14,0.95351774
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1161_114094.jpg,test,2,Cheng,10,0.924319
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1377_105187.jpg,test,2,Cheng,8,0.9154001
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1834_98995.jpg,test,2,Cheng,6,0.8820574
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1338_103731.jpg,test,2,Cheng,10,0.9604847
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1137_112649.jpg,test,2,Cheng,6,0.9502395
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0970_109898.jpg,test,2,Cheng,6,0.9148014
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1639_99223.jpg,test,2,Cheng,8,0.96284497
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1078_109471.jpg,test,2,Cheng,6,0.94414675
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1416_98472.jpg,test,2,Cheng,6,0.9707067
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1058_107505.jpg,test,2,Cheng,10,0.9366998
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1801_98652.jpg,test,2,Cheng,8,0.8662461
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1744_104912.jpg,test,2,Cheng,6,0.8994951
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1122_111125.jpg,test,2,Cheng,6,0.95311683
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1330_103731.jpg,test,2,Cheng,8,0.85035527
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0964_109769.jpg,test,2,Cheng,6,0.9605999
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1026_101017.jpg,test,2,Cheng,6,0.8933319
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1813_98874.jpg,test,2,Cheng,10,0.9385123
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1776_97461.jpg,test,2,Cheng,6,0.92066854
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1832_98995.jpg,test,2,Cheng,10,0.87458104
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1613_98871.jpg,test,2,Cheng,12,0.8678285
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1186_107429.jpg,test,2,Cheng,6,0.94250214
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1808_98871.jpg,test,2,Cheng,6,0.945379
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1329_103671.jpg,test,2,Cheng,6,0.95815796
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0960_109471.jpg,test,2,Cheng,8,0.95949185
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1229_110537.jpg,test,2,Cheng,10,0.90146124
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1724_104019.jpg,test,2,Cheng,8,0.9088151
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0972_110518.jpg,test,2,Cheng,6,0.936232
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1617_98874.jpg,test,2,Cheng,6,0.9598451
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1013_113741.jpg,test,2,Cheng,8,0.9653791
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1475_101305.jpg,test,2,Cheng,8,0.9325588
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1747_104912.jpg,test,2,Cheng,8,0.9123292
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0999_112649.jpg,test,2,Cheng,10,0.940352
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1725_104558.jpg,test,2,Cheng,6,0.89344436
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_0956_108931.jpg,test,2,Cheng,10,0.93975824
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1104_110537.jpg,test,2,Cheng,8,0.9473756
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1367_104684.jpg,test,2,Cheng,10,0.9669645
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1349_104019.jpg,test,2,Cheng,6,0.9653776
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1509_103582.jpg,test,2,Cheng,8,0.94660276
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1117_111075.jpg,test,2,Cheng,12,0.86370254
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1802_98652.jpg,test,2,Cheng,8,0.889767
+jun-cheng-brain-tumor-mri-dataset-jpg/brain tumor mri dataset/3_pituitary_tumor/scan_1782_97481.jpg,test,2,Cheng,6,0.91038513

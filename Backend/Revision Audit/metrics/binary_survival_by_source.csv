@@ -1,0 +1,5 @@
+subset,class_name,before,after,removed,removed_pct
+Chakrabarty,No Tumor,98,76,22,22.45
+Br35H,No Tumor,1500,383,1117,74.47
+Chakrabarty,Tumor,155,130,25,16.13
+Br35H,Tumor,1500,598,902,60.13

@@ -1,0 +1,16 @@
+run,model,task,checkpoint
+binary-detection-coatnet0,CoAtNet-0,binary,not found
+binary-detection-densenet121,DenseNet121,binary,not found
+binary-detection-efficientnetb0,EfficientNetB0,binary,/kaggle/input/datasets/parthmital/revision-audit-inputs/weights/binary-detection-efficientnetb0.pth
+binary-detection-resnet50,ResNet50,binary,not found
+binary-detection-inceptionv3,InceptionV3,binary,not found
+binary-detection-swinbase,Swin-Base,binary,not found
+binary-detection-vit-b16,ViT-B/16,binary,not found
+binary-detection-mobilenetv3-large,MobileNetV3-Large,binary,not found
+binary-detection-vgg16,VGG16,binary,not found
+classification-swinbase,Swin-Base,multiclass,not found
+classification-coatnet0,CoAtNet-0,multiclass,not found
+classification-inceptionv3,InceptionV3,multiclass,not found
+classification-efficientnetb0,EfficientNetB0,multiclass,/kaggle/input/datasets/parthmital/revision-audit-inputs/weights/classification-efficientnetb0.pth
+classification-resnet50,ResNet50,multiclass,not found
+classification-vit-b16,ViT-B/16,multiclass,not found

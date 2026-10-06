@@ -1,0 +1,3 @@
+run,reloaded_accuracy,stored_accuracy,prediction_agreement
+binary-detection-efficientnetb0,0.9939,0.9939,1.0
+classification-efficientnetb0,0.9759,0.9759,1.0

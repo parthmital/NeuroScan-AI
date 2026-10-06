@@ -1,0 +1,128 @@
+{
+	"multiclass_dedup_reproduced": true,
+	"multiclass_removed_total": 1123,
+	"multiclass_removed_cross_source": 3,
+	"multiclass_removed_within_source": 1120,
+	"multiclass_removed_cross_label": 23,
+	"multiclass_survival_by_source": {
+		"Cheng": {
+			"before": 3064,
+			"after": 2568
+		},
+		"Testing": {
+			"before": 289,
+			"after": 212
+		},
+		"Training": {
+			"before": 2475,
+			"after": 1925
+		}
+	},
+	"binary_cross_label_pairs": 0,
+	"binary_cross_label_by_category": {},
+	"binary_label_conflict_images": 0,
+	"binary_label_aware_kept": {
+		"No Tumor": 459,
+		"Tumor": 728
+	},
+	"multiclass_cross_label_pairs": 31,
+	"multiclass_cross_label_by_category": {
+		"visually distinct (hash false positive)": 23,
+		"near-identical (label conflict)": 8
+	},
+	"multiclass_label_conflict_images": 10,
+	"multiclass_label_aware_kept": {
+		"Glioma": 1998,
+		"Meningioma": 1310,
+		"Pituitary": 1401
+	},
+	"binary_dedup_kept": 1187,
+	"binary_dedup_removed": 2066,
+	"binary_dedup_removed_pct": 63.51,
+	"binary_dedup_kept_by_class": {
+		"Tumor": 728,
+		"No Tumor": 459
+	},
+	"binary_removed_cross_source": 731,
+	"binary_removed_cross_label": 0,
+	"phash_recall_at_5": {
+		"binary": 0.8904,
+		"multiclass": 0.9688
+	},
+	"phash_pairs_not_ncc_at_5": {
+		"binary": 986,
+		"multiclass": 1250
+	},
+	"binary_test_with_train_near_duplicate_at_5": "403/488 (82.58%)",
+	"multiclass_test_with_train_near_duplicate_at_5": "0/706 (0.0%)",
+	"accuracy_full_vs_t5": {
+		"binary-detection-coatnet0": "99.39 -> 98.82 (n=85)",
+		"binary-detection-densenet121": "99.39 -> 97.65 (n=85)",
+		"binary-detection-efficientnetb0": "99.39 -> 96.47 (n=85)",
+		"binary-detection-inceptionv3": "98.77 -> 95.29 (n=85)",
+		"binary-detection-mobilenetv3-large": "90.78 -> 80.00 (n=85)",
+		"binary-detection-resnet50": "99.39 -> 96.47 (n=85)",
+		"binary-detection-swinbase": "95.90 -> 89.41 (n=85)",
+		"binary-detection-vgg16": "88.32 -> 82.35 (n=85)",
+		"binary-detection-vit-b16": "94.88 -> 91.76 (n=85)",
+		"classification-coatnet0": "98.44 -> 98.44 (n=706)",
+		"classification-efficientnetb0": "97.59 -> 97.59 (n=706)",
+		"classification-inceptionv3": "98.30 -> 98.30 (n=706)",
+		"classification-resnet50": "97.59 -> 97.59 (n=706)",
+		"classification-swinbase": "98.58 -> 98.58 (n=706)",
+		"classification-vit-b16": "90.51 -> 90.51 (n=706)"
+	},
+	"runs_with_checkpoint": [
+		"binary-detection-efficientnetb0",
+		"classification-efficientnetb0"
+	],
+	"gradcam_outside_fraction_mean_sd": {
+		"binary EfficientNetB0": "0.0729999989271164 \u00b1 0.11800000071525574",
+		"multiclass EfficientNetB0": "0.0689999982714653 \u00b1 0.07000000029802322"
+	},
+	"background_only_accuracy": {
+		"binary EfficientNetB0": "55.7% (chance 50.8%)",
+		"multiclass EfficientNetB0": "37.0% (chance 42.5%)"
+	},
+	"efficiency_mean_sd": {
+		"binary-detection-coatnet0": "latency 11.6 \u00b1 0.4 ms, throughput 578 \u00b1 3 img/s",
+		"binary-detection-densenet121": "latency 16.7 \u00b1 0.9 ms, throughput 707 \u00b1 7 img/s",
+		"binary-detection-efficientnetb0": "latency 8.9 \u00b1 0.4 ms, throughput 1636 \u00b1 20 img/s",
+		"binary-detection-resnet50": "latency 6.6 \u00b1 0.2 ms, throughput 819 \u00b1 4 img/s",
+		"binary-detection-inceptionv3": "latency 12.3 \u00b1 0.4 ms, throughput 564 \u00b1 3 img/s",
+		"binary-detection-swinbase": "latency 24.0 \u00b1 0.5 ms, throughput 215 \u00b1 1 img/s",
+		"binary-detection-vit-b16": "latency 7.4 \u00b1 0.6 ms, throughput 351 \u00b1 3 img/s",
+		"binary-detection-mobilenetv3-large": "latency 7.1 \u00b1 0.3 ms, throughput 2665 \u00b1 59 img/s",
+		"binary-detection-vgg16": "latency 4.6 \u00b1 0.1 ms, throughput 397 \u00b1 2 img/s",
+		"classification-swinbase": "latency 27.8 \u00b1 1.2 ms, throughput 205 \u00b1 1 img/s",
+		"classification-coatnet0": "latency 11.8 \u00b1 0.4 ms, throughput 516 \u00b1 5 img/s",
+		"classification-inceptionv3": "latency 12.2 \u00b1 0.8 ms, throughput 525 \u00b1 4 img/s",
+		"classification-efficientnetb0": "latency 8.9 \u00b1 0.6 ms, throughput 1538 \u00b1 34 img/s",
+		"classification-resnet50": "latency 6.7 \u00b1 0.3 ms, throughput 771 \u00b1 10 img/s",
+		"classification-vit-b16": "latency 7.5 \u00b1 0.4 ms, throughput 329 \u00b1 2 img/s"
+	},
+	"splits_source": {
+		"binary": "stored predictions (binary-detection-coatnet0)",
+		"multiclass": "stored predictions (classification-swinbase)"
+	},
+	"runs_without_checkpoint": [
+		"binary-detection-coatnet0",
+		"binary-detection-densenet121",
+		"binary-detection-inceptionv3",
+		"binary-detection-mobilenetv3-large",
+		"binary-detection-resnet50",
+		"binary-detection-swinbase",
+		"binary-detection-vgg16",
+		"binary-detection-vit-b16",
+		"classification-coatnet0",
+		"classification-inceptionv3",
+		"classification-resnet50",
+		"classification-swinbase",
+		"classification-vit-b16"
+	],
+	"runs_without_stored_predictions": [],
+	"skipped_requires_retraining": [
+		"Retraining the nine binary models on the deduplicated pool (proxy: section 15)",
+		"Background-only training ablation (proxy: section 20)"
+	]
+}

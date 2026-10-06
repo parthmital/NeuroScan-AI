@@ -1,0 +1,11 @@
+task,size,class_name,images,mask_area_mean,mask_area_sd
+binary,224,No Tumor,240,0.5179,0.1291
+binary,224,Tumor,248,0.6087,0.1595
+binary,299,No Tumor,240,0.5093,0.1304
+binary,299,Tumor,248,0.5998,0.1664
+multiclass,224,Glioma,300,0.4716,0.0949
+multiclass,224,Meningioma,196,0.4661,0.1045
+multiclass,224,Pituitary,210,0.6091,0.0943
+multiclass,299,Glioma,300,0.47,0.0952
+multiclass,299,Meningioma,196,0.4647,0.1037
+multiclass,299,Pituitary,210,0.6032,0.0965

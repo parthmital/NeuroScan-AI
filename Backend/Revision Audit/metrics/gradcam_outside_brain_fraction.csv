@@ -1,0 +1,6 @@
+task,model,class_name,images,cam_outside_all,cam_outside_correct,uniform_map_outside,cam_outside_alt_layer,rollout_outside
+binary,EfficientNetB0,No Tumor,240,0.068 ± 0.118,0.067 ± 0.117,0.482 ± 0.129,n/a,n/a
+binary,EfficientNetB0,Tumor,248,0.077 ± 0.118,0.077 ± 0.118,0.391 ± 0.160,n/a,n/a
+multiclass,EfficientNetB0,Glioma,300,0.040 ± 0.020,0.038 ± 0.018,0.528 ± 0.095,n/a,n/a
+multiclass,EfficientNetB0,Meningioma,196,0.090 ± 0.044,0.091 ± 0.044,0.534 ± 0.105,n/a,n/a
+multiclass,EfficientNetB0,Pituitary,210,0.092 ± 0.110,0.091 ± 0.109,0.391 ± 0.095,n/a,n/a

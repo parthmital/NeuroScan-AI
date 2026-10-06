@@ -1,0 +1,6 @@
+task,source,subset,images,n_No Tumor,n_Tumor,width_mean,width_sd,height_mean,height_sd,width_min,width_max,height_min,height_max,modal_size,modal_share_pct,distinct_sizes,n_Glioma,n_Meningioma,n_Pituitary
+binary,Chakrabarty,Chakrabarty,253,98.0,155.0,354.2,217.1,386.0,213.1,150,1920,168,1427,225x225,7.1,184,,,
+binary,Br35H,Br35H,3000,1500.0,1500.0,325.2,174.4,352.8,182.8,150,1920,167,1427,225x225,10.9,291,,,
+multiclass,Bhuvaji,Testing,289,,,422.9,235.3,435.4,222.6,174,1358,167,1322,512x512,11.1,184,100.0,115.0,74.0
+multiclass,Bhuvaji,Training,2475,,,500.9,66.5,501.9,64.1,180,1365,202,1427,512x512,93.1,137,826.0,822.0,827.0
+multiclass,Cheng,Cheng,3064,,,510.7,17.9,510.7,17.9,256,512,256,512,512x512,99.5,2,1426.0,708.0,930.0

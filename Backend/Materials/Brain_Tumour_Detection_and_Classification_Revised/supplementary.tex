@@ -86,6 +86,110 @@ Figures~S1 and S2 show the native image dimension and intensity distributions of
 \label{fig:s4}
 \end{figure}
 
+The remaining items of this section come from a post-training audit that reproduced the original data collection, perceptual-hash pass, and stratified splits exactly, without retraining any model. The reproduced multiclass pass retains the published 2,000, 1,304, and 1,401 images per class, and the reproduced splits match the stored test and validation predictions of all 15 runs. Table~S11 gives the per-source survival of both pools, the binary figures being those of a pass that was not applied before training. Figure~S17 plots the native image size of every source. Figure~S18 shows the closest cross-label near-duplicate pairs of the multiclass pool, and Figure~S19 compares the hash with an independent detector based on the normalised cross-correlation (NCC) of $64\times 64$ greyscale thumbnails, which treats a pair as the same image at $\mathrm{NCC}\geq 0.98$. Figure~S20 gives, for every test image, the Hamming distance to its nearest training image, and Table~S12 and Figure~S21 the test accuracy of every model on the test images with no training image within a given distance.
+
+\begin{table}[htbp]
+\tablenumber{11}
+\centering
+\caption{Images per source and class before and after the perceptual-hash pass at a Hamming tolerance of 5. The binary pass was run after training and was not applied to the training data. Of the 1,123 multiclass removals, 3 are cross-source and 1,120 within-source, and 23 are cross-label; of the 2,066 binary removals, 731 are cross-source (Br35H images whose retained near-duplicate is a Chakrabarty image) and none is cross-label.}
+\label{tab:s11}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lllccc@{}}
+\toprule
+Track & Source & Class & Before & Kept & Removed (\%) \\
+\midrule
+\multirow{4}{*}{Binary} & Chakrabarty & Tumour-negative & 98 & 76 & 22.45 \\
+ & Chakrabarty & Tumour & 155 & 130 & 16.13 \\
+ & Br35H & Tumour-negative & 1,500 & 383 & 74.47 \\
+ & Br35H & Tumour & 1,500 & 598 & 60.13 \\
+\midrule
+\multirow{9}{*}{Multiclass} & Bhuvaji, training & Glioma & 826 & 695 & 15.86 \\
+ & Bhuvaji, training & Meningioma & 822 & 604 & 26.52 \\
+ & Bhuvaji, training & Pituitary & 827 & 626 & 24.30 \\
+ & Bhuvaji, testing & Glioma & 100 & 82 & 18.00 \\
+ & Bhuvaji, testing & Meningioma & 115 & 98 & 14.78 \\
+ & Bhuvaji, testing & Pituitary & 74 & 32 & 56.76 \\
+ & Cheng & Glioma & 1,426 & 1,223 & 14.24 \\
+ & Cheng & Meningioma & 708 & 602 & 14.97 \\
+ & Cheng & Pituitary & 930 & 743 & 20.11 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{table}[htbp]
+\tablenumber{12}
+\centering
+\caption{Test accuracy (\%) of every model on the full test split and on the test images with no training image within Hamming distance 5 or 8, or with no training image at $\mathrm{NCC}\geq 0.98$; the number of test images in each subset is given in the Images rows. Multiclass test images have no training image within distance 5 by construction.}
+\label{tab:s12}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llcccc@{}}
+\toprule
+Task & Model & Full & Distance $>5$ & Distance $>8$ & No NCC duplicate \\
+\midrule
+\multirow{10}{*}{Binary} & Images & 488 & 85 & 47 & 92 \\
+\cmidrule(l){2-6}
+ & CoAtNet-0 & 99.39 & 98.82 & 97.87 & 98.91 \\
+ & DenseNet121 & 99.39 & 97.65 & 95.74 & 97.83 \\
+ & EfficientNetB0 & 99.39 & 96.47 & 93.62 & 96.74 \\
+ & ResNet50 & 99.39 & 96.47 & 93.62 & 96.74 \\
+ & InceptionV3 & 98.77 & 95.29 & 91.49 & 95.65 \\
+ & Swin-Base & 95.90 & 89.41 & 89.36 & 90.22 \\
+ & ViT-B/16 & 94.88 & 91.76 & 89.36 & 92.39 \\
+ & MobileNetV3-Large & 90.78 & 80.00 & 74.47 & 80.43 \\
+ & VGG16 & 88.32 & 82.35 & 72.34 & 79.35 \\
+\midrule
+\multirow{7}{*}{Multiclass} & Images & 706 & 706 & 265 & 703 \\
+\cmidrule(l){2-6}
+ & Swin-Base & 98.58 & 98.58 & 97.74 & 98.58 \\
+ & CoAtNet-0 & 98.44 & 98.44 & 97.36 & 98.44 \\
+ & InceptionV3 & 98.30 & 98.30 & 98.11 & 98.29 \\
+ & EfficientNetB0 & 97.59 & 97.59 & 96.23 & 97.58 \\
+ & ResNet50 & 97.59 & 97.59 & 96.98 & 97.58 \\
+ & ViT-B/16 & 90.51 & 90.51 & 90.19 & 90.47 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{figure}[htbp]
+\figurenumber{17}
+\centering
+\includegraphics[width=\linewidth]{figures/audit/01_native_size_by_source.png}
+\caption{Native width and height of every image by source, for the binary pool (left) and the multiclass pool (right), where the Bhuvaji collection is split into its original training and testing folders. Almost all Cheng slices and most Bhuvaji training images are $512\times 512$ pixels, whereas the Bhuvaji testing folder and both binary sources span a wide range of sizes.}
+\label{fig:s17}
+\end{figure}
+
+\begin{figure}[htbp]
+\figurenumber{18}
+\centering
+\includegraphics[width=\linewidth]{figures/audit/02_multiclass_cross_label_gallery.png}
+\caption{The closest cross-label near-duplicate pairs of the multiclass pool, each shown as a glioma image beside a meningioma image with their Hamming distance $d$ and thumbnail NCC. All 31 cross-label pairs within the tolerance are glioma against meningioma. The 8 pairs at $\mathrm{NCC}\geq 0.98$ are the same images filed under both labels in the Bhuvaji collection; the other 23 are visually distinct images and are hash false positives.}
+\label{fig:s18}
+\end{figure}
+
+\begin{figure}[htbp]
+\figurenumber{19}
+\centering
+\includegraphics[width=\linewidth]{figures/audit/03_phash_vs_ncc.png}
+\caption{Perceptual hash against the NCC detector as a function of the Hamming tolerance. Left: share of NCC duplicate pairs (385 multiclass, 6,078 binary) that the hash also flags. Right: number of hash pairs that are not NCC duplicates, on a logarithmic scale. At the tolerance of 5 used in this study (dashed line) the hash recovers 96.9\% and 89.0\% of the NCC pairs and flags 1,250 and 986 further pairs.}
+\label{fig:s19}
+\end{figure}
+
+\begin{figure}[htbp]
+\figurenumber{20}
+\centering
+\includegraphics[width=\linewidth]{figures/audit/04_train_test_nearest_distance.png}
+\caption{Hamming distance from every test image to its nearest training image. In the binary track, which was not deduplicated, 403 of 488 test images (82.6\%) lie within the tolerance of 5. In the multiclass track no test image does, by construction.}
+\label{fig:s20}
+\end{figure}
+
+\begin{figure}[htbp]
+\figurenumber{21}
+\centering
+\includegraphics[width=\linewidth]{figures/audit/05_accuracy_by_threshold.png}
+\caption{Test accuracy of every model on the test images with no training image within each Hamming distance, computed from the stored test predictions without retraining. The subsets shrink as the distance grows (Table~S12), to 22 binary and 33 multiclass images at a distance of 12, so the right-hand end of each curve rests on very few images.}
+\label{fig:s21}
+\end{figure}
+
 \FloatBarrier
 \section*{S3. Preprocessing and augmentation}
 
@@ -265,7 +369,7 @@ ViT-B/16 & 10 & 0.3040 & 0.8808 & 0.9712 & 0.3419 & 0.8810 & 0.9689 \\
 \FloatBarrier
 \section*{S6. Complete efficiency measurements}
 
-Tables~S9 and S10 give the complete efficiency measurements for each task, of which the main-text efficiency table reports the paired subset. Training used dual NVIDIA Tesla T4 graphics processing units, except the binary InceptionV3 run, which executed on a single device and whose training time is therefore not comparable. Latency and throughput were measured on one device for every model under half-precision autocasting. Latency is the mean $\pm$ standard deviation of 100 timed single-image forward passes after 10 warm-up passes; throughput is measured at batch size 32 as the mean over 20 timed passes after 3 warm-up passes, for which per-pass timings were not retained. ``Acc./M'' is test accuracy in percentage points per million parameters. Rows are ordered by parameter count.
+Tables~S9 and S10 give the complete efficiency measurements for each task, of which the main-text efficiency table reports the paired subset. Training used dual NVIDIA Tesla T4 graphics processing units, except the binary InceptionV3 run, which executed on a single device and whose training time is therefore not comparable. Latency and throughput were re-measured after training on one device for every model under half-precision autocasting, using randomly initialised copies of each architecture and a synthetic input at its native resolution. Latency is the mean $\pm$ within-run standard deviation of 100 timed single-image forward passes after 10 warm-up passes; throughput is measured at batch size 32 as the mean $\pm$ within-run standard deviation of 20 timed passes after 3 warm-up passes. The protocol was repeated three times per model and the values are pooled over the repeats; Figure~S22 compares them with the original single-session measurements, which were 0.8 to 7.4~ms slower for every model. ``Acc./M'' is test accuracy in percentage points per million parameters. Rows are ordered by parameter count.
 
 \begin{table}[htbp]
 \tablenumber{9}
@@ -277,15 +381,15 @@ Tables~S9 and S10 give the complete efficiency measurements for each task, of wh
 \toprule
 Model & Params (M) & GFLOPs & Batch & Train (min) & Latency (ms) & Thr. (img/s) & Acc./M \\
 \midrule
-EfficientNetB0 & 4.01 & 0.77 & 256 & 16.3 & $10.8\pm 0.5$ & 1364 & 24.79 \\
-MobileNetV3-Large & 4.20 & 0.43 & 256 & 12.0 & $8.1\pm 0.6$ & 2409 & 21.60 \\
-DenseNet121 & 6.95 & 5.67 & 64 & 8.5 & $19.4\pm 0.9$ & 630 & 14.29 \\
-ResNet50 & 23.51 & 8.17 & 256 & 5.4 & $7.3\pm 0.5$ & 771 & 4.23 \\
-InceptionV3 & 24.35 & 11.42 & 128 & 4.9 & $14.0\pm 1.0$ & 514 & 4.06 \\
-CoAtNet-0 & 26.67 & 8.42 & 64 & 29.1 & $13.9\pm 0.7$ & 520 & 3.73 \\
-ViT-B/16 & 85.80 & 22.54 & 128 & 4.7 & $8.8\pm 0.6$ & 287 & 1.11 \\
-Swin-Base & 86.74 & 30.86 & 64 & 6.6 & $29.0\pm 1.1$ & 196 & 1.11 \\
-VGG16 & 134.26 & 30.93 & 256 & 12.5 & $8.2\pm 0.5$ & 338 & 0.66 \\
+EfficientNetB0 & 4.01 & 0.77 & 256 & 16.3 & $8.9\pm 0.4$ & $1636\pm 20$ & 24.79 \\
+MobileNetV3-Large & 4.20 & 0.43 & 256 & 12.0 & $7.1\pm 0.3$ & $2665\pm 59$ & 21.60 \\
+DenseNet121 & 6.95 & 5.67 & 64 & 8.5 & $16.7\pm 0.9$ & $707\pm 7$ & 14.29 \\
+ResNet50 & 23.51 & 8.17 & 256 & 5.4 & $6.6\pm 0.2$ & $819\pm 4$ & 4.23 \\
+InceptionV3 & 24.35 & 11.42 & 128 & 4.9 & $12.3\pm 0.4$ & $564\pm 3$ & 4.06 \\
+CoAtNet-0 & 26.67 & 8.42 & 64 & 29.1 & $11.6\pm 0.4$ & $578\pm 3$ & 3.73 \\
+ViT-B/16 & 85.80 & 22.54 & 128 & 4.7 & $7.4\pm 0.6$ & $351\pm 3$ & 1.11 \\
+Swin-Base & 86.74 & 30.86 & 64 & 6.6 & $24.0\pm 0.5$ & $215\pm 1$ & 1.11 \\
+VGG16 & 134.26 & 30.93 & 256 & 12.5 & $4.6\pm 0.1$ & $397\pm 2$ & 0.66 \\
 \bottomrule
 \end{tabular*}
 \end{table}
@@ -300,15 +404,23 @@ VGG16 & 134.26 & 30.93 & 256 & 12.5 & $8.2\pm 0.5$ & 338 & 0.66 \\
 \toprule
 Model & Params (M) & GFLOPs & Batch & Train (min) & Latency (ms) & Thr. (img/s) & Acc./M \\
 \midrule
-EfficientNetB0 & 4.01 & 0.77 & 256 & 26.9 & $13.9\pm 1.0$ & 1471 & 24.33 \\
-ResNet50 & 23.51 & 8.17 & 256 & 8.1 & $7.8\pm 1.3$ & 792 & 4.15 \\
-InceptionV3 & 25.12 & 11.42 & 128 & 12.2 & $14.2\pm 0.9$ & 533 & 3.91 \\
-CoAtNet-0 & 26.67 & 8.42 & 128 & 28.0 & $13.2\pm 0.6$ & 499 & 3.69 \\
-ViT-B/16 & 85.80 & 22.54 & 32 & 7.4 & $8.4\pm 0.6$ & 290 & 1.05 \\
-Swin-Base & 86.75 & 30.86 & 64 & 9.5 & $35.1\pm 2.6$ & 202 & 1.14 \\
+EfficientNetB0 & 4.01 & 0.77 & 256 & 26.9 & $8.9\pm 0.6$ & $1538\pm 34$ & 24.33 \\
+ResNet50 & 23.51 & 8.17 & 256 & 8.1 & $6.7\pm 0.3$ & $771\pm 10$ & 4.15 \\
+InceptionV3 & 25.12 & 11.42 & 128 & 12.2 & $12.2\pm 0.8$ & $525\pm 4$ & 3.91 \\
+CoAtNet-0 & 26.67 & 8.42 & 128 & 28.0 & $11.8\pm 0.4$ & $516\pm 5$ & 3.69 \\
+ViT-B/16 & 85.80 & 22.54 & 32 & 7.4 & $7.5\pm 0.4$ & $329\pm 2$ & 1.05 \\
+Swin-Base & 86.75 & 30.86 & 64 & 9.5 & $27.8\pm 1.2$ & $205\pm 1$ & 1.14 \\
 \bottomrule
 \end{tabular*}
 \end{table}
+
+\begin{figure}[htbp]
+\figurenumber{22}
+\centering
+\includegraphics[width=\linewidth]{figures/audit/09_efficiency_with_variance.png}
+\caption{Re-measured single-image latency (left) and throughput at batch size 32 (right) for all 15 runs, as the mean $\pm$ within-run standard deviation pooled over three repeats (bars), against the original single-session measurements (dots). The standard deviation between the three repeat means is at most 0.6~ms for latency and 18 images per second for throughput.}
+\label{fig:s22}
+\end{figure}
 
 \FloatBarrier
 \section*{S7. Evaluation figures}
@@ -433,6 +545,32 @@ Figure~S15 gives the complete input, activation, and overlay panels for the most
 \panel{1}{figures/cls_gradcam_misclassified.png}{Multiclass classification: the six most confident of seventeen errors.}
 \caption{Gradient-weighted class activation maps for \textbf{EfficientNetB0} on misclassified test cases, ranked by confidence in the wrong class.}
 \label{fig:s16}
+\end{figure}
+
+Figures~S23 to S25 quantify the EfficientNetB0 maps on the full test split of each task, using the released checkpoints, which reproduce the stored test predictions exactly. Figure~S23 shows the head mask used, Figure~S24 the share of Grad-CAM energy falling outside it, and Figure~S25 an inference-only masking test. The remaining checkpoints, including Swin-Base, were not available to this analysis.
+
+\begin{figure}[htbp]
+\figurenumber{23}
+\centering
+\includegraphics[width=\linewidth]{figures/audit/06_brain_mask_quality_check.png}
+\caption{Head masks (green contours) on random binary (top) and multiclass (bottom) test images, computed by Otsu thresholding, a small morphological closing, selection of the largest connected component, and hole filling. The mask covers brain and skull, so energy outside it lies on background, borders, and framing. On sagittal slices it also includes the neck, and on some heavily processed images it misses part of the head.}
+\label{fig:s23}
+\end{figure}
+
+\begin{figure}[htbp]
+\figurenumber{24}
+\centering
+\includegraphics[width=0.85\linewidth]{figures/audit/07_gradcam_outside_brain.png}
+\caption{Share of \textbf{EfficientNetB0} Grad-CAM energy falling outside the head mask on the test split, per task. Mean $\pm$ standard deviation per class: tumour-negative $0.068\pm 0.118$ and tumour-positive $0.077\pm 0.118$; glioma $0.040\pm 0.020$, meningioma $0.090\pm 0.044$, and pituitary $0.092\pm 0.110$. A map spread evenly over the image would place 0.39 to 0.53 of its energy outside the mask, depending on class (dashed line, mean).}
+\label{fig:s24}
+\end{figure}
+
+\begin{figure}[htbp]
+\figurenumber{25}
+\centering
+\includegraphics[width=0.85\linewidth]{figures/audit/08_masking_test.png}
+\caption{Inference-only masking test for \textbf{EfficientNetB0}: test accuracy on the original images, on background-only images with the head region set to zero, and on head-only images with the background set to zero, against the majority-class rate. Background-only accuracy is 55.74\% against 50.82\% for binary detection and 36.97\% against 42.49\% for subtype classification; head-only accuracy is 97.75\% and 96.60\%. A fall to chance does not rule out a shortcut, because background-only images lie outside the training distribution.}
+\label{fig:s25}
 \end{figure}
 
 \end{document}
