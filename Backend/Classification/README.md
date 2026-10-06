@@ -1,10 +1,38 @@
 # Classification: Glioma, Meningioma or Pituitary
 
-This folder benchmarks six pretrained image classifiers on a three-class task. Given a brain MRI slice that **already contains a tumour**, each model predicts whether it is a **Glioma**, **Meningioma** or **Pituitary** tumour. There is one Kaggle notebook per model. All six share the same deduplicated data, split, training recipe and evaluation code; batch size and input size are the main exceptions.
+This folder benchmarks pretrained image classifiers on a three-class task. Given a brain MRI slice that **already contains a tumour**, each model predicts whether it is a **Glioma**, **Meningioma** or **Pituitary** tumour. The legacy runs covered six backbones; all nine are now trained and evaluated by one Kaggle notebook, [`classification.ipynb`](classification.ipynb).
 
-Every number in this README is read from the saved notebook outputs and the files in each run folder. Where the evidence does not explain a choice, the README says so instead of guessing. The notebooks were not re-executed for this README.
+The rest of this README documents the **legacy per-model runs** behind the published results. Their notebooks were replaced by the unified notebook; they remain in Git history (for example `git show 9a8ac24:"Backend/Classification/classification-resnet50.ipynb"`), and their result folders are unchanged. Every number below is read from those saved outputs and run folders; the notebooks were not re-executed for this README. Where the evidence does not explain a choice, the README says so instead of guessing.
 
-## At a glance
+## Unified notebook
+
+[`classification.ipynb`](classification.ipynb) trains and evaluates all nine backbones (ResNet50, VGG16, DenseNet121, EfficientNetB0, MobileNetV3-Large, InceptionV3, ViT-B/16, Swin-Base, CoAtNet-0) on subtype classification (the legacy runs covered only six) with one shared pipeline, the same code as the other 2D notebook. It has **no saved outputs yet**: it has not been run on Kaggle in this form, so no result in this README comes from it.
+
+What it does differently from the legacy runs:
+
+| Area                      | Legacy per-model notebooks                                                                   | Unified notebook                                                                                                                                                                       |
+| ------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Deduplication             | Applied, but in a fixed class order, so cross-label pairs always kept the glioma copy        | pHash (Hamming 5) on this task's pool before splitting, label-aware; cross-label near-identical pairs (NCC >= 0.98) excluded as label noise                                            |
+| Split                     | One stratified 70/15/15 split at image level                                                 | Group-aware: similar images (Hamming <= 8 or NCC >= 0.98) share a group; held-out test set plus 5 development folds; a leakage audit asserts no test image has a development neighbour |
+| Optimisation budget       | Batch size 32 to 256, so step counts differed                                                | Same effective batch (64) and step count for every model through gradient accumulation; warm-up then per-step cosine decay                                                             |
+| Model sources             | Swin-Base from different libraries per task; InceptionV3 auxiliary loss and head differences | One registry for both tasks; InceptionV3 auxiliary head removed everywhere                                                                                                             |
+| Selection and calibration | Best validation AUC; fixed 0.5 threshold                                                     | Best validation log-loss; temperature scaling and (binary) Youden threshold fitted on each validation fold                                                                             |
+| Statistics                | Single run, no intervals                                                                     | Fold mean and SD, fold-ensemble test predictions, bootstrap 95% CIs, exact McNemar tests with Holm correction                                                                          |
+| Interpretability          | Grad-CAM galleries; outside-head share for EfficientNetB0 only                               | Outside-head Grad-CAM energy for every model on every test image, attention rollout for ViT, occlusion maps for all, inference masking test, and background-only retraining per model  |
+| Preprocessing             | Plain resize                                                                                 | The web app's brain crop (`crop_to_brain` in `processor.py`), then resize; augmentation on the GPU                                                                                     |
+| Efficiency                | Single-session latency                                                                       | Latency and throughput repeated three times with SD; training time, throughput and peak memory per run                                                                                 |
+
+How to run it:
+
+1. Create a Kaggle notebook from the file with the **GPU T4 x2** accelerator and **Internet on** (pretrained weights are downloaded).
+2. Attach `sartajbhuvaji/brain-tumor-classification-mri` and `moundir8/jun-cheng-brain-tumor-mri-dataset-jpg`. The notebook finds them under both `/kaggle/input/<slug>` and `/kaggle/input/datasets/<owner>/<slug>`.
+3. Run all cells. Training runs as two worker processes, one per GPU, with live progress bars, and stops claiming new jobs after `TRAINING_BUDGET_HOURS` (9 by default). To continue an interrupted run, attach the previous version's output and set `RESUME_DIR` in the configuration cell.
+4. Download `outputs.zip` from the Output tab. It holds `weights/`, `metrics/`, `plots/`, `predictions/`, `logs/` and `src/`.
+5. To update the web app, copy `weights/deploy/EfficientNetB0.pth` into this folder. The notebook checks that it loads into the backend's EfficientNet-B0 and reproduces the stored test logits; `weights/deploy/metadata.json` records its temperature and threshold.
+
+Runtime, metrics and hardware use of the unified notebook: Not measured in the current repository.
+
+## At a glance (legacy runs)
 
 | Item                      | Value                                                                                                                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -29,6 +57,8 @@ Main caveats, detailed in [Anomalies and limitations](#anomalies-and-limitations
 
 ## Contents
 
+- [Unified notebook](#unified-notebook)
+- [At a glance (legacy runs)](#at-a-glance-legacy-runs)
 - [Folder layout](#folder-layout)
 - [Pipeline overview](#pipeline-overview)
 - [Dataset and deduplication](#dataset-and-deduplication)
@@ -51,8 +81,8 @@ Main caveats, detailed in [Anomalies and limitations](#anomalies-and-limitations
 Classification/
 |-- README.md                              This file
 |-- EfficientNetB0.pth                     Weights loaded by the backend (not tracked in Git)
-|-- classification-<model>.ipynb           6 notebooks, 75 cells each
-`-- classification-<model>/                Unzipped outputs of that notebook
+|-- classification.ipynb                  Unified notebook for all nine models (no outputs yet)
+`-- classification-<model>/                Unzipped outputs of the legacy per-model notebook
     |-- metrics/                           22 CSV, JSON and TXT files (tracked in Git)
     |-- plots/                             14 PNG files, numbered 01-14 (tracked in Git)
     |-- tensorboard/<YYYYMMDD-HHMMSS>/     One events.out.tfevents.* file (not tracked in Git)
@@ -637,7 +667,7 @@ What the SwinBase Grad-CAM "most confident correct" panel shows: for Meningioma 
 
 ### CoAtNet-0 plots
 
-Run folder: [`classification-coatnet0/`](classification-coatnet0/). Notebook: [`classification-coatnet0.ipynb`](classification-coatnet0.ipynb). Best epoch 9 of 10, test accuracy 0.9844.
+Run folder: [`classification-coatnet0/`](classification-coatnet0/). Notebook: `classification-coatnet0.ipynb` (removed; in Git history). Best epoch 9 of 10, test accuracy 0.9844.
 
 ![CoAtNet-0 01_class_distribution](classification-coatnet0/plots/01_class_distribution.png)
 
@@ -697,7 +727,7 @@ _14_gradcam_misclassified: Grad-CAM for the most confident misclassified test pr
 
 ### EfficientNetB0 plots
 
-Run folder: [`classification-efficientnetb0/`](classification-efficientnetb0/). Notebook: [`classification-efficientnetb0.ipynb`](classification-efficientnetb0.ipynb). Best epoch 9 of 10, test accuracy 0.9759.
+Run folder: [`classification-efficientnetb0/`](classification-efficientnetb0/). Notebook: `classification-efficientnetb0.ipynb` (removed; in Git history). Best epoch 9 of 10, test accuracy 0.9759.
 
 ![EfficientNetB0 01_class_distribution](classification-efficientnetb0/plots/01_class_distribution.png)
 
@@ -757,7 +787,7 @@ _14_gradcam_misclassified: Grad-CAM for the most confident misclassified test pr
 
 ### InceptionV3 plots
 
-Run folder: [`classification-inceptionv3/`](classification-inceptionv3/). Notebook: [`classification-inceptionv3.ipynb`](classification-inceptionv3.ipynb). Best epoch 8 of 10, test accuracy 0.9830.
+Run folder: [`classification-inceptionv3/`](classification-inceptionv3/). Notebook: `classification-inceptionv3.ipynb` (removed; in Git history). Best epoch 8 of 10, test accuracy 0.9830.
 
 ![InceptionV3 01_class_distribution](classification-inceptionv3/plots/01_class_distribution.png)
 
@@ -817,7 +847,7 @@ _14_gradcam_misclassified: Grad-CAM for the most confident misclassified test pr
 
 ### ResNet50 plots
 
-Run folder: [`classification-resnet50/`](classification-resnet50/). Notebook: [`classification-resnet50.ipynb`](classification-resnet50.ipynb). Best epoch 9 of 10, test accuracy 0.9759.
+Run folder: [`classification-resnet50/`](classification-resnet50/). Notebook: `classification-resnet50.ipynb` (removed; in Git history). Best epoch 9 of 10, test accuracy 0.9759.
 
 ![ResNet50 01_class_distribution](classification-resnet50/plots/01_class_distribution.png)
 
@@ -877,7 +907,7 @@ _14_gradcam_misclassified: Grad-CAM for the most confident misclassified test pr
 
 ### SwinBase plots
 
-Run folder: [`classification-swinbase/`](classification-swinbase/). Notebook: [`classification-swinbase.ipynb`](classification-swinbase.ipynb). Best epoch 7 of 10, test accuracy 0.9858.
+Run folder: [`classification-swinbase/`](classification-swinbase/). Notebook: `classification-swinbase.ipynb` (removed; in Git history). Best epoch 7 of 10, test accuracy 0.9858.
 
 ![SwinBase 01_class_distribution](classification-swinbase/plots/01_class_distribution.png)
 
@@ -937,7 +967,7 @@ _14_gradcam_misclassified: Grad-CAM for the most confident misclassified test pr
 
 ### ViT-B16 plots
 
-Run folder: [`classification-vit-b16/`](classification-vit-b16/). Notebook: [`classification-vit-b16.ipynb`](classification-vit-b16.ipynb). Best epoch 10 of 10, test accuracy 0.9051.
+Run folder: [`classification-vit-b16/`](classification-vit-b16/). Notebook: `classification-vit-b16.ipynb` (removed; in Git history). Best epoch 10 of 10, test accuracy 0.9051.
 
 ![ViT-B16 01_class_distribution](classification-vit-b16/plots/01_class_distribution.png)
 
@@ -1043,6 +1073,8 @@ Weight files in the local working copy (not tracked in Git). Sizes are in bytes.
 - `run_epoch` evaluation does not use `torch.no_grad()`.
 
 ## Reproducing a run
+
+To run the current pipeline, use the unified notebook (see [Unified notebook](#unified-notebook)). The steps below reproduce a legacy run from its notebook in Git history.
 
 1. Create a Kaggle notebook with the **GPU T4 x2** accelerator and internet access enabled.
 2. Attach `sartajbhuvaji/brain-tumor-classification-mri` and `moundir8/jun-cheng-brain-tumor-mri-dataset-jpg` so that the paths in cell 10 resolve.

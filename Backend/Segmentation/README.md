@@ -1,10 +1,37 @@
 # Segmentation: 3D Brain Tumour Sub-Region Segmentation on BraTS 2020
 
-This folder benchmarks six 3D segmentation networks on the BraTS 2020 training data. Each model takes the four MRI modalities of one patient (FLAIR, T1, T1CE, T2) as a 4-channel volume and predicts three overlapping tumour masks: Whole Tumour (WT), Tumour Core (TC) and Enhancing Tumour (ET). There is one Kaggle notebook per model, plus a seventh notebook that re-trains VNet and plots the results.
+This folder benchmarks six 3D segmentation networks on the BraTS 2020 training data. Each model takes the four MRI modalities of one patient (FLAIR, T1, T1CE, T2) as a 4-channel volume and predicts three overlapping tumour masks: Whole Tumour (WT), Tumour Core (TC) and Enhancing Tumour (ET). All six are now trained and evaluated by one Kaggle notebook, [`segmentation.ipynb`](segmentation.ipynb), written from scratch in plain PyTorch (no MONAI or timm).
 
-All six models are written from scratch in plain PyTorch inside the notebooks (no MONAI or timm), and all use the same data loading, preprocessing, split and evaluation code. Every number in this README is copied from the saved cell outputs of the notebooks. The notebooks were not re-executed for this README.
+The rest of this README documents the **legacy per-model runs** behind the published results. Their notebooks were replaced by the unified notebook; they remain in Git history (for example `git show 9a8ac24:"Backend/Segmentation/UNet.ipynb"`), and every number below is copied from their saved cell outputs; the notebooks were not re-executed for this README.
 
-## At a glance
+## Unified notebook
+
+[`segmentation.ipynb`](segmentation.ipynb) replaces the seven per-model notebooks. It trains and evaluates UNet, nnU-Net, VNet, UNETR, Swin UNETR and TransBTS with one shared data pipeline, training loop and evaluation. It has **no saved outputs yet**: it has not been run on Kaggle in this form, so no result in this README comes from it.
+
+What it does differently from the legacy runs:
+
+| Area            | Legacy per-model notebooks                      | Unified notebook                                                                                                                                                                          |
+| --------------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cases           | 368 (the misnamed mask of case 355 was skipped) | Every case with a mask, found by name pattern                                                                                                                                             |
+| Split           | Random 70/15/15, not stratified                 | 70/15/15 stratified by tumour grade (HGG/LGG); results also reported per grade                                                                                                            |
+| Training length | 10 epochs, no warm-up                           | `EPOCHS` (50 by default) for every model; warm-up then cosine decay for the transformer and hybrid models; per-epoch checkpoints so runs resume across Kaggle sessions                    |
+| Batch           | 4 (2 for Swin-UNETR)                            | Effective batch 4 for every model through gradient accumulation                                                                                                                           |
+| Evaluation      | Dice averaged over batches on the 128^3 grid    | Per-case Dice, HD95 (mm), sensitivity and specificity at the native resolution, BraTS conventions for empty regions, 8-flip test-time augmentation, ET size threshold tuned on validation |
+| Swin-UNETR      | No test result (checkpoint loading failed)      | Evaluated like every other model; adds the reference design's full-resolution skip                                                                                                        |
+| Statistics      | None computed                                   | Bootstrap 95% CIs, Wilcoxon signed-rank tests with Holm correction, seed spread when `SEEDS` has several entries                                                                          |
+| Extras          | One VNet re-run with three figures              | Seed, all-model and CNN-only ensembles; TTA uncertainty against per-case Dice; latency per volume and peak memory per model                                                               |
+
+How to run it:
+
+1. Create a Kaggle notebook from the file with the **GPU T4 x2** accelerator; Internet is needed only if `nibabel` is missing.
+2. Attach `awsaf49/brats20-dataset-training-validation`.
+3. Run all cells. Two worker processes train one job each per GPU with live progress. The full six-model run at 50 epochs does not fit one 12-hour session: training stops at `TRAINING_BUDGET_HOURS` (9.5 by default) at an epoch boundary and the notebook analyses whatever finished. To continue, attach the previous version's output and set `RESUME_DIR`; or reduce `EPOCHS` or `MODELS` to fit one session.
+4. Download `outputs.zip` from the Output tab.
+5. To update the web app, copy `weights/deploy/VNet.pth` into this folder. Its module names match `VNet3D` in [`networks.py`](../neuroscan/inference/networks.py), and the notebook checks the reload against the stored test probabilities.
+
+Runtime, metrics and hardware use of the unified notebook: Not measured in the current repository.
+
+## At a glance (legacy runs)
 
 | Item                      | Value                                                                                                                                                                          |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -19,6 +46,8 @@ All six models are written from scratch in plain PyTorch inside the notebooks (n
 
 ## Contents
 
+- [Unified notebook](#unified-notebook)
+- [At a glance (legacy runs)](#at-a-glance-legacy-runs)
 - [Folder layout](#folder-layout)
 - [Dataset and split](#dataset-and-split)
 - [Shared pipeline](#shared-pipeline)
@@ -36,13 +65,7 @@ All six models are written from scratch in plain PyTorch inside the notebooks (n
 ```text
 Segmentation/
 |-- README.md                  This file
-|-- UNet.ipynb                 3D UNet with deep supervision (13 cells)
-|-- nnUNet.ipynb               nnU-Net style 5-stage network (15 cells)
-|-- VNet.ipynb                 Residual VNet with PReLU (13 cells)
-|-- VNet-Visualisation.ipynb   VNet re-run with 3 figures (14 cells)
-|-- UNETR.ipynb                ViT encoder + CNN decoder (13 cells)
-|-- SwinUNETR.ipynb            Swin Transformer encoder + CNN decoder (15 cells)
-|-- TransBTS.ipynb             CNN encoder with transformer bottleneck (13 cells)
+|-- segmentation.ipynb         Unified notebook for all six models (no outputs yet)
 `-- VNet.pth                   Weights loaded by the backend (not tracked in Git)
 ```
 
@@ -406,7 +429,7 @@ The validation set also selects the checkpoint, so these values are optimistic.
 
 ## Reproducing a run
 
-The notebooks are designed for Kaggle and have not been run elsewhere.
+To run the current pipeline, use the unified notebook (see [Unified notebook](#unified-notebook)). The steps below reproduce a legacy run from its notebook in Git history. The notebooks are designed for Kaggle and have not been run elsewhere.
 
 1. Create a Kaggle notebook with the **GPU T4 x2** accelerator and internet access (the first cell runs `pip install`).
 2. Attach the Kaggle dataset `awsaf49/brats20-dataset-training-validation`. If it mounts somewhere other than `/kaggle/input/datasets/awsaf49/brats20-dataset-training-validation`, edit `DATA_ROOT`.

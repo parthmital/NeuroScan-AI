@@ -194,7 +194,7 @@ Ranges from [`Frontend/package.json`](Frontend/package.json); exact versions are
 
 ### Research notebooks
 
-The notebooks run on Kaggle with 2x Tesla T4 GPUs. Binary Detection and Classification runs record Python 3.12.13, torch 2.10.0+cu128 and CUDA 12.8, and use torchvision, timm, scikit-learn, imagehash and TensorBoard. Segmentation notebooks use plain PyTorch, nibabel and scikit-learn. See each folder's README for details.
+The notebooks run on Kaggle with 2x Tesla T4 GPUs. Binary Detection and Classification runs record Python 3.12.13, torch 2.10.0+cu128 and CUDA 12.8, and use torchvision, timm, scikit-learn, imagehash and TensorBoard. Segmentation notebooks use plain PyTorch, nibabel, SciPy and scikit-learn. The unified 2D notebooks additionally use OpenCV, scikit-image and SciPy. See each folder's README for details.
 
 ## Repository structure
 
@@ -391,13 +391,13 @@ curl.exe -b cookies.txt -H "X-Requested-With: NeuroScan" `
 
 ## Research notebooks and results
 
-Each research folder has its own README with the full cell-by-cell walkthrough, every metric and every saved plot. The notebooks target Kaggle and were not executed for these READMEs; all numbers come from their saved outputs.
+Each research stage now has one unified Kaggle notebook that trains and evaluates every architecture of that stage with a shared pipeline: `binary-detection.ipynb`, `classification.ipynb` and `segmentation.ipynb`. They address the limitations stated in the papers (deduplication and group-aware splits for both 2D tasks, equal optimisation budgets, cross-validation with confidence intervals and significance tests, calibration, attention and shortcut audits for every model, native-resolution segmentation metrics, resumable longer training) and have **no saved outputs yet**. The results below come from the legacy per-model notebooks, which remain in Git history; each folder README documents them in full.
 
-| Stage                                              | Folder                                                           | Notebooks                                                                                                      | Best test result                                                                             | Deployed model  |
-| -------------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------- |
-| Detection (tumour vs no tumour, 2D)                | [Backend/Binary Detection](Backend/Binary%20Detection/README.md) | 9 (EfficientNetB0, DenseNet121, ResNet50, CoAtNet-0, InceptionV3, SwinBase, ViT-B16, MobileNetV3-Large, VGG16) | Accuracy 0.9939 on 488 images, shared by DenseNet121, ResNet50, EfficientNetB0 and CoAtNet-0 | EfficientNet-B0 |
-| Classification (glioma, meningioma, pituitary, 2D) | [Backend/Classification](Backend/Classification/README.md)       | 6 (EfficientNetB0, ResNet50, InceptionV3, CoAtNet-0, SwinBase, ViT-B16)                                        | Accuracy 0.9858 on 706 images (SwinBase); EfficientNetB0 0.9759                              | EfficientNet-B0 |
-| Segmentation (WT, TC, ET, 3D BraTS 2020)           | [Backend/Segmentation](Backend/Segmentation/README.md)           | 7 (UNet, nnU-Net style, VNet, VNet re-run with plots, UNETR, Swin-UNETR, TransBTS)                             | Mean Dice 0.7999 on 56 cases (3D UNet); VNet 0.7655                                          | VNet            |
+| Stage                                              | Folder                                                           | Notebooks                                                                                                                   | Best test result                                                                             | Deployed model  |
+| -------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------- |
+| Detection (tumour vs no tumour, 2D)                | [Backend/Binary Detection](Backend/Binary%20Detection/README.md) | Legacy runs: 9 (EfficientNetB0, DenseNet121, ResNet50, CoAtNet-0, InceptionV3, SwinBase, ViT-B16, MobileNetV3-Large, VGG16) | Accuracy 0.9939 on 488 images, shared by DenseNet121, ResNet50, EfficientNetB0 and CoAtNet-0 | EfficientNet-B0 |
+| Classification (glioma, meningioma, pituitary, 2D) | [Backend/Classification](Backend/Classification/README.md)       | Legacy runs: 6 (EfficientNetB0, ResNet50, InceptionV3, CoAtNet-0, SwinBase, ViT-B16)                                        | Accuracy 0.9858 on 706 images (SwinBase); EfficientNetB0 0.9759                              | EfficientNet-B0 |
+| Segmentation (WT, TC, ET, 3D BraTS 2020)           | [Backend/Segmentation](Backend/Segmentation/README.md)           | Legacy runs: 7 (UNet, nnU-Net style, VNet, VNet re-run with plots, UNETR, Swin-UNETR, TransBTS)                             | Mean Dice 0.7999 on 56 cases (3D UNet); VNet 0.7655                                          | VNet            |
 
 Points to keep in mind:
 
@@ -474,7 +474,7 @@ Keep `.env` out of Git (it is already ignored) and rotate `JWT_SECRET` and `DATA
 | Frontend routes           | 9 including the 404 page                                                                                                       | `Frontend/src/App.tsx`                                |
 | Backend tests             | 61                                                                                                                             | `Backend/tests/`                                      |
 | Frontend tests            | 39                                                                                                                             | `Frontend/src/test/`                                  |
-| Research notebooks        | 22 (9 detection, 6 classification, 7 segmentation)                                                                             | `Backend/*/*.ipynb`                                   |
+| Research notebooks        | 4 (one unified notebook each for detection, classification and segmentation, plus the revision audit)                          | `Backend/*/*.ipynb`                                   |
 | Deployed model parameters | Detection and classification: EfficientNet-B0 (4,008,829 and 4,011,391 in the notebook versions); segmentation: VNet 1,398,761 | Notebook `model_profile.json` files                   |
 | Session lifetime          | 30 minutes by default                                                                                                          | `ACCESS_TOKEN_EXPIRE_MINUTES`                         |
 | Ports                     | 8000 (API, localhost only), 8080 (Vite dev)                                                                                    | `scripts/dev.mjs`, `vite.config.ts`                   |
