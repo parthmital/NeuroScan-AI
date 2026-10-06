@@ -14,7 +14,7 @@ Elsevier `elsarticle` (ScienceDirect) submission package, rebuilt from the proof
 | `graphical_abstract.tex` | Standalone graphical abstract (compile separately).                                                              |
 | `figures/`               | 30 PNGs copied from the rerun notebook outputs, plus 6 cropped main-text panels (`*_test.png`, `*_overlay.png`). |
 | `figures/supp/`          | Per-model training, ROC/PR and calibration plots for all 15 runs, used by the supplement.                        |
-| `figures/audit/`         | The 9 plots of `Backend/Revision Audit/plots/`, used by the supplement as Figures S17–S25.                         |
+| `figures/audit/`         | The 9 plots of `Backend/Revision Audit/plots/`, used by the supplement as Figures S17–S25.                       |
 
 Supplementary item numbers follow the reviewer's mapping table (Comments-V2, Table M1), so
 `supplementary.tex` sets each number explicitly; numbers the mapping does not assign
@@ -28,16 +28,16 @@ and `logs/` beside it) answers the Comments-V2 questions that need no retraining
 were carried into the paper as follows; every number comes from `metrics/*.csv` or
 `metrics/revision_audit_summary.json`.
 
-| Finding                                                                                     | Where it now appears                                       |
-| ------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| Per-source survival, Bhuvaji training/testing folders, native resolution per source         | `tab:provenance`, Section 3.2, Table S11, Figure S17       |
-| Multiclass removals: 3 cross-source, 1,120 within-source, 23 cross-label                    | Sections 3.2–3.3, Table S11                                |
-| Cross-label pairs: 31 (8 label conflicts, 23 hash false positives); label-aware pool        | Section 3.6, Figure S18                                    |
-| Binary pass: 1,187 kept, 2,066 removed (731 cross-source); 82.6% test images leaked         | Abstract, Sections 3.3, 4.1, 4.5, conclusion, Figure S20   |
-| pHash vs NCC: recall 96.9% / 89.0% at tolerance 5                                           | Section 3.3, Figure S19                                    |
-| Leakage-free test accuracy (binary 85 images; multiclass 265 and 703)                       | `tab:binary-results` "Acc. LF", Sections 4.1–4.2, Table S12, Figure S21 |
-| EfficientNetB0 Grad-CAM outside-head fraction and masking test                              | Section 4.4, Figures S23–S25                               |
-| Latency and throughput re-measured, mean ± SD over three repeats                            | `tab:efficiency`, Section 4.3, Tables S9–S10, Figure S22, abstract |
+| Finding                                                                              | Where it now appears                                                    |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| Per-source survival, Bhuvaji training/testing folders, native resolution per source  | `tab:provenance`, Section 3.2, Table S11, Figure S17                    |
+| Multiclass removals: 3 cross-source, 1,120 within-source, 23 cross-label             | Sections 3.2–3.3, Table S11                                             |
+| Cross-label pairs: 31 (8 label conflicts, 23 hash false positives); label-aware pool | Section 3.6, Figure S18                                                 |
+| Binary pass: 1,187 kept, 2,066 removed (731 cross-source); 82.6% test images leaked  | Abstract, Sections 3.3, 4.1, 4.5, conclusion, Figure S20                |
+| pHash vs NCC: recall 96.9% / 89.0% at tolerance 5                                    | Section 3.3, Figure S19                                                 |
+| Leakage-free test accuracy (binary 85 images; multiclass 265 and 703)                | `tab:binary-results` "Acc. LF", Sections 4.1–4.2, Table S12, Figure S21 |
+| EfficientNetB0 Grad-CAM outside-head fraction and masking test                       | Section 4.4, Figures S23–S25                                            |
+| Latency and throughput re-measured, mean ± SD over three repeats                     | `tab:efficiency`, Section 4.3, Tables S9–S10, Figure S22, abstract      |
 
 Not carried in because the audit could not produce it: retrained binary or label-aware
 models, the background-only training ablation, and any Swin-Base or ViT-B/16 attention
