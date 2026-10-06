@@ -1,0 +1,4 @@
+subset,Tumour,Tumour-negative,Total,distinct_sizes,modal_size,modal_share,median_crop_fraction
+Br35H,1500,1500,3000,291.0,225x225,0.109,0.7869121813031161
+Chakrabarty,155,98,253,184.0,225x225,0.07114624505928854,0.7826578362944162
+Total,1655,1598,3253,,,,

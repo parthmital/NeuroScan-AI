@@ -1,0 +1,5 @@
+removed_source,kind,Tumour,Tumour-negative,All
+Br35H,cross-source,312,417,729
+Br35H,within-source,588,704,1292
+Chakrabarty,within-source,25,22,47
+All,,925,1143,2068

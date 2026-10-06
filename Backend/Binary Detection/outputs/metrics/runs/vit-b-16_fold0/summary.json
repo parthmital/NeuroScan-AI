@@ -1,0 +1,22 @@
+{
+	"run_id": "vit-b-16_fold0",
+	"model": "ViT-B/16",
+	"family": "Transformer",
+	"fold": 0,
+	"mode": "full",
+	"input_size": 224,
+	"parameters": 85799425,
+	"micro_batch": 64,
+	"accumulation": 1,
+	"effective_batch": 64,
+	"optimizer_steps": 260,
+	"epochs": 20,
+	"best_epoch": 17,
+	"best_val_loss": 0.052002175994541336,
+	"train_seconds": 176.39223283399997,
+	"train_images_per_second": 94.10845213134756,
+	"peak_train_memory_gb": 5.95861504,
+	"train_images": 830,
+	"val_images": 184,
+	"gpu": "Tesla T4"
+}

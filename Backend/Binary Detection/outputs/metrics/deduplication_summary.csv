@@ -1,0 +1,4 @@
+class_name,before,duplicates_removed,label_noise_excluded,after,removed_pct
+Tumour-negative,1598,1143,0,455,71.53
+Tumour,1655,925,0,730,55.89
+Total,3253,2068,0,1185,63.57

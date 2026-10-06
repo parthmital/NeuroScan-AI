@@ -1,0 +1,22 @@
+{
+	"run_id": "efficientnetb0_fold0",
+	"model": "EfficientNetB0",
+	"family": "Efficient CNN",
+	"fold": 0,
+	"mode": "full",
+	"input_size": 224,
+	"parameters": 4008829,
+	"micro_batch": 64,
+	"accumulation": 1,
+	"effective_batch": 64,
+	"optimizer_steps": 260,
+	"epochs": 20,
+	"best_epoch": 5,
+	"best_val_loss": 0.07814211949058202,
+	"train_seconds": 132.88820151900018,
+	"train_images_per_second": 124.91703409520937,
+	"peak_train_memory_gb": 3.092570624,
+	"train_images": 830,
+	"val_images": 184,
+	"gpu": "Tesla T4"
+}

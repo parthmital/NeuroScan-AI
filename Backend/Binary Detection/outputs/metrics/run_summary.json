@@ -1,0 +1,27 @@
+{
+	"task": "binary",
+	"images_in_pool": 3253,
+	"images_after_deduplication": 1185,
+	"label_noise_excluded": 0,
+	"test_images": 171,
+	"folds": 5,
+	"jobs_finished": 54,
+	"jobs_total": 54,
+	"leader": "CoAtNet-0",
+	"training_wall_minutes": 63.49989611835,
+	"notebook_minutes": 71.8395051240921,
+	"environment": {
+		"python": "3.13.15",
+		"torch": "2.11.0+cu128",
+		"torchvision": "0.26.0+cu128",
+		"timm": "1.0.29",
+		"cuda": "12.8",
+		"gpus": ["Tesla T4", "Tesla T4"]
+	},
+	"limitations": [
+		"MRI sequence of the images is not recorded by the sources",
+		"binary negatives are tumour-negative, not certified normal",
+		"no patient identifiers: grouping by image similarity is a proxy for a patient-level split",
+		"two-dimensional public slices only; no institutional or three-dimensional external data"
+	]
+}

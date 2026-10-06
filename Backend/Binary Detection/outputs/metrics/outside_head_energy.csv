@@ -1,0 +1,21 @@
+model,class,method,mean,sd,uniform_map
+ResNet50,Tumour-negative,Grad-CAM,0.1215,0.2192,0.3558
+ResNet50,Tumour,Grad-CAM,0.0787,0.2002,0.3278
+VGG16,Tumour-negative,Grad-CAM,0.1526,0.2115,0.3558
+VGG16,Tumour,Grad-CAM,0.0737,0.1839,0.3278
+DenseNet121,Tumour-negative,Grad-CAM,0.1897,0.2293,0.3558
+DenseNet121,Tumour,Grad-CAM,0.1764,0.1834,0.3278
+EfficientNetB0,Tumour-negative,Grad-CAM,0.2868,0.2107,0.3558
+EfficientNetB0,Tumour,Grad-CAM,0.072,0.18,0.3278
+MobileNetV3-Large,Tumour-negative,Grad-CAM,0.1424,0.2305,0.3558
+MobileNetV3-Large,Tumour,Grad-CAM,0.082,0.163,0.3278
+InceptionV3,Tumour-negative,Grad-CAM,0.1458,0.2342,0.3558
+InceptionV3,Tumour,Grad-CAM,0.1474,0.1873,0.3278
+ViT-B/16,Tumour-negative,Grad-CAM,0.4255,0.2375,0.3558
+ViT-B/16,Tumour-negative,Attention rollout,0.4211,0.1786,0.3558
+ViT-B/16,Tumour,Grad-CAM,0.2435,0.2643,0.3278
+ViT-B/16,Tumour,Attention rollout,0.285,0.1626,0.3278
+Swin-Base,Tumour-negative,Grad-CAM,0.1586,0.2461,0.3558
+Swin-Base,Tumour,Grad-CAM,0.1845,0.1949,0.3278
+CoAtNet-0,Tumour-negative,Grad-CAM,0.1391,0.2479,0.3558
+CoAtNet-0,Tumour,Grad-CAM,0.1882,0.2004,0.3278

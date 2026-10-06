@@ -1,0 +1,5 @@
+role,Tumour,Tumour-negative,Total
+dev,623,391,1014
+duplicate,925,1143,2068
+test,107,64,171
+Total,1655,1598,3253

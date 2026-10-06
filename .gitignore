@@ -22,6 +22,8 @@ __pycache__/
 .coverage
 htmlcov/
 .ipynb_checkpoints/
+__notebook__.ipynb
+
 
 # Backend runtime state and uploads
 Backend/*.db

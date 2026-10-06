@@ -1,0 +1,10 @@
+model,background_only_accuracy,background_only_auc,majority_rate,p_value,p_holm,shortcut_detected
+ResNet50,0.8129,0.8657,0.6257,0.0,0.0,True
+VGG16,0.7485,0.8359,0.6257,0.0004,0.0013,True
+DenseNet121,0.7953,0.8578,0.6257,0.0,0.0,True
+EfficientNetB0,0.7778,0.8584,0.6257,0.0,0.0001,True
+MobileNetV3-Large,0.6784,0.7821,0.6257,0.0886,0.1772,False
+InceptionV3,0.7953,0.8606,0.6257,0.0,0.0,True
+ViT-B/16,0.655,0.7411,0.6257,0.2396,0.2396,False
+Swin-Base,0.8304,0.8893,0.6257,0.0,0.0,True
+CoAtNet-0,0.7953,0.8756,0.6257,0.0,0.0,True

@@ -1,0 +1,292 @@
+{
+	"num_outputs": 1,
+	"seed": 42,
+	"deterministic": false,
+	"effective_batch": 64,
+	"epochs": 20,
+	"warmup_epochs": 1,
+	"lr": 0.0003,
+	"weight_decay": 0.01,
+	"grad_clip": 1.0,
+	"runs_dir": "/kaggle/working/metrics/runs",
+	"weights_dir": "/kaggle/working/weights",
+	"predictions_dir": "/kaggle/working/predictions",
+	"log_dir": "/kaggle/working/logs",
+	"claims_dir": "/kaggle/working/cache/claims",
+	"split_table": "/kaggle/working/metrics/splits.csv",
+	"images_path": "/kaggle/working/cache/images.npy",
+	"masks_path": "/kaggle/working/cache/masks.npy",
+	"deadline": 1791326187.094405,
+	"jobs": [
+		{
+			"model": "VGG16",
+			"fold": 0,
+			"mode": "full"
+		},
+		{
+			"model": "VGG16",
+			"fold": 1,
+			"mode": "full"
+		},
+		{
+			"model": "VGG16",
+			"fold": 2,
+			"mode": "full"
+		},
+		{
+			"model": "VGG16",
+			"fold": 3,
+			"mode": "full"
+		},
+		{
+			"model": "VGG16",
+			"fold": 4,
+			"mode": "full"
+		},
+		{
+			"model": "VGG16",
+			"fold": 0,
+			"mode": "background"
+		},
+		{
+			"model": "Swin-Base",
+			"fold": 0,
+			"mode": "full"
+		},
+		{
+			"model": "Swin-Base",
+			"fold": 1,
+			"mode": "full"
+		},
+		{
+			"model": "Swin-Base",
+			"fold": 2,
+			"mode": "full"
+		},
+		{
+			"model": "Swin-Base",
+			"fold": 3,
+			"mode": "full"
+		},
+		{
+			"model": "Swin-Base",
+			"fold": 4,
+			"mode": "full"
+		},
+		{
+			"model": "Swin-Base",
+			"fold": 0,
+			"mode": "background"
+		},
+		{
+			"model": "ViT-B/16",
+			"fold": 0,
+			"mode": "full"
+		},
+		{
+			"model": "ViT-B/16",
+			"fold": 1,
+			"mode": "full"
+		},
+		{
+			"model": "ViT-B/16",
+			"fold": 2,
+			"mode": "full"
+		},
+		{
+			"model": "ViT-B/16",
+			"fold": 3,
+			"mode": "full"
+		},
+		{
+			"model": "ViT-B/16",
+			"fold": 4,
+			"mode": "full"
+		},
+		{
+			"model": "ViT-B/16",
+			"fold": 0,
+			"mode": "background"
+		},
+		{
+			"model": "InceptionV3",
+			"fold": 0,
+			"mode": "full"
+		},
+		{
+			"model": "InceptionV3",
+			"fold": 1,
+			"mode": "full"
+		},
+		{
+			"model": "InceptionV3",
+			"fold": 2,
+			"mode": "full"
+		},
+		{
+			"model": "InceptionV3",
+			"fold": 3,
+			"mode": "full"
+		},
+		{
+			"model": "InceptionV3",
+			"fold": 4,
+			"mode": "full"
+		},
+		{
+			"model": "InceptionV3",
+			"fold": 0,
+			"mode": "background"
+		},
+		{
+			"model": "CoAtNet-0",
+			"fold": 0,
+			"mode": "full"
+		},
+		{
+			"model": "CoAtNet-0",
+			"fold": 1,
+			"mode": "full"
+		},
+		{
+			"model": "CoAtNet-0",
+			"fold": 2,
+			"mode": "full"
+		},
+		{
+			"model": "CoAtNet-0",
+			"fold": 3,
+			"mode": "full"
+		},
+		{
+			"model": "CoAtNet-0",
+			"fold": 4,
+			"mode": "full"
+		},
+		{
+			"model": "CoAtNet-0",
+			"fold": 0,
+			"mode": "background"
+		},
+		{
+			"model": "ResNet50",
+			"fold": 0,
+			"mode": "full"
+		},
+		{
+			"model": "ResNet50",
+			"fold": 1,
+			"mode": "full"
+		},
+		{
+			"model": "ResNet50",
+			"fold": 2,
+			"mode": "full"
+		},
+		{
+			"model": "ResNet50",
+			"fold": 3,
+			"mode": "full"
+		},
+		{
+			"model": "ResNet50",
+			"fold": 4,
+			"mode": "full"
+		},
+		{
+			"model": "ResNet50",
+			"fold": 0,
+			"mode": "background"
+		},
+		{
+			"model": "DenseNet121",
+			"fold": 0,
+			"mode": "full"
+		},
+		{
+			"model": "DenseNet121",
+			"fold": 1,
+			"mode": "full"
+		},
+		{
+			"model": "DenseNet121",
+			"fold": 2,
+			"mode": "full"
+		},
+		{
+			"model": "DenseNet121",
+			"fold": 3,
+			"mode": "full"
+		},
+		{
+			"model": "DenseNet121",
+			"fold": 4,
+			"mode": "full"
+		},
+		{
+			"model": "DenseNet121",
+			"fold": 0,
+			"mode": "background"
+		},
+		{
+			"model": "EfficientNetB0",
+			"fold": 0,
+			"mode": "full"
+		},
+		{
+			"model": "EfficientNetB0",
+			"fold": 1,
+			"mode": "full"
+		},
+		{
+			"model": "EfficientNetB0",
+			"fold": 2,
+			"mode": "full"
+		},
+		{
+			"model": "EfficientNetB0",
+			"fold": 3,
+			"mode": "full"
+		},
+		{
+			"model": "EfficientNetB0",
+			"fold": 4,
+			"mode": "full"
+		},
+		{
+			"model": "EfficientNetB0",
+			"fold": 0,
+			"mode": "background"
+		},
+		{
+			"model": "MobileNetV3-Large",
+			"fold": 0,
+			"mode": "full"
+		},
+		{
+			"model": "MobileNetV3-Large",
+			"fold": 1,
+			"mode": "full"
+		},
+		{
+			"model": "MobileNetV3-Large",
+			"fold": 2,
+			"mode": "full"
+		},
+		{
+			"model": "MobileNetV3-Large",
+			"fold": 3,
+			"mode": "full"
+		},
+		{
+			"model": "MobileNetV3-Large",
+			"fold": 4,
+			"mode": "full"
+		},
+		{
+			"model": "MobileNetV3-Large",
+			"fold": 0,
+			"mode": "background"
+		}
+	]
+}

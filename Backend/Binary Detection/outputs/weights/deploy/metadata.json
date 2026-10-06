@@ -1,0 +1,12 @@
+{
+	"task": "binary",
+	"architecture": "torchvision efficientnet_b0, classifier[1] replaced",
+	"classes": ["Tumour-negative", "Tumour"],
+	"outputs": 1,
+	"input_size": 224,
+	"preprocessing": "crop_to_brain (blur 5x5, threshold 45, largest contour box), resize, ImageNet normalisation",
+	"run_id": "efficientnetb0_fold4",
+	"temperature": 0.04983436675615064,
+	"decision_threshold": 1.0,
+	"fold_test_accuracy": 0.9766081871345029
+}

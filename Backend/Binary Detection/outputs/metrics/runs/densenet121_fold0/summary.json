@@ -1,0 +1,22 @@
+{
+	"run_id": "densenet121_fold0",
+	"model": "DenseNet121",
+	"family": "Classical CNN",
+	"fold": 0,
+	"mode": "full",
+	"input_size": 224,
+	"parameters": 6954881,
+	"micro_batch": 64,
+	"accumulation": 1,
+	"effective_batch": 64,
+	"optimizer_steps": 260,
+	"epochs": 20,
+	"best_epoch": 6,
+	"best_val_loss": 0.04795743071514627,
+	"train_seconds": 89.62043240499997,
+	"train_images_per_second": 185.22561824945933,
+	"peak_train_memory_gb": 4.477646848,
+	"train_images": 830,
+	"val_images": 184,
+	"gpu": "Tesla T4"
+}
