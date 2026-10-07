@@ -209,8 +209,9 @@ NeuroScan-AI/
 |-- .pre-commit-config.yaml   gitleaks secret scan before each commit
 |-- .gitattributes            LF line endings on every OS, matching Prettier
 |-- pyproject.toml            black settings matching ruff, for `black .` from the root
-|-- package.json              `npm run dev`: sets up and starts backend and frontend
+|-- package.json              `npm run dev`: sets up and starts backend and frontend; `npm run papers`: builds the papers
 |-- scripts/dev.mjs           The setup and launch script behind `npm run dev`
+|-- scripts/build-papers.mjs  Compiles the LaTeX papers with Tectonic (`npm run papers`)
 |-- Backend/
 |   |-- main.py               ASGI entry point (uvicorn main:app)
 |   |-- neuroscan/            Application package (see ARCHITECTURE.md)
@@ -230,8 +231,7 @@ NeuroScan-AI/
 |   |   |-- binary-detection.ipynb, classification.ipynb, segmentation.ipynb
 |   |   `-- <task>/           metrics/, plots/, logs/, predictions/, src/, weights/ (incl. deploy/)
 |   |-- Research Papers/      Two LaTeX paper projects (main.tex, highlights, graphical abstract)
-|   |-- Screenshots/          UI screenshots used in this README
-|   `-- build-latex.ps1       Compiles the papers with a local tectonic.exe
+|   `-- Screenshots/          UI screenshots used in this README
 `-- Frontend/
     |-- vite.config.ts        Port 8080, /api proxy, security headers for preview
     `-- src/
@@ -412,20 +412,20 @@ Points to keep in mind:
 
 ## Papers and presentation materials
 
-[`Materials/Research Papers/`](Materials/Research%20Papers/) contains two LaTeX paper projects in the Elsevier `elsarticle` format, both rewritten from the notebook outputs above:
+[`Materials/Research Papers/`](Materials/Research%20Papers/) contains two LaTeX paper projects in the Elsevier CAS single-column format (`cas-sc`) for _Engineering Applications of Artificial Intelligence_, both rewritten from the notebook outputs above:
 
-| Folder                                                                                      | Paper                                                               | Files                                                                                                                              |
-| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `Brain_Tumour_Detection_and_Classification_Revised/`                                        | Nine-backbone benchmark for 2D detection and subtype classification | `main.tex`, `supplementary.tex`, `highlights.tex`, `graphical_abstract.tex`, `main.pdf`, `supplementary.pdf`, `README_Overleaf.md` |
-| `A_Comprehensive_Benchmark_of_3D_Segmentation_Architectures_for_Brain_Tumour_Segmentation/` | Six-network 3D segmentation benchmark on BraTS 2020                 | `main.tex`, `highlights.tex`, `graphical_abstract.tex`, `README_Overleaf.md`                                                       |
+| Folder                                                                                                      | Paper                                                               | Files                                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `Standardised_Comparison_of_Convolutional_and_Transformer_Backbones_for_Brain_Tumour_Image_Classification/` | Nine-backbone benchmark for 2D detection and subtype classification | `main.tex`, `refs.bib`, `highlights.tex`, `graphical_abstract.tex`, `main.pdf`, `README_Overleaf.md`, CAS template files |
+| `A_Comprehensive_Benchmark_of_Three-Dimensional_Segmentation_Architectures_for_Brain_Tumour_Segmentation/`  | Six-network 3D segmentation benchmark on BraTS 2020                 | `main.tex`, `refs.bib`, `highlights.tex`, `graphical_abstract.tex`, `main.pdf`, `README_Overleaf.md`, CAS template files |
 
-The papers include the notebook plots directly from `Materials/Notebooks/<task>/plots/` through `\graphicspath`, so they compile in place without copied figures. Each `README_Overleaf.md` says where to upload the plots for Overleaf and which output file each table comes from.
+The papers include the notebook plots directly from `Materials/Notebooks/<task>/plots/` through `\graphicspath`, so they compile in place without copied figures. Every notebook plot is used, each figure and table is set directly after the paragraph that first cites it, and citations, cross-references, DOIs and URLs are links. Each `README_Overleaf.md` says where to upload the plots for Overleaf and which output file each table comes from.
 
-`build-latex.ps1` compiles `main.tex` (or, when a folder has none, every `.tex` file) in each project folder with a local `tectonic.exe`. The `.exe` is Git-ignored, so download [Tectonic](https://tectonic-typesetting.github.io/) and place `tectonic.exe` in `Materials/` first.
+`npm run papers` compiles `main.tex` (or, when a folder has none, every `.tex` file) in each project folder with Tectonic, which also runs BibTeX. It uses `Materials/tectonic.exe` (`Materials/tectonic` on macOS and Linux), then a `tectonic` on `PATH`, or the path in the `TECTONIC` environment variable. The binary is Git-ignored, so download [Tectonic](https://tectonic-typesetting.github.io/) first. Its package cache is kept in `.cache/tectonic/`.
 
-```powershell
-.\Materials\build-latex.ps1                         # all projects
-.\Materials\build-latex.ps1 -Project Revised        # folders whose name contains "Revised"
+```bash
+npm run papers                  # all projects
+npm run papers -- Standardised  # folders whose name contains "Standardised" (case-insensitive)
 ```
 
 ## Testing and code quality
@@ -459,7 +459,7 @@ From the repository root, `black .` and `npx prettier . --write` produce the sam
 | Every request returns `401` after login                                             | Browser blocked the `Secure` cookie on plain HTTP other than `localhost`                        | Use HTTPS, or `localhost` in development                                                        |
 | `403 Missing or invalid X-Requested-With header`                                    | A script called the API without the CSRF header                                                 | Send `X-Requested-With: NeuroScan` on `POST`, `PUT` and `DELETE`                                |
 | Locked out, or lost the authenticator                                               | Lockout after 5 failures, or 2FA device lost                                                    | Wait 15 minutes, or use the [account recovery](#account-recovery) commands                      |
-| `build-latex.ps1` says `tectonic.exe not found`                                     | The binary is Git-ignored                                                                       | Download Tectonic and place `tectonic.exe` in `Materials/`                                      |
+| `npm run papers` says `Tectonic not found`                                          | The binary is Git-ignored                                                                       | Download Tectonic and place `tectonic.exe` in `Materials/`, or put `tectonic` on `PATH`         |
 
 ## Known limitations
 

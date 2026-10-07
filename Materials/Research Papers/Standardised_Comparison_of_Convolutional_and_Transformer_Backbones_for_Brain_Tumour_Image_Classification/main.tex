@@ -1,0 +1,1155 @@
+\documentclass[a4paper,fleqn]{cas-sc}
+% Elsevier CAS single-column class (cas-sc.cls, cas-common.sty and cas-model2-names.bst,
+% version 2.4, are in this folder). The class loads hyperref, booktabs, multirow and array.
+\usepackage[authoryear]{natbib}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+% Figures are the notebook plots: figures/<task>/plots/<file>.png when uploaded with the
+% project (Overleaf), otherwise read in place from Materials/Notebooks/<task>/plots/.
+\graphicspath{{figures/}{../../Notebooks/}}
+% DOIs in the reference list link to https://doi.org (the .bst default is dx.doi.org)
+\newcommand*{\doi}[1]{\href{https://doi.org/#1}{\path{#1}}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.08}
+\emergencystretch=2em
+% One plot scaled to the text width, but never taller than #1 of the text height.
+\newcommand{\plot}[2]{\includegraphics[width=\linewidth,height=#1\textheight,keepaspectratio]{#2}}
+% A labelled panel of a figure that stacks the two tasks.
+\newcommand{\panel}[3]{\plot{#1}{#2}\par\smallskip{\small #3}\par}
+% Grad-CAM maps of one backbone on both tasks.
+\newcommand{\gradcamfigure}[2]{%
+\begin{herefigure}
+\centering
+\panel{0.18}{binary-detection/plots/13_gradcam_#1.png}{(a) Binary detection.}
+\medskip
+\panel{0.18}{classification/plots/13_gradcam_#1.png}{(b) Subtype classification.}
+\caption{Grad-CAM maps of #2 on its most confident correct and most confident wrong test predictions, from the fold with the lowest validation loss.}
+\label{fig:gradcam-#1}
+\end{herefigure}}
+% Figures and tables are not floats: each is set exactly where it is written, right after
+% the paragraph that first cites it, with the cas-sc caption style. A page may end short
+% when the next figure or table does not fit on it.
+\makeatletter
+\ExplSyntaxOn
+\NewDocumentEnvironment { herefigure } { }
+  {
+    \par \addvspace { \intextsep } \noindent
+    \begin{minipage}{\linewidth}
+    \__reset_fig:
+    \dim_set:Nn \l_fig_width_dim { \linewidth }
+    \cs_set_eq:NN \@makecaption \__make_fig_caption:nn
+    \def \@captype { figure }
+    \centering \sffamily \small
+  }
+  { \end{minipage} \par \addvspace { \intextsep } }
+\NewDocumentEnvironment { heretable } { }
+  {
+    \par \addvspace { \intextsep } \noindent
+    \begin{minipage}{\linewidth}
+    \__reset_tbl:
+    \dim_set:Nn \l_tbl_width_dim { \linewidth }
+    \csgdef { tblwidth } { \dim_use:N \l_tbl_width_dim }
+    \cs_set_eq:NN \@makecaption \__make_tbl_caption:nn
+    \def \@captype { table }
+    \centering \sffamily \small
+  }
+  { \end{minipage} \par \addvspace { \intextsep } }
+% cas-common.sty prints an empty "ORCID(s):" footnote when no author has an ORCID iD.
+\RenewDocumentCommand \printorcid { }
+  {
+    \seq_if_empty:NF \g_stm_orcid_seq
+      {
+        \group_begin:
+          \tex_let:D \thefootnote \relax \footnotetext
+            { \raggedright \textsc{orcid}(s):\c_space_token \seq_use:Nn \g_stm_orcid_seq { ;~ } }
+        \group_end:
+      }
+  }
+\ExplSyntaxOff
+\makeatother
+\raggedbottom
+\hypersetup{
+  pdftitle={Standardised Comparison of Convolutional and Transformer Backbones for Brain Tumour Magnetic Resonance Image Classification under Perceptual-Hash Deduplication},
+  pdfauthor={Parth Mital, Ved Lawand, Biji C. L., Muzaffar Ahamad Dar, George Priya Doss C.},
+}
+
+\begin{document}
+\let\WriteBookmarks\relax
+
+\shorttitle{Backbone benchmark for brain tumour image classification}
+\shortauthors{P. Mital et al.}
+
+\title[mode=title]{Standardised Comparison of Convolutional and Transformer Backbones for Brain Tumour Magnetic Resonance Image Classification under Perceptual-Hash Deduplication}
+
+\author[1]{Parth Mital}
+\author[1]{Ved Lawand}
+\author[1]{Biji C. L.}
+\cormark[1]
+\ead{biji.cl@vit.ac.in}
+\author[2]{Muzaffar Ahamad Dar}
+\author[2]{George Priya Doss C.}
+
+\affiliation[1]{organization={School of Computer Science and Engineering, Vellore Institute of Technology},
+  city={Vellore},
+  state={Tamil Nadu},
+  country={India}}
+\affiliation[2]{organization={School of Bio Sciences and Technology, Vellore Institute of Technology},
+  city={Vellore},
+  state={Tamil Nadu},
+  country={India}}
+
+\cortext[1]{Corresponding author}
+
+\begin{abstract}
+Magnetic resonance imaging (MRI) is the standard investigation for brain tumours, but published deep learning accuracies are difficult to compare because studies differ in data, splitting and evaluation, and because near-duplicate images from shared public sources leak between training and test partitions. The contribution to artificial intelligence is a controlled evaluation protocol: label-aware perceptual-hash deduplication before splitting, a group-aware split into five cross-validation folds and a held-out test set, an equal number of optimiser steps for every model, temperature scaling, fold ensembles with bootstrap confidence intervals and Holm-corrected McNemar tests, and attention and background-only shortcut audits. The engineering application is the selection of a deployable tumour detector and subtype classifier. Nine ImageNet-pretrained convolutional, transformer and hybrid backbones were benchmarked on binary tumour detection and three-way subtype classification. Deduplication reduced the binary pool from 3,253 to 1,185 images and the multiclass pool from 5,828 to 4,730. On 171 binary test images, CoAtNet-0, EfficientNetB0 and ViT-B/16 reached 99.42\% accuracy (95\% confidence interval 98.25--100\%), and no pair of models differed significantly. The multiclass grouping left only 45 test images, on which six models were error-free, so that test set cannot rank the models. Models retrained with the head masked out still exceeded the majority-class rate for 7 of 9 binary and all 9 multiclass backbones, reaching 83.04\% and 97.78\% accuracy, so these public collections carry label information outside the brain. EfficientNetB0 matched the binary leaders with 4.01 million parameters and 0.77 giga floating-point operations per image.
+\end{abstract}
+
+\begin{keywords}
+Brain tumour MRI \sep deep learning \sep perceptual hashing \sep shortcut learning \sep vision transformers
+\end{keywords}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+Brain tumours constitute the abnormal proliferation of cells either in the brain or the central nervous system. Whether benign or malignant, brain tumours represent serious threats because of their location in the limited skull cavity and the important functions of the brain. According to the Central Brain Tumor Registry of the United States, 453,623 primary brain and other central nervous system tumours were diagnosed in the United States between 2016 and 2020, an average of approximately 90,700 cases per year \citep{ostrom2023}. The exact prevalence in India, however, is not fully documented. Three major forms of primary brain tumours include: (i) glioma, which is formed from glial cells and accounts for 26.3\% of all primary brain and other central nervous system tumours in the same registry \citep{ostrom2023}; (ii) meningioma, which develops in the meningeal layers of the brain and is usually benign in nature; and (iii) pituitary tumours, which grow in the pituitary gland and cause hormonal problems \citep{bauer2013}.
+
+Magnetic resonance imaging (MRI) is used nowadays as the main non-invasive technique for brain tumour detection and classification. In comparison to traditional computed tomography imaging, MRI gives much better soft tissue contrast without utilising any ionising radiation. Moreover, MRI allows images to be acquired in different orientations and with different types of contrast, namely T1-weighted, T2-weighted, fluid-attenuated inversion recovery (FLAIR), and diffusion-weighted. This is extremely important for determining tumour location, volume, margins, oedema, and adjacent vital structures. At the same time, analysis of MRI studies raises a number of problems that cannot be ignored. Firstly, examination takes a lot of time, because a complete brain MRI study may include hundreds of sections, each of which must be reviewed. Secondly, inter- and intra-observer variability should be noted, as there is no guarantee that radiologists will interpret the results of an MRI study in the same way. Thirdly, limited training in neuroradiology can become an obstacle to correct image interpretation. Finally, there are not enough specialists in the rural and semi-urban regions of India because of the poor radiologist-to-population ratio.
+
+The introduction of deep learning technology has transformed the field of medical imaging analysis in the last ten years. Models based on deep learning, especially convolutional neural networks (CNNs), have the ability to learn hierarchical representations of visual features directly from pixel inputs without the need for manual feature extraction. Thus, the use of these models enables automatic, efficient, and consistent tumour detection from brain MRI images. Convolutional neural networks have become popular among researchers working in this area, with well-performing models such as ResNet, VGG, DenseNet, Inception, EfficientNet, and MobileNet setting benchmarks on image classification tasks. More recently, researchers started exploring transformer models for computer vision problems, having been introduced initially for natural language processing. These transformer-based models include the vision transformer (ViT), the Swin Transformer, and CoAtNet. This line of research provides an alternative way of representing global information in images using the self-attention mechanism, and it might be of particular use in medical imaging, especially for understanding the relation between a tumour and the surrounding anatomical structures \citep{dosovitskiy2021,liu2021,dai2021,khan2022}.
+
+Although several research works have separately proved the efficiency of deep learning architectures for detecting and classifying brain tumours, there is still an insufficient number of comparative investigations performed across several architectural families using the same experimental settings. The lack of comparative analysis poses serious challenges in choosing a suitable model, since each study employs a separate database, preprocessing procedure, data augmentation approach, and assessment technique, which makes it problematic to compare results reported by different studies. For example, it is impossible to say which performance figure is better when one work reports an accuracy of 99\% on a small and homogeneous database, whereas another gives 97\% accuracy on a larger and heterogeneous one.
+
+Numerous papers make the mistake of retaining images that are duplicates or near-duplicates across the training, validation, and test splits when using publicly available datasets drawn from multiple sources. This results in a highly inaccurate assessment of performance, causing a significant increase in reported performance figures compared with the actual ability of a model to generalise. Once a model has been shown a particular image, or one that is very similar, during training, any further performance result for that image reflects memorisation rather than genuine learning. The problem of near-duplicate images is especially critical within brain tumour research, since most publicly available datasets come from common origins such as the Cheng dataset or the Figshare collection. Perceptual hashing addresses images that are duplicates of one another. It does not address a second and distinct form of correlation: adjacent slices of the same patient are visually different enough to survive any hash-based filter, yet are not statistically independent, so a split drawn at slice level can place highly correlated images on both sides of the partition even when no near-duplicate pair remains.
+
+It is important to emphasise the clinical significance of establishing a brain tumour diagnosis correctly. The potential consequences of late diagnosis or misdiagnosis include limited treatment alternatives, poor prognosis, higher healthcare expenditure, and significantly diminished quality of life for both patients and their families. The implementation of automated systems with accuracy equal or superior to that of humans may bring about several advantages: faster diagnosis through prompt preliminary assessment; decision-making support where experienced radiologists are unavailable; uniformity of diagnosis due to the absence of inter-reader variation; and relief of radiologist workload so that experts attend primarily to challenging cases \citep{beam2018,defauw2018}.
+
+This paper makes four contributions. First, it trains and evaluates nine ImageNet-pretrained backbones from three architectural families with one code path, on identical splits and with an identical number of optimiser steps, so that the only difference between the rows of each results table is the architecture. Second, it controls leakage before any split is drawn, with label-aware perceptual-hash deduplication and a group-aware split whose leakage audit finds no test image near a development image, and it reports what this control does to each public collection. Third, it replaces single-run leaderboards with five-fold cross-validation, fold-ensemble test predictions, bootstrap confidence intervals, exact McNemar tests with Holm correction, calibration analysis and measured latency and throughput, and shows that the leading models cannot be separated. Fourth, it audits every model for reliance on image regions outside the head, both through attention maps and by retraining each model on background-only images, and finds that the background carries label information that most models can exploit.
+
+The rest of this paper is structured as follows. Section~\ref{sec:lit} reviews existing studies on brain tumour classification. Section~\ref{sec:methods} describes the data, deduplication, splitting, models, training and evaluation protocol. Section~\ref{sec:results} presents the cross-validation and test results of both tasks, calibration, efficiency, and the interpretability and shortcut analyses, with the per-run results, per-class metrics and per-model attention maps beside the results they support. Section~\ref{sec:conclusion} concludes the study and offers directions for future research, and \ref{app:code} describes the released code and outputs.
+
+\section{Literature Review}
+\label{sec:lit}
+
+Previous works on automated brain tumour recognition were based on feature engineering followed by machine learning classifiers. Such works have used texture descriptors such as the grey level co-occurrence matrix (GLCM) and local binary patterns (LBP), wavelet transforms such as the discrete wavelet transform (DWT), morphological features related to shape, size, and boundary, and classifiers such as the support vector machine (SVM), random forests, and $k$-nearest neighbours \citep{bauer2013,gordillo2013}. In their work, \citet{zacharaki2009} obtained around 85\% accuracy using texture features and an SVM classifier on a small set of 80 images for tumour type recognition. \citet{cheng2015} suggested a tumour region augmentation approach that yielded 90\% accuracy using intensity, texture, and shape features along with an SVM classifier on 3,064 MRI images. Although promising, such methods faced challenges due to the limitations of feature engineering, the inability to generalise across datasets, and the absence of automatic learning of hierarchical structures.
+
+The success of AlexNet in 2012 propelled the implementation of deep learning in medical imaging applications. Successive CNN models improved performance by introducing better architectures. \citet{he2016} incorporated residual connections into CNN models, making it possible to train very deep networks by addressing the vanishing gradient problem. ResNet50 became a standard model for medical image classification, with reports of 95--98\% accuracy for brain tumour classification. Using transfer learning on a ResNet50 model, \citet{seetha2018} achieved an accuracy of 97.5\% for the classification of 253 brain MRI images. \citet{simonyan2014} demonstrated improvements in model performance by increasing depth while keeping small convolutional filters of size $3\times 3$. However, due to its very large parameter count of 138 million, VGG16 is computationally intensive and vulnerable to overfitting when applied to small medical datasets. For instance, \citet{khan2020} reported 98.69\% accuracy using VGG16 with 3,064 samples. \citet{huang2017} introduced densely connected layers in which each layer receives input from all preceding layers. Consequently, DenseNet121 became more parameter-efficient while achieving better performance in medical imaging tasks, with accuracies of 96--98\%. \citet{szegedy2016} presented parallel convolutions with varying kernel dimensions ($1\times 1$, $3\times 3$, $5\times 5$) that allowed the model to learn multi-scale features. InceptionV3 reached 97.5\% accuracy in brain tumour classification, as reported by \citet{deepak2019}. Moreover, \citet{rehman2020} obtained a high classification rate of 99.34\% accuracy via transfer learning. \citet{tan2019} introduced a method for scaling network dimensions, namely depth, width, and resolution, using neural architecture search to obtain better accuracy with far fewer parameters than comparable models. Furthermore, \citet{howard2019} created lightweight neural networks based on depth-wise separable convolutions for mobile and edge devices.
+
+\citet{dosovitskiy2021} adapted transformer models to visual tasks by framing images as sequences of patches of $16\times 16$ pixels. The ViT-B/16 variant performed comparably with CNNs on large-scale datasets such as ImageNet and JFT-300M but needed extensive pre-training and exhibited drawbacks on small medical datasets because of a lack of built-in inductive biases. \citet{liu2021} proposed hierarchical transformers using shifted windows to process images efficiently at multiple scales while retaining linear complexity with respect to image resolution. Swin Transformers performed impressively on ImageNet and have also been investigated for medical image processing. The hierarchical window attention in Swin Transformers enables the model to learn both local tumour boundaries and overall structure from MRI images. CoAtNet, proposed by \citet{dai2021}, stacks depth-wise convolution stages and relative self-attention stages vertically within a single model, which is intended to combine the inductive bias of convolution with the global receptive field of attention.
+
+Since 2022 these architectures have been applied to brain tumour MRI directly, and the reliability of the public benchmarks on which they are evaluated has itself come under scrutiny. \citet{shamshad2023} survey the adoption of transformers across medical imaging tasks, including classification. \citet{tummala2022} fine-tuned an ensemble of four ImageNet-pretrained ViT variants on the 3,064-image Cheng collection and reported 98.7\% test accuracy for three-way subtype classification, and \citet{asiri2024} reported 97\% accuracy for a Swin Transformer on a 2,870-image four-class Kaggle collection. Over the same period, \citet{kapoor2023} documented data leakage, including leakage between training and test data, as a recurring cause of over-optimistic results in machine-learning-based science across 17 fields. Most directly relevant here, \citet{vangala2026} audited public brain tumour MRI classification benchmarks and found that 28.8\% of the official test images of one widely used collection have a near-duplicate in its training split, and that 22.3\% of the test images of the Bhuvaji collection used in the present study are byte-identical to a training image. These findings strengthen the case for deduplicating before splitting rather than relying on the official partitions.
+
+Studies applying these architectures to brain tumour detection and classification are summarised in Table~\ref{tab:existing-studies}.
+
+\begin{heretable}
+\centering
+\caption{Comparison of existing studies for brain tumour detection.}
+\label{tab:existing-studies}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccc@{}}
+\toprule
+Study & Model & Dataset size & Task & Accuracy \\
+\midrule
+\citet{talo2019} & ResNet50 & 253 & Binary & 95.23\% \\
+\citet{khan2020} & VGG16 & 3,064 & Binary & 98.69\% \\
+\citet{noreen2020} & DenseNet121 & 3,064 & Binary & 99.51\% \\
+\citet{rehman2020} & InceptionV3 & 3,064 & Binary & 99.34\% \\
+\citet{ghassemi2020} & EfficientNet & 3,064 & Binary & 98.87\% \\
+\citet{cheng2015} & SVM + features & 3,064 & Multiclass & 90.00\% \\
+\citet{deepak2019} & InceptionV3 & 3,064 & Multiclass & 97.50\% \\
+\citet{tummala2022} & ViT ensemble & 3,064 & Multiclass & 98.70\% \\
+\citet{asiri2024} & Swin Transformer & 2,870 & Multiclass & 97.00\% \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+Several open issues remain. Cross-architecture comparison is difficult because most studies examine no more than two or three models. Dataset heterogeneity is a further obstacle, because split schemes, preprocessing, and evaluation protocols differ between studies. Transformer under-representation is an additional problem, since current papers deal mainly with CNN-based models. Reproducibility is also limited, because source code, exact splits, and pretrained weights are not consistently released. Incomplete deduplication is a final gap, as most papers do not account for duplicate and near-duplicate images in combined datasets. Reporting practice is also narrow: headline accuracy and AUC are commonly quoted from a single run without confidence intervals or significance tests, without per-class sensitivity and specificity, without any assessment of probability calibration, and without measured inference cost. Whether a model relies on the anatomy or on the framing of the image is rarely tested. This paper addresses these gaps by evaluating nine architectures with one pipeline and an equal optimisation budget, deduplicating and grouping before splitting, cross-validating every model, testing differences statistically, reporting calibration and measured efficiency, auditing attention and background shortcuts for every model, and releasing the notebooks, splits and outputs.
+
+\section{Methods and Materials}
+\label{sec:methods}
+
+\subsection{Overall Methodology}
+\label{sec:workflow}
+
+The workflow is illustrated in Figure~\ref{fig:methodology}. Both tasks are run by the same notebook code, which differs only in the data sources and the number of classes. In the data stage, two public Kaggle collections are combined for binary detection and two for subtype classification, every image is cropped to the brain, and a 64-bit perceptual hash and a $64\times 64$ thumbnail are computed from the original image. In the curation stage, near-duplicates are removed within each label, images filed under two labels are excluded as label noise, and the remaining images are joined into groups of similar images that are kept together when the pool is split into a held-out test set and five development folds. In the training stage, each of the nine backbones is trained once per fold, plus once on background-only images, with the same schedule and number of optimiser steps. In the evaluation stage, each run is calibrated on its own validation fold, the five fold models of each backbone are averaged on the test set, and accuracy, calibration, statistical significance, attention, shortcut reliance and efficiency are measured.
+
+\begin{herefigure}
+\centering
+\begin{tikzpicture}[
+  font=\sffamily\small,
+  >=Latex,
+  stage/.style={draw=black!70, fill=black!4, rounded corners=3pt, line width=0.5pt,
+                text width=2.6cm, align=center, minimum height=1.75cm, inner sep=3pt},
+  lbl/.style={font=\sffamily\bfseries\footnotesize},
+  arrow/.style={->, line width=0.7pt, draw=black!70}
+]
+\node[stage] (acq) {\textbf{Data}\\[2pt]\scriptsize Binary: 2 Kaggle\\ sets (3,253)\\ Multiclass: 2\\ Kaggle sets (5,828)\\ brain crop, pHash};
+\node[stage, right=0.4cm of acq] (cur) {\textbf{Curation}\\[2pt]\scriptsize label-aware pHash\\ deduplication\\ $3{,}253\rightarrow1{,}185$\\ $5{,}828\rightarrow4{,}730$\\ group-aware split};
+\node[stage, right=0.4cm of cur] (pre) {\textbf{Split}\\[2pt]\scriptsize held-out test set\\ (171 and 45)\\ + 5 development\\ folds; leakage\\ audit};
+\node[stage, right=0.4cm of pre] (mod) {\textbf{Training}\\[2pt]\scriptsize 9 ImageNet\\ backbones $\times$ 5 folds\\ + background-only\\ runs; equal\\ optimiser steps};
+\node[stage, right=0.4cm of mod] (ev) {\textbf{Evaluation}\\[2pt]\scriptsize temperature scaling,\\ fold ensembles,\\ bootstrap CIs,\\ McNemar, Grad-CAM,\\ shortcut tests};
+
+\draw[arrow] (acq) -- (cur);
+\draw[arrow] (cur) -- (pre);
+\draw[arrow] (pre) -- (mod);
+\draw[arrow] (mod) -- (ev);
+
+\node[below=0.35cm of cur, lbl, text width=3.2cm, align=center] (t1)
+  {\scriptsize Leakage control before splitting};
+\node[below=0.35cm of mod, lbl, text width=3.2cm, align=center] (t2)
+  {\scriptsize Checkpoint chosen on validation log-loss};
+\draw[arrow, dashed, draw=black!45] (t1) -- (cur);
+\draw[arrow, dashed, draw=black!45] (t2) -- (mod);
+\end{tikzpicture}
+\caption{Overall methodology of the study. Deduplication and grouping precede every split, so no group of similar images crosses the test set and the development folds. Each backbone is trained on every fold with the same number of optimiser steps, calibrated on its own validation fold, and evaluated on the test set as a five-fold ensemble.}
+\label{fig:methodology}
+\end{herefigure}
+
+The two tasks are kept separate rather than merged into a single four-class problem. The binary detector answers whether a tumour is present, whereas subtype classification is only meaningful once a tumour-positive decision has been taken. Keeping the tasks separate mirrors the clinical order of interpretation and avoids making the subtype model responsible for rejecting tumour-negative images that were never part of its training objective.
+
+\subsection{Data Collection}
+\label{sec:data}
+
+For the binary task, which classifies MRI slices as tumour-positive or tumour-negative, two public Kaggle collections were combined. The first, \textit{Brain MRI Images for Brain Tumor Detection} \citep{chakrabarty2019}, contributes 253 images, 155 tumour-positive and 98 tumour-negative. The second, \textit{Br35H: Brain Tumor Detection 2020} \citep{hamada2025}, contributes 3,000 images, 1,500 of each class. The pooled binary set therefore has 3,253 images, 1,655 tumour-positive and 1,598 tumour-negative. The negative class consists of images that the dataset curators labelled as not containing a tumour; neither source certifies that these images are radiologically normal, so the class is referred to as tumour-negative rather than normal.
+
+For subtype classification into glioma, meningioma and pituitary tumour, two further collections were combined. The first is the \textit{Brain Tumor Classification (MRI)} collection \citep{bhuvaji2020}, whose training and testing folders were merged and whose tumour-negative folder was excluded. The second is the collection of \citet{cheng2017}, described in the associated study \citep{cheng2015}, which comprises 3,064 contrast-enhanced T1-weighted slices from 233 patients and was used in the JPEG conversion distributed on Kaggle \citep{moundirb2025}. The pooled multiclass set has 5,828 images: 2,352 glioma, 1,645 meningioma and 1,831 pituitary.
+
+Table~\ref{tab:provenance} gives the provenance of every image, the native resolution of each source, the share of the image that the brain crop keeps, and the number of images each source lost to deduplication, and Figure~\ref{fig:overview} plots the images per source and class and the native image sizes. The binary sources span 184 and 291 distinct image sizes, whereas 99.5\% of the Cheng slices and 93.1\% of the Bhuvaji training folder are $512\times 512$ pixels; the Bhuvaji testing folder is far less uniform, with 184 distinct sizes.
+
+\begin{heretable}
+\centering
+\caption{Provenance of the source collections: images per class, native resolution as the number of distinct image sizes and the most common (modal) size with its share, the median fraction of the image kept by the brain crop, and the images removed by deduplication. Bhuvaji removals are recorded for both folders together.}
+\label{tab:provenance}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llcccccccc@{}}
+\toprule
+Track & Source & \multicolumn{3}{c}{Images per class} & Total & Sizes & Modal size (share) & Crop kept & Removed \\
+\midrule
+ & & Tumour & Tumour-neg. & & & & & & \\
+\cmidrule(lr){3-4}
+\multirow{3}{*}{Binary} & Br35H & 1,500 & 1,500 & & 3,000 & 291 & $225\times 225$ (10.9\%) & 0.787 & 2,021 \\
+ & Chakrabarty & 155 & 98 & & 253 & 184 & $225\times 225$ (7.1\%) & 0.783 & 47 \\
+ & \textbf{Total} & \textbf{1,655} & \textbf{1,598} & & \textbf{3,253} & & & & \textbf{2,068} \\
+\midrule
+ & & Glioma & Meningioma & Pituitary & & & & & \\
+\cmidrule(lr){3-5}
+\multirow{4}{*}{Multiclass} & Bhuvaji, training & 826 & 822 & 827 & 2,475 & 137 & $512\times 512$ (93.1\%) & 0.671 & \multirow{2}{*}{608} \\
+ & Bhuvaji, testing & 100 & 115 & 74 & 289 & 184 & $512\times 512$ (11.1\%) & 0.846 & \\
+ & Cheng & 1,426 & 708 & 930 & 3,064 & 2 & $512\times 512$ (99.5\%) & 0.635 & 486 \\
+ & \textbf{Total} & \textbf{2,352} & \textbf{1,645} & \textbf{1,831} & \textbf{5,828} & & & & \textbf{1,094} \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\panel{0.25}{binary-detection/plots/01_dataset_overview.png}{(a) Binary detection.}
+\medskip
+\panel{0.25}{classification/plots/01_dataset_overview.png}{(b) Subtype classification.}
+\caption{Dataset overview before deduplication: images per source and class, and native image sizes.}
+\label{fig:overview}
+\end{herefigure}
+
+The MRI sequence is unknown in both tracks. Neither binary source records the sequence (T1-weighted, contrast-enhanced T1-weighted, T2-weighted, or FLAIR) of individual images. In the multiclass track, the Cheng component is contrast-enhanced T1-weighted according to its source publication \citep{cheng2015}, but the Bhuvaji collection records no sequence information, so the pooled multiclass set is a mixture of unknown sequence composition. A model trained on an unknown mixture of sequences cannot be specified for deployment on any particular acquisition protocol. No patient identifiers are available in any source. Representative images, their brain crops and the head masks used later are shown in Figure~\ref{fig:samples}.
+
+\begin{herefigure}
+\centering
+\panel{0.2}{binary-detection/plots/02_samples_crop_mask.png}{(a) Binary detection.}
+\medskip
+\panel{0.25}{classification/plots/02_samples_crop_mask.png}{(b) Subtype classification.}
+\caption{Sample images of each class, the brain crop that every model is trained and evaluated on, and the head masks used by the attention and shortcut analyses.}
+\label{fig:samples}
+\end{herefigure}
+
+\subsection{Preprocessing, Deduplication and Splitting}
+\label{sec:preproc}
+
+\textbf{Brain crop.} Every image is converted to greyscale, blurred with a $5\times 5$ Gaussian kernel and thresholded at intensity 45, and the bounding box of the largest external contour is kept. This is the crop applied by the web application that deploys the models, so training, evaluation and deployment see the same framing, and it removes most of the empty border around the head. The crops are cached once at $320\times 320$ pixels and resized on the GPU to the input size of each backbone.
+
+\textbf{Label-aware deduplication.} Near-duplicates were identified with 64-bit perceptual hashes computed from the original images: two images within Hamming distance 5 are treated as duplicates, and within each label all but one image of each duplicate set are removed, keeping the copy from the first-listed folder. Pairs within the tolerance that carry different labels were classified with the normalised cross-correlation (NCC) of their $64\times 64$ thumbnails, following the duplicate criterion of \citet{vangala2026}: at $\mathrm{NCC}\geq 0.98$ the pair is the same image filed under two labels and both copies are excluded as label noise; below that the pair is a hash false positive and both images are kept. The pass ran on each task's pool before any split.
+
+The binary pool contained no cross-label pair within the tolerance. Deduplication removed 2,068 of its 3,253 images (63.57\%), leaving 455 tumour-negative and 730 tumour-positive images (Table~\ref{tab:dedup}). Of the removals, 729 were Br35H images whose retained duplicate is a Chakrabarty image, 1,292 were duplicates within Br35H and 47 within Chakrabarty. In the multiclass pool, 31 cross-label pairs lay within the tolerance, all glioma against meningioma: 8 pairs inside the Bhuvaji collection had NCC of at least 0.9997 and were excluded as label noise, and 23 were hash false positives with NCC between 0.67 and 0.86. Deduplication removed 1,094 multiclass images as duplicates, 608 within Bhuvaji, 483 within Cheng and only 3 Cheng meningioma images against a Bhuvaji copy, and the label-noise exclusion brought the pool to 4,730 images. Per image, the split table records 1,088 duplicates and 10 label-noise exclusions (2 glioma, 8 meningioma); both accounts reach the same 4,730 images.
+
+\begin{heretable}
+\centering
+\caption{Deduplication outcome per class at Hamming tolerance 5. Label-noise exclusions are those recorded by the per-class summary.}
+\label{tab:dedup}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+Task & Class & Before & Duplicates & Label noise & After & Removed (\%) \\
+\midrule
+\multirow{3}{*}{Binary} & Tumour-negative & 1,598 & 1,143 & 0 & 455 & 71.53 \\
+ & Tumour & 1,655 & 925 & 0 & 730 & 55.89 \\
+ & \textbf{Total} & \textbf{3,253} & \textbf{2,068} & \textbf{0} & \textbf{1,185} & \textbf{63.57} \\
+\midrule
+\multirow{4}{*}{Multiclass} & Glioma & 2,352 & 342 & 2 & 2,008 & 14.63 \\
+ & Meningioma & 1,645 & 329 & 2 & 1,314 & 20.12 \\
+ & Pituitary & 1,831 & 423 & 0 & 1,408 & 23.10 \\
+ & \textbf{Total} & \textbf{5,828} & \textbf{1,094} & \textbf{4} & \textbf{4,730} & \textbf{18.84} \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+Images kept at other tolerances are listed in Table~\ref{tab:sweep} and plotted in Figure~\ref{fig:dedup}; tolerances 4 and 5 give the same pool in both tasks. The multiclass cross-label pairs are shown in Figure~\ref{fig:crosslabel}.
+
+\begin{heretable}
+\centering
+\caption{Images kept by the label-aware perceptual-hash pass at each Hamming tolerance. The study uses tolerance 5. The multiclass count at tolerance 5 is before the label-noise exclusion, which brings the pool to 4,730.}
+\label{tab:sweep}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
+\toprule
+Tolerance & 0, 1 & 2, 3 & 4, 5 & 6, 7 & 8, 9 & 10, 11 & 12 \\
+\midrule
+Binary, tumour-negative & 860 & 583 & 455 & 395 & 341 & 310 & 285 \\
+Binary, tumour & 1,217 & 912 & 730 & 607 & 541 & 494 & 424 \\
+\textbf{Binary, total} & \textbf{2,077} & \textbf{1,495} & \textbf{1,185} & \textbf{1,002} & \textbf{882} & \textbf{804} & \textbf{709} \\
+\midrule
+Multiclass, glioma & 2,303 & 2,221 & 2,010 & 1,653 & 1,277 & 919 & 627 \\
+Multiclass, meningioma & 1,518 & 1,453 & 1,316 & 1,130 & 935 & 704 & 506 \\
+Multiclass, pituitary & 1,751 & 1,663 & 1,408 & 1,145 & 886 & 663 & 478 \\
+\textbf{Multiclass, total} & \textbf{5,572} & \textbf{5,337} & \textbf{4,734} & \textbf{3,928} & \textbf{3,098} & \textbf{2,286} & \textbf{1,611} \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\panel{0.25}{binary-detection/plots/03_deduplication.png}{(a) Binary detection.}
+\medskip
+\panel{0.25}{classification/plots/03_deduplication.png}{(b) Subtype classification.}
+\caption{Images kept at each Hamming tolerance, and the class distribution before and after the pass at tolerance 5.}
+\label{fig:dedup}
+\end{herefigure}
+
+\begin{herefigure}
+\centering
+\plot{0.25}{classification/plots/04_cross_label_pairs.png}
+\caption{Multiclass cross-label pairs within Hamming distance 5, label-noise pairs first. All 31 pairs are glioma against meningioma; the 8 pairs at $\mathrm{NCC}\geq 0.98$ lie inside the Bhuvaji collection and both copies were excluded, and the 23 others are hash false positives and were kept. The binary pool has no cross-label pair.}
+\label{fig:crosslabel}
+\end{herefigure}
+
+\textbf{Group-aware split.} Deduplication does not remove correlated but distinct images such as adjacent slices. Kept images within Hamming distance 8 of each other, or with thumbnail $\mathrm{NCC}\geq 0.98$, were therefore joined into groups (connected components), a proxy for patient-level grouping since no source carries patient identifiers. Stratified group $k$-fold sampling then drew a held-out test set of about 15\% of the images and five development folds, so that no group crosses a partition. A leakage audit measured, for every test image, the nearest development image by Hamming distance and NCC: in both tasks no test image has a development image within Hamming distance 5, within distance 8, or at $\mathrm{NCC}\geq 0.98$ (Figure~\ref{fig:groups}).
+
+\begin{herefigure}
+\centering
+\panel{0.25}{binary-detection/plots/05_groups_and_leakage.png}{(a) Binary detection: 821 groups, the largest of 7 images.}
+\medskip
+\panel{0.25}{classification/plots/05_groups_and_leakage.png}{(b) Subtype classification: 1,867 groups, the largest of 1,431 images.}
+\caption{Group sizes and the distance from each test image to its nearest development image. No test image has a development image within Hamming distance 5 or 8 or at $\mathrm{NCC}\geq 0.98$.}
+\label{fig:groups}
+\end{herefigure}
+
+The binary pool formed 821 groups, the largest of 7 images, and the split gave 1,014 development images in folds of 184 to 211 images and a test set of 171 images (107 tumour, 64 tumour-negative; Table~\ref{tab:splits}). The multiclass pool formed 1,867 groups, but one of them held 1,431 images, more than 5\% of the pool, and the notebook warned that a smaller grouping tolerance should be considered. The run kept the tolerance of 8. Because a group cannot be divided, the multiclass split is highly uneven: the development folds hold 154 to 2,216 images, and the held-out test set holds only 45 images, of which 1 is glioma, 13 meningioma and 31 pituitary. The multiclass test results in Section~\ref{sec:multiclass-results} must be read with this in mind.
+
+\begin{heretable}
+\centering
+\caption{Images per partition after deduplication and grouping. Development images are divided into five group-aware folds; fold sizes are given in the last column.}
+\label{tab:splits}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccl@{}}
+\toprule
+Task & Class & Development & Test & Fold sizes (0--4) \\
+\midrule
+\multirow{3}{*}{Binary} & Tumour-negative & 391 & 64 & \\
+ & Tumour & 623 & 107 & \\
+ & \textbf{Total} & \textbf{1,014} & \textbf{171} & 184, 211, 207, 210, 202 \\
+\midrule
+\multirow{4}{*}{Multiclass} & Glioma & 2,007 & 1 & \\
+ & Meningioma & 1,301 & 13 & \\
+ & Pituitary & 1,377 & 31 & \\
+ & \textbf{Total} & \textbf{4,685} & \textbf{45} & 154, 742, 697, 876, 2,216 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\textbf{Normalisation and augmentation.} Crops are scaled to $[0,1]$ and normalised with the ImageNet channel means of $[0.485, 0.456, 0.406]$ and standard deviations of $[0.229, 0.224, 0.225]$. Training augmentation runs on the GPU and consists of horizontal flipping with probability 0.5, rotation of up to $\pm 10$ degrees, and brightness and contrast jitter of up to 20\%; validation and test images are not augmented. Examples are shown in Figure~\ref{fig:augmentation}.
+
+\begin{herefigure}
+\centering
+\begin{minipage}[b]{0.4\textwidth}
+\centering
+\plot{0.4}{binary-detection/plots/06_augmentation.png}\par\smallskip
+{\small (a) Binary detection.}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.56\textwidth}
+\centering
+\plot{0.4}{classification/plots/06_augmentation.png}\par\smallskip
+{\small (b) Subtype classification.}
+\end{minipage}
+\caption{Training augmentation (horizontal flip, rotation up to $\pm 10^{\circ}$, brightness and contrast jitter of 20\%) on a few training images, with the background-only and head-only inputs of the masking and shortcut tests.}
+\label{fig:augmentation}
+\end{herefigure}
+
+\subsection{Model Development}
+\label{sec:models}
+
+Nine architectures spanning three families were evaluated, all built from one model registry so that a model name means the same implementation and the same pretrained checkpoint in both tasks. Eight are \texttt{torchvision} models loaded with their default ImageNet weights, and CoAtNet-0 is the \texttt{timm} model \texttt{coatnet\_0\_rw\_224}, since CoAtNet has no \texttt{torchvision} implementation. In every model the final linear layer is replaced by one with one output for the binary task or three for the multiclass task. The auxiliary classifier of InceptionV3 is removed, so no model receives an extra loss term and no unused parameters are counted.
+
+ResNet50 is a 50-layer residual network built around bottleneck residual blocks with skip connections, with 23.51 million parameters in the binary configuration. VGG16 stacks $3\times 3$ convolutions in increasing depth and has 134.26 million parameters. DenseNet121 concatenates the feature maps of all preceding layers within each dense block and has 6.95 million parameters. EfficientNetB0, developed through neural architecture search and compound scaling, has 4.01 million parameters and needs 0.77 GFLOPs per image. MobileNetV3-Large uses depth-wise separable convolutions for mobile devices and has 4.20 million parameters and the lowest cost in the study, 0.43 GFLOPs. InceptionV3 uses parallel convolutional paths of different kernel sizes, has 21.79 million parameters, and is the only model run at its native $299\times 299$ input, at which it needs 11.42 GFLOPs against 5.67 GFLOPs at $224\times 224$. ViT-B/16 processes $16\times 16$ patches as a token sequence with a transformer encoder and has 85.80 million parameters. Swin-Base uses hierarchical shifted-window attention and has 86.74 million parameters. CoAtNet-0 combines convolutional and attention stages and has 26.67 million parameters. The multiclass heads add a few thousand parameters to each count (for example 4.011 million for EfficientNetB0 and 134.27 million for VGG16). Parameter counts and GFLOPs are those measured by the notebook on the instantiated models; they are compared with the measured cost of every model in Section~\ref{sec:efficiency}.
+
+\subsection{Training Configuration}
+\label{sec:training}
+
+All experiments ran on Kaggle with two NVIDIA Tesla T4 graphics processing units, four central processing unit cores and 33.7~GB of system memory, using Python 3.13.15, PyTorch 2.11.0, torchvision 0.26.0, timm 1.0.29 and CUDA 12.8. Two worker processes, one per GPU, trained different (model, fold) jobs in parallel. The settings in Table~\ref{tab:hyperparams} were identical for every model and both tasks.
+
+\begin{heretable}
+\centering
+\caption{Training settings, identical for all nine models and both tasks.}
+\label{tab:hyperparams}
+\small
+\begin{tabularx}{\textwidth}{@{}lY@{}}
+\toprule
+Setting & Value \\
+\midrule
+Epochs & 20, with 1 warm-up epoch \\
+Effective batch & 64 images, through gradient accumulation \\
+Optimiser steps & Equal for every model on a given fold (binary 260; multiclass 780 to 1,420 by fold) \\
+Optimiser & AdamW, learning rate $3\times 10^{-4}$, weight decay 0.01 \\
+Learning rate schedule & Linear warm-up, then cosine decay per optimiser step \\
+Loss & Binary cross-entropy with logits (detection); cross-entropy (subtypes) \\
+Precision & Half-precision autocasting with gradient scaling \\
+Gradient clipping & Norm 1.0 \\
+Input resolution & $224\times 224$ pixels; $299\times 299$ pixels for InceptionV3 \\
+Augmentation & Horizontal flip ($p=0.5$), rotation up to $\pm 10^{\circ}$, brightness and contrast jitter of 20\% \\
+Checkpoint selection & Lowest validation log-loss \\
+Cross-validation & 5 group-aware folds plus a fixed held-out test set \\
+Random seed & 42 \\
+\bottomrule
+\end{tabularx}
+\end{heretable}
+
+Every model used the same effective batch of 64 images and 20 epochs. The largest micro-batch that fitted on one GPU was probed for each model, and gradient accumulation made up the difference: Swin-Base trained with micro-batches of 32 accumulated over two steps, every other model with micro-batches of 64. All models therefore receive the same number of optimiser steps on the same fold: 260 steps for every binary run (13 steps per epoch), and 1,420, 1,240, 1,260, 1,200 and 780 steps on multiclass folds 0 to 4, whose training sets differ in size because of the uneven split. Every training image is used in every epoch. The optimiser was AdamW with a learning rate of $3\times 10^{-4}$ and weight decay 0.01, with a linear warm-up over the first epoch followed by cosine decay applied per optimiser step, half-precision autocasting with gradient scaling, and gradient clipping at a norm of 1.0. The loss was binary cross-entropy with logits for detection and cross-entropy for subtypes. After every epoch the validation fold was evaluated, and the checkpoint with the lowest validation log-loss, a continuous proper scoring rule, was kept.
+
+For the shortcut test of Section~\ref{sec:interpretability}, each backbone was also trained once on fold 0 with the head region of every image set to zero, so that only background, borders and framing remain. With 45 full-image runs and 9 background-only runs per task, each notebook trained 54 jobs; all 54 finished in both tasks, in 63.5 minutes of training for detection and 264.6 minutes for subtypes. The random seed was 42; deterministic kernels were not enforced, so re-running the notebooks should reproduce the reported figures closely but not necessarily bit for bit.
+
+\subsection{Evaluation Protocol}
+\label{sec:evaluation}
+
+\textbf{Calibration and thresholds.} For every run, a temperature was fitted on its own validation fold by minimising the negative log-likelihood \citep{guo2017}, searching $\log T$ in $[-3, 3]$, and applied to its test logits. For binary runs, a decision threshold was also chosen on the validation fold by Youden's J statistic. The expected calibration error (ECE) uses 15 equal-width confidence bins.
+
+\textbf{Cross-validation and fold ensembles.} Each run is scored on the held-out test set, and the five runs of each backbone are summarised as mean and standard deviation. For the headline comparison, the calibrated test probabilities of the five folds are averaged into one fold-ensemble prediction per image. Accuracy, macro F1 and area under the receiver operating characteristic curve (AUC) receive percentile bootstrap 95\% confidence intervals from 2,000 resamples of the test images. Binary sensitivity and specificity are reported at a threshold of 0.5 and at the mean validation-tuned threshold.
+
+\textbf{Statistical comparison.} Every pair of fold ensembles was compared with an exact McNemar test, and the p-values were adjusted with the Holm procedure \citep{holm1979}. For each model, the bootstrap 95\% confidence interval of its accuracy gap to the leading model was also computed; a model whose interval includes zero cannot be separated from the leader on this test set. Test accuracy was further broken down by the Hamming distance from each test image to its nearest development image.
+
+\textbf{Attention and shortcut analysis.} For each backbone, the fold with the lowest validation loss was reloaded and gradient-weighted class activation maps (Grad-CAM) \citep{selvaraju2017} were computed for every test image at the last spatial or token stage of the network; for VGG16 this is the last convolution. ViT-B/16 additionally received attention rollout \citep{abnar2020}. A head mask was computed for every image by Otsu thresholding, morphological closing, selection of the largest connected component and hole filling, and the share of map energy outside the mask was compared with the share a uniform map would give. Because Grad-CAM maps of convolutional and attention stages are not strictly commensurable, occlusion sensitivity, the drop in predicted-class probability when a $32\times 32$ patch moved with stride 16 is replaced by the image mean, was computed in the same way for every model on a common stratified sample of test images. An inference-only masking test applied each fold's checkpoint to test images with the head set to zero or the background set to zero. Finally, the background-only models of Section~\ref{sec:training} were tested on background-only test images; accuracy significantly above the majority-class rate, by a one-sided exact binomial test with Holm correction, shows that the background carries label information a model can exploit.
+
+\textbf{Efficiency.} After training, each model was timed on one T4 with no other work on the device, under half-precision autocasting: single-image latency over 100 passes after 10 warm-up passes, and throughput at batch size 32 over 20 passes after 3 warm-up passes, with the whole protocol repeated three times. Training time, training throughput and peak training memory are averaged over the folds; because the two workers shared four CPU cores, training throughput is a lower bound.
+
+\section{Results and Discussion}
+\label{sec:results}
+
+Section~\ref{sec:cv-results} reports cross-validation, Sections~\ref{sec:binary-results} and \ref{sec:multiclass-results} the fold-ensemble test results of each task, Section~\ref{sec:calibration} calibration, Section~\ref{sec:efficiency} efficiency, Section~\ref{sec:interpretability} attention and shortcut analyses, and Section~\ref{sec:comparison} the comparison with published work.
+
+\subsection{Cross-Validation Results}
+\label{sec:cv-results}
+
+Table~\ref{tab:cv} summarises the test accuracy, macro F1 and AUC of the individual fold models. In binary detection, mean accuracy ranges from 95.91\% for VGG16 to 97.89\% for InceptionV3, and the standard deviations across folds, from 0.32 to 2.20 percentage points, are of the same size as most gaps between neighbouring models. The fold models disagree more with each other than the backbones do on average: CoAtNet-0, for example, scores between 94.74\% and 98.83\% on its five folds. In subtype classification, every model averages between 97.33\% and 99.56\%, but each fold model is scored on the same 45 test images, so one image changes accuracy by 2.22 percentage points.
+
+\begin{heretable}
+\centering
+\caption{Test results of the individual fold models: mean $\pm$ standard deviation over the five folds of each backbone, after temperature scaling. Binary detection is evaluated on 171 test images and subtype classification on 45. Rows are ordered by binary accuracy.}
+\label{tab:cv}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{Binary detection} & \multicolumn{3}{c}{Subtype classification} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-7}
+Model & Accuracy (\%) & Macro F1 (\%) & AUC & Accuracy (\%) & Macro F1 (\%) & AUC \\
+\midrule
+InceptionV3 & $97.89\pm 0.32$ & $97.75\pm 0.34$ & $0.9966\pm 0.0042$ & $99.56\pm 0.99$ & $97.51\pm 5.57$ & $1.0000\pm 0.0000$ \\
+Swin-Base & $97.78\pm 1.62$ & $97.64\pm 1.72$ & $0.9974\pm 0.0026$ & $99.56\pm 0.99$ & $97.51\pm 5.57$ & $1.0000\pm 0.0000$ \\
+EfficientNetB0 & $97.78\pm 0.49$ & $97.62\pm 0.52$ & $0.9968\pm 0.0034$ & $97.33\pm 3.65$ & $90.61\pm 9.43$ & $0.9989\pm 0.0017$ \\
+CoAtNet-0 & $97.54\pm 1.72$ & $97.39\pm 1.83$ & $0.9966\pm 0.0038$ & $98.67\pm 1.22$ & $94.67\pm 6.53$ & $1.0000\pm 0.0000$ \\
+ViT-B/16 & $97.54\pm 0.96$ & $97.37\pm 1.04$ & $0.9970\pm 0.0013$ & $99.11\pm 1.22$ & $95.02\pm 6.82$ & $0.9995\pm 0.0011$ \\
+DenseNet121 & $97.19\pm 0.76$ & $96.98\pm 0.82$ & $0.9927\pm 0.0048$ & $99.11\pm 1.22$ & $97.15\pm 5.42$ & $0.9998\pm 0.0004$ \\
+ResNet50 & $96.84\pm 1.35$ & $96.60\pm 1.46$ & $0.9876\pm 0.0105$ & $98.67\pm 1.22$ & $92.69\pm 6.68$ & $0.9998\pm 0.0004$ \\
+MobileNetV3-Large & $96.37\pm 2.20$ & $96.16\pm 2.30$ & $0.9946\pm 0.0033$ & $97.78\pm 0.00$ & $87.56\pm 0.00$ & $0.9998\pm 0.0004$ \\
+VGG16 & $95.91\pm 0.83$ & $95.65\pm 0.88$ & $0.9943\pm 0.0023$ & $97.33\pm 2.43$ & $88.46\pm 7.30$ & $0.9989\pm 0.0021$ \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+The training curves of every model are shown in Figure~\ref{fig:curves-binary} for detection.
+
+\begin{herefigure}
+\centering
+\plot{0.8}{binary-detection/plots/07_training_curves.png}
+\caption{Binary detection: mean $\pm$ one standard deviation across folds of training and validation loss, validation accuracy and learning rate, per model.}
+\label{fig:curves-binary}
+\end{herefigure}
+
+Figure~\ref{fig:curves-multiclass} shows the same curves for subtype classification.
+
+\begin{herefigure}
+\centering
+\plot{0.8}{classification/plots/07_training_curves.png}
+\caption{Subtype classification: mean $\pm$ one standard deviation across folds of training and validation loss, validation accuracy and learning rate, per model.}
+\label{fig:curves-multiclass}
+\end{herefigure}
+
+The fitted temperature, the validation-tuned threshold and the test result of every binary run are listed in Table~\ref{tab:runs-binary}.
+
+\begin{heretable}
+\centering
+\caption{Binary detection: every full-image run. Every run took 260 optimiser steps. $T$ is the temperature fitted on the run's validation fold and Thr.\ the Youden threshold chosen there; accuracy and log-loss are on the 171 test images after temperature scaling. In fold 4 the temperature of six models lies at or near the lower search bound $e^{-3}\approx 0.0498$.}
+\label{tab:runs-binary}
+\scriptsize
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
+\toprule
+Model & Fold & Best epoch & $T$ & Thr. & Test accuracy & Test log-loss & Train images \\
+\midrule
+\multirow{5}{*}{CoAtNet-0} & 0 & 9 & 1.1767 & 0.739 & 0.9883 & 0.0491 & 830 \\
+ & 1 & 7 & 1.4761 & 0.529 & 0.9825 & 0.0534 & 803 \\
+ & 2 & 12 & 1.7756 & 0.633 & 0.9474 & 0.1317 & 807 \\
+ & 3 & 14 & 2.1222 & 0.316 & 0.9883 & 0.0333 & 804 \\
+ & 4 & 7 & 0.0604 & 1.000 & 0.9708 & 0.8079 & 812 \\
+\midrule
+\multirow{5}{*}{DenseNet121} & 0 & 6 & 0.8003 & 0.724 & 0.9766 & 0.0847 & 830 \\
+ & 1 & 11 & 1.0106 & 0.657 & 0.9649 & 0.0751 & 803 \\
+ & 2 & 12 & 1.3466 & 0.885 & 0.9649 & 0.1019 & 807 \\
+ & 3 & 14 & 1.1351 & 0.950 & 0.9825 & 0.0696 & 804 \\
+ & 4 & 15 & 0.5882 & 0.927 & 0.9708 & 0.2513 & 812 \\
+\midrule
+\multirow{5}{*}{EfficientNetB0} & 0 & 5 & 1.2527 & 0.621 & 0.9708 & 0.0875 & 830 \\
+ & 1 & 14 & 1.2311 & 0.962 & 0.9766 & 0.0378 & 803 \\
+ & 2 & 13 & 1.1739 & 0.625 & 0.9825 & 0.0471 & 807 \\
+ & 3 & 11 & 0.9215 & 0.985 & 0.9825 & 0.0755 & 804 \\
+ & 4 & 19 & 0.0498 & 1.000 & 0.9766 & 0.5431 & 812 \\
+\midrule
+\multirow{5}{*}{InceptionV3} & 0 & 17 & 1.6119 & 0.895 & 0.9766 & 0.0543 & 830 \\
+ & 1 & 8 & 1.4656 & 0.045 & 0.9766 & 0.0603 & 803 \\
+ & 2 & 10 & 0.9470 & 0.861 & 0.9766 & 0.1005 & 807 \\
+ & 3 & 5 & 1.1069 & 0.829 & 0.9825 & 0.0372 & 804 \\
+ & 4 & 12 & 0.0682 & 1.000 & 0.9825 & 0.3662 & 812 \\
+\midrule
+\multirow{5}{*}{MobileNetV3-Large} & 0 & 20 & 2.7638 & 0.121 & 0.9298 & 0.1551 & 830 \\
+ & 1 & 20 & 1.8160 & 0.583 & 0.9766 & 0.0638 & 803 \\
+ & 2 & 14 & 1.6694 & 0.410 & 0.9883 & 0.0448 & 807 \\
+ & 3 & 20 & 1.7832 & 0.249 & 0.9591 & 0.1161 & 804 \\
+ & 4 & 13 & 0.0508 & 1.000 & 0.9649 & 0.7224 & 812 \\
+\midrule
+\multirow{5}{*}{ResNet50} & 0 & 9 & 1.7422 & 0.819 & 0.9474 & 0.1451 & 830 \\
+ & 1 & 8 & 1.7905 & 0.314 & 0.9766 & 0.0837 & 803 \\
+ & 2 & 7 & 1.0362 & 0.853 & 0.9649 & 0.0787 & 807 \\
+ & 3 & 17 & 1.2096 & 0.759 & 0.9708 & 0.1416 & 804 \\
+ & 4 & 12 & 0.0498 & 1.000 & 0.9825 & 0.4848 & 812 \\
+\midrule
+\multirow{5}{*}{Swin-Base} & 0 & 14 & 1.7903 & 0.617 & 0.9708 & 0.0826 & 830 \\
+ & 1 & 11 & 1.7026 & 0.550 & 0.9708 & 0.1311 & 803 \\
+ & 2 & 6 & 1.5159 & 0.683 & 0.9591 & 0.1221 & 807 \\
+ & 3 & 5 & 0.8935 & 0.261 & 0.9883 & 0.0536 & 804 \\
+ & 4 & 10 & 0.0498 & 1.000 & 1.0000 & 0.0000 & 812 \\
+\midrule
+\multirow{5}{*}{VGG16} & 0 & 5 & 1.7926 & 0.462 & 0.9532 & 0.1252 & 830 \\
+ & 1 & 13 & 2.1367 & 0.216 & 0.9649 & 0.0912 & 803 \\
+ & 2 & 18 & 1.5436 & 0.775 & 0.9649 & 0.2265 & 807 \\
+ & 3 & 4 & 1.4973 & 0.196 & 0.9474 & 0.1276 & 804 \\
+ & 4 & 6 & 1.8620 & 0.495 & 0.9649 & 0.1407 & 812 \\
+\midrule
+\multirow{5}{*}{ViT-B/16} & 0 & 17 & 1.4451 & 0.767 & 0.9825 & 0.0566 & 830 \\
+ & 1 & 12 & 1.5874 & 0.483 & 0.9649 & 0.1114 & 803 \\
+ & 2 & 17 & 1.3066 & 0.824 & 0.9883 & 0.0526 & 807 \\
+ & 3 & 8 & 0.8068 & 0.559 & 0.9708 & 0.0711 & 804 \\
+ & 4 & 16 & 0.9993 & 0.836 & 0.9708 & 0.1007 & 812 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+Table~\ref{tab:runs-multiclass} lists the same for every multiclass run.
+
+\begin{heretable}
+\centering
+\caption{Subtype classification: every full-image run. Optimiser steps depend on the fold because the group-aware folds differ in size; within a fold they are equal for every model. In fold 0, whose validation fold has 154 images, the temperature of EfficientNetB0, InceptionV3 and Swin-Base lies at or near the lower search bound.}
+\label{tab:runs-multiclass}
+\scriptsize
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
+\toprule
+Model & Fold & Steps & Best epoch & $T$ & Test accuracy & Test log-loss & Train / val images \\
+\midrule
+\multirow{5}{*}{CoAtNet-0} & 0 & 1,420 & 7 & 0.8899 & 1.0000 & 0.0209 & 4,531 / 154 \\
+ & 1 & 1,240 & 9 & 1.3042 & 1.0000 & 0.0034 & 3,943 / 742 \\
+ & 2 & 1,260 & 5 & 0.8503 & 0.9778 & 0.0720 & 3,988 / 697 \\
+ & 3 & 1,200 & 6 & 1.2193 & 0.9778 & 0.0395 & 3,809 / 876 \\
+ & 4 & 780 & 15 & 2.3073 & 0.9778 & 0.0236 & 2,469 / 2,216 \\
+\midrule
+\multirow{5}{*}{DenseNet121} & 0 & 1,420 & 7 & 1.1754 & 1.0000 & 0.0040 & 4,531 / 154 \\
+ & 1 & 1,240 & 15 & 1.9404 & 1.0000 & 0.0061 & 3,943 / 742 \\
+ & 2 & 1,260 & 9 & 1.5745 & 1.0000 & 0.0186 & 3,988 / 697 \\
+ & 3 & 1,200 & 4 & 1.4594 & 0.9778 & 0.1067 & 3,809 / 876 \\
+ & 4 & 780 & 10 & 1.5314 & 0.9778 & 0.0355 & 2,469 / 2,216 \\
+\midrule
+\multirow{5}{*}{EfficientNetB0} & 0 & 1,420 & 9 & 0.0498 & 0.9778 & 0.6140 & 4,531 / 154 \\
+ & 1 & 1,240 & 4 & 1.5348 & 0.9111 & 0.1585 & 3,943 / 742 \\
+ & 2 & 1,260 & 15 & 1.8186 & 1.0000 & 0.0024 & 3,988 / 697 \\
+ & 3 & 1,200 & 3 & 1.3621 & 1.0000 & 0.0181 & 3,809 / 876 \\
+ & 4 & 780 & 16 & 1.7429 & 0.9778 & 0.0330 & 2,469 / 2,216 \\
+\midrule
+\multirow{5}{*}{InceptionV3} & 0 & 1,420 & 9 & 0.0515 & 1.0000 & 0.0000 & 4,531 / 154 \\
+ & 1 & 1,240 & 7 & 1.5646 & 1.0000 & 0.0050 & 3,943 / 742 \\
+ & 2 & 1,260 & 10 & 1.6805 & 1.0000 & 0.0040 & 3,988 / 697 \\
+ & 3 & 1,200 & 15 & 2.2675 & 1.0000 & 0.0101 & 3,809 / 876 \\
+ & 4 & 780 & 11 & 1.7383 & 0.9778 & 0.0503 & 2,469 / 2,216 \\
+\midrule
+\multirow{5}{*}{MobileNetV3-Large} & 0 & 1,420 & 12 & 1.0519 & 0.9778 & 0.1369 & 4,531 / 154 \\
+ & 1 & 1,240 & 20 & 3.1578 & 0.9778 & 0.0712 & 3,943 / 742 \\
+ & 2 & 1,260 & 18 & 2.6818 & 0.9778 & 0.0685 & 3,988 / 697 \\
+ & 3 & 1,200 & 8 & 2.4891 & 0.9778 & 0.0327 & 3,809 / 876 \\
+ & 4 & 780 & 20 & 3.0036 & 0.9778 & 0.0689 & 2,469 / 2,216 \\
+\midrule
+\multirow{5}{*}{ResNet50} & 0 & 1,420 & 5 & 0.9164 & 1.0000 & 0.0026 & 4,531 / 154 \\
+ & 1 & 1,240 & 9 & 2.0543 & 0.9778 & 0.0395 & 3,943 / 742 \\
+ & 2 & 1,260 & 5 & 1.5465 & 0.9778 & 0.0672 & 3,988 / 697 \\
+ & 3 & 1,200 & 15 & 2.6184 & 1.0000 & 0.0176 & 3,809 / 876 \\
+ & 4 & 780 & 8 & 1.6629 & 0.9778 & 0.0957 & 2,469 / 2,216 \\
+\midrule
+\multirow{5}{*}{Swin-Base} & 0 & 1,420 & 15 & 0.0498 & 1.0000 & 0.0000 & 4,531 / 154 \\
+ & 1 & 1,240 & 8 & 1.6375 & 1.0000 & 0.0112 & 3,943 / 742 \\
+ & 2 & 1,260 & 9 & 1.9777 & 1.0000 & 0.0076 & 3,988 / 697 \\
+ & 3 & 1,200 & 5 & 1.7771 & 0.9778 & 0.0397 & 3,809 / 876 \\
+ & 4 & 780 & 18 & 2.2403 & 1.0000 & 0.0047 & 2,469 / 2,216 \\
+\midrule
+\multirow{5}{*}{VGG16} & 0 & 1,420 & 11 & 1.2077 & 0.9778 & 0.1367 & 4,531 / 154 \\
+ & 1 & 1,240 & 7 & 1.7136 & 1.0000 & 0.0175 & 3,943 / 742 \\
+ & 2 & 1,260 & 2 & 1.6416 & 0.9333 & 0.2497 & 3,988 / 697 \\
+ & 3 & 1,200 & 4 & 2.0744 & 0.9778 & 0.0520 & 3,809 / 876 \\
+ & 4 & 780 & 13 & 2.2774 & 0.9778 & 0.0970 & 2,469 / 2,216 \\
+\midrule
+\multirow{5}{*}{ViT-B/16} & 0 & 1,420 & 15 & 1.3910 & 1.0000 & 0.0020 & 4,531 / 154 \\
+ & 1 & 1,240 & 13 & 1.7649 & 1.0000 & 0.0238 & 3,943 / 742 \\
+ & 2 & 1,260 & 13 & 1.2801 & 0.9778 & 0.0420 & 3,988 / 697 \\
+ & 3 & 1,200 & 11 & 1.5805 & 1.0000 & 0.0129 & 3,809 / 876 \\
+ & 4 & 780 & 11 & 1.4512 & 0.9778 & 0.1176 & 2,469 / 2,216 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\subsection{Binary Detection Results}
+\label{sec:binary-results}
+
+Table~\ref{tab:binary-results} reports the fold ensembles on the 171 binary test images, and Table~\ref{tab:perclass} the per-class metrics. CoAtNet-0, EfficientNetB0 and ViT-B/16 each misclassified one image, an accuracy of 99.42\% with a bootstrap 95\% confidence interval of 98.25\% to 100\%. Their single errors differ in kind: CoAtNet-0 missed one tumour, whereas EfficientNetB0 and ViT-B/16 detected every tumour and raised one false alarm. Swin-Base followed at 98.83\% with two missed tumours, then InceptionV3 and ResNet50 at 98.25\%, and DenseNet121, MobileNetV3-Large and VGG16 at 97.08\%. Every AUC lies between 0.9974 and 0.9997.
+
+\begin{heretable}
+\centering
+\caption{Binary detection: fold ensembles on the 171 held-out test images (107 tumour, 64 tumour-negative). Sensitivity is recall of the tumour class and specificity recall of the tumour-negative class, both at threshold 0.5; FN and FP are missed tumours and false alarms. Accuracy has a bootstrap 95\% confidence interval. Rows are ordered by accuracy.}
+\label{tab:binary-results}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccc@{}}
+\toprule
+Model & Accuracy (\%) [95\% CI] & Bal. acc. (\%) & Sens. (\%) & Spec. (\%) & MCC & AUC & FN & FP \\
+\midrule
+CoAtNet-0 & 99.42 [98.25, 100] & 99.53 & 99.07 & 100.00 & 0.9876 & 0.9994 & 1 & 0 \\
+EfficientNetB0 & 99.42 [98.25, 100] & 99.22 & 100.00 & 98.44 & 0.9876 & 0.9991 & 0 & 1 \\
+ViT-B/16 & 99.42 [98.25, 100] & 99.22 & 100.00 & 98.44 & 0.9876 & 0.9984 & 0 & 1 \\
+Swin-Base & 98.83 [97.08, 100] & 99.07 & 98.13 & 100.00 & 0.9755 & 0.9997 & 2 & 0 \\
+InceptionV3 & 98.25 [95.91, 100] & 97.97 & 99.07 & 96.88 & 0.9625 & 0.9991 & 1 & 2 \\
+ResNet50 & 98.25 [95.91, 100] & 98.28 & 98.13 & 98.44 & 0.9627 & 0.9988 & 2 & 1 \\
+DenseNet121 & 97.08 [94.15, 99.42] & 96.41 & 99.07 & 93.75 & 0.9376 & 0.9984 & 1 & 4 \\
+MobileNetV3-Large & 97.08 [94.15, 99.42] & 97.04 & 97.20 & 96.88 & 0.9378 & 0.9978 & 3 & 2 \\
+VGG16 & 97.08 [94.15, 99.42] & 97.04 & 97.20 & 96.88 & 0.9378 & 0.9974 & 3 & 2 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{heretable}
+\centering
+\caption{Per-class test metrics of the fold ensembles. Binary support: 64 tumour-negative, 107 tumour. Multiclass support: 1 glioma, 13 meningioma, 31 pituitary.}
+\label{tab:perclass}
+\scriptsize
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llcccccc@{}}
+\toprule
+Model & Class & TP & FP & FN & Precision & Sensitivity & Specificity \\
+\midrule
+\multirow{2}{*}{ResNet50} & Tumour-negative & 63 & 2 & 1 & 0.9692 & 0.9844 & 0.9813 \\
+ & Tumour & 105 & 1 & 2 & 0.9906 & 0.9813 & 0.9844 \\
+\multirow{2}{*}{VGG16} & Tumour-negative & 62 & 3 & 2 & 0.9538 & 0.9688 & 0.9720 \\
+ & Tumour & 104 & 2 & 3 & 0.9811 & 0.9720 & 0.9688 \\
+\multirow{2}{*}{DenseNet121} & Tumour-negative & 60 & 1 & 4 & 0.9836 & 0.9375 & 0.9907 \\
+ & Tumour & 106 & 4 & 1 & 0.9636 & 0.9907 & 0.9375 \\
+\multirow{2}{*}{EfficientNetB0} & Tumour-negative & 63 & 0 & 1 & 1.0000 & 0.9844 & 1.0000 \\
+ & Tumour & 107 & 1 & 0 & 0.9907 & 1.0000 & 0.9844 \\
+\multirow{2}{*}{MobileNetV3-Large} & Tumour-negative & 62 & 3 & 2 & 0.9538 & 0.9688 & 0.9720 \\
+ & Tumour & 104 & 2 & 3 & 0.9811 & 0.9720 & 0.9688 \\
+\multirow{2}{*}{InceptionV3} & Tumour-negative & 62 & 1 & 2 & 0.9841 & 0.9688 & 0.9907 \\
+ & Tumour & 106 & 2 & 1 & 0.9815 & 0.9907 & 0.9688 \\
+\multirow{2}{*}{ViT-B/16} & Tumour-negative & 63 & 0 & 1 & 1.0000 & 0.9844 & 1.0000 \\
+ & Tumour & 107 & 1 & 0 & 0.9907 & 1.0000 & 0.9844 \\
+\multirow{2}{*}{Swin-Base} & Tumour-negative & 64 & 2 & 0 & 0.9697 & 1.0000 & 0.9813 \\
+ & Tumour & 105 & 0 & 2 & 1.0000 & 0.9813 & 1.0000 \\
+\multirow{2}{*}{CoAtNet-0} & Tumour-negative & 64 & 1 & 0 & 0.9846 & 1.0000 & 0.9907 \\
+ & Tumour & 106 & 0 & 1 & 1.0000 & 0.9907 & 1.0000 \\
+\midrule
+\multirow{3}{*}{\shortstack[l]{ResNet50, DenseNet121, InceptionV3,\\ViT-B/16, Swin-Base, CoAtNet-0}} & Glioma & 1 & 0 & 0 & 1.0000 & 1.0000 & 1.0000 \\
+ & Meningioma & 13 & 0 & 0 & 1.0000 & 1.0000 & 1.0000 \\
+ & Pituitary & 31 & 0 & 0 & 1.0000 & 1.0000 & 1.0000 \\
+\midrule
+\multirow{3}{*}{\shortstack[l]{VGG16, EfficientNetB0,\\MobileNetV3-Large}} & Glioma & 1 & 1 & 0 & 0.5000 & 1.0000 & 0.9773 \\
+ & Meningioma & 12 & 0 & 1 & 1.0000 & 0.9231 & 1.0000 \\
+ & Pituitary & 31 & 0 & 0 & 1.0000 & 1.0000 & 1.0000 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+The confusion matrices of all nine ensembles are shown in Figure~\ref{fig:binary-confusion}.
+
+\begin{herefigure}
+\centering
+\plot{0.7}{binary-detection/plots/09_confusion_matrices.png}
+\caption{Binary detection: test confusion matrices of the fold ensemble of every model, as counts with row percentages.}
+\label{fig:binary-confusion}
+\end{herefigure}
+
+The receiver operating characteristic and precision--recall curves of every ensemble, for both tasks, are shown in Figure~\ref{fig:roc}.
+
+\begin{herefigure}
+\centering
+\panel{0.24}{binary-detection/plots/10_roc_pr_curves.png}{(a) Binary detection, tumour class.}
+\medskip
+\panel{0.55}{classification/plots/10_roc_pr_curves.png}{(b) Subtype classification, one-versus-rest.}
+\caption{Receiver operating characteristic and precision--recall curves of every fold ensemble on the test set.}
+\label{fig:roc}
+\end{herefigure}
+
+These differences are small relative to the test set. No pair of models differs significantly by the exact McNemar test after Holm correction: every adjusted p-value is 1.0 (Figure~\ref{fig:mcnemar}). The bootstrap interval of the accuracy gap to CoAtNet-0 excludes zero only for VGG16 and MobileNetV3-Large, both 2.34 percentage points behind with an interval of 0.58 to 4.68 points; ResNet50, InceptionV3, DenseNet121, Swin-Base, EfficientNetB0 and ViT-B/16 cannot be separated from the leader. Accuracy also does not fall for test images that are furthest from the development pool: with nearest development images at Hamming distance 17 to 20, every model is correct on every image (Table~\ref{tab:distance}, Figure~\ref{fig:distance}).
+
+\begin{herefigure}
+\centering
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\plot{0.3}{binary-detection/plots/08_mcnemar.png}\par\smallskip
+{\small (a) Binary detection.}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\plot{0.3}{classification/plots/08_mcnemar.png}\par\smallskip
+{\small (b) Subtype classification.}
+\end{minipage}
+\caption{Holm-corrected exact McNemar p-values between the fold ensembles. Every adjusted p-value is 1.0 in both tasks.}
+\label{fig:mcnemar}
+\end{herefigure}
+
+\begin{heretable}
+\centering
+\caption{Fold-ensemble test accuracy by the Hamming distance from each test image to its nearest development image. The multiclass test set has no image at distance 17 to 20.}
+\label{tab:distance}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{Binary detection} & \multicolumn{2}{c}{Subtype classification} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-6}
+Model & 9--12 & 13--16 & 17--20 & 9--12 & 13--16 \\
+\midrule
+CoAtNet-0 & 0.9886 & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+DenseNet121 & 0.9773 & 0.9589 & 1.0000 & 1.0000 & 1.0000 \\
+EfficientNetB0 & 1.0000 & 0.9863 & 1.0000 & 0.9773 & 1.0000 \\
+InceptionV3 & 1.0000 & 0.9589 & 1.0000 & 1.0000 & 1.0000 \\
+MobileNetV3-Large & 0.9545 & 0.9863 & 1.0000 & 0.9773 & 1.0000 \\
+ResNet50 & 0.9886 & 0.9726 & 1.0000 & 1.0000 & 1.0000 \\
+Swin-Base & 1.0000 & 0.9726 & 1.0000 & 1.0000 & 1.0000 \\
+VGG16 & 0.9659 & 0.9726 & 1.0000 & 0.9773 & 1.0000 \\
+ViT-B/16 & 1.0000 & 0.9863 & 1.0000 & 1.0000 & 1.0000 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\plot{0.3}{binary-detection/plots/12_accuracy_by_distance.png}\par\smallskip
+{\small (a) Binary detection.}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\plot{0.3}{classification/plots/12_accuracy_by_distance.png}\par\smallskip
+{\small (b) Subtype classification.}
+\end{minipage}
+\caption{Test accuracy by the Hamming distance from each test image to its nearest development image.}
+\label{fig:distance}
+\end{herefigure}
+
+At the mean validation-tuned thresholds, which range from 0.43 to 0.84, accuracy is between 96.49\% and 98.83\%, and for EfficientNetB0 sensitivity falls from 100\% to 96.26\% while specificity stays at 98.44\%. The tuned thresholds raise accuracy only for DenseNet121 (97.66\% against 97.08\%), leave it unchanged for InceptionV3 and VGG16, and lower it for the other six models.
+
+\subsection{Subtype Classification Results}
+\label{sec:multiclass-results}
+
+Table~\ref{tab:multiclass-results} reports the fold ensembles on the 45 multiclass test images. ResNet50, DenseNet121, InceptionV3, ViT-B/16, Swin-Base and CoAtNet-0 classified every image correctly. VGG16, EfficientNetB0 and MobileNetV3-Large made the same single error, a meningioma image predicted as glioma, for an accuracy of 97.78\%; because the test set contains only one glioma image, that error halves glioma precision and pulls macro F1 down to 87.56\%. Every model reaches an AUC of 1.0, no McNemar comparison is significant, and every bootstrap interval of the gap to the leader includes zero. The confusion matrices are shown in Figure~\ref{fig:multiclass-confusion}.
+
+\begin{heretable}
+\centering
+\caption{Subtype classification: fold ensembles on the 45 held-out test images (1 glioma, 13 meningioma, 31 pituitary). Precision and F1 are macro-averaged; AUC is the macro one-versus-rest value. Accuracy has a bootstrap 95\% confidence interval.}
+\label{tab:multiclass-results}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc@{}}
+\toprule
+Model & Accuracy (\%) [95\% CI] & Bal. acc. (\%) & Prec. (\%) & F1 (\%) & MCC & AUC \\
+\midrule
+ResNet50 & 100.00 [100, 100] & 100.00 & 100.00 & 100.00 & 1.0000 & 1.0000 \\
+DenseNet121 & 100.00 [100, 100] & 100.00 & 100.00 & 100.00 & 1.0000 & 1.0000 \\
+InceptionV3 & 100.00 [100, 100] & 100.00 & 100.00 & 100.00 & 1.0000 & 1.0000 \\
+ViT-B/16 & 100.00 [100, 100] & 100.00 & 100.00 & 100.00 & 1.0000 & 1.0000 \\
+Swin-Base & 100.00 [100, 100] & 100.00 & 100.00 & 100.00 & 1.0000 & 1.0000 \\
+CoAtNet-0 & 100.00 [100, 100] & 100.00 & 100.00 & 100.00 & 1.0000 & 1.0000 \\
+VGG16 & 97.78 [93.33, 100] & 97.44 & 83.33 & 87.56 & 0.9515 & 1.0000 \\
+EfficientNetB0 & 97.78 [93.33, 100] & 97.44 & 83.33 & 87.56 & 0.9515 & 1.0000 \\
+MobileNetV3-Large & 97.78 [93.33, 100] & 97.44 & 83.33 & 87.56 & 0.9515 & 1.0000 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\plot{0.7}{classification/plots/09_confusion_matrices.png}
+\caption{Subtype classification: test confusion matrices of every fold ensemble, as counts with row percentages.}
+\label{fig:multiclass-confusion}
+\end{herefigure}
+
+This test set cannot rank the models. It contains 45 images, one of them glioma, because a single group of 1,431 images could not be divided between partitions (Section~\ref{sec:preproc}); its class balance (2.2\% glioma, 28.9\% meningioma, 68.9\% pituitary) is far from that of the pool. The cross-validation results in Table~\ref{tab:cv} are scored on the same 45 images and inherit the same limitation. The multiclass results therefore show that every backbone separates these subtypes on images that are not near-copies of its training images, but they do not establish an ordering of the backbones, and the 100\% accuracies should not be quoted as an estimate of subtype accuracy in general.
+
+\subsection{Calibration}
+\label{sec:calibration}
+
+Table~\ref{tab:calibration} gives the ECE of the fold ensembles before and after temperature scaling. Every model is reasonably calibrated, with ECE between 0.0146 and 0.0326 in detection and between 0.0044 and 0.0371 in classification. Temperature scaling, however, lowered the ECE only for ResNet50 and ViT-B/16 in detection and for CoAtNet-0 in classification, and raised it for every other model. The cause is visible in the per-run temperatures (Tables~\ref{tab:runs-binary} and \ref{tab:runs-multiclass}): when a validation fold is classified almost perfectly, minimising its negative log-likelihood drives the temperature towards the lower bound of the search, $e^{-3}\approx 0.0498$, which sharpens the test probabilities. In binary fold 4 the fitted temperature of six models lies between 0.0498 and 0.0682, and for five of them that fold has the highest test log-loss of the model's five folds, for example 0.543 for EfficientNetB0 against 0.038 to 0.088 on its other folds. Validation folds of a few hundred near-separable images are too small to fit a temperature reliably. Reliability diagrams are given in Figure~\ref{fig:reliability}.
+
+\begin{heretable}
+\centering
+\caption{Expected calibration error of the fold ensembles on the held-out test set, after and before temperature scaling.}
+\label{tab:calibration}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc@{}}
+\toprule
+ & \multicolumn{2}{c}{Binary detection} & \multicolumn{2}{c}{Subtype classification} \\
+\cmidrule(lr){2-3}\cmidrule(l){4-5}
+Model & Scaled & Uncalibrated & Scaled & Uncalibrated \\
+\midrule
+CoAtNet-0 & 0.0275 & 0.0207 & 0.0253 & 0.0259 \\
+DenseNet121 & 0.0252 & 0.0233 & 0.0215 & 0.0165 \\
+EfficientNetB0 & 0.0243 & 0.0231 & 0.0277 & 0.0263 \\
+InceptionV3 & 0.0228 & 0.0151 & 0.0088 & 0.0045 \\
+MobileNetV3-Large & 0.0326 & 0.0146 & 0.0285 & 0.0204 \\
+ResNet50 & 0.0157 & 0.0173 & 0.0222 & 0.0125 \\
+Swin-Base & 0.0152 & 0.0148 & 0.0109 & 0.0044 \\
+VGG16 & 0.0296 & 0.0179 & 0.0371 & 0.0355 \\
+ViT-B/16 & 0.0207 & 0.0222 & 0.0182 & 0.0114 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\panel{0.38}{binary-detection/plots/11_calibration.png}{(a) Binary detection.}
+\medskip
+\panel{0.38}{classification/plots/11_calibration.png}{(b) Subtype classification.}
+\caption{Reliability diagrams of every fold ensemble on the test set, uncalibrated and temperature-scaled, with the expected calibration error of each.}
+\label{fig:reliability}
+\end{herefigure}
+
+\subsection{Model Efficiency Comparison}
+\label{sec:efficiency}
+
+Table~\ref{tab:efficiency} compares the cost of the nine backbones. Cost varies by more than two orders of magnitude, from 0.43 GFLOPs for MobileNetV3-Large to 30.9 GFLOPs for Swin-Base and VGG16, while binary test accuracy varies by 2.34 percentage points and the differences are not significant. MobileNetV3-Large has the highest batched throughput, 2,301 images per second in detection, and EfficientNetB0 follows at 1,393 images per second with an accuracy equal to the leaders; Swin-Base has the lowest throughput at 198 images per second and the highest single-image latency at 36.3~ms. Single-image latency does not follow model size: VGG16, the largest model, has the lowest latency at 7.7~ms in detection and 8.0~ms in classification, whereas DenseNet121 needs 23.6~ms and 22.8~ms despite its 6.95 million parameters, so neither parameter count nor GFLOPs predicts single-image latency on this hardware. Peak training memory ranges from 2.1~GB for MobileNetV3-Large to 11.4~GB for CoAtNet-0.
+
+\begin{heretable}
+\centering
+\caption{Computational cost of the nine backbones. Parameters and GFLOPs are measured on the binary models at the native input ($299\times 299$ for InceptionV3, which needs 5.67 GFLOPs at $224\times 224$). Latency is the mean of single-image passes and throughput the mean at batch size 32, both on one Tesla T4 under half-precision autocasting and pooled over three repeats. Training time is minutes per run, averaged over folds. Rows are ordered by parameter count.}
+\label{tab:efficiency}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccc@{}}
+\toprule
+ & & & \multicolumn{2}{c}{Latency (ms)} & \multicolumn{2}{c}{Throughput (img/s)} & \multicolumn{2}{c}{Training (min/run)} \\
+\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(l){8-9}
+Model & Params (M) & GFLOPs & Bin. & Multi. & Bin. & Multi. & Bin. & Multi. \\
+\midrule
+EfficientNetB0 & 4.01 & 0.77 & 13.1 & 12.8 & 1,393 & 1,266 & 2.0 & 5.1 \\
+MobileNetV3-Large & 4.20 & 0.43 & 10.6 & 10.0 & 2,301 & 2,183 & 1.5 & 3.5 \\
+DenseNet121 & 6.95 & 5.67 & 23.6 & 22.8 & 657 & 608 & 1.5 & 6.9 \\
+InceptionV3 & 21.79 & 11.42 & 17.6 & 16.7 & 512 & 438 & 1.7 & 8.0 \\
+ResNet50 & 23.51 & 8.17 & 9.6 & 9.1 & 777 & 717 & 1.2 & 5.3 \\
+CoAtNet-0 & 26.67 & 8.42 & 16.5 & 15.9 & 513 & 448 & 2.3 & 9.5 \\
+ViT-B/16 & 85.80 & 22.54 & 11.0 & 10.3 & 272 & 241 & 2.9 & 15.0 \\
+Swin-Base & 86.74 & 30.86 & 36.3 & 34.6 & 198 & 173 & 4.3 & 21.4 \\
+VGG16 & 134.26 & 30.93 & 7.7 & 8.0 & 386 & 332 & 2.2 & 9.5 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+Accuracy is plotted against latency in Figure~\ref{fig:latency}; the full measurements, including standard deviations and training throughput, are in Table~\ref{tab:efficiency-full}.
+
+\begin{herefigure}
+\centering
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\plot{0.3}{binary-detection/plots/18_accuracy_vs_latency.png}\par\smallskip
+{\small (a) Binary detection.}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\plot{0.3}{classification/plots/18_accuracy_vs_latency.png}\par\smallskip
+{\small (b) Subtype classification.}
+\end{minipage}
+\caption{Fold-ensemble test accuracy against single-image latency for every model.}
+\label{fig:latency}
+\end{herefigure}
+
+\begin{heretable}
+\centering
+\caption{Complete efficiency measurements: latency (ms) and throughput at batch size 32 (images/s) as mean $\pm$ pooled standard deviation over three repeats on one Tesla T4 under half-precision autocasting; training throughput (images/s) and peak training memory (GB) averaged over the folds. Training throughput is a lower bound because the two workers shared four CPU cores.}
+\label{tab:efficiency-full}
+\scriptsize
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llcccc@{}}
+\toprule
+Task & Model & Latency (ms) & Throughput (img/s) & Training (img/s) & Peak memory (GB) \\
+\midrule
+\multirow{9}{*}{Binary} & ResNet50 & $9.57\pm 0.38$ & $777.2\pm 6.1$ & 235.2 & 5.62 \\
+ & VGG16 & $7.72\pm 0.42$ & $386.5\pm 4.8$ & 124.4 & 9.88 \\
+ & DenseNet121 & $23.58\pm 1.53$ & $656.6\pm 22.9$ & 185.4 & 4.48 \\
+ & EfficientNetB0 & $13.13\pm 0.55$ & $1393.3\pm 115.8$ & 136.4 & 3.09 \\
+ & MobileNetV3-Large & $10.55\pm 1.09$ & $2301.1\pm 292.9$ & 182.3 & 2.09 \\
+ & InceptionV3 & $17.63\pm 0.79$ & $511.6\pm 5.8$ & 155.8 & 5.85 \\
+ & ViT-B/16 & $10.95\pm 1.04$ & $272.2\pm 2.8$ & 93.0 & 5.96 \\
+ & Swin-Base & $36.29\pm 1.23$ & $197.6\pm 2.9$ & 62.9 & 6.45 \\
+ & CoAtNet-0 & $16.53\pm 1.07$ & $513.1\pm 6.9$ & 118.7 & 11.39 \\
+\midrule
+\multirow{9}{*}{Multiclass} & ResNet50 & $9.07\pm 0.36$ & $716.8\pm 6.9$ & 232.9 & 4.08 \\
+ & VGG16 & $8.02\pm 0.40$ & $332.1\pm 6.2$ & 130.5 & 9.87 \\
+ & DenseNet121 & $22.81\pm 1.22$ & $607.7\pm 17.7$ & 180.4 & 4.48 \\
+ & EfficientNetB0 & $12.81\pm 0.80$ & $1265.7\pm 50.3$ & 243.9 & 3.04 \\
+ & MobileNetV3-Large & $9.99\pm 0.92$ & $2183.1\pm 234.4$ & 355.2 & 2.08 \\
+ & InceptionV3 & $16.69\pm 1.25$ & $438.2\pm 6.6$ & 155.4 & 5.26 \\
+ & ViT-B/16 & $10.26\pm 1.10$ & $241.0\pm 3.0$ & 82.6 & 5.97 \\
+ & Swin-Base & $34.65\pm 1.51$ & $173.1\pm 2.8$ & 57.8 & 6.45 \\
+ & CoAtNet-0 & $15.88\pm 0.73$ & $448.4\pm 6.3$ & 131.1 & 10.42 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\subsection{Interpretability and Shortcut Analysis}
+\label{sec:interpretability}
+
+Table~\ref{tab:attention} summarises four measurements of whether the models rely on the head. The share of Grad-CAM energy outside the head is below the share of a uniform map for most models and classes, which on its own would suggest attention concentrated on the head. ViT-B/16 is the exception in detection, with 42.6\% of its Grad-CAM energy and 42.1\% of its attention rollout outside the head on tumour-negative images, against 35.6\% for a uniform map, and CoAtNet-0 places 41.7\% outside the head on the single glioma test image. The per-class values are listed in Table~\ref{tab:energy}.
+
+\begin{heretable}
+\centering
+\caption{Reliance on the head and on the background. Grad-CAM: share of map energy outside the head mask, the average of the per-class means over test images (uniform map: 0.34 binary, 0.25 multiclass, averaged the same way). Occlusion: share of occlusion sensitivity outside the head on 16 (binary) and 17 (multiclass) test images. Masking: mean fold accuracy on test images with the background set to zero (head only) or the head set to zero (background only). Shortcut: accuracy on background-only test images of a model trained on background-only images; majority-class rate 0.626 (binary) and 0.689 (multiclass); $^{*}$ above chance after Holm correction.}
+\label{tab:attention}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccccc@{}}
+\toprule
+ & \multicolumn{5}{c}{Binary detection} & \multicolumn{5}{c}{Subtype classification} \\
+\cmidrule(lr){2-6}\cmidrule(l){7-11}
+Model & Grad-CAM & Occl. & Head & Backgr. & Shortcut & Grad-CAM & Occl. & Head & Backgr. & Shortcut \\
+\midrule
+ResNet50 & 0.100 & 0.116 & 0.960 & 0.492 & 0.813$^{*}$ & 0.087 & 0.079 & 0.947 & 0.284 & 0.933$^{*}$ \\
+VGG16 & 0.113 & 0.007 & 0.947 & 0.499 & 0.749$^{*}$ & 0.087 & 0.079 & 0.942 & 0.240 & 0.978$^{*}$ \\
+DenseNet121 & 0.183 & 0.135 & 0.944 & 0.518 & 0.795$^{*}$ & 0.135 & 0.110 & 0.960 & 0.276 & 0.867$^{*}$ \\
+EfficientNetB0 & 0.179 & 0.194 & 0.956 & 0.498 & 0.778$^{*}$ & 0.064 & 0.066 & 0.956 & 0.133 & 0.889$^{*}$ \\
+MobileNetV3-Large & 0.112 & 0.111 & 0.937 & 0.533 & 0.678 & 0.077 & 0.071 & 0.951 & 0.338 & 0.933$^{*}$ \\
+InceptionV3 & 0.147 & 0.167 & 0.945 & 0.657 & 0.795$^{*}$ & 0.122 & 0.099 & 0.947 & 0.218 & 0.978$^{*}$ \\
+ViT-B/16 & 0.335 & 0.155 & 0.957 & 0.450 & 0.655 & 0.207 & 0.107 & 0.987 & 0.116 & 0.911$^{*}$ \\
+Swin-Base & 0.172 & 0.182 & 0.968 & 0.517 & 0.830$^{*}$ & 0.102 & 0.122 & 0.996 & 0.169 & 0.911$^{*}$ \\
+CoAtNet-0 & 0.164 & 0.089 & 0.964 & 0.444 & 0.795$^{*}$ & 0.231 & 0.124 & 0.982 & 0.156 & 0.822$^{*}$ \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{heretable}
+\centering
+\caption{Share of Grad-CAM energy outside the head mask, mean $\pm$ standard deviation over test images, and of occlusion sensitivity over 16 binary and 17 multiclass test images. The multiclass test set has one glioma image, so that column has no standard deviation.}
+\label{tab:energy}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{Binary detection} & \multicolumn{4}{c}{Subtype classification} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-8}
+Model & Tumour-negative & Tumour & Occlusion & Glioma & Meningioma & Pituitary & Occlusion \\
+\midrule
+ResNet50 & $0.122\pm 0.219$ & $0.079\pm 0.200$ & 0.116 & 0.098 & $0.056\pm 0.074$ & $0.106\pm 0.202$ & 0.079 \\
+VGG16 & $0.153\pm 0.212$ & $0.074\pm 0.184$ & 0.007 & 0.026 & $0.121\pm 0.066$ & $0.115\pm 0.163$ & 0.079 \\
+DenseNet121 & $0.190\pm 0.229$ & $0.176\pm 0.183$ & 0.135 & 0.108 & $0.148\pm 0.042$ & $0.150\pm 0.153$ & 0.110 \\
+EfficientNetB0 & $0.287\pm 0.211$ & $0.072\pm 0.180$ & 0.194 & 0.033 & $0.067\pm 0.042$ & $0.091\pm 0.156$ & 0.066 \\
+MobileNetV3-Large & $0.142\pm 0.231$ & $0.082\pm 0.163$ & 0.111 & 0.038 & $0.058\pm 0.056$ & $0.134\pm 0.136$ & 0.071 \\
+InceptionV3 & $0.146\pm 0.234$ & $0.147\pm 0.187$ & 0.167 & 0.102 & $0.136\pm 0.062$ & $0.129\pm 0.178$ & 0.099 \\
+ViT-B/16 (Grad-CAM) & $0.426\pm 0.238$ & $0.244\pm 0.264$ & 0.155 & 0.326 & $0.077\pm 0.045$ & $0.218\pm 0.229$ & 0.107 \\
+ViT-B/16 (rollout) & $0.421\pm 0.179$ & $0.285\pm 0.163$ & & 0.262 & $0.350\pm 0.047$ & $0.358\pm 0.121$ & \\
+Swin-Base & $0.159\pm 0.246$ & $0.185\pm 0.195$ & 0.182 & 0.079 & $0.123\pm 0.046$ & $0.103\pm 0.158$ & 0.122 \\
+CoAtNet-0 & $0.139\pm 0.248$ & $0.188\pm 0.200$ & 0.089 & 0.417 & $0.152\pm 0.064$ & $0.122\pm 0.184$ & 0.124 \\
+Uniform map & 0.356 & 0.328 & & 0.213 & 0.268 & 0.267 & \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+Figure~\ref{fig:energy} plots the same shares per model and class against the share of a uniform map.
+
+\begin{herefigure}
+\centering
+\panel{0.3}{binary-detection/plots/14_outside_head_energy.png}{(a) Binary detection.}
+\medskip
+\panel{0.3}{classification/plots/14_outside_head_energy.png}{(b) Subtype classification.}
+\caption{Share of Grad-CAM energy outside the head per model and class; the black mark is the share of a uniform map.}
+\label{fig:energy}
+\end{herefigure}
+
+Occlusion maps, which are computed the same way for every architecture, place between 0.7\% (VGG16) and 19.4\% (EfficientNetB0) of the sensitivity outside the head in detection and between 6.6\% and 12.4\% in classification. The detection maps of every model are shown in Figure~\ref{fig:occlusion-binary}.
+
+\begin{herefigure}
+\centering
+\plot{0.8}{binary-detection/plots/15_occlusion_maps.png}
+\caption{Binary detection: occlusion maps of every model on the same stratified test images.}
+\label{fig:occlusion-binary}
+\end{herefigure}
+
+The subtype classification maps are shown in Figure~\ref{fig:occlusion-multiclass}.
+
+\begin{herefigure}
+\centering
+\plot{0.8}{classification/plots/15_occlusion_maps.png}
+\caption{Subtype classification: occlusion maps of every model on the same stratified test images.}
+\label{fig:occlusion-multiclass}
+\end{herefigure}
+
+The Grad-CAM maps of EfficientNetB0, the deployed architecture, are shown in Figure~\ref{fig:gradcam}.
+
+\begin{herefigure}
+\centering
+\panel{0.18}{binary-detection/plots/13_gradcam_efficientnetb0.png}{(a) Binary detection.}
+\medskip
+\panel{0.18}{classification/plots/13_gradcam_efficientnetb0.png}{(b) Subtype classification.}
+\caption{Grad-CAM maps of EfficientNetB0, the deployed architecture, on its most confident correct and most confident wrong test predictions, from the fold with the lowest validation loss.}
+\label{fig:gradcam}
+\end{herefigure}
+
+The maps of the other eight backbones follow in the same layout: ResNet50 and VGG16 in Figures~\ref{fig:gradcam-resnet50} and \ref{fig:gradcam-vgg16}.
+
+\gradcamfigure{resnet50}{ResNet50}
+\gradcamfigure{vgg16}{VGG16}
+The maps of DenseNet121 and MobileNetV3-Large are shown in Figures~\ref{fig:gradcam-densenet121} and \ref{fig:gradcam-mobilenetv3-large}.
+
+\gradcamfigure{densenet121}{DenseNet121}
+\gradcamfigure{mobilenetv3-large}{MobileNetV3-Large}
+The maps of InceptionV3 and ViT-B/16 are shown in Figures~\ref{fig:gradcam-inceptionv3} and \ref{fig:gradcam-vit-b-16}.
+
+\gradcamfigure{inceptionv3}{InceptionV3}
+\gradcamfigure{vit-b-16}{ViT-B/16}
+The maps of Swin-Base and CoAtNet-0 are shown in Figures~\ref{fig:gradcam-swin-base} and \ref{fig:gradcam-coatnet-0}.
+
+\gradcamfigure{swin-base}{Swin-Base}
+\gradcamfigure{coatnet-0}{CoAtNet-0}
+
+
+The masking test agrees with the attention measurements (Figure~\ref{fig:masking}). With the background set to zero, every model keeps most of its accuracy, between 93.7\% and 96.8\% in detection and between 94.2\% and 99.6\% in classification. With the head set to zero, detection accuracy falls to between 44.4\% and 53.3\% for every model except InceptionV3 (65.7\%), close to or below the majority-class rate of 62.6\%, and classification accuracy falls to between 11.6\% and 33.8\%, below its majority-class rate of 68.9\%. Models trained on full images therefore depend on the head.
+
+\begin{herefigure}
+\centering
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\plot{0.3}{binary-detection/plots/16_masking_test.png}\par\smallskip
+{\small (a) Binary detection.}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\plot{0.3}{classification/plots/16_masking_test.png}\par\smallskip
+{\small (b) Subtype classification.}
+\end{minipage}
+\caption{Masking test (inference only): test accuracy of each fold's checkpoint on full images, head-only images (background set to zero) and background-only images (head set to zero), mean $\pm$ standard deviation over folds.}
+\label{fig:masking}
+\end{herefigure}
+
+The shortcut test shows that this is not the whole story. When each backbone is retrained on images whose head region is set to zero, it learns to predict the label from the background alone well above chance (Table~\ref{tab:shortcut}, Figure~\ref{fig:shortcut}). In detection, seven of the nine background-only models exceed the majority-class rate of 62.6\% after Holm correction, reaching 83.0\% for Swin-Base, 81.3\% for ResNet50 and 77.8\% for EfficientNetB0, with background-only AUCs up to 0.889; only MobileNetV3-Large (67.8\%) and ViT-B/16 (65.5\%) are not significant. In classification all nine are significant, with background-only accuracies between 82.2\% and 97.8\% against a majority-class rate of 68.9\%, and background-only AUCs between 0.972 and 1.000. The background, borders and framing of these public collections therefore carry substantial label information, in the multiclass pool almost enough to solve the test set without any brain. The models trained on full images do not need the background to perform well, as the masking test shows, but the data do not prevent them from using it, and the accuracies in Tables~\ref{tab:binary-results} and \ref{tab:multiclass-results} cannot be taken as proof that pathology has been learned.
+
+\begin{heretable}
+\centering
+\caption{Shortcut test: models trained (fold 0) and tested on background-only images. The p-value is a one-sided exact binomial test against the majority-class rate (0.6257 binary, 0.6889 multiclass), Holm-corrected within each task.}
+\label{tab:shortcut}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{Binary detection} & \multicolumn{3}{c}{Subtype classification} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-7}
+Model & Accuracy & AUC & Holm $p$ & Accuracy & AUC & Holm $p$ \\
+\midrule
+ResNet50 & 0.8129 & 0.8657 & $<10^{-4}$ & 0.9333 & 0.9968 & 0.0006 \\
+VGG16 & 0.7485 & 0.8359 & 0.0013 & 0.9778 & 1.0000 & $<10^{-4}$ \\
+DenseNet121 & 0.7953 & 0.8578 & $<10^{-4}$ & 0.8667 & 0.9904 & 0.0104 \\
+EfficientNetB0 & 0.7778 & 0.8584 & 0.0001 & 0.8889 & 1.0000 & 0.0048 \\
+MobileNetV3-Large & 0.6784 & 0.7821 & 0.1772 & 0.9333 & 1.0000 & 0.0006 \\
+InceptionV3 & 0.7953 & 0.8606 & $<10^{-4}$ & 0.9778 & 0.9984 & $<10^{-4}$ \\
+ViT-B/16 & 0.6550 & 0.7411 & 0.2396 & 0.9111 & 0.9717 & 0.0020 \\
+Swin-Base & 0.8304 & 0.8893 & $<10^{-4}$ & 0.9111 & 0.9976 & 0.0020 \\
+CoAtNet-0 & 0.7953 & 0.8756 & $<10^{-4}$ & 0.8222 & 0.9752 & 0.0337 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\plot{0.3}{binary-detection/plots/17_shortcut_test.png}\par\smallskip
+{\small (a) Binary detection.}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\plot{0.3}{classification/plots/17_shortcut_test.png}\par\smallskip
+{\small (b) Subtype classification.}
+\end{minipage}
+\caption{Shortcut test: accuracy on background-only test images of models trained on background-only images (fold 0); red bars are significantly above the majority-class rate after Holm correction.}
+\label{fig:shortcut}
+\end{herefigure}
+
+\subsection{Comparison with Existing Literature}
+\label{sec:comparison}
+
+Table~\ref{tab:literature-comparison} places the fold-ensemble results beside published figures for the same architectures. The comparison is for orientation only. The published studies mostly evaluate on the 3,064-image Cheng collection or on official partitions without deduplication, whereas the results here are measured after removing 63.57\% of the binary pool and 18.84\% of the multiclass pool as near-duplicates and after splitting by group; removing near-duplicates removes exactly the images most likely to have inflated a score. The multiclass result rests on 45 test images and is not comparable with results on full test splits. The models here also share one training configuration rather than being tuned individually.
+
+\begin{heretable}
+\centering
+\caption{Present results beside previously published studies. ``This work'' is fold-ensemble accuracy on the held-out test set: 171 images for binary detection and 45 for subtype classification.}
+\label{tab:literature-comparison}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llcccc@{}}
+\toprule
+Study & Model & Dataset size & Task & Reported accuracy & This work \\
+\midrule
+\citet{talo2019} & ResNet50 & 253 & Binary & 95.23\% & 98.25\% \\
+\citet{khan2020} & VGG16 & 3,064 & Binary & 98.69\% & 97.08\% \\
+\citet{noreen2020} & DenseNet121 & 3,064 & Binary & 99.51\% & 97.08\% \\
+\citet{rehman2020} & InceptionV3 & 3,064 & Binary & 99.34\% & 98.25\% \\
+\citet{ghassemi2020} & EfficientNet & 3,064 & Binary & 98.87\% & 99.42\% \\
+\citet{deepak2019} & InceptionV3 & 3,064 & Multiclass & 97.50\% & 100.00\% \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+Three conclusions about architecture can be drawn from these experiments, and one cannot. First, under an equal optimisation budget every backbone family reaches 97\% to 99\% detection accuracy, and the differences between families are not significant on 171 test images, so this benchmark gives no support to the claim that transformers, hybrids or convolutional networks are better suited to the task. Second, cost differs by two orders of magnitude for statistically indistinguishable accuracy, which makes cost the deciding factor in practice: EfficientNetB0 matches the leaders with 4.01 million parameters and 0.77 GFLOPs and has the second-highest throughput, which is why it is the architecture deployed in the accompanying application. Third, cross-validation spread is as large as the gaps between models, so single-run leaderboards on collections of this size cannot rank architectures. What cannot be concluded is that any of these models has learned tumour morphology rather than properties of the source collections, since background-only models reach 83\% detection and 98\% subtype accuracy.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This study benchmarked nine ImageNet-pretrained backbones for brain tumour detection and subtype classification with one pipeline: label-aware perceptual-hash deduplication and group-aware splitting before any training, an equal number of optimiser steps for every model, five-fold cross-validation with fold ensembles, bootstrap confidence intervals and Holm-corrected McNemar tests, calibration analysis, measured efficiency, and attention and shortcut audits for every model. Deduplication removed 63.57\% of the binary and 18.84\% of the multiclass images, and the leakage audit found no test image near a development image. On 171 binary test images, CoAtNet-0, EfficientNetB0 and ViT-B/16 reached 99.42\% accuracy, and no model differed significantly from any other; only VGG16 and MobileNetV3-Large were separable from the leader by the bootstrap interval of the accuracy gap. The multiclass split was dominated by one group of 1,431 images, so its test set of 45 images, on which six models were error-free and three made one error, cannot rank the models. Temperature scaling fitted on near-separable validation folds made calibration worse for most models. Most importantly, models retrained on background-only images exceeded chance for 7 of 9 detection and all 9 classification backbones, with up to 83.04\% and 97.78\% accuracy, so the public collections used here and in much of the literature carry label information outside the brain, and high accuracy on them does not establish that pathology has been learned. The principal limitations are that the images are public two-dimensional slices of unknown MRI sequence without patient identifiers, so grouping by image similarity is only a proxy for a patient-level split; that the binary negative class is tumour-negative rather than certified normal; that no external validation set was available; and that every model was trained once per fold with one seed and one shared configuration. Future work should split by patient where identifiers exist, use a smaller grouping tolerance or a different grouping criterion for the multiclass pool so that its test set represents every class, remove or standardise the image border before training and repeat the shortcut test, fit calibration on larger held-out sets, and validate externally on multi-sequence and three-dimensional institutional data before any clinical claim is made. The notebooks, splits, metrics and checkpoints are released so that both the results and their caveats can be reproduced.
+
+\section*{Declaration of competing interest}
+
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Data availability}
+
+All datasets used in this study are publicly available and are cited in Section~\ref{sec:data}. The notebooks, the split of every image, the per-run metrics and the trained checkpoints are available at the repository given in \ref{app:code}.
+
+\appendix
+
+\section{Code Repository}
+\label{app:code}
+
+The notebooks for both tasks, which perform deduplication, splitting, training, evaluation and figure generation, are available together with their outputs (split tables, per-run metrics, plots and the exported checkpoints) at \url{https://github.com/parthmital/NeuroScan-AI}, in the folder \texttt{Materials/Notebooks}.
+
+\bibliographystyle{cas-model2-names}
+\bibliography{refs}
+
+\end{document}

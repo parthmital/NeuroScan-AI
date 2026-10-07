@@ -16,7 +16,12 @@ import { authApi } from "@/lib/api";
 import type { User } from "@/lib/types";
 
 type ProfileField =
-	"firstName" | "lastName" | "email" | "title" | "department" | "institution";
+	| "firstName"
+	| "lastName"
+	| "email"
+	| "title"
+	| "department"
+	| "institution";
 
 const FIELDS: {
 	id: ProfileField;
