@@ -1,3 +1,0 @@
-class_a,class_b,category,pairs
-Glioma,Meningioma,near-identical (label conflict),8
-Glioma,Meningioma,visually distinct (hash false positive),23

@@ -1,9 +1,0 @@
-              precision    recall  f1-score   support
-
-      Glioma     0.9900    0.9933    0.9917       300
-  Meningioma     0.9895    0.9592    0.9741       196
-   Pituitary     0.9767    1.0000    0.9882       210
-
-    accuracy                         0.9858       706
-   macro avg     0.9854    0.9842    0.9847       706
-weighted avg     0.9859    0.9858    0.9858       706

@@ -1,3 +1,0 @@
-class,support,tp,fp,fn,tn,precision,recall_sensitivity,specificity,npv,fpr,fnr,f1,roc_auc,average_precision
-No Tumor,239,239,0,0,249,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,0.9999999999999998
-Tumor,249,249,0,0,239,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0

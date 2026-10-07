@@ -33,6 +33,7 @@ Backend/*.db-wal
 Backend/*.db-shm
 Backend/uploads/
 Backend/Input/
+Materials/Input/
 
 # Frontend dependencies, builds, and test output
 Frontend/node_modules/
@@ -82,4 +83,4 @@ Desktop.ini
 *.swo
 *.zip
 *.exe
-Backend/Materials/tectonic.exe
+Materials/tectonic.exe
