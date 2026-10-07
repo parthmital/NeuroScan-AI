@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 BACKEND_DIR = Path(__file__).resolve().parent.parent
+# Each research notebook exports the checkpoint the web app loads into its weights/deploy/ folder.
+NOTEBOOKS_DIR = BACKEND_DIR.parent / "Materials" / "Notebooks"
 
 # Values shipped in .env.example; refusing them stops a copied example from reaching production.
 _EXAMPLE_SECRETS = {"change-me", "replace-with-a-random-secret"}
@@ -21,9 +23,13 @@ class Settings(BaseModel):
     data_encryption_key: str
     database_url: str = f"sqlite:///{BACKEND_DIR / 'neuroscan.db'}"
     upload_dir: Path = BACKEND_DIR / "uploads"
-    detection_weights: Path = BACKEND_DIR / "Binary Detection" / "EfficientNetB0.pth"
-    classification_weights: Path = BACKEND_DIR / "Classification" / "EfficientNetB0.pth"
-    segmentation_weights: Path = BACKEND_DIR / "Segmentation" / "VNet.pth"
+    detection_weights: Path = (
+        NOTEBOOKS_DIR / "binary-detection" / "weights" / "deploy" / "EfficientNetB0.pth"
+    )
+    classification_weights: Path = (
+        NOTEBOOKS_DIR / "classification" / "weights" / "deploy" / "EfficientNetB0.pth"
+    )
+    segmentation_weights: Path = NOTEBOOKS_DIR / "segmentation" / "weights" / "deploy" / "VNet.pth"
     cors_origins: list[str] = []
     access_token_expire_minutes: int = Field(default=30, ge=1, le=24 * 60)
     cookie_secure: bool = True

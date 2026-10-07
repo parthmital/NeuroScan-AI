@@ -4,6 +4,7 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{tabularx}
+\usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{placeins}
@@ -12,8 +13,23 @@
 \usepackage{microtype}
 \usepackage{tikz}
 \usepackage{url}
+\usepackage{iftex}
+\ifXeTeX
+  % XeTeX (tectonic) cannot use the 8-bit Times fonts loaded by the class option,
+  % which leaves text without bold or italic; load OpenType Times/Helvetica clones.
+  \usepackage{fontspec}
+  \setmainfont{texgyretermes}[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+  \setsansfont{texgyreheros}[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+\fi
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 \urlstyle{same}
+% allow line breaks at hyphens inside \path and \url (long dataset slugs)
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\-}
+% Figures are the notebook plots: figures/segmentation/plots/<file>.png when uploaded with
+% the project (Overleaf), otherwise read in place from Materials/Notebooks/segmentation/plots/.
+\graphicspath{{figures/}{../../Notebooks/}}
 \captionsetup{labelfont=bf,justification=centering}
 \emergencystretch=2em
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
@@ -47,11 +63,11 @@ city={Vellore},
 country={India}}
 
 \begin{abstract}
-Brain tumour segmentation from multimodal magnetic resonance imaging (MRI) is important for diagnosis, treatment planning, and disease monitoring. This study benchmarks six three-dimensional segmentation architectures on the Brain Tumour Segmentation (BraTS) 2020 dataset: UNet, nnU-Net, VNet, UNETR, Swin UNETR, and TransBTS. All models are implemented in PyTorch with consistent preprocessing, data splits, training protocols, and evaluation metrics. Final test metrics are reported only for architectures whose notebooks contain captured final outputs; Swin UNETR is retained in the methodology but excluded from final comparison tables. UNet achieved the highest verified mean Dice score of 0.7999, followed by nnU-Net at 0.7945 and VNet at 0.7655. The results show that convolutional neural network (CNN) architectures remain highly competitive under the available training budget, while transformer-based models require longer schedules, pretraining, or larger datasets before their global context modelling can translate into stronger segmentation performance.
+Brain tumour segmentation from multimodal magnetic resonance imaging (MRI) is important for diagnosis, treatment planning, and disease monitoring. This study benchmarks six three-dimensional segmentation architectures on the 369 training cases of the Brain Tumour Segmentation (BraTS) 2020 dataset: UNet, an nnU-Net-style network, VNet, UNETR, Swin UNETR, and TransBTS. All six are implemented from scratch in PyTorch and trained by one notebook with identical preprocessing, a grade-stratified split of 257 training, 56 validation and 56 test cases, the same effective batch, 50 epochs and the same number of optimiser steps. Test cases are evaluated at their native resolution with eight-flip test-time augmentation, using per-case Dice, 95th-percentile Hausdorff distance, sensitivity and specificity, bootstrap confidence intervals and Holm-corrected Wilcoxon signed-rank tests. UNet achieved the highest mean Dice of 0.8199 (95\% confidence interval 0.7826--0.8533), followed by nnU-Net at 0.8192 and VNet at 0.7965; the transformer and hybrid models reached 0.7462 (Swin UNETR), 0.7291 (TransBTS) and 0.7056 (UNETR), and every pairwise difference was significant after correction. All models segmented the whole tumour well (Dice 0.8714--0.9012), but enhancing-tumour Dice on low-grade gliomas, 27 of 76 of which have no enhancing tumour, fell to between 0.1613 and 0.4237. VNet reached 97\% of the UNet Dice with 1.40 million parameters, 0.53 training hours and 0.0375 seconds per volume, the best Dice per parameter and per training hour in the study. Convolutional networks therefore remain the stronger choice under this data size and training budget, and enhancing-tumour segmentation of low-grade gliomas remains the weakest point of every architecture.
 \end{abstract}
 
 \begin{keyword}
-Brain tumour segmentation, 3D UNet, Transformer, BraTS, Medical image analysis, Deep learning
+Brain tumour segmentation \sep 3D UNet \sep Transformer \sep BraTS \sep Medical image analysis \sep Deep learning
 \end{keyword}
 
 \end{frontmatter}
@@ -59,228 +75,421 @@ Brain tumour segmentation, 3D UNet, Transformer, BraTS, Medical image analysis, 
 
 \section{Introduction}
 
-Gliomas are the most common and aggressive primary brain tumours, accounting for approximately 80\% of all malignant brain tumours worldwide \cite{ref5}. These tumours arise from glial cells and are classified into low-grade gliomas (LGG) and high-grade gliomas (HGG), with the latter being more invasive and associated with poorer patient outcomes. Accurate segmentation of these tumours from magnetic resonance imaging (MRI) scans is essential for several clinical tasks including diagnosis and grading, treatment planning, disease monitoring, and prognosis prediction. The BraTS challenge, established in 2012, has become the premier benchmark for evaluating brain tumour segmentation algorithms. It provides multimodal MRI scans consisting of four complementary sequences: T1-weighted (T1), T1-contrast-enhanced (T1CE), T2-weighted (T2), and fluid-attenuated inversion recovery (FLAIR). Alongside these scans, the dataset includes expert-annotated segmentation masks delineating three tumour sub-regions: whole tumour (WT), tumour core (TC), and enhancing tumour (ET) \cite{ref2}. The clinical significance of automated segmentation cannot be overstated. Manual delineation of brain tumours is time-consuming, requires specialised expertise, and suffers from inter-rater variability. Deep learning based segmentation methods have demonstrated the potential to automate this process, thereby reducing radiologist workload and providing consistent, reproducible results. However, the rapid proliferation of architectural innovations from convolutional neural networks to transformer based models has created a fragmented landscape where practitioners struggle to identify the most suitable approach for their specific clinical or research settings.
+Gliomas are the most common and aggressive primary brain tumours, accounting for approximately 80\% of all malignant brain tumours worldwide \cite{ref5}. These tumours arise from glial cells and are classified into low-grade gliomas (LGG) and high-grade gliomas (HGG), with the latter being more invasive and associated with poorer patient outcomes. Accurate segmentation of these tumours from magnetic resonance imaging (MRI) scans is essential for several clinical tasks including diagnosis and grading, treatment planning, disease monitoring, and prognosis prediction. The BraTS challenge, established in 2012, has become the premier benchmark for evaluating brain tumour segmentation algorithms. It provides multimodal MRI scans consisting of four complementary sequences: T1-weighted (T1), T1-contrast-enhanced (T1CE), T2-weighted (T2), and fluid-attenuated inversion recovery (FLAIR). Alongside these scans, the dataset includes expert-annotated segmentation masks delineating three tumour sub-regions: whole tumour (WT), tumour core (TC), and enhancing tumour (ET) \cite{ref2}. Manual delineation of brain tumours is time-consuming, requires specialised expertise, and suffers from inter-rater variability. Deep learning based segmentation methods have demonstrated the potential to automate this process, thereby reducing radiologist workload and providing consistent, reproducible results. However, the rapid proliferation of architectural innovations from convolutional neural networks to transformer based models has created a fragmented landscape where practitioners struggle to identify the most suitable approach for their specific clinical or research settings.
 
-Despite significant advances in deep learning for medical image segmentation, several persistent challenges remain unaddressed in the existing literature. First, the proliferation of architectures from classic UNets to complex transformer hybrids creates confusion about which approach is optimal for clinical deployment. Researchers often introduce novel architectures without rigorous comparison against established baselines under controlled conditions, leading to inflated claims and unreliable benchmarks. Second, many published results use different preprocessing pipelines, training protocols, data splits, and evaluation metrics, making fair comparisons across studies difficult or impossible. A model that performs well under one set of conditions may fail under another, yet such nuances are rarely discussed. Third, transformer based models promise better global context modelling through self-attention mechanisms, but they require substantial computational resources, larger datasets, and careful hyperparameter tuning. This raises serious questions about their practical utility in resource-constrained clinical environments. Fourth, medical datasets are typically limited in size due to privacy concerns, annotation costs, and disease rarity. Sophisticated architectures with millions or billions of parameters are prone to overfitting when trained on such modest datasets, yet this trade-off is rarely quantified in comparative studies. Fifth, most existing comparisons focus exclusively on final performance metrics such as Dice scores while ignoring computational efficiency, training stability, convergence speed, and memory footprint. These practical considerations are often decisive factors in real-world deployment decisions.
+Despite significant advances in deep learning for medical image segmentation, several persistent challenges remain unaddressed in the existing literature. First, the proliferation of architectures from classic UNets to complex transformer hybrids creates confusion about which approach is optimal for clinical deployment. Researchers often introduce novel architectures without rigorous comparison against established baselines under controlled conditions. Second, many published results use different preprocessing pipelines, training protocols, data splits, and evaluation metrics, making fair comparisons across studies difficult or impossible. Third, transformer based models promise better global context modelling through self-attention mechanisms, but they require substantial computational resources, larger datasets, and careful hyperparameter tuning, which raises questions about their practical utility in resource-constrained clinical environments. Fourth, medical datasets are typically limited in size due to privacy concerns, annotation costs, and disease rarity, so architectures with tens or hundreds of millions of parameters are prone to overfitting. Fifth, most existing comparisons focus on mean Dice scores while ignoring boundary accuracy, statistical significance, behaviour on clinically distinct subgroups, uncertainty, computational efficiency and memory footprint.
 
-This study aims to address the aforementioned gaps through the following specific objectives. First, to establish a fair comparison framework by implementing six representative architectures namely UNet, nnU-Net, VNet, UNETR, Swin UNETR, and TransBTS with identical preprocessing, data splits, and evaluation protocols. All implementations are done from scratch in PyTorch to eliminate biases arising from different codebases or optimisation levels. Second, to quantify performance differences across architectures with statistical robustness using bootstrapped confidence intervals and significance testing. Third, to analyse architectural trade-offs between segmentation performance, computational cost, training time, parameter count, and memory utilisation. Fourth, to identify optimal approaches for different use cases ranging from high-accuracy requirements to resource-constrained deployments. Fifth, to provide fully reproducible code and configuration files to enable other researchers to build upon this work and extend the comparison to new architectures or datasets. The remainder of this paper is organised as follows. Section 2 reviews the evolution of segmentation architectures from the original UNet to modern transformer based designs, highlighting key innovations and identified gaps in the literature. Section 3 details the methodology, including dataset description, preprocessing steps, model implementations, training configuration, evaluation metrics, and experimental setup. Section 4 presents quantitative results and comparative analysis across performance, efficiency, and statistical significance dimensions. Section 5 discusses the limitations of the current study and outlines promising directions for future work. Section 6 addresses ethical implications related to clinical deployment, fairness, and responsible use. Section 7 concludes with key takeaways and practical recommendations for researchers and practitioners.
+This study addresses these gaps with the following objectives. First, to establish a fair comparison by implementing six representative architectures, namely UNet, an nnU-Net-style network, VNet, UNETR, Swin UNETR, and TransBTS, from scratch in PyTorch and training them with one code path, one split, one effective batch size and one training length. Second, to evaluate every model on the original image grid of each test case with per-case Dice, boundary distance, sensitivity and specificity, and to quantify differences with bootstrap confidence intervals and paired significance tests. Third, to report results separately for high-grade and low-grade gliomas. Fourth, to analyse the trade-offs between segmentation accuracy, parameter count, training time, inference latency and memory, together with ensembles and test-time-augmentation uncertainty. Fifth, to release the notebook, the split and the per-case outputs so that the comparison can be reproduced and extended. The remainder of this paper is organised as follows. Section 2 reviews the evolution of segmentation architectures. Section 3 details the dataset, preprocessing, model implementations, training configuration and evaluation protocol. Section 4 presents and discusses the results. Section 5 discusses limitations and future work, Section 6 ethical implications, and Section 7 concludes.
 
 \section{Literature Review}
 
-The evolution of medical image segmentation has been marked by several foundational architectures. The UNet architecture, introduced by Ronneberger et al. \cite{ref1}, revolutionised medical image segmentation by introducing a symmetric encoder-decoder structure with skip connections. The encoder progressively downsamples the input to capture context, while the decoder upsamples to recover spatial details. The 3D UNet, proposed by Cicek et al. \cite{ref3}, extended this architecture to volumetric data by replacing 2D convolutions with 3D counterparts, enabling direct processing of 3D MRI volumes. The VNet, developed by Milletari et al. \cite{ref4}, introduced residual connections allowing deeper networks without gradient degradation, and PReLU activations that improve gradient flow. The VNet employed a fully convolutional architecture that could handle variable input sizes, making it particularly suitable for medical volumes. The nnU-Net, presented by Isensee et al. \cite{ref7}, represented a paradigm shift by automating architecture design based on dataset characteristics. Rather than a fixed architecture, nnU-Net analyses the dataset fingerprint, including image sizes, voxel spacings, and class imbalances, to configure network depth and width, patch size, batch size, and training schedule.
+The evolution of medical image segmentation has been marked by several foundational architectures. The UNet architecture, introduced by Ronneberger et al. \cite{ref1}, revolutionised medical image segmentation by introducing a symmetric encoder-decoder structure with skip connections. The encoder progressively downsamples the input to capture context, while the decoder upsamples to recover spatial details. The 3D UNet, proposed by Cicek et al. \cite{ref3}, extended this architecture to volumetric data by replacing 2D convolutions with 3D counterparts, enabling direct processing of 3D MRI volumes. The VNet, developed by Milletari et al. \cite{ref4}, introduced residual connections allowing deeper networks without gradient degradation, and PReLU activations that improve gradient flow. The nnU-Net, presented by Isensee et al. \cite{ref7}, represented a paradigm shift by automating architecture design based on dataset characteristics. Rather than a fixed architecture, nnU-Net analyses the dataset fingerprint, including image sizes, voxel spacings, and class imbalances, to configure network depth and width, patch size, batch size, and training schedule.
 
-Parallel to CNN innovations, transformer-based architectures have emerged. Vision Transformers (ViT), introduced by Dosovitskiy et al. \cite{ref8}, demonstrated that pure transformer architectures could match or exceed CNN performance on image classification tasks by modelling long-range dependencies through self-attention mechanisms. UNETR, proposed by Hatamizadeh et al. \cite{ref14}, was the first to integrate a ViT encoder with a CNN decoder for 3D segmentation. Swin UNETR, developed by Hatamizadeh et al. \cite{ref15}, addressed UNETR's limitations by replacing the standard ViT with a Swin Transformer backbone, using window-based self-attention and shifted windows to reduce computational complexity. TransBTS, introduced by Wang et al. \cite{ref9}, took a hybrid approach, placing transformer layers only at the bottleneck of a CNN encoder-decoder.
+Parallel to CNN innovations, transformer-based architectures have emerged. Vision Transformers (ViT), introduced by Dosovitskiy et al. \cite{ref8}, demonstrated that pure transformer architectures could match or exceed CNN performance on image classification tasks by modelling long-range dependencies through self-attention mechanisms. TransUNet \cite{ref10} placed a transformer encoder on top of a CNN feature extractor for 2D medical segmentation. UNETR, proposed by Hatamizadeh et al. \cite{ref14}, integrated a ViT encoder with a CNN decoder for 3D segmentation. Swin UNETR, developed by Hatamizadeh et al. \cite{ref15}, replaced the standard ViT with a Swin Transformer backbone, using window-based self-attention and shifted windows to reduce computational complexity. TransBTS, introduced by Wang et al. \cite{ref9}, took a hybrid approach, placing transformer layers only at the bottleneck of a CNN encoder-decoder. Transformers are known to need large datasets or distillation to train well from scratch \cite{ref13}, and several medical variants modify attention to cope with limited data \cite{ref11,ref12}.
 
-Despite the proliferation of architectures, several gaps remain: lack of systematic comparison where most papers introduce new architectures without rigorous comparison against established baselines under controlled conditions; implementation variability where different preprocessing, data splits, and training protocols make direct comparisons impossible; inadequate computational reporting where many studies omit detailed computational metrics; and reproducibility concerns where code availability and documentation are often insufficient for reproduction. This study addresses these gaps by implementing all six architectures from scratch in PyTorch with identical preprocessing, reporting detailed computational metrics including training time, memory usage, and parameter counts, providing complete code and configuration files for full reproducibility, and analysing not just performance but also convergence behaviour, stability, and resource requirements.
+Despite the proliferation of architectures, several gaps remain: lack of systematic comparison under controlled conditions; implementation variability in preprocessing, data splits and training protocols; inadequate reporting of statistical significance, boundary accuracy, subgroup performance and computational cost; and insufficient code and documentation for reproduction. This study addresses these gaps by implementing all six architectures from scratch in one notebook with identical preprocessing and training budget, evaluating them per case at native resolution with confidence intervals and significance tests, reporting results by tumour grade, measuring latency and memory, and releasing the notebook and its outputs.
 
 \section{Methods and Materials}
 
-The BraTS 2020 training dataset was used for the segmentation experiments. Notebook outputs report 368 usable cases after availability checks for images and segmentation masks, consisting of 293 high-grade glioma cases and 75 low-grade glioma cases. Each case contains four MRI modalities acquired using different pulse sequences to highlight different tissue characteristics. The T1-weighted modality provides standard anatomical imaging with good grey-white matter contrast. The T1 contrast-enhanced modality uses a gadolinium-based contrast agent to highlight areas of blood-brain barrier breakdown, which typically correspond to active tumour regions. The T2-weighted modality visualises oedema and tumour infiltration into surrounding brain parenchyma. The FLAIR modality suppresses cerebrospinal fluid signals, making peritumoural oedema and non-enhancing tumour components more conspicuous. Ground truth segmentation masks provided by expert neuroradiologists contain three tumour labels: label 1 for necrotic and non-enhancing tumour core, label 2 for peritumoural oedema, and label 4 for enhancing tumour.
+\subsection{Dataset}
 
-Following data collection, all four MRI modalities were normalised using per-volume z-score normalisation applied only to foreground, non-zero voxels. This approach computes the mean and standard deviation of voxel intensities within the brain mask, subtracts the mean, and divides by the standard deviation. Foreground-only normalisation is important because background voxels contain no brain tissue and would otherwise distort the intensity distribution. All volumes were resized to 128 by 128 by 128 voxels to standardise input size and fit within GPU memory constraints. Image modalities were resized using trilinear interpolation, while segmentation masks were resized using nearest-neighbour interpolation to preserve discrete labels. The final model input stacks FLAIR, T1, T1CE, and T2 as four channels. The masks are converted into three binary tumour regions: whole tumour from all non-zero tumour labels, tumour core from labels 1 and 4, and enhancing tumour from label 4.
+The BraTS 2020 training dataset \cite{ref2,ref5} was used, in the Kaggle distribution \path{awsaf49/brats20-dataset-training-validation}. Segmentation masks were located by name pattern, which also finds the misnamed mask of case 355, so all 369 training cases have the four sequences and a mask: 293 HGG and 76 LGG cases, with the grade taken from the dataset's \texttt{name\_mapping.csv}. Each case contains four MRI sequences. The T1-weighted sequence provides standard anatomical imaging with good grey-white matter contrast. The T1 contrast-enhanced sequence uses a gadolinium-based contrast agent to highlight areas of blood-brain barrier breakdown, which typically correspond to active tumour regions. The T2-weighted sequence visualises oedema and tumour infiltration into surrounding brain parenchyma. The FLAIR sequence suppresses cerebrospinal fluid signals, making peritumoural oedema and non-enhancing tumour components more conspicuous. Ground truth masks contain label 1 for necrotic and non-enhancing tumour core, label 2 for peritumoural oedema, and label 4 for enhancing tumour. They are converted into three nested binary regions: whole tumour from all non-zero labels, tumour core from labels 1 and 4, and enhancing tumour from label 4. One case with its sequences and regions is shown in Figure~\ref{fig:modalities}.
 
-The conversion of labels into whole tumour, tumour core, and enhancing tumour targets follows the standard BraTS evaluation convention. Whole tumour includes all visible abnormal tumour-related tissue and is usually the easiest region to segment because it occupies the largest spatial extent. Tumour core excludes oedema and focuses on the central tumour components, making it more sensitive to boundary ambiguity. Enhancing tumour is the smallest and clinically important target, but it is also the most difficult because the region may be fragmented and highly variable across patients. Treating the three targets as separate binary masks allows the model to learn overlapping anatomical definitions rather than forcing a mutually exclusive class assignment at each voxel.
-
-The usable case count differs slightly from the nominal BraTS 2020 training count because notebook-level checks retain only cases with the required image volumes and corresponding segmentation masks available for processing. The final split uses random seed 42 and produces 257 training cases, 55 validation cases, and 56 test cases. This fixed split is used consistently across architectures so that differences in Dice score, loss, training time, and parameter efficiency can be attributed to architecture and optimisation behaviour rather than to split variation. The split also preserves the HGG and LGG composition reported in the notebooks, with 293 HGG and 75 LGG cases across the 368 usable cases.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/segmentation_mri_modalities_segmentation_masks.png}
-\caption{MRI modalities and corresponding tumour segmentation masks.}
-\label{fig:mri-modalities-and-corresponding-tumour-segme}
-\end{figure}
-
-Six architectures were implemented from scratch. The standard 3D UNet serves as the baseline architecture. The encoder comprises four downsampling stages, each consisting of two convolutional layers followed by max pooling with stride 2. The number of channels progresses as 32 to 64 to 128 to 256 through the encoder stages. The decoder is symmetric with the encoder, using transposed convolutions for upsampling followed by two convolutional layers per stage. Skip connections concatenate encoder features to decoder features at the same spatial resolution, enabling the decoder to recover fine-grained details lost during downsampling. Deep supervision is implemented with auxiliary outputs at decoder stages 2 and 3 to provide additional gradient paths and improve convergence. InstanceNorm3d with affine parameters is used for normalisation, and LeakyReLU activation with a negative slope of 0.01 is used throughout. The total number of trainable parameters is 5.6 million. The nnU-Net implementation uses the full-resolution variant without ensemble. The architecture includes a five-stage encoder using stride-2 convolutions for downsampling instead of max pooling, which allows the network to learn appropriate downsampling filters. The channel progression is 32 to 64 to 128 to 256 to 320. The decoder uses transposed convolution upsampling with skip connections from corresponding encoder stages. Deep supervision heads are attached to all decoder stages with exponentially decaying weights: 1.0 for the main output, 0.5 for decoder stage 2, 0.25 for decoder stage 3, and 0.125 for decoder stage 4. InstanceNorm3d is used for normalisation, and LeakyReLU activation with negative slope 0.01 is used throughout. The total number of trainable parameters is 16.5 million. The VNet implementation incorporates residual connections and PReLU activations. Residual blocks contain one to two convolutions each, with identity shortcuts when input and output dimensions match, and $1\times 1$ $\times$ 1 projection shortcuts when dimensions differ. The channel progression is 16 to 32 to 64 to 128, which is reduced compared to UNet to save memory and improve efficiency. Downsampling uses stride-2 convolutions instead of max pooling, allowing the network to learn optimal downsampling filters. Upsampling uses transposed convolutions. PReLU activation uses learnable negative slopes that adapt during training, providing better gradient flow compared to fixed leaky ReLU. Gradient checkpointing is enabled on all residual blocks to trade computation for memory, allowing larger effective networks within the same memory budget. The total number of trainable parameters is 1.4 million. The UNETR implementation uses a ViT-Base style encoder. The input volume is divided into patches of size $16\times 16$ $\times$ 16 voxels, resulting in a grid of 8 $\times$ 8 $\times$ 8 patches totalling 512 patches. The hidden dimension is 768. The transformer consists of 12 layers, each with 12 attention heads and an MLP dimension of 3072. Feature maps are extracted from transformer layers 3, 6, 9, and 12 to provide multi-scale representations to the decoder. The decoder performs hierarchical upsampling using transposed convolutions, with skip connections from the extracted transformer features. LayerNorm is used within the transformer, while InstanceNorm is used in the CNN decoder. The total number of trainable parameters is 137.6 million. The Swin UNETR implementation uses a Swin Transformer backbone with window-based self-attention. The patch size is 2 $\times$ 2 $\times$ 2 voxels, and the initial embedding dimension is 48. The architecture has four stages with patch merging operations that double the embedding dimension at each stage, progressing as 48 to 96 to 192 to 384. The window size is 7 $\times$ 7 $\times$ 7 tokens. The number of attention heads per stage is 3, 6, 12, and 24 respectively. Each stage has a depth of 2 transformer blocks. Shifted windows are used with alternating normal window and shifted window configurations in consecutive blocks. Relative position bias is implemented with learnable bias parameters per attention head. The total number of trainable parameters is 10.7 million. The TransBTS implementation follows a hybrid approach. The CNN encoder has four downsampling stages with residual blocks. The channel progression is 32 to 64 to 128 to 256 to 512. The transformer bottleneck contains four layers with eight attention heads and a hidden dimension of 512. Positional embeddings are learnable and defined for 512 tokens corresponding to an 8 $\times$ 8 $\times$ 8 grid. The CNN decoder performs upsampling with skip connections from the encoder stages. Deep supervision outputs are attached at decoder stages 1, 2, and 3. The total number of trainable parameters is 35.8 million.
-
-The architecture set was chosen to cover the main design families used in contemporary volumetric segmentation. UNet represents the standard encoder-decoder baseline with skip connections. nnU-Net represents a self-configuring variant that adapts many design choices to the dataset fingerprint. VNet tests whether residual volumetric blocks and PReLU activations can provide better efficiency with fewer parameters. UNETR and TransBTS represent transformer-based and hybrid transformer segmentation strategies. Swin UNETR is described because its notebook includes architecture, split, hyperparameter, and training setup details, but it is not used in final metric comparisons because the captured final test output is absent. This distinction keeps the methods section faithful to the implementation while keeping the result tables grounded only in verifiable notebook outputs.
-
-The experiments used a combined loss function that integrates Dice loss and binary cross-entropy (BCE) for each tumour region independently. The total loss for each region is computed as the sum of Dice loss and BCE loss. For models with deep supervision, exponentially decaying weights were applied to auxiliary losses. For UNet, VNet, and TransBTS, the weights were 1.0 for the main output, 0.5 for decoder stage 2, and 0.25 for decoder stage 3. For nnU-Net with four decoder stages, the weights were 1.0 for the main output, 0.5 for stage 2, 0.25 for stage 3, and 0.125 for stage 4. Optimiser choice followed architecture characteristics. UNet, nnU-Net, and VNet used SGD with Nesterov momentum of 0.99 and weight decay of $3 \times 10^{-5}$. The high momentum value was chosen to accelerate convergence in flat regions of the loss landscape. UNETR, Swin UNETR, and TransBTS used AdamW with weight decay of $1 \times 10^{-5}$, which is known to work well with transformer architectures. For learning rate schedules, CNN models used polynomial decay where the learning rate at epoch t equals the initial learning rate multiplied by (1 minus t divided by total epochs) raised to the power 0.9. This schedule provides gradual decay while maintaining higher learning rates for longer compared to step decay. Transformer models used cosine annealing where the learning rate equals lr\_min plus 0.5 multiplied by (lr\_max minus lr\_min) multiplied by (1 plus cosine of multiplied by t divided by total epochs). Cosine annealing is known to help transformers escape sharp local minima. All models used automatic mixed precision (AMP) through PyTorch's torch.amp.autocast context manager and gradient scaling. AMP reduces memory consumption by approximately 50\% by storing tensors in half-precision where possible while maintaining master weights in full precision. Training speed is accelerated by 30-40\% due to reduced memory bandwidth requirements and faster computation on modern GPUs. Hyperparameters were kept consistent across models where applicable to ensure fair comparison. The learning rate was 0.01 for CNN models and $1 \times 10^{-4}$ for transformer models. The batch size was 4 for all models except Swin UNETR, which used batch size 2 because of memory demand. The total number of training epochs was 10 for all models. Gradient clipping was applied at a maximum norm of 1.0 to prevent gradient explosion. Early stopping patience was set to 6 epochs, meaning training would stop if no improvement in validation loss was observed for 6 consecutive epochs.
-
-The primary evaluation metric is the Dice Similarity Coefficient (DSC), defined as DSC equals two times the cardinality of the intersection of predicted set and ground truth set divided by the sum of the cardinalities of predicted set and ground truth set. The Dice coefficient ranges from 0 indicating no overlap to 1 indicating perfect overlap. This study computed DSC separately for each tumour region: DSC\_WT for whole tumour segmentation accuracy, DSC\_TC for tumour core segmentation accuracy, and DSC\_ET for enhancing tumour segmentation accuracy. The mean DSC is the arithmetic average of these three values. This study also reported training loss and validation loss for convergence analysis, where lower loss indicates better model optimisation. Training loss is computed on the training set during each epoch, while validation loss is computed on the held-out validation set. The gap between training and validation loss provides insight into overfitting or underfitting behaviour. For computational metrics, the study reported several quantities of practical importance. Parameter count refers to the number of trainable parameters in millions, which correlates with model expressivity and storage requirements. Training time in minutes is reported for ten complete epochs, reflecting the time required to train the model from scratch. Peak GPU memory during training is measured in gigabytes, indicating the hardware requirements for deployment. Inference speed is estimated as seconds per volume, though detailed latency benchmarking is left for future work.
-
-The hardware environment consisted of two Tesla T4 GPUs manufactured by NVIDIA, each with 16 GB of dedicated memory. The host system used an Intel Xeon CPU with four cores operating at 2.2 GHz. System memory was 32 GB of RAM, and storage was 100 GB of SSD. The Tesla T4 GPUs are commonly available in cloud computing platforms and academic clusters, making the results reproducible in typical research environments. The software environment used PyTorch version 2.0 or higher with CUDA version 11.8 for GPU acceleration. Python version was 3.12. Key libraries included NumPy for numerical operations, NiBabel for reading NIfTI format medical images, scikit-learn for data splitting and metrics, and tqdm for progress bars. All experiments were conducted on Kaggle's free GPU resources, which provides Tesla T4 GPUs with the aforementioned specifications. To ensure reproducibility, the study fixed random seeds for all stochastic operations including PyTorch random number generator, NumPy random number generator, and Python random module. This study used persistent DataLoader workers to prevent deadlocks during multi-epoch training. Where possible, the study enabled deterministic algorithms in PyTorch by setting torch.backends.cudnn.deterministic to True and torch.backends.cudnn.benchmark to False. Complete notebook files with all code are provided in the supplementary materials to enable other researchers to reproduce the results exactly and extend the comparison to new architectures or datasets.
-
-\section{Results and Discussion}
-
-Table~\ref{tab:seg-performance} presents final test set results only for models with captured final notebook outputs. UNet achieves the best overall performance with mean Dice of 0.7999, demonstrating that the classic architecture remains highly competitive when properly trained. nnU-Net performs comparably to UNet with mean Dice of 0.7945, although it requires longer training time. VNet shows strong efficiency with only 1.4 million parameters while achieving 0.7655 mean Dice. Transformer-based verified models underperform the CNN group under the available ten-epoch training budget: UNETR reaches 0.6234 mean Dice, and TransBTS reaches 0.5109 mean Dice. Swin UNETR is not included in these final metric tables because its notebook does not contain captured final test output.
-
-The ranking indicates that the strongest results are not produced by the largest model. UNETR has the largest parameter count among the verified models, but its mean Dice score remains below the CNN baselines. VNet has the smallest parameter count and the fastest training time, yet its Dice score remains close to the stronger CNN models. This suggests that, for the available BraTS split and ten-epoch budget, inductive bias and optimisation stability matter more than raw parameter count. UNet and nnU-Net benefit from direct convolutional locality, skip connections, and stable decoder reconstruction, while VNet benefits from residual volumetric blocks. The verified transformer-based models may require longer schedules, larger datasets, pretraining, or more careful regularisation before their global context modelling can translate into better final Dice scores.
+The two grades differ in a way that matters for evaluation (Table~\ref{tab:volumes}). LGG whole tumours are as large as HGG ones, with a median of 86.32 against 91.13~cm$^3$, but their enhancing tumour is much smaller, with a median of 0.82 against 19.46~cm$^3$, and 27 of the 76 LGG cases (35.5\%) have no enhancing tumour at all, whereas every HGG case has some. The distributions are plotted in Figure~\ref{fig:volumes}.
 
 \begin{table}[htbp]
 \centering
-\caption{Performance Comparison on the BraTS 2020 Test Split}
-\label{tab:seg-performance}
+\caption{Reference region volumes in cm$^3$ at native resolution, by tumour grade (293 HGG, 76 LGG cases).}
+\label{tab:volumes}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+Region & Grade & Mean & SD & Min & Median & Max \\
+\midrule
+\multirow{2}{*}{WT} & HGG & 96.44 & 53.78 & 7.28 & 91.13 & 256.88 \\
+ & LGG & 111.54 & 76.72 & 17.08 & 86.32 & 361.78 \\
+\multirow{2}{*}{TC} & HGG & 37.66 & 29.26 & 0.56 & 32.54 & 126.72 \\
+ & LGG & 57.85 & 49.66 & 0.83 & 44.59 & 190.19 \\
+\multirow{2}{*}{ET} & HGG & 23.39 & 18.50 & 0.11 & 19.46 & 111.25 \\
+ & LGG & 5.46 & 13.53 & 0.00 & 0.82 & 89.55 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{segmentation/plots/02_modalities_and_masks.png}
+\caption{One BraTS 2020 case: the four MRI sequences and the three nested tumour regions.}
+\label{fig:modalities}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{segmentation/plots/01_region_volumes.png}
+\caption{Reference WT, TC and ET volumes by tumour grade.}
+\label{fig:volumes}
+\end{figure}
+
+\subsection{Preprocessing and Split}
+
+Each sequence was normalised by a per-volume z-score computed over its non-zero (foreground) voxels only, so that background does not distort the intensity distribution. Images were resampled from their native $240\times 240\times 155$ grid to $128\times 128\times 128$ voxels with trilinear interpolation, and masks with nearest-neighbour interpolation, to fit the networks within the memory of one GPU. The input stacks FLAIR, T1, T1CE and T2 as four channels, in the order used by the web application that deploys the VNet model. The preprocessed volumes were cached once.
+
+A fixed split with seed 42, stratified by tumour grade, divided the cases into 257 training, 56 validation and 56 test cases (Table~\ref{tab:splits}), and every model used the same split. Training augmentation, applied on the GPU, consisted of random flips along each axis and a per-channel intensity scale between 0.9 and 1.1 and shift between $-0.1$ and $0.1$ (Figure~\ref{fig:augmentation} in the appendix).
+
+\begin{table}[htbp]
+\centering
+\caption{Grade-stratified split of the 369 cases.}
+\label{tab:splits}
+\small
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccc@{}}
+\toprule
+Split & HGG & LGG & Total \\
+\midrule
+Training & 204 & 53 & 257 \\
+Validation & 45 & 11 & 56 \\
+Test & 44 & 12 & 56 \\
+\textbf{Total} & \textbf{293} & \textbf{76} & \textbf{369} \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\subsection{Model Architectures}
+
+All six networks take the four-channel $128^3$ volume and output three logits per voxel, one per region; every model returns its main output first, followed by any deep-supervision outputs. Parameter counts and estimated GFLOPs per volume, measured by the notebook, are listed in Table~\ref{tab:efficiency}.
+
+\textbf{UNet.} A 3D UNet with four resolution levels of 32, 64, 128 and 256 channels and three max-pooling steps. Each level has two $3\times 3\times 3$ convolutions with affine instance normalisation and LeakyReLU (slope 0.01); the decoder uses transposed convolutions and concatenated skip connections, with deep-supervision outputs at decoder stages 2 and 3. It has 5.60 million parameters.
+
+\textbf{nnU-Net-style network.} A fixed full-resolution architecture in the style of nnU-Net, not the self-configuring nnU-Net pipeline: five stages of 32, 64, 128, 256 and 320 channels with stride-2 convolutions for downsampling, the same convolution blocks as UNet, and deep supervision at four decoder stages. It has 16.55 million parameters.
+
+\textbf{VNet.} A residual VNet with stages of 16, 32, 64 and 128 channels. Residual blocks of one or two $3\times 3\times 3$ convolutions with affine instance normalisation and PReLU use identity shortcuts or $1\times 1\times 1$ projections; downsampling uses stride-2 convolutions and upsampling transposed convolutions, with deep-supervision outputs at two decoder stages. Its module names match the network class of the web application, so the trained weights load there unchanged. It has 1.40 million parameters.
+
+\textbf{UNETR.} A ViT-Base encoder on $16\times 16\times 16$ patches, giving 512 tokens of dimension 768, with 12 pre-norm transformer layers of 12 heads, an MLP dimension of 3,072 and dropout 0.1. Token maps from layers 3, 6, 9 and 12 feed a convolutional decoder with transposed convolutions and blocks of instance normalisation and ReLU, plus a full-resolution convolutional skip from the input. It has 137.60 million parameters, the largest in the study.
+
+\textbf{Swin UNETR.} A Swin Transformer encoder on $2\times 2\times 2$ patches with an embedding of 48 channels doubled at each of four stages (48, 96, 192, 384), $7\times 7\times 7$ windows, 3, 6, 12 and 24 heads, two blocks per stage alternating regular and shifted windows, and a learnable relative position bias per head. The convolutional decoder uses skips from every stage and a full-resolution convolutional skip from the input. It has 10.52 million parameters.
+
+\textbf{TransBTS.} A hybrid with a residual convolutional encoder of 32, 64, 128, 256 and 512 channels and four stride-2 downsamplings, four transformer layers of 8 heads and dimension 512 at the bottleneck with a learnable position embedding for the $8\times 8\times 8$ tokens, and a residual decoder with skip connections and deep-supervision outputs at two decoder stages. It has 35.81 million parameters.
+
+The set covers the standard encoder-decoder baseline (UNet), a deeper nnU-Net-style variant, a compact residual design (VNet), a pure transformer encoder (UNETR), a hierarchical windowed transformer (Swin UNETR) and a hybrid with transformer layers only at the bottleneck (TransBTS).
+
+\subsection{Training Configuration}
+
+The loss for each region was the sum of a soft Dice loss computed over the batch and binary cross-entropy. Deep-supervision outputs were compared with masks downsampled by nearest-neighbour interpolation and weighted 1.0, 0.5 and 0.25 for UNet, VNet and TransBTS, and 1.0, 0.5, 0.25 and 0.125 for the nnU-Net-style network. Optimisers followed the architecture family (Table~\ref{tab:hyperparameters}). The three convolutional networks used SGD with Nesterov momentum 0.99, a learning rate of 0.01, weight decay $3\times 10^{-5}$ and polynomial decay with power 0.9 applied per optimiser step. UNETR, Swin UNETR and TransBTS used AdamW with a learning rate of $10^{-4}$, weight decay $10^{-5}$, a linear warm-up over three epochs and cosine decay to 1\% of the initial rate, also per step.
+
+Every model trained for 50 epochs with an effective batch of 4 volumes, obtained with micro-batches of 2 accumulated over two steps, or micro-batches of 1 accumulated over four steps for Swin UNETR. All models therefore took the same 3,250 optimiser steps. Training used half-precision autocasting with gradient scaling and gradient clipping at a norm of 1.0; UNETR and Swin UNETR used gradient checkpointing to fit in memory. After every epoch the validation cases were evaluated, and the checkpoint with the best validation mean Dice was kept; no early stopping was applied. The random seed was 42 and deterministic kernels were not enforced, so re-runs should reproduce the results closely but not bit for bit.
+
+Two worker processes, one per GPU, trained different models in parallel on Kaggle with two NVIDIA Tesla T4 GPUs, four CPU cores and 33.7~GB of system memory, using Python 3.13.15, PyTorch 2.11.0 and CUDA 12.8. All six runs finished, in 515.0 minutes of training. Training curves are shown in Figure~\ref{fig:curves}.
+
+\subsection{Evaluation}
+
+\textbf{Post-processing.} After training, the threshold for removing small enhancing-tumour predictions was tuned on the validation cases for each model, choosing among 0, 50, 100, 200, 300, 500 and 800 voxels at native resolution. At test time, sigmoid probabilities of the main output were averaged over the eight combinations of axis flips (test-time augmentation, TTA), resampled to the native grid with trilinear interpolation and thresholded at 0.5. The region hierarchy was enforced, so that ET lies inside TC and TC inside WT, and an ET prediction smaller than the tuned threshold was removed.
+
+\textbf{Metrics.} For every test case and region, the notebook computes the Dice similarity coefficient, scored as 1 when both prediction and reference are empty; the 95th-percentile symmetric Hausdorff distance (HD95) in millimetres using the voxel spacing, set to 0 when both are empty and to the BraTS value of 373.13~mm when only one is empty; and voxel-wise sensitivity and specificity. The mean Dice of a case is the average over the three regions. Model-level Dice is the mean over cases with a percentile bootstrap 95\% confidence interval from 2,000 resamples; HD95 is summarised by its median because empty-region cases contribute the fixed value of 373.13~mm.
+
+\textbf{Comparisons.} Models were compared with Wilcoxon signed-rank tests on per-case mean Dice, paired by case, with Holm correction \cite{ref16}. Results were also computed separately for HGG and LGG test cases. Two ensembles were evaluated in the same way: all six models, and the three convolutional networks, each averaging member probabilities and using the median of the members' ET thresholds. The voxel-wise standard deviation across the eight TTA flips, averaged inside the predicted whole tumour, served as a per-case uncertainty and was correlated with per-case mean Dice by Spearman's rank correlation.
+
+\textbf{Efficiency.} Latency per volume was measured at batch size 1 under half-precision autocasting, with and without TTA, as the mean and standard deviation over timed passes after warm-up; peak training and inference memory were recorded on the GPU.
+
+\begin{table}[htbp]
+\centering
+\caption{Training settings by model. All models used 50 epochs, an effective batch of 4 volumes (3,250 optimiser steps), gradient clipping at 1.0 and half-precision autocasting. SGD uses Nesterov momentum 0.99 and polynomial decay with power 0.9; AdamW uses cosine decay after a 3-epoch warm-up. DS: deep-supervision weights; GC: gradient checkpointing.}
+\label{tab:hyperparameters}
 \scriptsize
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
 \toprule
-Model & WT Dice & TC Dice & ET Dice & Mean Dice & Test Loss & Parameters & Training Time (min) \\
+Model & Optimiser & LR & Weight decay & Schedule & Micro-batch & GC & DS \\
 \midrule
-UNet & 0.8647 & 0.7844 & 0.7505 & 0.7999 & 0.4109 & 5.6M & 32.4 \\
-nnU-Net & 0.8569 & 0.7813 & 0.7452 & 0.7945 & 0.4553 & 16.5M & 55.1 \\
-VNet & 0.8541 & 0.7108 & 0.7316 & 0.7655 & 0.4880 & 1.4M & 16.9 \\
-TransBTS & 0.6383 & 0.4618 & 0.4325 & 0.5109 & 2.1940 & 35.8M & 70.1 \\
-UNETR & 0.7128 & 0.6261 & 0.5314 & 0.6234 & 1.3411 & 137.6M & 117.2 \\
+UNet & SGD & 0.01 & $3\times 10^{-5}$ & Polynomial & 2 & No & 1, 0.5, 0.25 \\
+nnU-Net & SGD & 0.01 & $3\times 10^{-5}$ & Polynomial & 2 & No & 1, 0.5, 0.25, 0.125 \\
+VNet & SGD & 0.01 & $3\times 10^{-5}$ & Polynomial & 2 & No & 1, 0.5, 0.25 \\
+UNETR & AdamW & $10^{-4}$ & $10^{-5}$ & Warm-up, cosine & 2 & Yes & 1 \\
+Swin UNETR & AdamW & $10^{-4}$ & $10^{-5}$ & Warm-up, cosine & 1 & Yes & 1 \\
+TransBTS & AdamW & $10^{-4}$ & $10^{-5}$ & Warm-up, cosine & 2 & No & 1, 0.5, 0.25 \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/segmentation_training_loss_dice_score_progression.png}
-\caption{Training loss and Dice score progression for the segmentation models.}
-\label{fig:training-loss-and-dice-score-progression-for-}
-\end{figure}
+\section{Results and Discussion}
 
-Turning to training dynamics, Table~\ref{tab:seg-training-summary} summarises the epoch to best validation performance, final loss gap, parameter efficiency, and time efficiency for each verified model. Most CNN models converged within ten epochs, while transformer-based verified models showed slower early convergence and required later epochs to reach their best validation state. Regarding training loss curves qualitatively, UNet demonstrated a smooth monotonic decrease from 1.843 to 0.385, nnU-Net showed a similar pattern but higher initial loss from 2.061 to 0.443, VNet exhibited the fastest initial drop from 1.932 to 0.481, UNETR showed slow initial progress with improvement after epoch four, and TransBTS consistently showed the highest loss values throughout training from 2.743 to 2.188. VNet shows a negative gap, suggesting possible validation-set sensitivity. The verified transformer-based models show minimal gaps, indicating possible underfitting. UNet and nnU-Net show small positive gaps, indicating good generalisation.
+\subsection{Training and Model Selection}
+
+Table~\ref{tab:selection} lists the epoch at which each model reached its best validation mean Dice and the tuned ET threshold. The convolutional networks reached the highest validation Dice, 0.7845 for UNet and 0.7824 for the nnU-Net-style network, whose best epoch was the last, 50. The transformer models peaked earlier, Swin UNETR at epoch 33 and UNETR at 39, at lower validation Dice. Validation tuning removed small ET predictions below 100 to 800 voxels for four models and chose no filtering for Swin UNETR and TransBTS.
 
 \begin{table}[htbp]
 \centering
-\caption{Convergence, Generalisation, and Efficiency Summary}
-\label{tab:seg-training-summary}
-\scriptsize
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc@{}}
+\caption{Model selection on the 56 validation cases.}
+\label{tab:selection}
+\small
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccc@{}}
 \toprule
-Model & Best Epoch & Final Train Loss & Final Val Loss & Gap & Param. Eff. & Time Eff. \\
+Model & Best epoch & Best validation Dice & ET threshold (voxels) \\
 \midrule
-UNet & 10 & 0.3852 & 0.4061 & +0.0209 & 0.1428 & 0.0247 \\
-nnU-Net & 10 & 0.4431 & 0.4514 & +0.0083 & 0.0482 & 0.0144 \\
-VNet & 10 & 0.4812 & 0.4719 & -0.0093 & 0.5468 & 0.0453 \\
-UNETR & 9 & 1.3384 & 1.3397 & +0.0013 & 0.0045 & 0.0053 \\
-TransBTS & 10 & 2.1882 & 2.1914 & +0.0032 & 0.0143 & 0.0073 \\
+UNet & 45 & 0.7845 & 100 \\
+nnU-Net & 50 & 0.7824 & 200 \\
+VNet & 44 & 0.7598 & 200 \\
+Swin UNETR & 33 & 0.7235 & 0 \\
+TransBTS & 45 & 0.7102 & 0 \\
+UNETR & 39 & 0.6960 & 800 \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-Per-region performance breakdown is given in Table~\ref{tab:seg-performance}. All models perform best on the whole tumour region, which is the largest and most consistent region. There is a significant drop in performance for tumour core across all models, especially transformers. The enhancing tumour region proves most challenging as it is the smallest and most variable region. The performance gradient (WT > TC > ET) is consistent across all architectures, reflecting inherent segmentation difficulty.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{segmentation/plots/04_training_curves.png}
+\caption{Training and validation loss and validation Dice per region for every model.}
+\label{fig:curves}
+\end{figure}
 
-Computational efficiency is also summarised in Table~\ref{tab:seg-training-summary}. VNet demonstrates exceptional parameter efficiency, achieving 76.5\% of UNet's performance with only 25\% of its parameters, making it ideal for resource-constrained environments. Time efficiency reinforces VNet's superiority, with the best performance-per-minute ratio. This suggests that for rapid prototyping or iterative experimentation, VNet is the optimal choice.
+\subsection{Test Results}
 
-Using bootstrapped confidence intervals at 95\% confidence level, the difference between UNet and nnU-Net was 0.0054 with p greater than 0.05, indicating no statistical significance. The difference between UNet and VNet was 0.0344 with p less than 0.05, indicating statistical significance. Differences between the CNN group and the verified transformer-based outputs were statistically significant with p less than 0.001. The CNN models, including UNet, nnU-Net, and VNet, form a distinct performance cluster and outperform the verified transformer-based models under these experimental conditions.
+Table~\ref{tab:seg-performance} reports the test results at native resolution. UNet achieved the highest mean Dice of 0.8199, followed closely by the nnU-Net-style network at 0.8192 and then VNet at 0.7965. The transformer-based models followed at a clear distance: Swin UNETR at 0.7462, the hybrid TransBTS at 0.7291 and UNETR at 0.7056. The bootstrap confidence intervals of the two leading CNNs, 0.7826--0.8533 and 0.7837--0.8511, overlap almost completely, whereas the intervals of all three transformer-based models lie entirely below them.
+
+\begin{table*}[htbp]
+\centering
+\caption{Test results on the 56 test cases at native resolution, with eight-flip TTA and tuned ET post-processing. Dice is the mean over cases, with a bootstrap 95\% confidence interval for the mean over regions; HD95 is the median over cases in millimetres; sensitivity is the mean over cases.}
+\label{tab:seg-performance}
+\scriptsize
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccccccc@{}}
+\toprule
+ & & \multicolumn{3}{c}{Dice} & \multicolumn{3}{c}{HD95 (mm)} & \multicolumn{3}{c}{Sensitivity} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(l){9-11}
+Model & Mean Dice [95\% CI] & WT & TC & ET & WT & TC & ET & WT & TC & ET \\
+\midrule
+UNet & 0.8199 [0.7826, 0.8533] & 0.9012 & 0.8300 & 0.7286 & 4.24 & 3.24 & 3.67 & 0.9059 & 0.8797 & 0.8486 \\
+nnU-Net & 0.8192 [0.7837, 0.8511] & 0.9002 & 0.8309 & 0.7264 & 4.24 & 3.46 & 3.80 & 0.9070 & 0.8831 & 0.8538 \\
+VNet & 0.7965 [0.7497, 0.8340] & 0.8865 & 0.7972 & 0.7058 & 4.06 & 4.18 & 3.46 & 0.8899 & 0.8697 & 0.8278 \\
+Swin UNETR & 0.7462 [0.7134, 0.7772] & 0.8714 & 0.7495 & 0.6176 & 5.10 & 6.70 & 6.28 & 0.9619 & 0.9316 & 0.9407 \\
+TransBTS & 0.7291 [0.6876, 0.7661] & 0.8743 & 0.7488 & 0.5642 & 4.42 & 6.58 & 5.96 & 0.9468 & 0.9384 & 0.9475 \\
+UNETR & 0.7056 [0.6700, 0.7384] & 0.8758 & 0.6692 & 0.5720 & 5.05 & 11.29 & 9.15 & 0.9492 & 0.9481 & 0.9520 \\
+\bottomrule
+\end{tabular*}
+\end{table*}
+
+The ranking is decided by the tumour core and the enhancing tumour. Whole-tumour Dice varies little, from 0.8714 to 0.9012, and every model's median WT boundary error is about 4 to 5~mm. TC Dice ranges from 0.6692 to 0.8309 and ET Dice from 0.5642 to 0.7286, and the median HD95 of UNETR on TC reaches 11.29~mm. The transformer-based models are more sensitive than the CNNs on every region, with ET sensitivity of 0.9407 to 0.9520 against 0.8278 to 0.8538, while their lower Dice shows that this comes from over-segmentation; voxel-wise specificity is above 0.997 for every model and region. Per-case distributions are shown in Figure~\ref{fig:distributions} and representative predictions in Figure~\ref{fig:qualitative}.
+
+All differences between models are significant after Holm correction (Table~\ref{tab:wilcoxon}, Figure~\ref{fig:wilcoxon}). The smallest is between UNet and the nnU-Net-style network, a median per-case difference of 0.0023 Dice with an adjusted $p$ of 0.042, which is statistically detectable but practically negligible; the same holds for Swin UNETR against TransBTS (0.0064, $p=0.042$). UNet leads VNet by a median of 0.0119 and every transformer-based model by 0.0738 to 0.1139.
+
+\begin{table}[htbp]
+\centering
+\caption{Pairwise Wilcoxon signed-rank tests on per-case mean Dice, Holm-corrected. A positive median difference favours the first model. Values below $10^{-5}$ are shown as $<10^{-5}$.}
+\label{tab:wilcoxon}
+\small
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llcc@{}}
+\toprule
+Model A & Model B & Median difference & Holm $p$ \\
+\midrule
+UNet & nnU-Net & 0.0023 & 0.0420 \\
+UNet & VNet & 0.0119 & $<10^{-5}$ \\
+UNet & UNETR & 0.1139 & $<10^{-5}$ \\
+UNet & Swin UNETR & 0.0738 & $<10^{-5}$ \\
+UNet & TransBTS & 0.0789 & $<10^{-5}$ \\
+nnU-Net & VNet & 0.0100 & $1\times 10^{-5}$ \\
+nnU-Net & UNETR & 0.1066 & $<10^{-5}$ \\
+nnU-Net & Swin UNETR & 0.0687 & $<10^{-5}$ \\
+nnU-Net & TransBTS & 0.0795 & $<10^{-5}$ \\
+VNet & UNETR & 0.0858 & $<10^{-5}$ \\
+VNet & Swin UNETR & 0.0604 & $<10^{-5}$ \\
+VNet & TransBTS & 0.0666 & $<10^{-5}$ \\
+UNETR & Swin UNETR & $-0.0359$ & $<10^{-5}$ \\
+UNETR & TransBTS & $-0.0194$ & 0.0002 \\
+Swin UNETR & TransBTS & 0.0064 & 0.0420 \\
+\bottomrule
+\end{tabular*}
+\end{table}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/segmentation_ground_truth_vs_predicted_tumour_segmentation.png}
-\caption{Ground truth and predicted tumour segmentation masks for representative BraTS cases.}
-\label{fig:ground-truth-and-predicted-tumour-segmentatio}
+\includegraphics[width=0.75\textwidth]{segmentation/plots/05_wilcoxon.png}
+\caption{Holm-corrected Wilcoxon signed-rank p-values between models.}
+\label{fig:wilcoxon}
 \end{figure}
 
-Several factors contribute to the superior performance of CNN architectures. First, CNNs have strong inductive biases including locality and translation equivariance that work well with limited medical imaging data, while transformers require massive datasets to learn these priors \cite{ref11}. Second, CNNs naturally maintain high-resolution features through their hierarchical structure, whereas transformers must patchify the input, losing fine-grained spatial information. Third, CNN training is well-understood with established recipes, while transformers require careful optimisation including learning rate warmup and specific regularisation \cite{ref12}. Fourth, with limited GPU memory of 16 GB, the notebooks used smaller batch sizes for transformer-based models, potentially affecting gradient estimates and training stability. Despite nnU-Net's theoretical advantages, the standard UNet performed slightly better due to dataset suitability where BraTS 2020 volumes are already standardised with 1mm isotropic resolution and 240 $\times$ 240 $\times$ 155 dimensions, so the dataset fingerprint analysis may not provide significant gains; simpler optimisation where UNet's architecture is easier to optimise with SGD and polynomial decay schedules; and deep supervision effect where both models use deep supervision, but nnU-Net's additional decoder stage may not be beneficial for this resolution. VNet's efficiency stems from residual connections that enable deeper effective networks without exploding gradients, reduced channel counts, PReLU activations with learnable negative slopes, and gradient checkpointing. The poor transformer performance can be attributed to insufficient data where 257 training cases may be inadequate for transformer pretraining, training complexity, architecture mismatch where the patch-based encoding may not be optimal for tumour segmentation where boundaries are critical, and memory constraints where reduced batch sizes likely hurt optimisation performance \cite{ref13}\cite{ref14}\cite{ref15}.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{segmentation/plots/07_per_case_distributions.png}
+\caption{Per-case Dice and HD95 for every region and model, including the two ensembles.}
+\label{fig:distributions}
+\end{figure}
 
-The region-wise results provide additional clinical interpretation. Whole tumour Dice is consistently higher than tumour core and enhancing tumour Dice because WT includes oedema and all tumour components, producing a larger and more spatially continuous target. Tumour core and enhancing tumour are more difficult because they represent smaller, heterogeneous regions with ambiguous borders and stronger dependence on contrast enhancement. This behaviour is visible across all verified models and is consistent with the expected difficulty hierarchy in BraTS evaluation. A model that performs well on WT but poorly on ET may still detect broad abnormality, but it may be less reliable for treatment planning tasks that require accurate localisation of active enhancing tumour. Therefore, mean Dice should be read together with per-region Dice, especially when comparing models for clinical decision support.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{segmentation/plots/08_qualitative_comparison.png}
+\caption{The test cases with the median and the lowest all-model-ensemble Dice: reference and every model's prediction on FLAIR at the axial slice with the largest reference tumour (oedema-only WT green, TC yellow, ET red).}
+\label{fig:qualitative}
+\end{figure}
 
-The efficiency tables also change the interpretation of the benchmark. UNet achieves the highest verified mean Dice score, but VNet provides the best Dice per million parameters and the best Dice per training minute. This makes VNet attractive for resource-constrained experimentation and for settings where rapid iteration is more important than the last few percentage points of Dice score. nnU-Net remains valuable because it provides a structured self-configuring framework, even though the present notebook settings do not show a clear advantage over the standard UNet. The verified transformer-based models are not dismissed by these results; rather, the results show that their benefits were not realised under the available dataset size, input resolution, and ten-epoch training budget.
+\subsection{Results by Tumour Grade}
+
+Table~\ref{tab:grade} and Figure~\ref{fig:grade} separate the 44 HGG and 12 LGG test cases. On HGG, UNet and the nnU-Net-style network reach mean Dice of 0.8629 and 0.8632, with ET Dice of about 0.81. On LGG, every model drops sharply: mean Dice falls to between 0.5616 and 0.6624, and ET Dice to between 0.1613 (TransBTS) and 0.4237 (UNet). WT Dice, in contrast, is slightly higher on LGG than on HGG for every model. This pattern is consistent with the data: many LGG cases have little or no enhancing tumour (Table~\ref{tab:volumes}), and any false-positive ET voxel on a case without enhancing tumour gives that case an ET Dice of zero. The ET post-processing tuned on the validation set reduces but does not remove this effect, and the two models that chose no ET filtering, Swin UNETR and TransBTS, have two of the three lowest LGG ET scores. The CNN advantage is present in both grades.
+
+\begin{table}[htbp]
+\centering
+\caption{Test Dice by tumour grade (44 HGG, 12 LGG cases), with the bootstrap 95\% confidence interval of the mean Dice.}
+\label{tab:grade}
+\scriptsize
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+Model & Grade & WT & TC & ET & Mean Dice & 95\% CI \\
+\midrule
+\multirow{2}{*}{UNet} & HGG & 0.8984 & 0.8786 & 0.8117 & 0.8629 & [0.8300, 0.8889] \\
+ & LGG & 0.9115 & 0.6520 & 0.4237 & 0.6624 & [0.6055, 0.7253] \\
+\multirow{2}{*}{nnU-Net} & HGG & 0.8985 & 0.8785 & 0.8124 & 0.8632 & [0.8357, 0.8865] \\
+ & LGG & 0.9065 & 0.6561 & 0.4112 & 0.6579 & [0.6032, 0.7175] \\
+\multirow{2}{*}{VNet} & HGG & 0.8819 & 0.8412 & 0.7923 & 0.8385 & [0.7965, 0.8716] \\
+ & LGG & 0.9032 & 0.6359 & 0.3885 & 0.6425 & [0.5750, 0.7131] \\
+\multirow{2}{*}{Swin UNETR} & HGG & 0.8620 & 0.7859 & 0.7262 & 0.7913 & [0.7666, 0.8147] \\
+ & LGG & 0.9061 & 0.6161 & 0.2193 & 0.5805 & [0.5249, 0.6299] \\
+\multirow{2}{*}{TransBTS} & HGG & 0.8665 & 0.7837 & 0.6740 & 0.7748 & [0.7389, 0.8073] \\
+ & LGG & 0.9029 & 0.6206 & 0.1613 & 0.5616 & [0.5043, 0.6120] \\
+\multirow{2}{*}{UNETR} & HGG & 0.8686 & 0.6843 & 0.6773 & 0.7434 & [0.7100, 0.7736] \\
+ & LGG & 0.9021 & 0.6137 & 0.1857 & 0.5672 & [0.5037, 0.6325] \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{segmentation/plots/06_dice_by_grade.png}
+\caption{Test Dice per region for HGG and LGG cases.}
+\label{fig:grade}
+\end{figure}
+
+\subsection{Ensembles and Uncertainty}
+
+An ensemble of the three CNNs reached a mean Dice of 0.8178 (95\% CI 0.7782--0.8522; WT 0.9010, TC 0.8262, ET 0.7262), and an ensemble of all six models 0.7991 (0.7631--0.8309). Neither exceeded UNet alone, so averaging with weaker models diluted rather than improved the best single model in this setting.
+
+The TTA uncertainty is informative only for the convolutional networks (Table~\ref{tab:uncertainty}, Figure~\ref{fig:uncertainty}). For UNet, the nnU-Net-style network and VNet, cases with higher mean uncertainty inside the predicted tumour have lower Dice, with Spearman correlations of $-0.30$ to $-0.40$ and $p\leq 0.023$; for the three transformer-based models the correlation is between $-0.08$ and $-0.14$ and not significant.
+
+\begin{table}[htbp]
+\centering
+\caption{Spearman correlation between per-case TTA uncertainty inside the predicted WT and per-case mean Dice.}
+\label{tab:uncertainty}
+\small
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lcc@{}}
+\toprule
+Model & Spearman $\rho$ & $p$ \\
+\midrule
+UNet & $-0.3034$ & 0.0230 \\
+nnU-Net & $-0.3040$ & 0.0228 \\
+VNet & $-0.4018$ & 0.0021 \\
+UNETR & $-0.0936$ & 0.4924 \\
+Swin UNETR & $-0.0796$ & 0.5596 \\
+TransBTS & $-0.1401$ & 0.3030 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{segmentation/plots/09_uncertainty_vs_dice.png}
+\caption{Per-case TTA uncertainty against per-case mean Dice for every model.}
+\label{fig:uncertainty}
+\end{figure}
+
+\subsection{Computational Efficiency}
+
+Table~\ref{tab:efficiency} compares cost. Parameter count does not predict accuracy: UNETR, with 137.60 million parameters, has the lowest Dice, whereas VNet, with 1.40 million, is third and reaches 97\% of the UNet Dice (0.7965 against 0.8199). VNet is also the cheapest model on every axis: 149.9 GFLOPs per volume, 0.53 training hours, 3.44~GB peak training memory, 0.98~GB at inference and 0.0375~s per volume without TTA, giving the best Dice per million parameters (0.5694) and per training hour (1.4939). UNet costs about three times as much per volume (0.1076~s) and 2.4 times the training time for its 0.0234 Dice advantage. Swin UNETR is the slowest model at 0.4893~s per volume and 5.29 training hours, despite having only 10.52 million parameters; with $2\times 2\times 2$ patches, its first stage attends over $64^3$ tokens. TTA multiplies latency by about eight for every model. Dice is plotted against latency in Figure~\ref{fig:latency}.
+
+\begin{table*}[htbp]
+\centering
+\caption{Computational cost. GFLOPs are estimated per $128^3$ volume; latency is per volume at batch size 1 under half-precision autocasting, mean $\pm$ standard deviation; memory is peak GPU memory in GB for training and inference.}
+\label{tab:efficiency}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccc@{}}
+\toprule
+ & & & & \multicolumn{2}{c}{Memory (GB)} & \multicolumn{2}{c}{Latency (s)} & \\
+\cmidrule(lr){5-6}\cmidrule(lr){7-8}
+Model & Params (M) & GFLOPs & Train (h) & Train & Infer. & No TTA & TTA & Dice / M \\
+\midrule
+UNet & 5.60 & 907.0 & 1.28 & 5.25 & 1.54 & $0.1076\pm 0.0013$ & $0.8611\pm 0.0019$ & 0.1463 \\
+nnU-Net & 16.55 & 956.3 & 1.35 & 5.22 & 1.65 & $0.1112\pm 0.0017$ & $0.8963\pm 0.0021$ & 0.0495 \\
+VNet & 1.40 & 149.9 & 0.53 & 3.44 & 0.98 & $0.0375\pm 0.0003$ & $0.2973\pm 0.0007$ & 0.5694 \\
+UNETR & 137.60 & 1761.7 & 2.49 & 9.30 & 3.80 & $0.2094\pm 0.0029$ & $1.6966\pm 0.0048$ & 0.0051 \\
+Swin UNETR & 10.52 & 797.1 & 5.29 & 7.07 & 6.97 & $0.4893\pm 0.0034$ & $3.9512\pm 0.0044$ & 0.0709 \\
+TransBTS & 35.81 & 996.2 & 1.56 & 7.46 & 1.99 & $0.1291\pm 0.0010$ & $1.0336\pm 0.0022$ & 0.0204 \\
+\bottomrule
+\end{tabular*}
+\end{table*}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{segmentation/plots/10_dice_vs_latency.png}
+\caption{Test mean Dice against latency per volume.}
+\label{fig:latency}
+\end{figure}
+
+\subsection{Discussion}
+
+Under one split, one training length and one optimisation budget, the three convolutional networks form a clearly better group than the three transformer-based models, and the gap is significant for every pair. Several factors are consistent with this outcome, although the experiments do not isolate them. Convolutions carry locality and translation equivariance by construction, which matters with 257 training volumes, whereas the transformer encoders here are trained from scratch without large-scale pretraining \cite{ref13}. UNETR tokenises the volume into $16^3$ patches, so its 512 tokens are coarse relative to small tumour sub-regions, which is consistent with its weak TC boundaries. The transformer-based models are also markedly more sensitive and less precise, so a different threshold or stronger post-processing might narrow the gap; the thresholds here were fixed at 0.5 for all models.
+
+The nnU-Net-style network matches UNet but does not improve on it: its five stages and extra deep-supervision output cost three times the parameters for a median per-case difference of 0.0023 Dice. This network is not the self-configuring nnU-Net pipeline, so the result says nothing about nnU-Net's automatic configuration. VNet is the clear efficiency choice and is the model deployed in the accompanying web application, where its exported checkpoint (best validation Dice 0.7598, test mean Dice 0.7965) segments a four-sequence case in a single forward pass. Mean Dice should be read together with the per-region and per-grade results: every model is reliable for the whole tumour, while enhancing-tumour segmentation of low-grade gliomas is the weakest result of every architecture.
 
 \section{Limitations and Future Work}
 
-Several limitations affect this study. The dataset is modest in size, with 257 training cases being relatively small for deep learning, particularly for transformer models. Results obtained on the BraTS 2020 dataset may not generalise to other medical imaging tasks or datasets. The data are preprocessed and standardised, which may not reflect real-world clinical conditions. No external validation on out-of-distribution data was performed. Regarding model design, the study did not perform exhaustive hyperparameter tuning per model, and ten epochs may be insufficient for transformer convergence. Transformers would likely benefit from pretraining on large-scale datasets, which was not explored. No ensemble methods were employed. Computationally, the study relied on a single run per model without cross-validation or multiple random seeds, and memory constraints prevented exploration of larger batch sizes for transformers. Inference speed was not systematically benchmarked. Only a single resolution of $128^3$ was evaluated; domain adaptation to different scanners and uncertainty quantification were not addressed.
+Several limitations affect this study. All results come from a single dataset, the BraTS 2020 training cases, with no external multi-centre test set with public labels, so they may not generalise to other scanners and protocols. Every model was trained once with one seed, so seed-to-seed variation is not measured; the test set has 56 cases, of which only 12 are LGG. The transformer encoders received no large-scale pretraining. A single input resolution of $128^3$ was used for the whole resampled volume, which discards detail at native resolution. Hyperparameters followed one recipe per family rather than being tuned per model.
 
-Future work should address these shortcomings. Immediate improvements include systematic hyperparameter optimisation through grid search for each architecture, extended training with 50 to 100 epochs and proper warmup for transformers, pretraining on large medical imaging datasets, ensemble methods to combine CNN and transformer predictions, and five-fold cross-validation for robust statistics. Architectural innovations could explore hybrid designs that combine CNN efficiency with transformer global context, efficient linear-attention mechanisms for 3D, multi-resolution processing, and uncertainty-aware models with Monte Carlo dropout. Data improvements involve synthetic data generation via GANs, multi-dataset training combining BraTS with other brain tumour collections, domain adaptation across multiple centres, and active learning to select the most informative cases for labelling. Clinical validation requires external evaluation on independent cohorts, user studies with radiologists, optimisation of inference speed and memory, and interpretability techniques such as attention map visualisation. Advanced training techniques like curriculum learning, self-supervised pretraining with masked autoencoding, knowledge distillation from CNNs to transformers, and neural architecture search for 3D segmentation also merit investigation.
+Future work should repeat the benchmark over several seeds and with cross-validation, add pretrained transformer encoders, train at higher resolution or with patch-based sampling, tune post-processing for each model, evaluate on external cohorts, and study LGG cases without enhancing tumour specifically, for example with grade-aware post-processing.
 
 \section{Ethical Implications}
 
-Clinical deployment risks must be carefully considered. Over-reliance on AI predictions could lead to missed diagnoses if they supplement rather than replace radiologist judgment. False negatives could delay treatment, and false positives from over-segmentation might result in unnecessary interventions. Models trained on predominantly HGG cases may underperform on LGG cases, introducing a bias. Fairness and bias concerns further complicate deployment. The BraTS dataset lacks diversity in age, gender, and ethnicity, with data primarily originating from North American and European institutions. Models may not generalise to low-resource settings with different imaging protocols, and segmentation masks reflect individual annotator expertise, potentially embedding label bias. Responsible deployment guidelines should mandate human-in-the-loop review of all AI predictions, continuous monitoring of model performance on new data, and provision of explainability features such as attention maps or uncertainty estimates with each prediction. Regulatory compliance with FDA and CE marking requirements and strict adherence to data privacy standards like HIPAA and GDPR are essential. Potential misuse includes attempts at autonomous diagnosis without clinical oversight, treatment decisions based solely on model outputs without clinical validation, and uncontrolled replication of the released code in ways that circumvent ethical safeguards.
+Clinical deployment risks must be carefully considered. Over-reliance on AI predictions could lead to missed diagnoses if they replace rather than supplement radiologist judgment. False negatives could delay treatment, and false positives from over-segmentation might result in unnecessary interventions. The results by grade show that every model segments the enhancing tumour of low-grade gliomas far worse than that of high-grade gliomas, a bias that must be disclosed to users. The BraTS dataset lacks diversity in age, gender, and ethnicity, with data primarily originating from North American and European institutions, so models may not generalise to settings with different imaging protocols, and segmentation masks reflect individual annotator expertise. Responsible deployment requires human-in-the-loop review of all AI predictions, continuous monitoring of model performance on new data, uncertainty estimates with each prediction, regulatory compliance, and adherence to data privacy standards. The released code is intended for research and must not be used for autonomous diagnosis without clinical validation.
 
 \section{Conclusion}
 
-This study provides a comprehensive controlled comparison of six major 3D segmentation architectures on the BraTS 2020 dataset. All models were implemented from scratch in PyTorch with identical preprocessing, data splits, and evaluation protocols, and complete code is provided to support reproducibility. Final test metrics are reported only for models with captured final notebook outputs. The main findings are that CNN models, particularly UNet, nnU-Net, and VNet, outperform the verified transformer-based models on this dataset with limited training data; VNet offers exceptional efficiency with only 1.4 million parameters; UNet remains the strongest verified model with the highest mean Dice score of 0.7999; and parameter count is not predictive of performance, as evidenced by UNETR with 137.6 million parameters achieving 0.6234 mean Dice while VNet with 1.4 million parameters achieves 0.7655 mean Dice. For highest accuracy, UNet is recommended. For limited computational resources, VNet provides the best parameter and time efficiency. For self-configuring pipelines, nnU-Net remains valuable when preprocessing and training automation are priorities. Transformer-based models should be considered when longer training schedules, pretraining, and larger datasets are available.
+This study compared six 3D segmentation architectures on BraTS 2020 under one controlled protocol: identical preprocessing, a grade-stratified split, 50 epochs and the same number of optimiser steps for every model, and per-case evaluation at native resolution with confidence intervals and Holm-corrected significance tests. UNet achieved the highest mean Dice of 0.8199, the nnU-Net-style network 0.8192 and VNet 0.7965, ahead of Swin UNETR (0.7462), TransBTS (0.7291) and UNETR (0.7056), and every pairwise difference was significant. Whole-tumour segmentation was good for every model, but enhancing-tumour Dice on low-grade gliomas fell to 0.16--0.42. Parameter count did not predict performance: VNet, with 1.40 million parameters, reached 97\% of the UNet Dice at a third of its latency and less than half its training time. For the highest accuracy, UNet is recommended; for limited computational resources and deployment, VNet; transformer-based models should be reconsidered when pretraining, larger datasets or higher-resolution training are available.
 
-\begin{thebibliography}{15}
+\begin{thebibliography}{16}
 
-\bibitem{ref1} O. Ronneberger, P. Fischer, and T. Brox, ''U-Net: Convolutional networks for biomedical image segmentation,'' in Proc. Int. Conf. Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2015, pp. 234-241.
+\bibitem{ref1} O. Ronneberger, P. Fischer, and T. Brox, ``U-Net: Convolutional networks for biomedical image segmentation,'' in Proc. Int. Conf. Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2015, pp. 234-241.
 
-\bibitem{ref2} B. H. Menze et al., ''The multimodal brain tumour image segmentation benchmark (BRATS),'' IEEE Trans. Medical Imaging, vol. 34, no. 10, pp. 1993-2024, 2015.
+\bibitem{ref2} B. H. Menze et al., ``The multimodal brain tumour image segmentation benchmark (BRATS),'' IEEE Trans. Medical Imaging, vol. 34, no. 10, pp. 1993-2024, 2015.
 
-\bibitem{ref3} O. Cicek, A. Abdulkadir, S. S. Lienkamp, T. Brox, and O. Ronneberger, ''3D U-Net: Learning dense volumetric segmentation from sparse annotation,'' in Proc. Int. Conf. Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2016, pp. 424-432.
+\bibitem{ref3} O. Cicek, A. Abdulkadir, S. S. Lienkamp, T. Brox, and O. Ronneberger, ``3D U-Net: Learning dense volumetric segmentation from sparse annotation,'' in Proc. Int. Conf. Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2016, pp. 424-432.
 
-\bibitem{ref4} F. Milletari, N. Navab, and S. A. Ahmadi, ''V-Net: Fully convolutional neural networks for volumetric medical image segmentation,'' in Proc. Int. Conf. 3D Vision (3DV), 2016, pp. 565-571.
+\bibitem{ref4} F. Milletari, N. Navab, and S. A. Ahmadi, ``V-Net: Fully convolutional neural networks for volumetric medical image segmentation,'' in Proc. Int. Conf. 3D Vision (3DV), 2016, pp. 565-571.
 
-\bibitem{ref5} S. Bakas et al., ''Advancing The Cancer Genome Atlas glioma MRI collections with expert segmentation labels and radiomic features,'' Scientific Data, vol. 4, no. 1, pp. 1-13, 2017.
+\bibitem{ref5} S. Bakas et al., ``Advancing The Cancer Genome Atlas glioma MRI collections with expert segmentation labels and radiomic features,'' Scientific Data, vol. 4, no. 1, pp. 1-13, 2017.
 
-\bibitem{ref6} N. Carion, F. Massa, G. Synnaeve, N. Usunier, A. Kirillov, and S. Zagoruyko, ''End-to-end object detection with transformers,'' in Proc. European Conf. Computer Vision (ECCV), 2020, pp. 213-229.
+\bibitem{ref7} F. Isensee, P. F. Jaeger, S. A. Kohl, J. Petersen, and K. H. Maier-Hein, ``nnU-Net: A self-configuring method for deep learning-based biomedical image segmentation,'' Nature Methods, vol. 18, no. 2, pp. 203-211, 2021.
 
-\bibitem{ref7} F. Isensee, P. F. Jaeger, S. A. Kohl, J. Petersen, and K. H. Maier-Hein, ''nnU-Net: A self-configuring method for deep learning-based biomedical image segmentation,'' Nature Methods, vol. 18, no. 2, pp. 203-211, 2021.
+\bibitem{ref8} A. Dosovitskiy et al., ``An image is worth 16x16 words: Transformers for image recognition at scale,'' in Proc. Int. Conf. Learning Representations (ICLR), 2021.
 
-\bibitem{ref8} A. Dosovitskiy et al., ''An image is worth 16x16 words: Transformers for image recognition at scale,'' in Proc. Int. Conf. Learning Representations (ICLR), 2021.
+\bibitem{ref9} W. Wang, C. Chen, M. Ding, H. Yu, S. Zha, and J. Li, ``TransBTS: Multimodal brain tumour segmentation using transformer,'' in Proc. Int. Conf. Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2021, pp. 109-119.
 
-\bibitem{ref9} W. Wang, C. Chen, M. Ding, H. Yu, S. Zha, and J. Li, ''TransBTS: Multimodal brain tumour segmentation using transformer,'' in Proc. Int. Conf. Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2021, pp. 109-119.
+\bibitem{ref10} J. Chen, Y. Lu, Q. Yu, X. Luo, E. Adeli, Y. Wang, and Y. Zhou, ``TransUNet: Transformers make strong encoders for medical image segmentation,'' arXiv preprint arXiv:2102.04306, 2021.
 
-\bibitem{ref10} J. Chen, Y. Lu, Q. Yu, X. Luo, E. Adeli, Y. Wang, and Y. Zhou, ''TransUNet: Transformers make strong encoders for medical image segmentation,'' arXiv preprint arXiv:2102.04306, 2021.
+\bibitem{ref11} J. M. J. Valanarasu, P. Oza, I. Hacihaliloglu, and V. M. Patel, ``Medical transformer: Gated axial-attention for medical image segmentation,'' in Proc. Int. Conf. Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2021, pp. 36-46.
 
-\bibitem{ref11} J. M. J. Valanarasu, P. Oza, I. Hacihaliloglu, and V. M. Patel, ''Medical transformer: Gated axial-attention for medical image segmentation,'' in Proc. Int. Conf. Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2021, pp. 36-46.
+\bibitem{ref12} H. Cao, Y. Wang, J. Chen, D. Jiang, X. Zhang, Q. Tian, and M. Wang, ``Swin-Unet: Unet-like pure transformer for medical image segmentation,'' arXiv preprint arXiv:2105.05537, 2021.
 
-\bibitem{ref12} H. Cao, Y. Wang, J. Chen, D. Jiang, X. Zhang, Q. Tian, and M. Wang, ''Swin-Unet: Unet-like pure transformer for medical image segmentation,'' arXiv preprint arXiv:2105.05537, 2021.
+\bibitem{ref13} H. Touvron, M. Cord, M. Douze, F. Massa, A. Sablayrolles, and H. Jegou, ``Training data-efficient image transformers and distillation through attention,'' in Proc. Int. Conf. Machine Learning (ICML), 2021, pp. 10347-10357.
 
-\bibitem{ref13} H. Touvron, M. Cord, M. Douze, F. Massa, A. Sablayrolles, and H. Jegou, ''Training data-efficient image transformers and distillation through attention,'' in Proc. Int. Conf. Machine Learning (ICML), 2021, pp. 10347-10357.
+\bibitem{ref14} A. Hatamizadeh et al., ``UNETR: Transformers for 3D medical image segmentation,'' in Proc. IEEE/CVF Winter Conf. Applications of Computer Vision (WACV), 2022, pp. 574-584.
 
-\bibitem{ref14} A. Hatamizadeh et al., ''UNETR: Transformers for 3D medical image segmentation,'' in Proc. IEEE/CVF Winter Conf. Applications of Computer Vision (WACV), 2022, pp. 574-584.
+\bibitem{ref15} A. Hatamizadeh, V. Nath, Y. Tang, D. Yang, A. Myronenko, H. R. Roth, and D. Xu, ``Swin UNETR: Swin transformers for semantic segmentation of brain tumours in MRI images,'' in Proc. Int. Conf. Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2022, pp. 272-284.
 
-\bibitem{ref15} A. Hatamizadeh, V. Nath, Y. Tang, D. Yang, A. Myronenko, H. R. Roth, and D. Xu, ''Swin UNETR: Swin transformers for semantic segmentation of brain tumours in MRI images,'' in Proc. Int. Conf. Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2022, pp. 272-284.
+\bibitem{ref16} S. Holm, ``A simple sequentially rejective multiple test procedure,'' Scandinavian Journal of Statistics, vol. 6, no. 2, pp. 65-70, 1979.
 
 \end{thebibliography}
 
 \FloatBarrier
 \appendix
-\renewcommand{\thetable}{\Alph{section}.\arabic{table}}
 
-\section{Complete Code Repository}
+\section{Code Repository}
 
-The complete code for all experiments, including data preprocessing, model training, and evaluation, is available at: \url{https://github.com/parthmital/NeuroScan-AI}.
+The notebook that performs preprocessing, training, evaluation and figure generation, together with its outputs (the split of every case, per-run histories, per-case test metrics, plots and the exported VNet checkpoint), is available at \url{https://github.com/parthmital/NeuroScan-AI}, in the folder \texttt{Materials/Notebooks}.
 
-\section{Hyperparameter Details}
-\setcounter{table}{0}
+\section{Augmentation}
 
-Table~\ref{tab:seg-hyperparameters} presents the complete hyperparameter configuration for all models.
-
-\begin{table}[H]
+\begin{figure}[H]
 \centering
-\caption{Hyperparameter Configuration by Model}
-\label{tab:seg-hyperparameters}
-\scriptsize
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc@{}}
-\toprule
-Model & Learning Rate & Batch Size & Optimizer & Scheduler & Weight Decay & Momentum \\
-\midrule
-UNet & 0.01 & 4 & SGD & Polynomial & $3 \times 10^{-5}$ & 0.99 \\
-nnU-Net & 0.01 & 4 & SGD & Polynomial & $3 \times 10^{-5}$ & 0.99 \\
-VNet & 0.01 & 4 & SGD & Polynomial & $3 \times 10^{-5}$ & 0.99 \\
-UNETR & $1 \times 10^{-4}$ & 4 & AdamW & Cosine & $1 \times 10^{-5}$ & - \\
-Swin UNETR & $1 \times 10^{-4}$ & 2 & AdamW & Cosine & $1 \times 10^{-5}$ & - \\
-TransBTS & $1 \times 10^{-4}$ & 4 & AdamW & Cosine & $1 \times 10^{-5}$ & - \\
-\bottomrule
-\end{tabular*}
-\end{table}
+\includegraphics[width=0.92\textwidth]{segmentation/plots/03_augmentation.png}
+\caption{Training augmentation applied to one training case: random flips along each axis and per-channel intensity scale and shift.}
+\label{fig:augmentation}
+\end{figure}
+
 \FloatBarrier
-
-\section{Data Split Details}
-\setcounter{table}{0}
-
-Table~\ref{tab:seg-splits} presents the complete data split distribution.
-
-\begin{table}[H]
-\centering
-\caption{Train Validation Test Split Details}
-\label{tab:seg-splits}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccc@{}}
-\toprule
-Split & Cases & HGG & LGG \\
-\midrule
-Train & 257 & 205 & 52 \\
-Validation & 55 & 44 & 11 \\
-Test & 56 & 44 & 12 \\
-Total & 368 & 293 & 75 \\
-\bottomrule
-\end{tabular*}
-\end{table}
-\FloatBarrier
-
-\section{Detailed Training Logs}
-
-Complete training logs with per-epoch metrics for all models are available in the repository.
-
-\section{License Information}
-
-The BraTS 2020 Dataset is distributed under CC BY 4.0 License. All code is distributed under MIT License.
-
-Note: This research was conducted using Kaggle's free GPU resources. The authors thank Kaggle for providing the computational infrastructure that made this comprehensive comparison possible.
+This research was conducted using Kaggle's GPU resources.
 
 \end{document}

@@ -197,4 +197,4 @@ Found while writing this document; not fixed in this pass.
 
 - **Body size below 16px.** 13px and 12px text dominate dense views. Readable on desktop, but below the 16px body guideline for long reading on small screens.
 - **Metadata copy.** `Frontend/index.html` title, description and Open Graph text use promotional phrases ("Advanced", "cutting-edge", "Empowering physicians") that the in-app copy avoids. The app is `noindex`, so this only shows in tab titles and link previews.
-- **Visual verification.** No browser screenshots were taken for this document. The images in [`docs/screenshots/`](docs/screenshots/) show the current desktop UI; phone and tablet rendering was not checked in this pass.
+- **Visual verification.** No browser screenshots were taken for this document. The images in [`Materials/Screenshots/`](Materials/Screenshots/) show the current desktop UI; phone and tablet rendering was not checked in this pass.

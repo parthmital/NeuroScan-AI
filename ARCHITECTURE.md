@@ -2,13 +2,13 @@
 
 NeuroScan AI is one deployable web application (a FastAPI backend and a React single-page app) plus self-contained Kaggle research notebooks. This document says where code lives, which way dependencies may point, and when the design should change.
 
-| Document                              | Owns                                                    |
-| ------------------------------------- | ------------------------------------------------------- |
-| [README.md](README.md)                | Setup, configuration, API reference, troubleshooting    |
-| ARCHITECTURE.md                       | Module map, dependency rules, decisions, growth signals |
-| [DESIGN.md](DESIGN.md)                | Frontend design system and UI decisions                 |
-| [SECURITY.md](SECURITY.md)            | Threat model, controls, review results, residual risks  |
-| `Backend/<research folder>/README.md` | Notebook walkthroughs and results                       |
+| Document                        | Owns                                                    |
+| ------------------------------- | ------------------------------------------------------- |
+| [README.md](README.md)          | Setup, configuration, API reference, troubleshooting    |
+| ARCHITECTURE.md                 | Module map, dependency rules, decisions, growth signals |
+| [DESIGN.md](DESIGN.md)          | Frontend design system and UI decisions                 |
+| [SECURITY.md](SECURITY.md)      | Threat model, controls, review results, residual risks  |
+| `Materials/Notebooks/README.md` | Notebook walkthroughs and results                       |
 
 ## Module map
 
@@ -33,7 +33,7 @@ NeuroScan AI is one deployable web application (a FastAPI backend and a React si
 
 ### Research and materials
 
-`Backend/Binary Detection/`, `Backend/Classification/` and `Backend/Segmentation/` hold Kaggle notebooks and their saved outputs. The application never imports them; it only reads the deployed `.pth` files from these folders by default (paths are configurable). `Backend/Materials/` holds papers and decks and is not code.
+`Materials/` holds everything that is not the application: `Notebooks/` (the three Kaggle notebooks `binary-detection.ipynb`, `classification.ipynb` and `segmentation.ipynb`, each with its downloaded outputs in a folder of the same name), `Research Papers/` (two LaTeX projects), `Screenshots/`, and `build-latex.ps1`. The application never imports any of it; it only reads the three checkpoints the notebooks export to `Materials/Notebooks/<task>/weights/deploy/` by default (paths are configurable).
 
 ### Frontend (`Frontend/src/`)
 

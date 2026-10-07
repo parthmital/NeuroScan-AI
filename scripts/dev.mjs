@@ -32,17 +32,18 @@ const MIN_PYTHON = [3, 11];
 const MIN_NODE_MAJOR = 22;
 const SHUTDOWN_GRACE_MS = 5000;
 // Model weights cannot be fetched automatically (see README); warn instead of failing.
+// Default paths match Backend/neuroscan/config.py and are relative to Backend/.
 const WEIGHTS = {
 	DETECTION_WEIGHTS: [
-		"Binary Detection/EfficientNetB0.pth",
+		"../Materials/Notebooks/binary-detection/weights/deploy/EfficientNetB0.pth",
 		"uploads stay disabled",
 	],
 	CLASSIFICATION_WEIGHTS: [
-		"Classification/EfficientNetB0.pth",
+		"../Materials/Notebooks/classification/weights/deploy/EfficientNetB0.pth",
 		"uploads stay disabled",
 	],
 	SEGMENTATION_WEIGHTS: [
-		"Segmentation/VNet.pth",
+		"../Materials/Notebooks/segmentation/weights/deploy/VNet.pth",
 		"scans are processed without segmentation",
 	],
 };
@@ -200,9 +201,10 @@ function checkWeights() {
 	for (const [name, [defaultPath, effect]] of Object.entries(WEIGHTS)) {
 		const overridden =
 			process.env[name] || new RegExp(`^${name}=\\S`, "m").test(envText);
-		if (!overridden && !existsSync(path.join(BACKEND, defaultPath))) {
+		const weightsPath = path.join(BACKEND, defaultPath);
+		if (!overridden && !existsSync(weightsPath)) {
 			warn(
-				`Model weights missing: Backend/${defaultPath}; ${effect} until it exists.`,
+				`Model weights missing: ${path.relative(ROOT, weightsPath)}; ${effect} until it exists.`,
 			);
 		}
 	}

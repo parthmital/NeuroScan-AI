@@ -6,7 +6,7 @@ NeuroScan AI is a full-stack web application and research repository for brain t
 2. **Classification**: a second EfficientNet-B0 labels the tumour as glioma, meningioma or pituitary.
 3. **Segmentation**: a 3D VNet outlines the Whole Tumour (WT), Tumour Core (TC) and Enhancing Tumour (ET) when all four modalities (FLAIR, T1, T1CE, T2) are uploaded.
 
-The React frontend shows the results in a multi-planar viewer: linked axial, coronal and sagittal views with the segmentation overlay, plus a 3D volume rendering. The repository also holds the Kaggle notebooks that benchmarked 21 model runs across the three tasks, and the LaTeX sources of the related papers.
+The React frontend shows the results in a multi-planar viewer: linked axial, coronal and sagittal views with the segmentation overlay, plus a 3D volume rendering. The repository also holds, under [`Materials/`](Materials/), the three Kaggle notebooks that trained the deployed models while benchmarking nine 2D backbones for detection, the same nine for classification and six 3D segmentation networks, their downloaded outputs, and the LaTeX sources of the two related papers.
 
 No clinical validation is recorded in this repository. Treat every output as a research result, not a diagnosis.
 
@@ -16,31 +16,31 @@ No clinical validation is recorded in this repository. Treat every output as a r
 
 Linked axial, coronal and sagittal views with the WT/TC/ET segmentation overlay, a 3D rendering, display controls and measurements.
 
-![Scan viewer](docs/screenshots/scan-viewer.png)
+![Scan viewer](Materials/Screenshots/scan-viewer.png)
 
 ### Dashboard
 
 Scan counts, recent scans and the tumour volume chart.
 
-![Dashboard](docs/screenshots/dashboard.png)
+![Dashboard](Materials/Screenshots/dashboard.png)
 
 ### Upload scan
 
 Drag-and-drop upload of FLAIR, T1, T1CE and T2 NIfTI volumes.
 
-![Upload scan](docs/screenshots/upload-scan.png)
+![Upload scan](Materials/Screenshots/upload-scan.png)
 
 ### Scan library
 
 Search, edit and delete processed scans.
 
-![Scan library](docs/screenshots/scan-library.png)
+![Scan library](Materials/Screenshots/scan-library.png)
 
 ### Reports
 
 PDF and CSV reports for completed scans, with "Export All".
 
-![Reports](docs/screenshots/reports.png)
+![Reports](Materials/Screenshots/reports.png)
 
 ## Contents
 
@@ -77,15 +77,15 @@ These steps start the backend on `127.0.0.1:8000` and the frontend on `localhost
 
 ### Steps
 
-1. **Place the three model weight files.** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. Default paths (override with the variables in [Configuration](#configuration)):
+1. **Place the three model weight files.** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. Each research notebook exports its checkpoint to `weights/deploy/` in its outputs folder, and the backend reads them from there by default (override with the variables in [Configuration](#configuration)):
 
-   | File                                          | Size (bytes) | Used for         |
-   | --------------------------------------------- | ------------ | ---------------- |
-   | `Backend/Binary Detection/EfficientNetB0.pth` | 16,342,545   | Tumour detection |
-   | `Backend/Classification/EfficientNetB0.pth`   | 16,359,363   | Tumour type      |
-   | `Backend/Segmentation/VNet.pth`               | 5,617,589    | 3D segmentation  |
+   | File                                                                     | Size (notebook log) | Used for         |
+   | ------------------------------------------------------------------------ | ------------------- | ---------------- |
+   | `Materials/Notebooks/binary-detection/weights/deploy/EfficientNetB0.pth` | 16.3 MB             | Tumour detection |
+   | `Materials/Notebooks/classification/weights/deploy/EfficientNetB0.pth`   | 16.3 MB             | Tumour type      |
+   | `Materials/Notebooks/segmentation/weights/deploy/VNet.pth`               | 5.6 MB              | 3D segmentation  |
 
-   No download location is recorded in the repository. Obtain the files from the project maintainer. The backend loads them with `torch.load(weights_only=True)`, so a weights file cannot run code. Without them the app still starts: missing detection or classification weights disable uploads, and a missing segmentation file skips segmentation.
+   No download location is recorded in the repository. Run the notebook on Kaggle and copy its `weights/deploy/` folder, or obtain the files from the project maintainer. The backend loads them with `torch.load(weights_only=True)`, so a weights file cannot run code. Without them the app still starts: missing detection or classification weights disable uploads, and a missing segmentation file skips segmentation.
 
 2. **Set up and start everything.**
 
@@ -137,7 +137,7 @@ The worker ([`neuroscan/scans/pipeline.py`](Backend/neuroscan/scans/pipeline.py)
 7. **Segmentation** (only when all four modalities are present): z-scores each volume over non-zero voxels, resizes it to 128 x 128 x 128, runs VNet, thresholds each output channel at 0.5, and saves `segmentation.nii` resized back to the FLAIR volume's shape (label 1 = WT, 2 = TC, 3 = ET, later labels overwriting earlier ones). A segmentation failure is logged and leaves the volumes at `0.0`.
 8. Marks the scan `completed`. Any other failure marks it `failed` with a generic message; the details go only to the server log. Failed scans can be retried from the scan page.
 
-The refactored pipeline was checked against results the original code had stored for a BraTS 2020 case: detection, class, confidence, all three volumes, and the saved mask (voxel for voxel) are identical.
+The brain crop in step 5 is the same function the 2D notebooks train and evaluate with (`crop_to_brain`). The backend does not read the notebooks' `metadata.json`: it applies no temperature scaling, uses the fixed 0.5 detection threshold, and segments without the test-time augmentation, region hierarchy and enhancing-tumour size filter the segmentation notebook uses for its reported scores.
 
 The reported volumes (`wtVolume`, `tcVolume`, `etVolume`, `tumorVolume`) are the number of voxels above 0.5 in the 128^3 grid divided by 1,000. They are not scaled by the scan's voxel spacing, even though the frontend labels them as cubic centimetres.
 
@@ -194,7 +194,7 @@ Ranges from [`Frontend/package.json`](Frontend/package.json); exact versions are
 
 ### Research notebooks
 
-The notebooks run on Kaggle with 2x Tesla T4 GPUs. Binary Detection and Classification runs record Python 3.12.13, torch 2.10.0+cu128 and CUDA 12.8, and use torchvision, timm, scikit-learn, imagehash and TensorBoard. Segmentation notebooks use plain PyTorch, nibabel, SciPy and scikit-learn. The unified 2D notebooks additionally use OpenCV, scikit-image and SciPy. See each folder's README for details.
+The notebooks ran on Kaggle with 2x Tesla T4 GPUs, Python 3.13.15, PyTorch 2.11.0+cu128 and CUDA 12.8 (`metrics/run_summary.json`). The two 2D notebooks use torchvision 0.26.0, timm 1.0.29 (CoAtNet-0 only), imagehash, OpenCV, scikit-image, SciPy and scikit-learn; the segmentation notebook uses plain PyTorch, nibabel, SciPy and scikit-learn. [`Materials/Notebooks/README.md`](Materials/Notebooks/README.md) has the details.
 
 ## Repository structure
 
@@ -224,9 +224,14 @@ NeuroScan-AI/
 |   |   `-- cli.py            Operator commands: reset password, unlock, disable 2FA
 |   |-- tests/                pytest suite (no model weights needed)
 |   |-- pyproject.toml        ruff, mypy, pytest and import-linter configuration
-|   |-- requirements*.txt     Pinned runtime and development dependencies
-|   |-- Binary Detection/, Classification/, Segmentation/   Notebooks, outputs, deployed weights
-|   `-- Materials/            LaTeX papers, report, review decks and build-latex.ps1
+|   `-- requirements*.txt     Pinned runtime and development dependencies
+|-- Materials/                Everything that is not the application
+|   |-- Notebooks/            3 Kaggle notebooks, their downloaded outputs, README with all results
+|   |   |-- binary-detection.ipynb, classification.ipynb, segmentation.ipynb
+|   |   `-- <task>/           metrics/, plots/, logs/, predictions/, src/, weights/ (incl. deploy/)
+|   |-- Research Papers/      Two LaTeX paper projects (main.tex, highlights, graphical abstract)
+|   |-- Screenshots/          UI screenshots used in this README
+|   `-- build-latex.ps1       Compiles the papers with a local tectonic.exe
 `-- Frontend/
     |-- vite.config.ts        Port 8080, /api proxy, security headers for preview
     `-- src/
@@ -238,7 +243,7 @@ NeuroScan-AI/
         `-- test/             Vitest tests
 ```
 
-Runtime data (`Backend/neuroscan.db`, `Backend/uploads/`, `.env`) is Git-ignored.
+Runtime data (`Backend/neuroscan.db`, `Backend/uploads/`, `.env`) is Git-ignored, and so are model weights (`*.pth`), Kaggle's duplicate notebook copies (`__notebook__.ipynb`), text logs (`*.log`), `*.npy` files, `Materials/Input/` and `Materials/tectonic.exe`.
 
 ## Configuration
 
@@ -251,7 +256,7 @@ The backend reads settings from the environment and from a `.env` file found by 
 | `ENVIRONMENT`                                                          | No       | `production`                       | `development` enables `/docs`; `production` disables it and sends HSTS.                                     |
 | `DATABASE_URL`                                                         | No       | `sqlite:///<Backend>/neuroscan.db` | SQLAlchemy URL                                                                                              |
 | `UPLOAD_DIR`                                                           | No       | `<Backend>/uploads`                | Scan file storage; keep it outside any web-served folder                                                    |
-| `DETECTION_WEIGHTS` etc.                                               | No       | paths in the Quick start           | Relative paths resolve against `Backend/`                                                                   |
+| `DETECTION_WEIGHTS`, `CLASSIFICATION_WEIGHTS`, `SEGMENTATION_WEIGHTS`  | No       | paths in the Quick start           | Relative paths resolve against `Backend/`                                                                   |
 | `CORS_ORIGINS`                                                         | No       | empty (no CORS)                    | Only for a frontend on a different origin. `*` is refused because requests carry cookies.                   |
 | `COOKIE_SECURE`                                                        | No       | `true`                             | Browsers treat `localhost` as secure, so this works in development too                                      |
 | `ACCESS_TOKEN_EXPIRE_MINUTES`                                          | No       | `30`                               | Session lifetime                                                                                            |
@@ -391,32 +396,37 @@ curl.exe -b cookies.txt -H "X-Requested-With: NeuroScan" `
 
 ## Research notebooks and results
 
-Each research stage now has one unified Kaggle notebook that trains and evaluates every architecture of that stage with a shared pipeline: `binary-detection.ipynb`, `classification.ipynb` and `segmentation.ipynb`. They address the limitations stated in the papers (deduplication and group-aware splits for both 2D tasks, equal optimisation budgets, cross-validation with confidence intervals and significance tests, calibration, attention and shortcut audits for every model, native-resolution segmentation metrics, resumable longer training) and have **no saved outputs yet**. The results below come from the legacy per-model notebooks, which remain in Git history; each folder README documents them in full.
+Each research task has one Kaggle notebook that trains and evaluates every architecture of the task with the same code, split and optimisation budget, and exports the checkpoint the web app loads. All three were executed on Kaggle (2x Tesla T4) and their outputs are in `Materials/Notebooks/<task>/`. [`Materials/Notebooks/README.md`](Materials/Notebooks/README.md) walks through every cell group with all metrics and plots; the summary below comes from each `metrics/summary_table.csv` and `weights/deploy/metadata.json`.
 
-| Stage                                              | Folder                                                           | Notebooks                                                                                                                   | Best test result                                                                             | Deployed model  |
-| -------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------- |
-| Detection (tumour vs no tumour, 2D)                | [Backend/Binary Detection](Backend/Binary%20Detection/README.md) | Legacy runs: 9 (EfficientNetB0, DenseNet121, ResNet50, CoAtNet-0, InceptionV3, SwinBase, ViT-B16, MobileNetV3-Large, VGG16) | Accuracy 0.9939 on 488 images, shared by DenseNet121, ResNet50, EfficientNetB0 and CoAtNet-0 | EfficientNet-B0 |
-| Classification (glioma, meningioma, pituitary, 2D) | [Backend/Classification](Backend/Classification/README.md)       | Legacy runs: 6 (EfficientNetB0, ResNet50, InceptionV3, CoAtNet-0, SwinBase, ViT-B16)                                        | Accuracy 0.9858 on 706 images (SwinBase); EfficientNetB0 0.9759                              | EfficientNet-B0 |
-| Segmentation (WT, TC, ET, 3D BraTS 2020)           | [Backend/Segmentation](Backend/Segmentation/README.md)           | Legacy runs: 7 (UNet, nnU-Net style, VNet, VNet re-run with plots, UNETR, Swin-UNETR, TransBTS)                             | Mean Dice 0.7999 on 56 cases (3D UNet); VNet 0.7655                                          | VNet            |
+| Task                                           | Notebook                                                               | Protocol                                                                                                                                                  | Test result                                                                                                                                                                                                 | Deployed checkpoint                               |
+| ---------------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| Detection (tumour vs tumour-negative, 2D)      | [`binary-detection.ipynb`](Materials/Notebooks/binary-detection.ipynb) | 9 backbones x 5 folds; 3,253 images, 1,185 after perceptual-hash deduplication; group-aware split with 171 held-out test images                           | Fold-ensemble accuracy 0.9942 (95% CI 0.9825 to 1.0000) for CoAtNet-0, EfficientNetB0 and ViT-B/16; all Holm-corrected McNemar p = 1.0; only VGG16 and MobileNetV3-Large (0.9708) separable from the leader | EfficientNetB0, fold 4: fold test accuracy 0.9766 |
+| Classification (glioma, meningioma, pituitary) | [`classification.ipynb`](Materials/Notebooks/classification.ipynb)     | 9 backbones x 5 folds; 5,828 images, 4,730 after deduplication and label-noise exclusion; 45 held-out test images (1 glioma, 13 meningioma, 31 pituitary) | Six models 1.0000 (45 of 45), VGG16, EfficientNetB0 and MobileNetV3-Large 0.9778; no model separable from the leader                                                                                        | EfficientNetB0, fold 0: fold test accuracy 0.9778 |
+| Segmentation (WT, TC, ET, 3D BraTS 2020)       | [`segmentation.ipynb`](Materials/Notebooks/segmentation.ipynb)         | 6 networks, 50 epochs, one seed; 369 cases split 257/56/56 by grade; native-resolution metrics with 8-flip TTA                                            | Mean Dice UNet 0.8199, nnU-Net 0.8192, VNet 0.7965, Swin UNETR 0.7462, TransBTS 0.7291, UNETR 0.7056; CNN ensemble 0.8178                                                                                   | VNet, seed 42: test mean Dice 0.7965              |
 
 Points to keep in mind:
 
-- **The deployed `.pth` files are not traced to a notebook run.** The detection and classification weights have the same byte size as the EfficientNetB0 notebook outputs but different MD5 hashes, and no notebook writes `VNet.pth`. Their exact test scores are therefore not recorded. The folder READMEs give the details.
-- **Training and serving preprocessing differ.** The notebooks resize whole 2D JPG slices; the backend takes the middle slice of a NIfTI volume and crops the brain with an OpenCV contour before resizing. How this affects accuracy was not measured.
-- **The Swin-UNETR notebook has no test result** because its test cell failed.
+- **The classification test set cannot rank the models.** Grouping at Hamming distance 8 joined 1,431 images into one group, so only 45 images (one glioma) fell into the held-out test set and every model scores 44 or 45 of 45.
+- **Background-only shortcut tests are positive.** Models retrained on images with the head masked out still beat the majority-class rate (Holm-corrected) for 7 of 9 detection backbones (EfficientNetB0 0.7778 against 0.6257) and all 9 classification backbones (EfficientNetB0 0.8889 against 0.6889).
+- **The web app does not reproduce the notebook evaluation exactly.** The notebooks train and test on 2D JPEG slices from public datasets; the backend takes the middle axial slice of an uploaded NIfTI volume. The crop is identical, but the backend ignores the exported temperature and threshold and segments without TTA, region hierarchy or ET size filtering. Accuracy of the full web pipeline on NIfTI uploads is `Not measured in the current repository.`
 
 ## Papers and presentation materials
 
-[`Backend/Materials/`](Backend/Materials/) contains three LaTeX paper projects (each with `main.tex`, `highlights.tex`, `graphical_abstract.tex` and a `figures/` folder), a project report (`Report.md`, `Report.pdf`), review decks and templates.
+[`Materials/Research Papers/`](Materials/Research%20Papers/) contains two LaTeX paper projects in the Elsevier `elsarticle` format, both rewritten from the notebook outputs above:
 
-`build-latex.ps1` compiles `main.tex` (or every `.tex` file) in each project folder with a local `tectonic.exe`. The `.exe` is Git-ignored, so download [Tectonic](https://tectonic-typesetting.github.io/) and place `tectonic.exe` in `Backend/Materials/` first.
+| Folder                                                                                      | Paper                                                               | Files                                                                                                                              |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `Brain_Tumour_Detection_and_Classification_Revised/`                                        | Nine-backbone benchmark for 2D detection and subtype classification | `main.tex`, `supplementary.tex`, `highlights.tex`, `graphical_abstract.tex`, `main.pdf`, `supplementary.pdf`, `README_Overleaf.md` |
+| `A_Comprehensive_Benchmark_of_3D_Segmentation_Architectures_for_Brain_Tumour_Segmentation/` | Six-network 3D segmentation benchmark on BraTS 2020                 | `main.tex`, `highlights.tex`, `graphical_abstract.tex`, `README_Overleaf.md`                                                       |
+
+The papers include the notebook plots directly from `Materials/Notebooks/<task>/plots/` through `\graphicspath`, so they compile in place without copied figures. Each `README_Overleaf.md` says where to upload the plots for Overleaf and which output file each table comes from.
+
+`build-latex.ps1` compiles `main.tex` (or, when a folder has none, every `.tex` file) in each project folder with a local `tectonic.exe`. The `.exe` is Git-ignored, so download [Tectonic](https://tectonic-typesetting.github.io/) and place `tectonic.exe` in `Materials/` first.
 
 ```powershell
-.\Backend\Materials\build-latex.ps1              # all projects
-.\Backend\Materials\build-latex.ps1 -Project Revised   # folders whose name contains "Revised"
+.\Materials\build-latex.ps1                         # all projects
+.\Materials\build-latex.ps1 -Project Revised        # folders whose name contains "Revised"
 ```
-
-The paper texts were not reviewed for this README; their numbers may differ from the notebook outputs.
 
 ## Testing and code quality
 
@@ -449,11 +459,12 @@ From the repository root, `black .` and `npx prettier . --write` produce the sam
 | Every request returns `401` after login                                             | Browser blocked the `Secure` cookie on plain HTTP other than `localhost`                        | Use HTTPS, or `localhost` in development                                                        |
 | `403 Missing or invalid X-Requested-With header`                                    | A script called the API without the CSRF header                                                 | Send `X-Requested-With: NeuroScan` on `POST`, `PUT` and `DELETE`                                |
 | Locked out, or lost the authenticator                                               | Lockout after 5 failures, or 2FA device lost                                                    | Wait 15 minutes, or use the [account recovery](#account-recovery) commands                      |
-| `build-latex.ps1` says `tectonic.exe not found`                                     | The binary is Git-ignored                                                                       | Download Tectonic and place `tectonic.exe` in `Backend/Materials/`                              |
+| `build-latex.ps1` says `tectonic.exe not found`                                     | The binary is Git-ignored                                                                       | Download Tectonic and place `tectonic.exe` in `Materials/`                                      |
 
 ## Known limitations
 
-- **Detection and classification use a single 2D slice** (the middle slice of one modality), not the whole volume.
+- **Detection and classification use a single 2D slice** (the middle slice of one modality), not the whole volume. The models were trained on 2D JPEG slices of unknown MRI sequence, so their notebook scores do not transfer directly to this input.
+- **The notebook calibration and post-processing are not applied.** The exported temperature, detection threshold and ET size filter in each `metadata.json` are not read by the backend.
 - **Volumes are voxel counts at 128^3 divided by 1,000**, not physical volumes.
 - **DICOM is not supported**; convert to NIfTI first.
 - **One backend process.** The job queue and rate limiter are in memory and SQLite has one writer. See `ARCHITECTURE.md` for what to change before running several instances.
@@ -467,18 +478,18 @@ Keep `.env` out of Git (it is already ignored) and rotate `JWT_SECRET` and `DATA
 
 ## Project metrics
 
-| Metric                    | Value                                                                                                                          | Source                                                |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| API routes                | 23                                                                                                                             | `Backend/neuroscan/api/`                              |
-| Database tables           | 2 (`user`, `scan`), 2 migrations                                                                                               | `Backend/neuroscan/models.py`, `migrations/versions/` |
-| Frontend routes           | 9 including the 404 page                                                                                                       | `Frontend/src/App.tsx`                                |
-| Backend tests             | 61                                                                                                                             | `Backend/tests/`                                      |
-| Frontend tests            | 39                                                                                                                             | `Frontend/src/test/`                                  |
-| Research notebooks        | 4 (one unified notebook each for detection, classification and segmentation, plus the revision audit)                          | `Backend/*/*.ipynb`                                   |
-| Deployed model parameters | Detection and classification: EfficientNet-B0 (4,008,829 and 4,011,391 in the notebook versions); segmentation: VNet 1,398,761 | Notebook `model_profile.json` files                   |
-| Session lifetime          | 30 minutes by default                                                                                                          | `ACCESS_TOKEN_EXPIRE_MINUTES`                         |
-| Ports                     | 8000 (API, localhost only), 8080 (Vite dev)                                                                                    | `scripts/dev.mjs`, `vite.config.ts`                   |
-| Processing time per scan  | About 4 seconds for one four-modality BraTS 2020 case on the development machine (CPU, no CUDA), measured once end to end      | Local end-to-end run                                  |
+| Metric                    | Value                                                                                                                     | Source                                                  |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| API routes                | 23                                                                                                                        | `Backend/neuroscan/api/`                                |
+| Database tables           | 2 (`user`, `scan`), 2 migrations                                                                                          | `Backend/neuroscan/models.py`, `migrations/versions/`   |
+| Frontend routes           | 9 including the 404 page                                                                                                  | `Frontend/src/App.tsx`                                  |
+| Backend tests             | 61                                                                                                                        | `Backend/tests/`                                        |
+| Frontend tests            | 39                                                                                                                        | `Frontend/src/test/`                                    |
+| Research notebooks        | 3 (detection, classification, segmentation), each with executed outputs                                                   | `Materials/Notebooks/*.ipynb`                           |
+| Deployed model parameters | Detection and classification: EfficientNet-B0 (4,008,829 and 4,011,391); segmentation: VNet 1,398,761                     | `metrics/run_metrics.csv`, `metrics/model_profiles.csv` |
+| Session lifetime          | 30 minutes by default                                                                                                     | `ACCESS_TOKEN_EXPIRE_MINUTES`                           |
+| Ports                     | 8000 (API, localhost only), 8080 (Vite dev)                                                                               | `scripts/dev.mjs`, `vite.config.ts`                     |
+| Processing time per scan  | About 4 seconds for one four-modality BraTS 2020 case on the development machine (CPU, no CUDA), measured once end to end | Local end-to-end run                                    |
 
 ## Contributing
 

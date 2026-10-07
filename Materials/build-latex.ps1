@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-    Compiles LaTeX documents in Backend/Materials using the local tectonic.exe binary.
+    Compiles the LaTeX paper projects in Materials/Research Papers using the local tectonic.exe binary.
 
 .PARAMETER Project
-    Specific project folder name or wildcard (e.g., 'Revised', '3D', 'Comparative').
+    Part of a project folder name (e.g., 'Revised', 'Segmentation').
     Default: compiles all projects.
 #>
 
@@ -20,7 +20,8 @@ if (-not (Test-Path $TectonicExe)) {
     exit 1
 }
 
-$ProjectDirs = Get-ChildItem -Path $ScriptDir -Directory | Where-Object { $_.Name -like "*$Project*" }
+$PapersDir = Join-Path $ScriptDir "Research Papers"
+$ProjectDirs = @(Get-ChildItem -Path $PapersDir -Directory | Where-Object { $_.Name -like "*$Project*" })
 
 if ($ProjectDirs.Count -eq 0) {
     Write-Warning "No project directory matching '$Project' found."
