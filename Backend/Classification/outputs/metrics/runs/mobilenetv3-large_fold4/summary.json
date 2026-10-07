@@ -1,0 +1,22 @@
+{
+	"run_id": "mobilenetv3-large_fold4",
+	"model": "MobileNetV3-Large",
+	"family": "Efficient CNN",
+	"fold": 4,
+	"mode": "full",
+	"input_size": 224,
+	"parameters": 4205875,
+	"micro_batch": 64,
+	"accumulation": 1,
+	"effective_batch": 64,
+	"optimizer_steps": 780,
+	"epochs": 20,
+	"best_epoch": 20,
+	"best_val_loss": 0.27640241492095835,
+	"train_seconds": 165.93002120600067,
+	"train_images_per_second": 297.5953335092699,
+	"peak_train_memory_gb": 1.61050368,
+	"train_images": 2469,
+	"val_images": 2216,
+	"gpu": "Tesla T4"
+}

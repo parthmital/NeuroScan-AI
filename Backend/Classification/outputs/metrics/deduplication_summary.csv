@@ -1,0 +1,5 @@
+class_name,before,duplicates_removed,label_noise_excluded,after,removed_pct
+Glioma,2352,342,2,2008,14.63
+Meningioma,1645,329,2,1314,20.12
+Pituitary,1831,423,0,1408,23.1
+Total,5828,1094,4,4730,18.84

@@ -1,0 +1,104 @@
+{"time": 1791318735.8774545, "message": "[GPU 1] unetr_seed42: 257 train / 56 val cases, micro-batch 2 x 2 accumulation, 3250 steps over 50 epochs"}
+{"time": 1791318933.7844582, "message": "[GPU 1] unetr_seed42 epoch 1/50: train loss 1.6373 | val loss 1.5962 | val Dice WT 0.3490 TC 0.0725 ET 0.0264 mean 0.1493 | best"}
+{"time": 1791319131.296555, "message": "[GPU 1] unetr_seed42 epoch 2/50: train loss 1.5537 | val loss 1.5124 | val Dice WT 0.5999 TC 0.1471 ET 0.0731 mean 0.2734 | best"}
+{"time": 1791319328.63203, "message": "[GPU 1] unetr_seed42 epoch 3/50: train loss 1.4934 | val loss 1.4762 | val Dice WT 0.6009 TC 0.3679 ET 0.2319 mean 0.4003 | best"}
+{"time": 1791319523.8143182, "message": "[GPU 1] unetr_seed42 epoch 4/50: train loss 1.4566 | val loss 1.4378 | val Dice WT 0.6469 TC 0.4893 ET 0.4167 mean 0.5176 | best"}
+{"time": 1791319719.377734, "message": "[GPU 1] unetr_seed42 epoch 5/50: train loss 1.4199 | val loss 1.4013 | val Dice WT 0.6758 TC 0.5199 ET 0.4459 mean 0.5472 | best"}
+{"time": 1791319914.6941366, "message": "[GPU 1] unetr_seed42 epoch 6/50: train loss 1.3837 | val loss 1.3665 | val Dice WT 0.6855 TC 0.5325 ET 0.4620 mean 0.5600 | best"}
+{"time": 1791320110.3481035, "message": "[GPU 1] unetr_seed42 epoch 7/50: train loss 1.3503 | val loss 1.3347 | val Dice WT 0.7097 TC 0.5650 ET 0.4634 mean 0.5794 | best"}
+{"time": 1791320305.2211974, "message": "[GPU 1] unetr_seed42 epoch 8/50: train loss 1.3195 | val loss 1.3054 | val Dice WT 0.6959 TC 0.5732 ET 0.5078 mean 0.5923 | best"}
+{"time": 1791320502.5819454, "message": "[GPU 1] unetr_seed42 epoch 9/50: train loss 1.2909 | val loss 1.2776 | val Dice WT 0.7214 TC 0.5757 ET 0.4840 mean 0.5937 | best"}
+{"time": 1791320697.621144, "message": "[GPU 1] unetr_seed42 epoch 10/50: train loss 1.2636 | val loss 1.2504 | val Dice WT 0.7465 TC 0.6067 ET 0.5401 mean 0.6311 | best"}
+{"time": 1791320891.656248, "message": "[GPU 1] unetr_seed42 epoch 11/50: train loss 1.2366 | val loss 1.2241 | val Dice WT 0.7483 TC 0.5964 ET 0.5414 mean 0.6287"}
+{"time": 1791321085.1324937, "message": "[GPU 1] unetr_seed42 epoch 12/50: train loss 1.2116 | val loss 1.2003 | val Dice WT 0.7498 TC 0.5749 ET 0.5295 mean 0.6181"}
+{"time": 1791321279.8554544, "message": "[GPU 1] unetr_seed42 epoch 13/50: train loss 1.1887 | val loss 1.1793 | val Dice WT 0.7688 TC 0.5778 ET 0.5828 mean 0.6432 | best"}
+{"time": 1791321472.3207304, "message": "[GPU 1] unetr_seed42 epoch 14/50: train loss 1.1676 | val loss 1.1589 | val Dice WT 0.7465 TC 0.5715 ET 0.5064 mean 0.6081"}
+{"time": 1791321665.2360783, "message": "[GPU 1] unetr_seed42 epoch 15/50: train loss 1.1482 | val loss 1.1399 | val Dice WT 0.7754 TC 0.5911 ET 0.5286 mean 0.6317"}
+{"time": 1791321859.0681603, "message": "[GPU 1] unetr_seed42 epoch 16/50: train loss 1.1306 | val loss 1.1227 | val Dice WT 0.7885 TC 0.5924 ET 0.5702 mean 0.6504 | best"}
+{"time": 1791322052.3428166, "message": "[GPU 1] unetr_seed42 epoch 17/50: train loss 1.1128 | val loss 1.1057 | val Dice WT 0.7895 TC 0.5775 ET 0.5284 mean 0.6318"}
+{"time": 1791322244.7627187, "message": "[GPU 1] unetr_seed42 epoch 18/50: train loss 1.0960 | val loss 1.0917 | val Dice WT 0.7566 TC 0.5525 ET 0.5085 mean 0.6059"}
+{"time": 1791322437.778577, "message": "[GPU 1] unetr_seed42 epoch 19/50: train loss 1.0818 | val loss 1.0763 | val Dice WT 0.7996 TC 0.5613 ET 0.5517 mean 0.6375"}
+{"time": 1791322630.409046, "message": "[GPU 1] unetr_seed42 epoch 20/50: train loss 1.0670 | val loss 1.0623 | val Dice WT 0.7998 TC 0.5923 ET 0.5570 mean 0.6497"}
+{"time": 1791322822.6062562, "message": "[GPU 1] unetr_seed42 epoch 21/50: train loss 1.0529 | val loss 1.0496 | val Dice WT 0.7907 TC 0.5750 ET 0.5436 mean 0.6364"}
+{"time": 1791323014.7411582, "message": "[GPU 1] unetr_seed42 epoch 22/50: train loss 1.0408 | val loss 1.0383 | val Dice WT 0.7707 TC 0.5539 ET 0.5533 mean 0.6260"}
+{"time": 1791323207.204684, "message": "[GPU 1] unetr_seed42 epoch 23/50: train loss 1.0283 | val loss 1.0263 | val Dice WT 0.8057 TC 0.5709 ET 0.5643 mean 0.6470"}
+{"time": 1791323403.5500484, "message": "[GPU 1] unetr_seed42 epoch 24/50: train loss 1.0165 | val loss 1.0148 | val Dice WT 0.8104 TC 0.6079 ET 0.5856 mean 0.6680 | best"}
+{"time": 1791323596.5991735, "message": "[GPU 1] unetr_seed42 epoch 25/50: train loss 1.0058 | val loss 1.0044 | val Dice WT 0.8099 TC 0.6044 ET 0.5629 mean 0.6591"}
+{"time": 1791323789.232167, "message": "[GPU 1] unetr_seed42 epoch 26/50: train loss 0.9958 | val loss 0.9947 | val Dice WT 0.7965 TC 0.5856 ET 0.5536 mean 0.6452"}
+{"time": 1791323981.052708, "message": "[GPU 1] unetr_seed42 epoch 27/50: train loss 0.9858 | val loss 0.9866 | val Dice WT 0.7782 TC 0.5568 ET 0.5047 mean 0.6132"}
+{"time": 1791324172.631133, "message": "[GPU 1] unetr_seed42 epoch 28/50: train loss 0.9768 | val loss 0.9766 | val Dice WT 0.8082 TC 0.5926 ET 0.5534 mean 0.6514"}
+{"time": 1791324365.5238004, "message": "[GPU 1] unetr_seed42 epoch 29/50: train loss 0.9671 | val loss 0.9685 | val Dice WT 0.8086 TC 0.5751 ET 0.5432 mean 0.6423"}
+{"time": 1791324557.7754004, "message": "[GPU 1] unetr_seed42 epoch 30/50: train loss 0.9597 | val loss 0.9606 | val Dice WT 0.8128 TC 0.5733 ET 0.5507 mean 0.6456"}
+{"time": 1791324750.5022204, "message": "[GPU 1] unetr_seed42 epoch 31/50: train loss 0.9511 | val loss 0.9531 | val Dice WT 0.8159 TC 0.6067 ET 0.5673 mean 0.6633"}
+{"time": 1791324944.3124695, "message": "[GPU 1] unetr_seed42 epoch 32/50: train loss 0.9444 | val loss 0.9468 | val Dice WT 0.8304 TC 0.6118 ET 0.5588 mean 0.6670"}
+{"time": 1791325139.2835515, "message": "[GPU 1] unetr_seed42 epoch 33/50: train loss 0.9376 | val loss 0.9408 | val Dice WT 0.8404 TC 0.6383 ET 0.5815 mean 0.6867 | best"}
+{"time": 1791325334.3183708, "message": "[GPU 1] unetr_seed42 epoch 34/50: train loss 0.9313 | val loss 0.9354 | val Dice WT 0.8430 TC 0.6378 ET 0.5759 mean 0.6855"}
+{"time": 1791325527.9564154, "message": "[GPU 1] unetr_seed42 epoch 35/50: train loss 0.9256 | val loss 0.9303 | val Dice WT 0.8385 TC 0.6354 ET 0.5624 mean 0.6787"}
+{"time": 1791325721.2116573, "message": "[GPU 1] unetr_seed42 epoch 36/50: train loss 0.9206 | val loss 0.9257 | val Dice WT 0.8339 TC 0.6206 ET 0.5492 mean 0.6679"}
+{"time": 1791325914.7414172, "message": "[GPU 1] unetr_seed42 epoch 37/50: train loss 0.9159 | val loss 0.9218 | val Dice WT 0.8316 TC 0.6265 ET 0.5619 mean 0.6733"}
+{"time": 1791326109.0394034, "message": "[GPU 1] unetr_seed42 epoch 38/50: train loss 0.9116 | val loss 0.9185 | val Dice WT 0.8331 TC 0.6116 ET 0.5649 mean 0.6699"}
+{"time": 1791326304.225004, "message": "[GPU 1] unetr_seed42 epoch 39/50: train loss 0.9090 | val loss 0.9154 | val Dice WT 0.8498 TC 0.6583 ET 0.5800 mean 0.6960 | best"}
+{"time": 1791326497.589756, "message": "[GPU 1] unetr_seed42 epoch 40/50: train loss 0.9043 | val loss 0.9124 | val Dice WT 0.8413 TC 0.6301 ET 0.5598 mean 0.6770"}
+{"time": 1791326690.413908, "message": "[GPU 1] unetr_seed42 epoch 41/50: train loss 0.9028 | val loss 0.9105 | val Dice WT 0.8445 TC 0.6479 ET 0.5651 mean 0.6858"}
+{"time": 1791326884.4744911, "message": "[GPU 1] unetr_seed42 epoch 42/50: train loss 0.9003 | val loss 0.9082 | val Dice WT 0.8457 TC 0.6451 ET 0.5667 mean 0.6858"}
+{"time": 1791327079.6765919, "message": "[GPU 1] unetr_seed42 epoch 43/50: train loss 0.8980 | val loss 0.9069 | val Dice WT 0.8413 TC 0.6360 ET 0.5609 mean 0.6794"}
+{"time": 1791327273.698575, "message": "[GPU 1] unetr_seed42 epoch 44/50: train loss 0.8978 | val loss 0.9057 | val Dice WT 0.8422 TC 0.6444 ET 0.5678 mean 0.6848"}
+{"time": 1791327467.2364323, "message": "[GPU 1] unetr_seed42 epoch 45/50: train loss 0.8971 | val loss 0.9046 | val Dice WT 0.8447 TC 0.6441 ET 0.5658 mean 0.6849"}
+{"time": 1791327660.663188, "message": "[GPU 1] unetr_seed42 epoch 46/50: train loss 0.8958 | val loss 0.9043 | val Dice WT 0.8427 TC 0.6434 ET 0.5658 mean 0.6839"}
+{"time": 1791327853.8303626, "message": "[GPU 1] unetr_seed42 epoch 47/50: train loss 0.8952 | val loss 0.9038 | val Dice WT 0.8449 TC 0.6508 ET 0.5734 mean 0.6897"}
+{"time": 1791328047.8805697, "message": "[GPU 1] unetr_seed42 epoch 48/50: train loss 0.8924 | val loss 0.9036 | val Dice WT 0.8453 TC 0.6527 ET 0.5749 mean 0.6910"}
+{"time": 1791328241.5637422, "message": "[GPU 1] unetr_seed42 epoch 49/50: train loss 0.8931 | val loss 0.9034 | val Dice WT 0.8428 TC 0.6470 ET 0.5689 mean 0.6862"}
+{"time": 1791328435.4941545, "message": "[GPU 1] unetr_seed42 epoch 50/50: train loss 0.8944 | val loss 0.9030 | val Dice WT 0.8446 TC 0.6519 ET 0.5720 mean 0.6895"}
+{"time": 1791328675.1023684, "message": "[GPU 1] unetr_seed42 done: test mean Dice 0.7056, ET size threshold 800 voxels"}
+{"time": 1791328681.945751, "message": "[GPU 1] swin-unetr_seed42: 257 train / 56 val cases, micro-batch 1 x 4 accumulation, 3250 steps over 50 epochs"}
+{"time": 1791329092.471711, "message": "[GPU 1] swin-unetr_seed42 epoch 1/50: train loss 1.5831 | val loss 1.5411 | val Dice WT 0.1946 TC 0.2400 ET 0.1494 mean 0.1947 | best"}
+{"time": 1791329503.9784265, "message": "[GPU 1] swin-unetr_seed42 epoch 2/50: train loss 1.5054 | val loss 1.4543 | val Dice WT 0.4798 TC 0.3872 ET 0.2544 mean 0.3738 | best"}
+{"time": 1791329914.3707519, "message": "[GPU 1] swin-unetr_seed42 epoch 3/50: train loss 1.4290 | val loss 1.4099 | val Dice WT 0.6290 TC 0.4464 ET 0.3917 mean 0.4890 | best"}
+{"time": 1791330324.6633935, "message": "[GPU 1] swin-unetr_seed42 epoch 4/50: train loss 1.3910 | val loss 1.3753 | val Dice WT 0.6872 TC 0.5145 ET 0.4424 mean 0.5480 | best"}
+{"time": 1791330733.321318, "message": "[GPU 1] swin-unetr_seed42 epoch 5/50: train loss 1.3587 | val loss 1.3455 | val Dice WT 0.6808 TC 0.5477 ET 0.4621 mean 0.5635 | best"}
+{"time": 1791331143.2683556, "message": "[GPU 1] swin-unetr_seed42 epoch 6/50: train loss 1.3302 | val loss 1.3183 | val Dice WT 0.7174 TC 0.5525 ET 0.4649 mean 0.5783 | best"}
+{"time": 1791331552.604528, "message": "[GPU 1] swin-unetr_seed42 epoch 7/50: train loss 1.3036 | val loss 1.2923 | val Dice WT 0.7408 TC 0.5606 ET 0.4718 mean 0.5911 | best"}
+{"time": 1791331961.3200688, "message": "[GPU 1] swin-unetr_seed42 epoch 8/50: train loss 1.2775 | val loss 1.2670 | val Dice WT 0.7691 TC 0.6301 ET 0.5566 mean 0.6519 | best"}
+{"time": 1791332371.5112932, "message": "[GPU 1] swin-unetr_seed42 epoch 9/50: train loss 1.2535 | val loss 1.2434 | val Dice WT 0.7333 TC 0.5756 ET 0.5306 mean 0.6132"}
+{"time": 1791332780.7574444, "message": "[GPU 1] swin-unetr_seed42 epoch 10/50: train loss 1.2292 | val loss 1.2203 | val Dice WT 0.7878 TC 0.6140 ET 0.5640 mean 0.6553 | best"}
+{"time": 1791333188.8999734, "message": "[GPU 1] swin-unetr_seed42 epoch 11/50: train loss 1.2073 | val loss 1.1993 | val Dice WT 0.8043 TC 0.6048 ET 0.5624 mean 0.6571 | best"}
+{"time": 1791333597.0143743, "message": "[GPU 1] swin-unetr_seed42 epoch 12/50: train loss 1.1863 | val loss 1.1785 | val Dice WT 0.7865 TC 0.6171 ET 0.5435 mean 0.6490"}
+{"time": 1791334005.1916287, "message": "[GPU 1] swin-unetr_seed42 epoch 13/50: train loss 1.1673 | val loss 1.1602 | val Dice WT 0.7791 TC 0.5762 ET 0.5599 mean 0.6384"}
+{"time": 1791334414.0508933, "message": "[GPU 1] swin-unetr_seed42 epoch 14/50: train loss 1.1485 | val loss 1.1424 | val Dice WT 0.7938 TC 0.6636 ET 0.5588 mean 0.6721 | best"}
+{"time": 1791334822.1188068, "message": "[GPU 1] swin-unetr_seed42 epoch 15/50: train loss 1.1312 | val loss 1.1259 | val Dice WT 0.7880 TC 0.5977 ET 0.5362 mean 0.6406"}
+{"time": 1791335229.7681863, "message": "[GPU 1] swin-unetr_seed42 epoch 16/50: train loss 1.1148 | val loss 1.1104 | val Dice WT 0.8093 TC 0.6747 ET 0.5776 mean 0.6872 | best"}
+{"time": 1791335637.7334762, "message": "[GPU 1] swin-unetr_seed42 epoch 17/50: train loss 1.0997 | val loss 1.0960 | val Dice WT 0.7992 TC 0.6418 ET 0.5367 mean 0.6592"}
+{"time": 1791336046.4763644, "message": "[GPU 1] swin-unetr_seed42 epoch 18/50: train loss 1.0854 | val loss 1.0826 | val Dice WT 0.7798 TC 0.5424 ET 0.4951 mean 0.6058"}
+{"time": 1791336454.9043612, "message": "[GPU 1] swin-unetr_seed42 epoch 19/50: train loss 1.0715 | val loss 1.0686 | val Dice WT 0.8026 TC 0.6191 ET 0.5452 mean 0.6556"}
+{"time": 1791336862.954429, "message": "[GPU 1] swin-unetr_seed42 epoch 20/50: train loss 1.0587 | val loss 1.0569 | val Dice WT 0.8409 TC 0.6888 ET 0.5772 mean 0.7023 | best"}
+{"time": 1791337269.829805, "message": "[GPU 1] swin-unetr_seed42 epoch 21/50: train loss 1.0462 | val loss 1.0444 | val Dice WT 0.8324 TC 0.6697 ET 0.5639 mean 0.6887"}
+{"time": 1791337678.1383693, "message": "[GPU 1] swin-unetr_seed42 epoch 22/50: train loss 1.0345 | val loss 1.0331 | val Dice WT 0.8157 TC 0.6664 ET 0.5738 mean 0.6853"}
+{"time": 1791338086.4741848, "message": "[GPU 1] swin-unetr_seed42 epoch 23/50: train loss 1.0240 | val loss 1.0235 | val Dice WT 0.7786 TC 0.6658 ET 0.5763 mean 0.6736"}
+{"time": 1791338493.628475, "message": "[GPU 1] swin-unetr_seed42 epoch 24/50: train loss 1.0146 | val loss 1.0137 | val Dice WT 0.8035 TC 0.6579 ET 0.5879 mean 0.6831"}
+{"time": 1791338900.7416074, "message": "[GPU 1] swin-unetr_seed42 epoch 25/50: train loss 1.0036 | val loss 1.0038 | val Dice WT 0.8223 TC 0.6531 ET 0.5721 mean 0.6825"}
+{"time": 1791339307.6714635, "message": "[GPU 1] swin-unetr_seed42 epoch 26/50: train loss 0.9944 | val loss 0.9946 | val Dice WT 0.8246 TC 0.6533 ET 0.5663 mean 0.6814"}
+{"time": 1791339714.6892793, "message": "[GPU 1] swin-unetr_seed42 epoch 27/50: train loss 0.9849 | val loss 0.9859 | val Dice WT 0.8256 TC 0.6665 ET 0.5777 mean 0.6899"}
+{"time": 1791340121.1120844, "message": "[GPU 1] swin-unetr_seed42 epoch 28/50: train loss 0.9765 | val loss 0.9784 | val Dice WT 0.8301 TC 0.6887 ET 0.5806 mean 0.6998"}
+{"time": 1791340528.879292, "message": "[GPU 1] swin-unetr_seed42 epoch 29/50: train loss 0.9689 | val loss 0.9707 | val Dice WT 0.8141 TC 0.6180 ET 0.5468 mean 0.6596"}
+{"time": 1791340937.0534892, "message": "[GPU 1] swin-unetr_seed42 epoch 30/50: train loss 0.9612 | val loss 0.9636 | val Dice WT 0.8265 TC 0.6681 ET 0.5900 mean 0.6949"}
+{"time": 1791341344.1453347, "message": "[GPU 1] swin-unetr_seed42 epoch 31/50: train loss 0.9542 | val loss 0.9570 | val Dice WT 0.8115 TC 0.6990 ET 0.5925 mean 0.7010"}
+{"time": 1791341753.2738056, "message": "[GPU 1] swin-unetr_seed42 epoch 32/50: train loss 0.9478 | val loss 0.9514 | val Dice WT 0.8174 TC 0.6611 ET 0.5766 mean 0.6850"}
+{"time": 1791342161.1225955, "message": "[GPU 1] swin-unetr_seed42 epoch 33/50: train loss 0.9415 | val loss 0.9466 | val Dice WT 0.8443 TC 0.7116 ET 0.6147 mean 0.7235 | best"}
+{"time": 1791342569.5453632, "message": "[GPU 1] swin-unetr_seed42 epoch 34/50: train loss 0.9361 | val loss 0.9409 | val Dice WT 0.8464 TC 0.6945 ET 0.5991 mean 0.7134"}
+{"time": 1791342978.9214015, "message": "[GPU 1] swin-unetr_seed42 epoch 35/50: train loss 0.9309 | val loss 0.9365 | val Dice WT 0.8255 TC 0.7061 ET 0.6025 mean 0.7114"}
+{"time": 1791343387.5443714, "message": "[GPU 1] swin-unetr_seed42 epoch 36/50: train loss 0.9265 | val loss 0.9322 | val Dice WT 0.8392 TC 0.6977 ET 0.5874 mean 0.7081"}
+{"time": 1791343796.3916373, "message": "[GPU 1] swin-unetr_seed42 epoch 37/50: train loss 0.9223 | val loss 0.9278 | val Dice WT 0.8262 TC 0.6917 ET 0.5798 mean 0.6992"}
+{"time": 1791344205.1391685, "message": "[GPU 1] swin-unetr_seed42 epoch 38/50: train loss 0.9185 | val loss 0.9254 | val Dice WT 0.8316 TC 0.6897 ET 0.5871 mean 0.7028"}
+{"time": 1791344613.0986416, "message": "[GPU 1] swin-unetr_seed42 epoch 39/50: train loss 0.9156 | val loss 0.9228 | val Dice WT 0.8529 TC 0.7105 ET 0.6004 mean 0.7213"}
+{"time": 1791345022.5048542, "message": "[GPU 1] swin-unetr_seed42 epoch 40/50: train loss 0.9126 | val loss 0.9194 | val Dice WT 0.8279 TC 0.6858 ET 0.5734 mean 0.6957"}
+{"time": 1791345431.1939843, "message": "[GPU 1] swin-unetr_seed42 epoch 41/50: train loss 0.9102 | val loss 0.9179 | val Dice WT 0.8323 TC 0.7013 ET 0.5829 mean 0.7055"}
+{"time": 1791345840.2388144, "message": "[GPU 1] swin-unetr_seed42 epoch 42/50: train loss 0.9083 | val loss 0.9166 | val Dice WT 0.8414 TC 0.7139 ET 0.6017 mean 0.7190"}
+{"time": 1791346249.8699744, "message": "[GPU 1] swin-unetr_seed42 epoch 43/50: train loss 0.9067 | val loss 0.9149 | val Dice WT 0.8375 TC 0.6997 ET 0.5884 mean 0.7085"}
+{"time": 1791346658.7414474, "message": "[GPU 1] swin-unetr_seed42 epoch 44/50: train loss 0.9053 | val loss 0.9135 | val Dice WT 0.8314 TC 0.6979 ET 0.5852 mean 0.7048"}
+{"time": 1791347067.5260441, "message": "[GPU 1] swin-unetr_seed42 epoch 45/50: train loss 0.9043 | val loss 0.9129 | val Dice WT 0.8408 TC 0.7084 ET 0.5951 mean 0.7148"}
+{"time": 1791347476.608963, "message": "[GPU 1] swin-unetr_seed42 epoch 46/50: train loss 0.9036 | val loss 0.9122 | val Dice WT 0.8378 TC 0.7070 ET 0.5922 mean 0.7124"}
+{"time": 1791347885.2576485, "message": "[GPU 1] swin-unetr_seed42 epoch 47/50: train loss 0.9029 | val loss 0.9117 | val Dice WT 0.8379 TC 0.7044 ET 0.5912 mean 0.7112"}
+{"time": 1791348294.2319992, "message": "[GPU 1] swin-unetr_seed42 epoch 48/50: train loss 0.9026 | val loss 0.9114 | val Dice WT 0.8367 TC 0.7037 ET 0.5908 mean 0.7104"}
+{"time": 1791348702.5817208, "message": "[GPU 1] swin-unetr_seed42 epoch 49/50: train loss 0.9021 | val loss 0.9114 | val Dice WT 0.8386 TC 0.7065 ET 0.5932 mean 0.7128"}
+{"time": 1791349111.2787993, "message": "[GPU 1] swin-unetr_seed42 epoch 50/50: train loss 0.9020 | val loss 0.9111 | val Dice WT 0.8372 TC 0.7061 ET 0.5920 mean 0.7118"}
+{"time": 1791349608.4116588, "message": "[GPU 1] swin-unetr_seed42 done: test mean Dice 0.7462, ET size threshold 0 voxels"}

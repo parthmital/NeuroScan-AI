@@ -1,0 +1,4 @@
+criterion,test images with a development neighbour
+Hamming <= 5,0
+Hamming <= 8,0
+NCC >= 0.98,0

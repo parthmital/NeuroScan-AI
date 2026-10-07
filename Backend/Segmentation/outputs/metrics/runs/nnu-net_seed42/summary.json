@@ -1,0 +1,32 @@
+{
+	"run_id": "nnu-net_seed42",
+	"model": "nnU-Net",
+	"family": "CNN",
+	"seed": 42,
+	"parameters": 16548108,
+	"micro_batch": 2,
+	"accumulation": 2,
+	"optimizer_steps": 3250,
+	"epochs_run": 50,
+	"best_epoch": 50,
+	"best_val_dice": 0.7823911123869857,
+	"et_min_voxels": 200,
+	"et_tuning": {
+		"0": 0.7409768666587312,
+		"50": 0.7382982952301598,
+		"100": 0.7382982952301598,
+		"200": 0.7561554380873027,
+		"300": 0.7561554380873027,
+		"500": 0.7561554380873027,
+		"800": 0.7561554380873027
+	},
+	"train_seconds": 4861.3592662330075,
+	"peak_train_memory_gb": 5.218068992,
+	"peak_inference_memory_gb": 1.647855616,
+	"latency_s": 0.11123443830028919,
+	"latency_s_sd": 0.0017144365698965802,
+	"latency_tta_s": 0.8962618270002167,
+	"latency_tta_s_sd": 0.0021443784887234677,
+	"test_dice_mean": 0.8191858114735684,
+	"gpu": "Tesla T4"
+}

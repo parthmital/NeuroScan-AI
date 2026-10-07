@@ -1,0 +1,31 @@
+model,class,method,mean,sd,uniform_map
+ResNet50,Glioma,Grad-CAM,0.0979,0.0,0.2129
+ResNet50,Meningioma,Grad-CAM,0.0561,0.0738,0.2679
+ResNet50,Pituitary,Grad-CAM,0.1058,0.2021,0.2671
+VGG16,Glioma,Grad-CAM,0.0258,0.0,0.2129
+VGG16,Meningioma,Grad-CAM,0.1212,0.0655,0.2679
+VGG16,Pituitary,Grad-CAM,0.1148,0.163,0.2671
+DenseNet121,Glioma,Grad-CAM,0.1081,0.0,0.2129
+DenseNet121,Meningioma,Grad-CAM,0.1481,0.0416,0.2679
+DenseNet121,Pituitary,Grad-CAM,0.1495,0.1525,0.2671
+EfficientNetB0,Glioma,Grad-CAM,0.033,0.0,0.2129
+EfficientNetB0,Meningioma,Grad-CAM,0.0673,0.0417,0.2679
+EfficientNetB0,Pituitary,Grad-CAM,0.0905,0.1564,0.2671
+MobileNetV3-Large,Glioma,Grad-CAM,0.0381,0.0,0.2129
+MobileNetV3-Large,Meningioma,Grad-CAM,0.0576,0.0556,0.2679
+MobileNetV3-Large,Pituitary,Grad-CAM,0.1343,0.1356,0.2671
+InceptionV3,Glioma,Grad-CAM,0.1018,0.0,0.2129
+InceptionV3,Meningioma,Grad-CAM,0.1356,0.0615,0.2679
+InceptionV3,Pituitary,Grad-CAM,0.1292,0.1776,0.2671
+ViT-B/16,Glioma,Grad-CAM,0.3262,0.0,0.2129
+ViT-B/16,Glioma,Attention rollout,0.2624,0.0,0.2129
+ViT-B/16,Meningioma,Grad-CAM,0.0773,0.0454,0.2679
+ViT-B/16,Meningioma,Attention rollout,0.3501,0.0469,0.2679
+ViT-B/16,Pituitary,Grad-CAM,0.2184,0.2285,0.2671
+ViT-B/16,Pituitary,Attention rollout,0.3579,0.1205,0.2671
+Swin-Base,Glioma,Grad-CAM,0.0793,0.0,0.2129
+Swin-Base,Meningioma,Grad-CAM,0.1234,0.0456,0.2679
+Swin-Base,Pituitary,Grad-CAM,0.103,0.1583,0.2671
+CoAtNet-0,Glioma,Grad-CAM,0.4172,0.0,0.2129
+CoAtNet-0,Meningioma,Grad-CAM,0.152,0.0636,0.2679
+CoAtNet-0,Pituitary,Grad-CAM,0.1223,0.1837,0.2671

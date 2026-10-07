@@ -1,0 +1,7 @@
+model,family,parameters_m,gflops_per_volume,optimizer,lr,weight_decay,warmup_epochs,micro_batch,checkpointing,ds_weights
+UNet,CNN,5.604361,907.035017216,sgd,0.01,3e-05,0,2,False,"(1.0, 0.5, 0.25)"
+nnU-Net,CNN,16.548108,956.295020544,sgd,0.01,3e-05,0,2,False,"(1.0, 0.5, 0.25, 0.125)"
+VNet,CNN,1.398761,149.917007872,sgd,0.01,3e-05,0,2,False,"(1.0, 0.5, 0.25)"
+UNETR,Transformer,137.596579,1761.741897728,adamw,0.0001,1e-05,3,2,True,"(1.0,)"
+Swin UNETR,Transformer,10.520901,797.069960448,adamw,0.0001,1e-05,3,1,True,"(1.0,)"
+TransBTS,Hybrid,35.805449,996.155588608,adamw,0.0001,1e-05,3,2,False,"(1.0, 0.5, 0.25)"

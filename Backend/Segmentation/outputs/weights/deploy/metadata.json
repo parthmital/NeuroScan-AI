@@ -1,0 +1,9 @@
+{
+	"architecture": "VNet3D (Backend/neuroscan/inference/networks.py)",
+	"input": "FLAIR, T1, T1CE, T2; foreground z-score; trilinear resample to 128^3",
+	"output": "WT, TC, ET logits (first element of the output tuple)",
+	"run_id": "vnet_seed42",
+	"best_val_dice": 0.7598035474445833,
+	"test_dice_mean": 0.796479458488382,
+	"et_min_voxels_native": 200
+}

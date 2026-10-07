@@ -1,0 +1,39 @@
+{
+	"cases": 369,
+	"split": {
+		"train": 257,
+		"val": 56,
+		"test": 56
+	},
+	"epochs": 50,
+	"seeds": [42],
+	"tta": true,
+	"deterministic": false,
+	"finished_runs": [
+		"nnu-net_seed42",
+		"swin-unetr_seed42",
+		"transbts_seed42",
+		"unet_seed42",
+		"unetr_seed42",
+		"vnet_seed42"
+	],
+	"pending_runs": [],
+	"best_model": "UNet",
+	"ensembles": {
+		"All models": 0.7991,
+		"CNN models": 0.8178
+	},
+	"training_wall_minutes": 515.0124568012167,
+	"notebook_minutes": 521.7155808965365,
+	"environment": {
+		"python": "3.13.15",
+		"torch": "2.11.0+cu128",
+		"cuda": "12.8",
+		"gpus": ["Tesla T4", "Tesla T4"]
+	},
+	"limitations": [
+		"single dataset (BraTS 2020 training cases); no external multi-centre test set with public labels",
+		"no large-scale pretraining of the transformer encoders",
+		"one input resolution per run (128^3, whole volume resampled)"
+	]
+}

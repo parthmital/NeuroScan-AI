@@ -1,0 +1,616 @@
+{"time": 1791317144.608215, "message": "[GPU 1] vgg16_fold1: 3943 train / 742 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1240 steps"}
+{"time": 1791317184.8815362, "message": "[GPU 1] vgg16_fold1 epoch 1/20: train loss 0.5998 acc 0.7390 | val loss 0.3353 acc 0.8720 AUC 0.9666 | best"}
+{"time": 1791317210.7252147, "message": "[GPU 1] vgg16_fold1 epoch 2/20: train loss 0.3113 acc 0.8935 | val loss 0.3372 acc 0.8720 AUC 0.9748"}
+{"time": 1791317238.7163684, "message": "[GPU 1] vgg16_fold1 epoch 3/20: train loss 0.2390 acc 0.9216 | val loss 0.3016 acc 0.9043 AUC 0.9811 | best"}
+{"time": 1791317268.1428099, "message": "[GPU 1] vgg16_fold1 epoch 4/20: train loss 0.1924 acc 0.9434 | val loss 0.2335 acc 0.9205 AUC 0.9853 | best"}
+{"time": 1791317297.2829978, "message": "[GPU 1] vgg16_fold1 epoch 5/20: train loss 0.1362 acc 0.9584 | val loss 0.2985 acc 0.9474 AUC 0.9887"}
+{"time": 1791317325.2243166, "message": "[GPU 1] vgg16_fold1 epoch 6/20: train loss 0.1331 acc 0.9571 | val loss 0.5930 acc 0.8854 AUC 0.9764"}
+{"time": 1791317354.453006, "message": "[GPU 1] vgg16_fold1 epoch 7/20: train loss 0.1090 acc 0.9688 | val loss 0.2297 acc 0.9367 AUC 0.9911 | best"}
+{"time": 1791317382.694771, "message": "[GPU 1] vgg16_fold1 epoch 8/20: train loss 0.0929 acc 0.9701 | val loss 0.5085 acc 0.8908 AUC 0.9886"}
+{"time": 1791317410.724052, "message": "[GPU 1] vgg16_fold1 epoch 9/20: train loss 0.0699 acc 0.9772 | val loss 0.2581 acc 0.9353 AUC 0.9912"}
+{"time": 1791317438.7555792, "message": "[GPU 1] vgg16_fold1 epoch 10/20: train loss 0.0432 acc 0.9863 | val loss 0.2653 acc 0.9447 AUC 0.9934"}
+{"time": 1791317466.508192, "message": "[GPU 1] vgg16_fold1 epoch 11/20: train loss 0.0274 acc 0.9929 | val loss 0.3428 acc 0.9542 AUC 0.9922"}
+{"time": 1791317494.3126361, "message": "[GPU 1] vgg16_fold1 epoch 12/20: train loss 0.0393 acc 0.9899 | val loss 0.3009 acc 0.9488 AUC 0.9931"}
+{"time": 1791317522.0203915, "message": "[GPU 1] vgg16_fold1 epoch 13/20: train loss 0.0159 acc 0.9944 | val loss 0.3791 acc 0.9367 AUC 0.9923"}
+{"time": 1791317549.7387168, "message": "[GPU 1] vgg16_fold1 epoch 14/20: train loss 0.0080 acc 0.9975 | val loss 0.3545 acc 0.9488 AUC 0.9928"}
+{"time": 1791317577.3591835, "message": "[GPU 1] vgg16_fold1 epoch 15/20: train loss 0.0010 acc 0.9995 | val loss 0.4505 acc 0.9488 AUC 0.9930"}
+{"time": 1791317604.904252, "message": "[GPU 1] vgg16_fold1 epoch 16/20: train loss 0.0006 acc 1.0000 | val loss 0.4507 acc 0.9447 AUC 0.9940"}
+{"time": 1791317632.4121802, "message": "[GPU 1] vgg16_fold1 epoch 17/20: train loss 0.0003 acc 0.9997 | val loss 0.4200 acc 0.9501 AUC 0.9942"}
+{"time": 1791317659.92658, "message": "[GPU 1] vgg16_fold1 epoch 18/20: train loss 0.0011 acc 0.9997 | val loss 0.3706 acc 0.9582 AUC 0.9948"}
+{"time": 1791317687.4533093, "message": "[GPU 1] vgg16_fold1 epoch 19/20: train loss 0.0009 acc 0.9997 | val loss 0.3695 acc 0.9582 AUC 0.9949"}
+{"time": 1791317715.0159857, "message": "[GPU 1] vgg16_fold1 epoch 20/20: train loss 0.0012 acc 0.9997 | val loss 0.3679 acc 0.9582 AUC 0.9949"}
+{"time": 1791317718.8699484, "message": "[GPU 1] vgg16_fold1 done in 9.5 min, best epoch 7"}
+{"time": 1791317722.791737, "message": "[GPU 1] vgg16_fold2: 3988 train / 697 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1260 steps"}
+{"time": 1791317760.9686313, "message": "[GPU 1] vgg16_fold2 epoch 1/20: train loss 0.5724 acc 0.7565 | val loss 1.2393 acc 0.7331 AUC 0.9020 | best"}
+{"time": 1791317791.195823, "message": "[GPU 1] vgg16_fold2 epoch 2/20: train loss 0.3490 acc 0.8854 | val loss 0.3059 acc 0.9024 AUC 0.9813 | best"}
+{"time": 1791317819.9692764, "message": "[GPU 1] vgg16_fold2 epoch 3/20: train loss 0.2119 acc 0.9295 | val loss 1.3977 acc 0.7805 AUC 0.9612"}
+{"time": 1791317848.5652277, "message": "[GPU 1] vgg16_fold2 epoch 4/20: train loss 0.2139 acc 0.9353 | val loss 0.3384 acc 0.8953 AUC 0.9829"}
+{"time": 1791317877.110602, "message": "[GPU 1] vgg16_fold2 epoch 5/20: train loss 0.1523 acc 0.9511 | val loss 0.3579 acc 0.8824 AUC 0.9820"}
+{"time": 1791317905.3834033, "message": "[GPU 1] vgg16_fold2 epoch 6/20: train loss 0.1316 acc 0.9586 | val loss 0.3947 acc 0.9240 AUC 0.9841"}
+{"time": 1791317933.6150734, "message": "[GPU 1] vgg16_fold2 epoch 7/20: train loss 0.1067 acc 0.9684 | val loss 0.8443 acc 0.9096 AUC 0.9779"}
+{"time": 1791317961.8807938, "message": "[GPU 1] vgg16_fold2 epoch 8/20: train loss 0.1075 acc 0.9679 | val loss 0.4602 acc 0.9211 AUC 0.9828"}
+{"time": 1791317990.088192, "message": "[GPU 1] vgg16_fold2 epoch 9/20: train loss 0.0588 acc 0.9862 | val loss 0.6736 acc 0.9268 AUC 0.9809"}
+{"time": 1791318018.0997918, "message": "[GPU 1] vgg16_fold2 epoch 10/20: train loss 0.0295 acc 0.9910 | val loss 0.8059 acc 0.9297 AUC 0.9832"}
+{"time": 1791318046.16611, "message": "[GPU 1] vgg16_fold2 epoch 11/20: train loss 0.0376 acc 0.9882 | val loss 0.3497 acc 0.9484 AUC 0.9911"}
+{"time": 1791318074.1233578, "message": "[GPU 1] vgg16_fold2 epoch 12/20: train loss 0.0256 acc 0.9925 | val loss 0.4612 acc 0.9412 AUC 0.9899"}
+{"time": 1791318101.9834936, "message": "[GPU 1] vgg16_fold2 epoch 13/20: train loss 0.0148 acc 0.9952 | val loss 0.5414 acc 0.9326 AUC 0.9896"}
+{"time": 1791318129.8149154, "message": "[GPU 1] vgg16_fold2 epoch 14/20: train loss 0.0025 acc 0.9992 | val loss 0.5581 acc 0.9397 AUC 0.9912"}
+{"time": 1791318157.611292, "message": "[GPU 1] vgg16_fold2 epoch 15/20: train loss 0.0029 acc 0.9987 | val loss 0.7061 acc 0.9369 AUC 0.9893"}
+{"time": 1791318185.370852, "message": "[GPU 1] vgg16_fold2 epoch 16/20: train loss 0.0049 acc 0.9992 | val loss 0.6613 acc 0.9354 AUC 0.9898"}
+{"time": 1791318213.1129687, "message": "[GPU 1] vgg16_fold2 epoch 17/20: train loss 0.0019 acc 0.9995 | val loss 0.7525 acc 0.9369 AUC 0.9889"}
+{"time": 1791318240.8537247, "message": "[GPU 1] vgg16_fold2 epoch 18/20: train loss 0.0004 acc 1.0000 | val loss 0.8389 acc 0.9397 AUC 0.9877"}
+{"time": 1791318268.611698, "message": "[GPU 1] vgg16_fold2 epoch 19/20: train loss 0.0003 acc 1.0000 | val loss 0.8473 acc 0.9397 AUC 0.9877"}
+{"time": 1791318296.3784976, "message": "[GPU 1] vgg16_fold2 epoch 20/20: train loss 0.0005 acc 0.9997 | val loss 0.8382 acc 0.9397 AUC 0.9878"}
+{"time": 1791318298.8988736, "message": "[GPU 1] vgg16_fold2 done in 9.6 min, best epoch 2"}
+{"time": 1791318303.6581256, "message": "[GPU 1] vgg16_fold4: 2469 train / 2216 val / 45 test, micro-batch 64 x 1 accumulation = 64, 780 steps"}
+{"time": 1791318337.316531, "message": "[GPU 1] vgg16_fold4 epoch 1/20: train loss 0.7297 acc 0.6906 | val loss 0.4009 acc 0.8461 AUC 0.9576 | best"}
+{"time": 1791318360.0266418, "message": "[GPU 1] vgg16_fold4 epoch 2/20: train loss 0.4538 acc 0.8493 | val loss 0.4336 acc 0.8786 AUC 0.9705"}
+{"time": 1791318383.3715158, "message": "[GPU 1] vgg16_fold4 epoch 3/20: train loss 0.2720 acc 0.9072 | val loss 0.3418 acc 0.8845 AUC 0.9840 | best"}
+{"time": 1791318406.5178394, "message": "[GPU 1] vgg16_fold4 epoch 4/20: train loss 0.2408 acc 0.9226 | val loss 0.2817 acc 0.9057 AUC 0.9857 | best"}
+{"time": 1791318429.6840909, "message": "[GPU 1] vgg16_fold4 epoch 5/20: train loss 0.1914 acc 0.9352 | val loss 0.2536 acc 0.9079 AUC 0.9889 | best"}
+{"time": 1791318452.7260733, "message": "[GPU 1] vgg16_fold4 epoch 6/20: train loss 0.1454 acc 0.9559 | val loss 0.1931 acc 0.9436 AUC 0.9928 | best"}
+{"time": 1791318474.8078542, "message": "[GPU 1] vgg16_fold4 epoch 7/20: train loss 0.1581 acc 0.9449 | val loss 0.4713 acc 0.8750 AUC 0.9786"}
+{"time": 1791318496.8986566, "message": "[GPU 1] vgg16_fold4 epoch 8/20: train loss 0.0986 acc 0.9660 | val loss 0.2051 acc 0.9531 AUC 0.9929"}
+{"time": 1791318518.8807592, "message": "[GPU 1] vgg16_fold4 epoch 9/20: train loss 0.0788 acc 0.9757 | val loss 0.3467 acc 0.9292 AUC 0.9903"}
+{"time": 1791318540.756663, "message": "[GPU 1] vgg16_fold4 epoch 10/20: train loss 0.0854 acc 0.9797 | val loss 0.2879 acc 0.9355 AUC 0.9935"}
+{"time": 1791318562.5405767, "message": "[GPU 1] vgg16_fold4 epoch 11/20: train loss 0.0552 acc 0.9830 | val loss 0.2412 acc 0.9486 AUC 0.9935"}
+{"time": 1791318584.2485323, "message": "[GPU 1] vgg16_fold4 epoch 12/20: train loss 0.0352 acc 0.9874 | val loss 0.2571 acc 0.9458 AUC 0.9937"}
+{"time": 1791318607.016809, "message": "[GPU 1] vgg16_fold4 epoch 13/20: train loss 0.0125 acc 0.9947 | val loss 0.1851 acc 0.9517 AUC 0.9950 | best"}
+{"time": 1791318628.6696787, "message": "[GPU 1] vgg16_fold4 epoch 14/20: train loss 0.0095 acc 0.9972 | val loss 0.1959 acc 0.9571 AUC 0.9951"}
+{"time": 1791318650.468995, "message": "[GPU 1] vgg16_fold4 epoch 15/20: train loss 0.0065 acc 0.9976 | val loss 0.1885 acc 0.9567 AUC 0.9951"}
+{"time": 1791318672.3053343, "message": "[GPU 1] vgg16_fold4 epoch 16/20: train loss 0.0038 acc 0.9984 | val loss 0.2194 acc 0.9594 AUC 0.9948"}
+{"time": 1791318694.0545828, "message": "[GPU 1] vgg16_fold4 epoch 17/20: train loss 0.0008 acc 0.9996 | val loss 0.2117 acc 0.9621 AUC 0.9951"}
+{"time": 1791318715.73891, "message": "[GPU 1] vgg16_fold4 epoch 18/20: train loss 0.0009 acc 1.0000 | val loss 0.2357 acc 0.9576 AUC 0.9949"}
+{"time": 1791318737.4503543, "message": "[GPU 1] vgg16_fold4 epoch 19/20: train loss 0.0003 acc 1.0000 | val loss 0.2371 acc 0.9580 AUC 0.9949"}
+{"time": 1791318759.1156454, "message": "[GPU 1] vgg16_fold4 epoch 20/20: train loss 0.0004 acc 1.0000 | val loss 0.2377 acc 0.9580 AUC 0.9949"}
+{"time": 1791318765.2674847, "message": "[GPU 1] vgg16_fold4 done in 7.6 min, best epoch 13"}
+{"time": 1791318771.0103312, "message": "[GPU 1] swin-base_fold0: 4531 train / 154 val / 45 test, micro-batch 32 x 2 accumulation = 64, 1420 steps"}
+{"time": 1791318843.295978, "message": "[GPU 1] swin-base_fold0 epoch 1/20: train loss 0.4933 acc 0.7872 | val loss 0.3033 acc 0.8896 AUC 0.9904 | best"}
+{"time": 1791318914.5333915, "message": "[GPU 1] swin-base_fold0 epoch 2/20: train loss 0.2342 acc 0.9217 | val loss 0.1769 acc 0.9286 AUC 0.9913 | best"}
+{"time": 1791318985.7534146, "message": "[GPU 1] swin-base_fold0 epoch 3/20: train loss 0.1658 acc 0.9404 | val loss 0.0652 acc 0.9740 AUC 0.9985 | best"}
+{"time": 1791319056.4937267, "message": "[GPU 1] swin-base_fold0 epoch 4/20: train loss 0.1350 acc 0.9559 | val loss 0.0904 acc 0.9675 AUC 0.9991"}
+{"time": 1791319127.204481, "message": "[GPU 1] swin-base_fold0 epoch 5/20: train loss 0.1166 acc 0.9653 | val loss 0.0393 acc 0.9870 AUC 0.9999 | best"}
+{"time": 1791319197.0810242, "message": "[GPU 1] swin-base_fold0 epoch 6/20: train loss 0.0878 acc 0.9715 | val loss 0.1556 acc 0.9610 AUC 0.9967"}
+{"time": 1791319267.0986774, "message": "[GPU 1] swin-base_fold0 epoch 7/20: train loss 0.0714 acc 0.9795 | val loss 0.0537 acc 0.9870 AUC 0.9986"}
+{"time": 1791319336.7501907, "message": "[GPU 1] swin-base_fold0 epoch 8/20: train loss 0.0548 acc 0.9821 | val loss 0.0702 acc 0.9740 AUC 0.9997"}
+{"time": 1791319406.03184, "message": "[GPU 1] swin-base_fold0 epoch 9/20: train loss 0.0424 acc 0.9872 | val loss 0.0570 acc 0.9805 AUC 0.9993"}
+{"time": 1791319475.6879797, "message": "[GPU 1] swin-base_fold0 epoch 10/20: train loss 0.0353 acc 0.9925 | val loss 0.2519 acc 0.9416 AUC 0.9983"}
+{"time": 1791319545.1855702, "message": "[GPU 1] swin-base_fold0 epoch 11/20: train loss 0.0305 acc 0.9921 | val loss 0.1190 acc 0.9610 AUC 0.9996"}
+{"time": 1791319614.6424928, "message": "[GPU 1] swin-base_fold0 epoch 12/20: train loss 0.0183 acc 0.9951 | val loss 0.1557 acc 0.9545 AUC 0.9999"}
+{"time": 1791319683.92862, "message": "[GPU 1] swin-base_fold0 epoch 13/20: train loss 0.0152 acc 0.9956 | val loss 0.2399 acc 0.9351 AUC 0.9993"}
+{"time": 1791319753.2189586, "message": "[GPU 1] swin-base_fold0 epoch 14/20: train loss 0.0099 acc 0.9971 | val loss 0.0047 acc 1.0000 AUC 1.0000 | best"}
+{"time": 1791319822.5702446, "message": "[GPU 1] swin-base_fold0 epoch 15/20: train loss 0.0034 acc 0.9985 | val loss 0.0042 acc 1.0000 AUC 1.0000 | best"}
+{"time": 1791319891.6822112, "message": "[GPU 1] swin-base_fold0 epoch 16/20: train loss 0.0059 acc 0.9987 | val loss 0.0086 acc 1.0000 AUC 1.0000"}
+{"time": 1791319960.5636756, "message": "[GPU 1] swin-base_fold0 epoch 17/20: train loss 0.0034 acc 0.9989 | val loss 0.0064 acc 1.0000 AUC 1.0000"}
+{"time": 1791320029.2381136, "message": "[GPU 1] swin-base_fold0 epoch 18/20: train loss 0.0011 acc 0.9996 | val loss 0.0056 acc 1.0000 AUC 1.0000"}
+{"time": 1791320097.87034, "message": "[GPU 1] swin-base_fold0 epoch 19/20: train loss 0.0024 acc 0.9989 | val loss 0.0092 acc 0.9935 AUC 1.0000"}
+{"time": 1791320166.4654813, "message": "[GPU 1] swin-base_fold0 epoch 20/20: train loss 0.0015 acc 0.9996 | val loss 0.0083 acc 0.9935 AUC 1.0000"}
+{"time": 1791320168.4809058, "message": "[GPU 1] swin-base_fold0 done in 23.3 min, best epoch 15"}
+{"time": 1791320172.3013587, "message": "[GPU 1] swin-base_fold2: 3988 train / 697 val / 45 test, micro-batch 32 x 2 accumulation = 64, 1260 steps"}
+{"time": 1791320239.2358482, "message": "[GPU 1] swin-base_fold2 epoch 1/20: train loss 0.5176 acc 0.7766 | val loss 0.3060 acc 0.8895 AUC 0.9789 | best"}
+{"time": 1791320304.5258794, "message": "[GPU 1] swin-base_fold2 epoch 2/20: train loss 0.2543 acc 0.9142 | val loss 0.3677 acc 0.9168 AUC 0.9790"}
+{"time": 1791320370.2759852, "message": "[GPU 1] swin-base_fold2 epoch 3/20: train loss 0.1628 acc 0.9446 | val loss 0.2421 acc 0.9297 AUC 0.9881 | best"}
+{"time": 1791320436.2561455, "message": "[GPU 1] swin-base_fold2 epoch 4/20: train loss 0.1330 acc 0.9554 | val loss 0.2126 acc 0.9283 AUC 0.9943 | best"}
+{"time": 1791320501.5430536, "message": "[GPU 1] swin-base_fold2 epoch 5/20: train loss 0.0969 acc 0.9666 | val loss 0.5074 acc 0.9110 AUC 0.9870"}
+{"time": 1791320566.8322964, "message": "[GPU 1] swin-base_fold2 epoch 6/20: train loss 0.0913 acc 0.9687 | val loss 0.1683 acc 0.9584 AUC 0.9955 | best"}
+{"time": 1791320631.3005948, "message": "[GPU 1] swin-base_fold2 epoch 7/20: train loss 0.0888 acc 0.9749 | val loss 0.2211 acc 0.9383 AUC 0.9930"}
+{"time": 1791320696.5306017, "message": "[GPU 1] swin-base_fold2 epoch 8/20: train loss 0.0995 acc 0.9679 | val loss 0.1981 acc 0.9512 AUC 0.9951"}
+{"time": 1791320761.509206, "message": "[GPU 1] swin-base_fold2 epoch 9/20: train loss 0.0424 acc 0.9882 | val loss 0.1263 acc 0.9756 AUC 0.9974 | best"}
+{"time": 1791320825.7902386, "message": "[GPU 1] swin-base_fold2 epoch 10/20: train loss 0.0403 acc 0.9882 | val loss 0.3758 acc 0.9326 AUC 0.9931"}
+{"time": 1791320890.053271, "message": "[GPU 1] swin-base_fold2 epoch 11/20: train loss 0.0356 acc 0.9902 | val loss 0.1558 acc 0.9699 AUC 0.9974"}
+{"time": 1791320953.9067888, "message": "[GPU 1] swin-base_fold2 epoch 12/20: train loss 0.0185 acc 0.9945 | val loss 0.1821 acc 0.9670 AUC 0.9974"}
+{"time": 1791321017.6207025, "message": "[GPU 1] swin-base_fold2 epoch 13/20: train loss 0.0166 acc 0.9947 | val loss 0.1426 acc 0.9699 AUC 0.9983"}
+{"time": 1791321081.5638142, "message": "[GPU 1] swin-base_fold2 epoch 14/20: train loss 0.0098 acc 0.9967 | val loss 0.2088 acc 0.9613 AUC 0.9971"}
+{"time": 1791321145.4019227, "message": "[GPU 1] swin-base_fold2 epoch 15/20: train loss 0.0045 acc 0.9987 | val loss 0.1937 acc 0.9656 AUC 0.9968"}
+{"time": 1791321209.2243469, "message": "[GPU 1] swin-base_fold2 epoch 16/20: train loss 0.0052 acc 0.9980 | val loss 0.2329 acc 0.9627 AUC 0.9971"}
+{"time": 1791321272.9634979, "message": "[GPU 1] swin-base_fold2 epoch 17/20: train loss 0.0037 acc 0.9987 | val loss 0.1886 acc 0.9656 AUC 0.9978"}
+{"time": 1791321336.6816616, "message": "[GPU 1] swin-base_fold2 epoch 18/20: train loss 0.0011 acc 0.9997 | val loss 0.2319 acc 0.9627 AUC 0.9974"}
+{"time": 1791321400.5014791, "message": "[GPU 1] swin-base_fold2 epoch 19/20: train loss 0.0023 acc 0.9995 | val loss 0.2177 acc 0.9641 AUC 0.9975"}
+{"time": 1791321464.1393638, "message": "[GPU 1] swin-base_fold2 epoch 20/20: train loss 0.0040 acc 0.9990 | val loss 0.2148 acc 0.9641 AUC 0.9975"}
+{"time": 1791321468.9842498, "message": "[GPU 1] swin-base_fold2 done in 21.5 min, best epoch 9"}
+{"time": 1791321473.2363594, "message": "[GPU 1] swin-base_fold4: 2469 train / 2216 val / 45 test, micro-batch 32 x 2 accumulation = 64, 780 steps"}
+{"time": 1791321524.8328266, "message": "[GPU 1] swin-base_fold4 epoch 1/20: train loss 0.6137 acc 0.7315 | val loss 1.0531 acc 0.7283 AUC 0.9239 | best"}
+{"time": 1791321575.8186646, "message": "[GPU 1] swin-base_fold4 epoch 2/20: train loss 0.3671 acc 0.8672 | val loss 0.2231 acc 0.9337 AUC 0.9934 | best"}
+{"time": 1791321626.5002415, "message": "[GPU 1] swin-base_fold4 epoch 3/20: train loss 0.2377 acc 0.9166 | val loss 0.2294 acc 0.9287 AUC 0.9929"}
+{"time": 1791321677.505423, "message": "[GPU 1] swin-base_fold4 epoch 4/20: train loss 0.1628 acc 0.9457 | val loss 0.1284 acc 0.9558 AUC 0.9953 | best"}
+{"time": 1791321727.8945174, "message": "[GPU 1] swin-base_fold4 epoch 5/20: train loss 0.1626 acc 0.9445 | val loss 0.1490 acc 0.9526 AUC 0.9937"}
+{"time": 1791321778.3002257, "message": "[GPU 1] swin-base_fold4 epoch 6/20: train loss 0.1324 acc 0.9599 | val loss 0.1340 acc 0.9616 AUC 0.9961"}
+{"time": 1791321829.236915, "message": "[GPU 1] swin-base_fold4 epoch 7/20: train loss 0.0956 acc 0.9688 | val loss 0.1197 acc 0.9634 AUC 0.9965 | best"}
+{"time": 1791321879.6972604, "message": "[GPU 1] swin-base_fold4 epoch 8/20: train loss 0.0575 acc 0.9814 | val loss 0.1509 acc 0.9576 AUC 0.9946"}
+{"time": 1791321929.7020018, "message": "[GPU 1] swin-base_fold4 epoch 9/20: train loss 0.0546 acc 0.9785 | val loss 0.1281 acc 0.9675 AUC 0.9970"}
+{"time": 1791321979.4703639, "message": "[GPU 1] swin-base_fold4 epoch 10/20: train loss 0.0340 acc 0.9870 | val loss 0.1646 acc 0.9653 AUC 0.9957"}
+{"time": 1791322029.235876, "message": "[GPU 1] swin-base_fold4 epoch 11/20: train loss 0.0282 acc 0.9891 | val loss 0.1490 acc 0.9707 AUC 0.9972"}
+{"time": 1791322079.0265112, "message": "[GPU 1] swin-base_fold4 epoch 12/20: train loss 0.0202 acc 0.9939 | val loss 0.1556 acc 0.9725 AUC 0.9959"}
+{"time": 1791322128.8042912, "message": "[GPU 1] swin-base_fold4 epoch 13/20: train loss 0.0124 acc 0.9968 | val loss 0.1476 acc 0.9743 AUC 0.9967"}
+{"time": 1791322178.5330093, "message": "[GPU 1] swin-base_fold4 epoch 14/20: train loss 0.0140 acc 0.9959 | val loss 0.1413 acc 0.9761 AUC 0.9966"}
+{"time": 1791322228.2264583, "message": "[GPU 1] swin-base_fold4 epoch 15/20: train loss 0.0102 acc 0.9976 | val loss 0.1198 acc 0.9756 AUC 0.9973"}
+{"time": 1791322277.9829402, "message": "[GPU 1] swin-base_fold4 epoch 16/20: train loss 0.0039 acc 0.9980 | val loss 0.1364 acc 0.9774 AUC 0.9973"}
+{"time": 1791322328.1596882, "message": "[GPU 1] swin-base_fold4 epoch 17/20: train loss 0.0080 acc 0.9976 | val loss 0.1160 acc 0.9797 AUC 0.9979 | best"}
+{"time": 1791322378.2593064, "message": "[GPU 1] swin-base_fold4 epoch 18/20: train loss 0.0053 acc 0.9988 | val loss 0.1082 acc 0.9815 AUC 0.9980 | best"}
+{"time": 1791322427.9411178, "message": "[GPU 1] swin-base_fold4 epoch 19/20: train loss 0.0029 acc 0.9988 | val loss 0.1135 acc 0.9819 AUC 0.9979"}
+{"time": 1791322477.6019967, "message": "[GPU 1] swin-base_fold4 epoch 20/20: train loss 0.0098 acc 0.9968 | val loss 0.1146 acc 0.9810 AUC 0.9979"}
+{"time": 1791322490.8802536, "message": "[GPU 1] swin-base_fold4 done in 16.7 min, best epoch 18"}
+{"time": 1791322495.613934, "message": "[GPU 1] vit-b-16_fold0: 4531 train / 154 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1420 steps"}
+{"time": 1791322547.252606, "message": "[GPU 1] vit-b-16_fold0 epoch 1/20: train loss 0.4031 acc 0.8296 | val loss 0.3859 acc 0.8442 AUC 0.9907 | best"}
+{"time": 1791322596.941106, "message": "[GPU 1] vit-b-16_fold0 epoch 2/20: train loss 0.3651 acc 0.8791 | val loss 0.5811 acc 0.8117 AUC 0.9799"}
+{"time": 1791322647.0575492, "message": "[GPU 1] vit-b-16_fold0 epoch 3/20: train loss 0.2240 acc 0.9146 | val loss 0.2179 acc 0.9026 AUC 0.9941 | best"}
+{"time": 1791322697.0882816, "message": "[GPU 1] vit-b-16_fold0 epoch 4/20: train loss 0.2180 acc 0.9186 | val loss 0.1406 acc 0.9610 AUC 0.9966 | best"}
+{"time": 1791322746.3230104, "message": "[GPU 1] vit-b-16_fold0 epoch 5/20: train loss 0.1866 acc 0.9294 | val loss 0.4460 acc 0.8312 AUC 0.9778"}
+{"time": 1791322796.1230423, "message": "[GPU 1] vit-b-16_fold0 epoch 6/20: train loss 0.1828 acc 0.9296 | val loss 0.1243 acc 0.9610 AUC 0.9967 | best"}
+{"time": 1791322845.6522799, "message": "[GPU 1] vit-b-16_fold0 epoch 7/20: train loss 0.1357 acc 0.9468 | val loss 0.0948 acc 0.9675 AUC 0.9970 | best"}
+{"time": 1791322894.4501173, "message": "[GPU 1] vit-b-16_fold0 epoch 8/20: train loss 0.1402 acc 0.9479 | val loss 0.1115 acc 0.9610 AUC 0.9970"}
+{"time": 1791322943.7823255, "message": "[GPU 1] vit-b-16_fold0 epoch 9/20: train loss 0.1151 acc 0.9570 | val loss 0.0925 acc 0.9416 AUC 0.9990 | best"}
+{"time": 1791322992.0704432, "message": "[GPU 1] vit-b-16_fold0 epoch 10/20: train loss 0.0842 acc 0.9698 | val loss 0.1700 acc 0.9610 AUC 0.9947"}
+{"time": 1791323040.3507516, "message": "[GPU 1] vit-b-16_fold0 epoch 11/20: train loss 0.0726 acc 0.9751 | val loss 0.0955 acc 0.9805 AUC 0.9983"}
+{"time": 1791323088.9368794, "message": "[GPU 1] vit-b-16_fold0 epoch 12/20: train loss 0.0506 acc 0.9830 | val loss 0.0800 acc 0.9740 AUC 0.9979 | best"}
+{"time": 1791323136.7604423, "message": "[GPU 1] vit-b-16_fold0 epoch 13/20: train loss 0.0395 acc 0.9865 | val loss 0.1185 acc 0.9675 AUC 0.9972"}
+{"time": 1791323184.5950878, "message": "[GPU 1] vit-b-16_fold0 epoch 14/20: train loss 0.0279 acc 0.9883 | val loss 0.1502 acc 0.9545 AUC 0.9979"}
+{"time": 1791323232.5362802, "message": "[GPU 1] vit-b-16_fold0 epoch 15/20: train loss 0.0174 acc 0.9940 | val loss 0.0448 acc 0.9935 AUC 0.9991 | best"}
+{"time": 1791323279.2971885, "message": "[GPU 1] vit-b-16_fold0 epoch 16/20: train loss 0.0069 acc 0.9978 | val loss 0.0666 acc 0.9870 AUC 0.9988"}
+{"time": 1791323325.950255, "message": "[GPU 1] vit-b-16_fold0 epoch 17/20: train loss 0.0034 acc 0.9987 | val loss 0.0843 acc 0.9740 AUC 0.9988"}
+{"time": 1791323372.4543934, "message": "[GPU 1] vit-b-16_fold0 epoch 18/20: train loss 0.0021 acc 0.9996 | val loss 0.0609 acc 0.9870 AUC 0.9988"}
+{"time": 1791323418.927904, "message": "[GPU 1] vit-b-16_fold0 epoch 19/20: train loss 0.0041 acc 0.9987 | val loss 0.0636 acc 0.9805 AUC 0.9988"}
+{"time": 1791323465.3214862, "message": "[GPU 1] vit-b-16_fold0 epoch 20/20: train loss 0.0022 acc 0.9993 | val loss 0.0637 acc 0.9870 AUC 0.9988"}
+{"time": 1791323466.689022, "message": "[GPU 1] vit-b-16_fold0 done in 16.2 min, best epoch 15"}
+{"time": 1791323469.8233619, "message": "[GPU 1] vit-b-16_fold2: 3988 train / 697 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1260 steps"}
+{"time": 1791323516.9670668, "message": "[GPU 1] vit-b-16_fold2 epoch 1/20: train loss 0.4412 acc 0.8197 | val loss 0.3226 acc 0.8623 AUC 0.9811 | best"}
+{"time": 1791323562.7589676, "message": "[GPU 1] vit-b-16_fold2 epoch 2/20: train loss 0.2550 acc 0.9010 | val loss 0.3402 acc 0.8723 AUC 0.9813"}
+{"time": 1791323608.3139825, "message": "[GPU 1] vit-b-16_fold2 epoch 3/20: train loss 0.2149 acc 0.9220 | val loss 0.5827 acc 0.7948 AUC 0.9826"}
+{"time": 1791323654.364943, "message": "[GPU 1] vit-b-16_fold2 epoch 4/20: train loss 0.2150 acc 0.9215 | val loss 0.1939 acc 0.9225 AUC 0.9917 | best"}
+{"time": 1791323700.1437159, "message": "[GPU 1] vit-b-16_fold2 epoch 5/20: train loss 0.1687 acc 0.9391 | val loss 0.2359 acc 0.9139 AUC 0.9908"}
+{"time": 1791323746.5753784, "message": "[GPU 1] vit-b-16_fold2 epoch 6/20: train loss 0.1651 acc 0.9361 | val loss 0.1760 acc 0.9311 AUC 0.9914 | best"}
+{"time": 1791323792.0697486, "message": "[GPU 1] vit-b-16_fold2 epoch 7/20: train loss 0.1387 acc 0.9531 | val loss 0.3106 acc 0.8895 AUC 0.9846"}
+{"time": 1791323837.5712783, "message": "[GPU 1] vit-b-16_fold2 epoch 8/20: train loss 0.1387 acc 0.9478 | val loss 0.2331 acc 0.9240 AUC 0.9917"}
+{"time": 1791323883.5724769, "message": "[GPU 1] vit-b-16_fold2 epoch 9/20: train loss 0.1138 acc 0.9594 | val loss 0.1700 acc 0.9455 AUC 0.9944 | best"}
+{"time": 1791323929.4250972, "message": "[GPU 1] vit-b-16_fold2 epoch 10/20: train loss 0.0862 acc 0.9702 | val loss 0.1645 acc 0.9484 AUC 0.9929 | best"}
+{"time": 1791323975.2885923, "message": "[GPU 1] vit-b-16_fold2 epoch 11/20: train loss 0.0775 acc 0.9739 | val loss 0.1542 acc 0.9397 AUC 0.9943 | best"}
+{"time": 1791324020.1542423, "message": "[GPU 1] vit-b-16_fold2 epoch 12/20: train loss 0.0625 acc 0.9802 | val loss 0.2095 acc 0.9426 AUC 0.9952"}
+{"time": 1791324065.373998, "message": "[GPU 1] vit-b-16_fold2 epoch 13/20: train loss 0.0498 acc 0.9835 | val loss 0.1304 acc 0.9570 AUC 0.9958 | best"}
+{"time": 1791324109.7016065, "message": "[GPU 1] vit-b-16_fold2 epoch 14/20: train loss 0.0206 acc 0.9940 | val loss 0.1855 acc 0.9570 AUC 0.9954"}
+{"time": 1791324153.8677306, "message": "[GPU 1] vit-b-16_fold2 epoch 15/20: train loss 0.0191 acc 0.9937 | val loss 0.1352 acc 0.9670 AUC 0.9961"}
+{"time": 1791324198.0034373, "message": "[GPU 1] vit-b-16_fold2 epoch 16/20: train loss 0.0113 acc 0.9965 | val loss 0.1449 acc 0.9713 AUC 0.9962"}
+{"time": 1791324242.0319052, "message": "[GPU 1] vit-b-16_fold2 epoch 17/20: train loss 0.0036 acc 0.9992 | val loss 0.1330 acc 0.9785 AUC 0.9960"}
+{"time": 1791324286.1159358, "message": "[GPU 1] vit-b-16_fold2 epoch 18/20: train loss 0.0024 acc 0.9992 | val loss 0.1400 acc 0.9742 AUC 0.9960"}
+{"time": 1791324330.145193, "message": "[GPU 1] vit-b-16_fold2 epoch 19/20: train loss 0.0032 acc 0.9982 | val loss 0.1413 acc 0.9742 AUC 0.9960"}
+{"time": 1791324374.2423286, "message": "[GPU 1] vit-b-16_fold2 epoch 20/20: train loss 0.0023 acc 0.9990 | val loss 0.1415 acc 0.9742 AUC 0.9960"}
+{"time": 1791324377.381292, "message": "[GPU 1] vit-b-16_fold2 done in 15.1 min, best epoch 13"}
+{"time": 1791324380.481794, "message": "[GPU 1] vit-b-16_fold4: 2469 train / 2216 val / 45 test, micro-batch 64 x 1 accumulation = 64, 780 steps"}
+{"time": 1791324416.194895, "message": "[GPU 1] vit-b-16_fold4 epoch 1/20: train loss 0.4846 acc 0.7853 | val loss 0.2118 acc 0.9179 AUC 0.9896 | best"}
+{"time": 1791324450.9840062, "message": "[GPU 1] vit-b-16_fold4 epoch 2/20: train loss 0.3037 acc 0.8817 | val loss 0.2388 acc 0.9102 AUC 0.9882"}
+{"time": 1791324486.2762268, "message": "[GPU 1] vit-b-16_fold4 epoch 3/20: train loss 0.2056 acc 0.9202 | val loss 0.2044 acc 0.9188 AUC 0.9913 | best"}
+{"time": 1791324520.9995766, "message": "[GPU 1] vit-b-16_fold4 epoch 4/20: train loss 0.2216 acc 0.9141 | val loss 0.2092 acc 0.9134 AUC 0.9885"}
+{"time": 1791324555.7497137, "message": "[GPU 1] vit-b-16_fold4 epoch 5/20: train loss 0.1697 acc 0.9417 | val loss 0.5123 acc 0.8384 AUC 0.9677"}
+{"time": 1791324591.0573668, "message": "[GPU 1] vit-b-16_fold4 epoch 6/20: train loss 0.1567 acc 0.9461 | val loss 0.1772 acc 0.9454 AUC 0.9912 | best"}
+{"time": 1791324626.2747576, "message": "[GPU 1] vit-b-16_fold4 epoch 7/20: train loss 0.1695 acc 0.9388 | val loss 0.1584 acc 0.9427 AUC 0.9925 | best"}
+{"time": 1791324660.8623378, "message": "[GPU 1] vit-b-16_fold4 epoch 8/20: train loss 0.1144 acc 0.9587 | val loss 0.2005 acc 0.9260 AUC 0.9903"}
+{"time": 1791324695.4623106, "message": "[GPU 1] vit-b-16_fold4 epoch 9/20: train loss 0.0914 acc 0.9656 | val loss 0.2273 acc 0.9251 AUC 0.9917"}
+{"time": 1791324729.751763, "message": "[GPU 1] vit-b-16_fold4 epoch 10/20: train loss 0.0782 acc 0.9725 | val loss 0.1967 acc 0.9359 AUC 0.9913"}
+{"time": 1791324764.3953586, "message": "[GPU 1] vit-b-16_fold4 epoch 11/20: train loss 0.0659 acc 0.9765 | val loss 0.1516 acc 0.9517 AUC 0.9952 | best"}
+{"time": 1791324798.2469509, "message": "[GPU 1] vit-b-16_fold4 epoch 12/20: train loss 0.0470 acc 0.9834 | val loss 0.1627 acc 0.9562 AUC 0.9948"}
+{"time": 1791324832.2053063, "message": "[GPU 1] vit-b-16_fold4 epoch 13/20: train loss 0.0609 acc 0.9810 | val loss 0.1805 acc 0.9495 AUC 0.9951"}
+{"time": 1791324865.9872186, "message": "[GPU 1] vit-b-16_fold4 epoch 14/20: train loss 0.0235 acc 0.9927 | val loss 0.1899 acc 0.9580 AUC 0.9954"}
+{"time": 1791324899.6056736, "message": "[GPU 1] vit-b-16_fold4 epoch 15/20: train loss 0.0105 acc 0.9964 | val loss 0.2004 acc 0.9522 AUC 0.9939"}
+{"time": 1791324933.0829492, "message": "[GPU 1] vit-b-16_fold4 epoch 16/20: train loss 0.0127 acc 0.9968 | val loss 0.1804 acc 0.9571 AUC 0.9950"}
+{"time": 1791324966.4981647, "message": "[GPU 1] vit-b-16_fold4 epoch 17/20: train loss 0.0034 acc 0.9988 | val loss 0.1630 acc 0.9598 AUC 0.9956"}
+{"time": 1791324999.8114128, "message": "[GPU 1] vit-b-16_fold4 epoch 18/20: train loss 0.0012 acc 1.0000 | val loss 0.1627 acc 0.9612 AUC 0.9957"}
+{"time": 1791325033.104512, "message": "[GPU 1] vit-b-16_fold4 epoch 19/20: train loss 0.0013 acc 0.9996 | val loss 0.1651 acc 0.9585 AUC 0.9956"}
+{"time": 1791325066.5035305, "message": "[GPU 1] vit-b-16_fold4 epoch 20/20: train loss 0.0018 acc 0.9992 | val loss 0.1654 acc 0.9598 AUC 0.9956"}
+{"time": 1791325075.0123093, "message": "[GPU 1] vit-b-16_fold4 done in 11.4 min, best epoch 11"}
+{"time": 1791325078.1483715, "message": "[GPU 1] vit-b-16_fold0_background: 4531 train / 154 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1420 steps"}
+{"time": 1791325128.7839534, "message": "[GPU 1] vit-b-16_fold0_background epoch 1/20: train loss 0.9411 acc 0.5290 | val loss 0.7789 acc 0.5974 AUC 0.8227 | best"}
+{"time": 1791325178.661033, "message": "[GPU 1] vit-b-16_fold0_background epoch 2/20: train loss 0.8535 acc 0.5897 | val loss 0.9305 acc 0.5519 AUC 0.8092"}
+{"time": 1791325228.5095465, "message": "[GPU 1] vit-b-16_fold0_background epoch 3/20: train loss 0.7805 acc 0.6250 | val loss 0.7820 acc 0.6429 AUC 0.8511"}
+{"time": 1791325278.4917073, "message": "[GPU 1] vit-b-16_fold0_background epoch 4/20: train loss 0.7645 acc 0.6347 | val loss 0.8685 acc 0.6234 AUC 0.8091"}
+{"time": 1791325328.9980574, "message": "[GPU 1] vit-b-16_fold0_background epoch 5/20: train loss 0.7215 acc 0.6617 | val loss 0.7441 acc 0.6299 AUC 0.8606 | best"}
+{"time": 1791325379.038034, "message": "[GPU 1] vit-b-16_fold0_background epoch 6/20: train loss 0.6848 acc 0.6762 | val loss 0.8578 acc 0.7078 AUC 0.8565"}
+{"time": 1791325429.3092387, "message": "[GPU 1] vit-b-16_fold0_background epoch 7/20: train loss 0.6391 acc 0.7007 | val loss 0.7328 acc 0.6688 AUC 0.8855 | best"}
+{"time": 1791325479.8471398, "message": "[GPU 1] vit-b-16_fold0_background epoch 8/20: train loss 0.5889 acc 0.7252 | val loss 0.6391 acc 0.6688 AUC 0.8672 | best"}
+{"time": 1791325530.141445, "message": "[GPU 1] vit-b-16_fold0_background epoch 9/20: train loss 0.5679 acc 0.7444 | val loss 0.5165 acc 0.7403 AUC 0.9083 | best"}
+{"time": 1791325579.739371, "message": "[GPU 1] vit-b-16_fold0_background epoch 10/20: train loss 0.5216 acc 0.7632 | val loss 0.5686 acc 0.7273 AUC 0.9039"}
+{"time": 1791325629.3476837, "message": "[GPU 1] vit-b-16_fold0_background epoch 11/20: train loss 0.4807 acc 0.7753 | val loss 0.6838 acc 0.7078 AUC 0.8866"}
+{"time": 1791325678.9394007, "message": "[GPU 1] vit-b-16_fold0_background epoch 12/20: train loss 0.4664 acc 0.7875 | val loss 0.6590 acc 0.7013 AUC 0.8859"}
+{"time": 1791325728.7359614, "message": "[GPU 1] vit-b-16_fold0_background epoch 13/20: train loss 0.4222 acc 0.8058 | val loss 0.6177 acc 0.7143 AUC 0.8909"}
+{"time": 1791325778.5809684, "message": "[GPU 1] vit-b-16_fold0_background epoch 14/20: train loss 0.3772 acc 0.8343 | val loss 0.7103 acc 0.7013 AUC 0.9073"}
+{"time": 1791325828.5161984, "message": "[GPU 1] vit-b-16_fold0_background epoch 15/20: train loss 0.3559 acc 0.8493 | val loss 0.6398 acc 0.7208 AUC 0.9014"}
+{"time": 1791325878.415626, "message": "[GPU 1] vit-b-16_fold0_background epoch 16/20: train loss 0.3035 acc 0.8652 | val loss 0.6720 acc 0.7273 AUC 0.9142"}
+{"time": 1791325928.2754602, "message": "[GPU 1] vit-b-16_fold0_background epoch 17/20: train loss 0.2687 acc 0.8863 | val loss 0.5828 acc 0.7403 AUC 0.9135"}
+{"time": 1791325977.9400961, "message": "[GPU 1] vit-b-16_fold0_background epoch 18/20: train loss 0.2443 acc 0.9007 | val loss 0.6075 acc 0.7532 AUC 0.9132"}
+{"time": 1791326027.3560758, "message": "[GPU 1] vit-b-16_fold0_background epoch 19/20: train loss 0.2167 acc 0.9077 | val loss 0.6469 acc 0.7532 AUC 0.9200"}
+{"time": 1791326077.1150658, "message": "[GPU 1] vit-b-16_fold0_background epoch 20/20: train loss 0.2159 acc 0.9102 | val loss 0.6256 acc 0.7468 AUC 0.9172"}
+{"time": 1791326078.0260224, "message": "[GPU 1] vit-b-16_fold0_background done in 16.6 min, best epoch 9"}
+{"time": 1791326088.0209556, "message": "[GPU 1] inceptionv3_fold2: 3988 train / 697 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1260 steps"}
+{"time": 1791326120.8092453, "message": "[GPU 1] inceptionv3_fold2 epoch 1/20: train loss 0.4843 acc 0.7896 | val loss 0.2310 acc 0.9125 AUC 0.9871 | best"}
+{"time": 1791326144.5918243, "message": "[GPU 1] inceptionv3_fold2 epoch 2/20: train loss 0.1722 acc 0.9423 | val loss 0.4369 acc 0.8996 AUC 0.9773"}
+{"time": 1791326168.168863, "message": "[GPU 1] inceptionv3_fold2 epoch 3/20: train loss 0.1074 acc 0.9639 | val loss 0.3258 acc 0.9039 AUC 0.9885"}
+{"time": 1791326191.6453657, "message": "[GPU 1] inceptionv3_fold2 epoch 4/20: train loss 0.0853 acc 0.9749 | val loss 0.2439 acc 0.9426 AUC 0.9882"}
+{"time": 1791326215.295093, "message": "[GPU 1] inceptionv3_fold2 epoch 5/20: train loss 0.0624 acc 0.9789 | val loss 0.1929 acc 0.9311 AUC 0.9924 | best"}
+{"time": 1791326238.9086483, "message": "[GPU 1] inceptionv3_fold2 epoch 6/20: train loss 0.0373 acc 0.9872 | val loss 0.1473 acc 0.9656 AUC 0.9949 | best"}
+{"time": 1791326262.455509, "message": "[GPU 1] inceptionv3_fold2 epoch 7/20: train loss 0.0361 acc 0.9882 | val loss 0.1422 acc 0.9656 AUC 0.9958 | best"}
+{"time": 1791326285.9228275, "message": "[GPU 1] inceptionv3_fold2 epoch 8/20: train loss 0.0253 acc 0.9937 | val loss 0.1665 acc 0.9584 AUC 0.9941"}
+{"time": 1791326309.4953792, "message": "[GPU 1] inceptionv3_fold2 epoch 9/20: train loss 0.0187 acc 0.9945 | val loss 0.1258 acc 0.9684 AUC 0.9965 | best"}
+{"time": 1791326333.1025076, "message": "[GPU 1] inceptionv3_fold2 epoch 10/20: train loss 0.0196 acc 0.9930 | val loss 0.1031 acc 0.9742 AUC 0.9964 | best"}
+{"time": 1791326356.4856093, "message": "[GPU 1] inceptionv3_fold2 epoch 11/20: train loss 0.0059 acc 0.9982 | val loss 0.1491 acc 0.9727 AUC 0.9941"}
+{"time": 1791326379.861707, "message": "[GPU 1] inceptionv3_fold2 epoch 12/20: train loss 0.0044 acc 0.9987 | val loss 0.1449 acc 0.9727 AUC 0.9960"}
+{"time": 1791326403.3555477, "message": "[GPU 1] inceptionv3_fold2 epoch 13/20: train loss 0.0027 acc 0.9990 | val loss 0.1833 acc 0.9656 AUC 0.9962"}
+{"time": 1791326426.7160032, "message": "[GPU 1] inceptionv3_fold2 epoch 14/20: train loss 0.0017 acc 0.9990 | val loss 0.1585 acc 0.9627 AUC 0.9967"}
+{"time": 1791326450.1050262, "message": "[GPU 1] inceptionv3_fold2 epoch 15/20: train loss 0.0005 acc 1.0000 | val loss 0.1409 acc 0.9641 AUC 0.9968"}
+{"time": 1791326473.4280114, "message": "[GPU 1] inceptionv3_fold2 epoch 16/20: train loss 0.0005 acc 1.0000 | val loss 0.1585 acc 0.9656 AUC 0.9968"}
+{"time": 1791326496.7052958, "message": "[GPU 1] inceptionv3_fold2 epoch 17/20: train loss 0.0019 acc 0.9992 | val loss 0.1695 acc 0.9641 AUC 0.9968"}
+{"time": 1791326519.990159, "message": "[GPU 1] inceptionv3_fold2 epoch 18/20: train loss 0.0003 acc 1.0000 | val loss 0.1708 acc 0.9670 AUC 0.9966"}
+{"time": 1791326543.3080945, "message": "[GPU 1] inceptionv3_fold2 epoch 19/20: train loss 0.0005 acc 1.0000 | val loss 0.1906 acc 0.9627 AUC 0.9966"}
+{"time": 1791326566.707007, "message": "[GPU 1] inceptionv3_fold2 epoch 20/20: train loss 0.0007 acc 0.9997 | val loss 0.1659 acc 0.9670 AUC 0.9967"}
+{"time": 1791326569.1750336, "message": "[GPU 1] inceptionv3_fold2 done in 8.0 min, best epoch 10"}
+{"time": 1791326570.7821784, "message": "[GPU 1] inceptionv3_fold4: 2469 train / 2216 val / 45 test, micro-batch 64 x 1 accumulation = 64, 780 steps"}
+{"time": 1791326596.6600983, "message": "[GPU 1] inceptionv3_fold4 epoch 1/20: train loss 0.5719 acc 0.7367 | val loss 0.3009 acc 0.8818 AUC 0.9803 | best"}
+{"time": 1791326614.9252653, "message": "[GPU 1] inceptionv3_fold4 epoch 2/20: train loss 0.1691 acc 0.9392 | val loss 0.2598 acc 0.9048 AUC 0.9866 | best"}
+{"time": 1791326633.035013, "message": "[GPU 1] inceptionv3_fold4 epoch 3/20: train loss 0.1302 acc 0.9546 | val loss 0.2825 acc 0.9197 AUC 0.9887"}
+{"time": 1791326651.093626, "message": "[GPU 1] inceptionv3_fold4 epoch 4/20: train loss 0.0953 acc 0.9680 | val loss 0.2067 acc 0.9282 AUC 0.9901 | best"}
+{"time": 1791326668.975039, "message": "[GPU 1] inceptionv3_fold4 epoch 5/20: train loss 0.0752 acc 0.9741 | val loss 0.2114 acc 0.9373 AUC 0.9922"}
+{"time": 1791326686.7989776, "message": "[GPU 1] inceptionv3_fold4 epoch 6/20: train loss 0.0606 acc 0.9818 | val loss 0.2159 acc 0.9364 AUC 0.9913"}
+{"time": 1791326704.7865295, "message": "[GPU 1] inceptionv3_fold4 epoch 7/20: train loss 0.0465 acc 0.9822 | val loss 0.1472 acc 0.9540 AUC 0.9951 | best"}
+{"time": 1791326722.870084, "message": "[GPU 1] inceptionv3_fold4 epoch 8/20: train loss 0.0331 acc 0.9903 | val loss 0.1412 acc 0.9580 AUC 0.9947 | best"}
+{"time": 1791326740.945366, "message": "[GPU 1] inceptionv3_fold4 epoch 9/20: train loss 0.0332 acc 0.9891 | val loss 0.1263 acc 0.9594 AUC 0.9955 | best"}
+{"time": 1791326758.7710261, "message": "[GPU 1] inceptionv3_fold4 epoch 10/20: train loss 0.0137 acc 0.9959 | val loss 0.1646 acc 0.9540 AUC 0.9932"}
+{"time": 1791326776.8502688, "message": "[GPU 1] inceptionv3_fold4 epoch 11/20: train loss 0.0101 acc 0.9976 | val loss 0.1255 acc 0.9666 AUC 0.9960 | best"}
+{"time": 1791326794.7743487, "message": "[GPU 1] inceptionv3_fold4 epoch 12/20: train loss 0.0020 acc 0.9996 | val loss 0.1350 acc 0.9621 AUC 0.9955"}
+{"time": 1791326812.6908917, "message": "[GPU 1] inceptionv3_fold4 epoch 13/20: train loss 0.0019 acc 0.9996 | val loss 0.1282 acc 0.9711 AUC 0.9964"}
+{"time": 1791326830.620417, "message": "[GPU 1] inceptionv3_fold4 epoch 14/20: train loss 0.0011 acc 1.0000 | val loss 0.1615 acc 0.9598 AUC 0.9948"}
+{"time": 1791326848.4867632, "message": "[GPU 1] inceptionv3_fold4 epoch 15/20: train loss 0.0004 acc 1.0000 | val loss 0.1353 acc 0.9653 AUC 0.9959"}
+{"time": 1791326866.3632479, "message": "[GPU 1] inceptionv3_fold4 epoch 16/20: train loss 0.0005 acc 1.0000 | val loss 0.1319 acc 0.9671 AUC 0.9961"}
+{"time": 1791326884.1564221, "message": "[GPU 1] inceptionv3_fold4 epoch 17/20: train loss 0.0011 acc 0.9996 | val loss 0.1408 acc 0.9657 AUC 0.9956"}
+{"time": 1791326902.0034642, "message": "[GPU 1] inceptionv3_fold4 epoch 18/20: train loss 0.0016 acc 0.9992 | val loss 0.1361 acc 0.9662 AUC 0.9958"}
+{"time": 1791326919.8575976, "message": "[GPU 1] inceptionv3_fold4 epoch 19/20: train loss 0.0009 acc 1.0000 | val loss 0.1294 acc 0.9720 AUC 0.9962"}
+{"time": 1791326937.62093, "message": "[GPU 1] inceptionv3_fold4 epoch 20/20: train loss 0.0010 acc 0.9996 | val loss 0.1403 acc 0.9648 AUC 0.9957"}
+{"time": 1791326942.2477646, "message": "[GPU 1] inceptionv3_fold4 done in 6.1 min, best epoch 11"}
+{"time": 1791326972.3748014, "message": "[GPU 1] coatnet-0_fold0: 4531 train / 154 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1420 steps"}
+{"time": 1791327042.7536275, "message": "[GPU 1] coatnet-0_fold0 epoch 1/20: train loss 0.4732 acc 0.7923 | val loss 0.3660 acc 0.8506 AUC 0.9778 | best"}
+{"time": 1791327073.9486785, "message": "[GPU 1] coatnet-0_fold0 epoch 2/20: train loss 0.2799 acc 0.9089 | val loss 0.5025 acc 0.7987 AUC 0.9643"}
+{"time": 1791327103.7597919, "message": "[GPU 1] coatnet-0_fold0 epoch 3/20: train loss 0.2594 acc 0.9130 | val loss 1.0625 acc 0.6948 AUC 0.9402"}
+{"time": 1791327133.6019511, "message": "[GPU 1] coatnet-0_fold0 epoch 4/20: train loss 0.1563 acc 0.9477 | val loss 0.4427 acc 0.8831 AUC 0.9813"}
+{"time": 1791327163.677752, "message": "[GPU 1] coatnet-0_fold0 epoch 5/20: train loss 0.1403 acc 0.9548 | val loss 0.3532 acc 0.9026 AUC 0.9888 | best"}
+{"time": 1791327193.585092, "message": "[GPU 1] coatnet-0_fold0 epoch 6/20: train loss 0.1381 acc 0.9583 | val loss 0.5483 acc 0.8182 AUC 0.9764"}
+{"time": 1791327223.5861373, "message": "[GPU 1] coatnet-0_fold0 epoch 7/20: train loss 0.1066 acc 0.9660 | val loss 0.0529 acc 0.9870 AUC 0.9995 | best"}
+{"time": 1791327253.302898, "message": "[GPU 1] coatnet-0_fold0 epoch 8/20: train loss 0.0861 acc 0.9744 | val loss 0.1080 acc 0.9545 AUC 0.9965"}
+{"time": 1791327283.1186032, "message": "[GPU 1] coatnet-0_fold0 epoch 9/20: train loss 0.0795 acc 0.9788 | val loss 0.0662 acc 0.9675 AUC 0.9984"}
+{"time": 1791327312.6958385, "message": "[GPU 1] coatnet-0_fold0 epoch 10/20: train loss 0.0611 acc 0.9810 | val loss 0.3220 acc 0.9091 AUC 0.9916"}
+{"time": 1791327342.283087, "message": "[GPU 1] coatnet-0_fold0 epoch 11/20: train loss 0.0524 acc 0.9834 | val loss 0.0734 acc 0.9740 AUC 0.9984"}
+{"time": 1791327371.539456, "message": "[GPU 1] coatnet-0_fold0 epoch 12/20: train loss 0.0269 acc 0.9929 | val loss 0.0731 acc 0.9675 AUC 0.9990"}
+{"time": 1791327400.7012255, "message": "[GPU 1] coatnet-0_fold0 epoch 13/20: train loss 0.0216 acc 0.9947 | val loss 0.1563 acc 0.9740 AUC 0.9983"}
+{"time": 1791327429.7672029, "message": "[GPU 1] coatnet-0_fold0 epoch 14/20: train loss 0.0092 acc 0.9967 | val loss 0.0733 acc 0.9805 AUC 0.9996"}
+{"time": 1791327458.5343618, "message": "[GPU 1] coatnet-0_fold0 epoch 15/20: train loss 0.0062 acc 0.9982 | val loss 0.1313 acc 0.9740 AUC 0.9990"}
+{"time": 1791327487.5493152, "message": "[GPU 1] coatnet-0_fold0 epoch 16/20: train loss 0.0052 acc 0.9985 | val loss 0.1362 acc 0.9740 AUC 0.9987"}
+{"time": 1791327516.2961066, "message": "[GPU 1] coatnet-0_fold0 epoch 17/20: train loss 0.0028 acc 0.9993 | val loss 0.1151 acc 0.9740 AUC 0.9992"}
+{"time": 1791327544.94999, "message": "[GPU 1] coatnet-0_fold0 epoch 18/20: train loss 0.0013 acc 0.9998 | val loss 0.1190 acc 0.9740 AUC 0.9992"}
+{"time": 1791327573.7617388, "message": "[GPU 1] coatnet-0_fold0 epoch 19/20: train loss 0.0034 acc 0.9989 | val loss 0.1303 acc 0.9740 AUC 0.9991"}
+{"time": 1791327602.461699, "message": "[GPU 1] coatnet-0_fold0 epoch 20/20: train loss 0.0017 acc 0.9993 | val loss 0.1301 acc 0.9740 AUC 0.9989"}
+{"time": 1791327608.5703459, "message": "[GPU 1] coatnet-0_fold0 done in 10.5 min, best epoch 7"}
+{"time": 1791327610.7344527, "message": "[GPU 1] coatnet-0_fold2: 3988 train / 697 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1260 steps"}
+{"time": 1791327661.0889027, "message": "[GPU 1] coatnet-0_fold2 epoch 1/20: train loss 0.5245 acc 0.7595 | val loss 0.6820 acc 0.8178 AUC 0.9394 | best"}
+{"time": 1791327689.6702776, "message": "[GPU 1] coatnet-0_fold2 epoch 2/20: train loss 0.2755 acc 0.9107 | val loss 0.2898 acc 0.8996 AUC 0.9842 | best"}
+{"time": 1791327717.1269057, "message": "[GPU 1] coatnet-0_fold2 epoch 3/20: train loss 0.1905 acc 0.9391 | val loss 0.3091 acc 0.8780 AUC 0.9882"}
+{"time": 1791327744.395259, "message": "[GPU 1] coatnet-0_fold2 epoch 4/20: train loss 0.1529 acc 0.9501 | val loss 1.4924 acc 0.6413 AUC 0.9290"}
+{"time": 1791327771.8985465, "message": "[GPU 1] coatnet-0_fold2 epoch 5/20: train loss 0.1151 acc 0.9599 | val loss 0.1653 acc 0.9527 AUC 0.9927 | best"}
+{"time": 1791327799.2556844, "message": "[GPU 1] coatnet-0_fold2 epoch 6/20: train loss 0.1080 acc 0.9629 | val loss 0.1669 acc 0.9455 AUC 0.9950"}
+{"time": 1791327826.6326013, "message": "[GPU 1] coatnet-0_fold2 epoch 7/20: train loss 0.0775 acc 0.9739 | val loss 0.1663 acc 0.9527 AUC 0.9948"}
+{"time": 1791327853.8083713, "message": "[GPU 1] coatnet-0_fold2 epoch 8/20: train loss 0.0612 acc 0.9829 | val loss 0.1955 acc 0.9440 AUC 0.9944"}
+{"time": 1791327880.912912, "message": "[GPU 1] coatnet-0_fold2 epoch 9/20: train loss 0.0537 acc 0.9824 | val loss 0.2219 acc 0.9455 AUC 0.9944"}
+{"time": 1791327908.00693, "message": "[GPU 1] coatnet-0_fold2 epoch 10/20: train loss 0.0333 acc 0.9902 | val loss 0.2522 acc 0.9469 AUC 0.9948"}
+{"time": 1791327934.950628, "message": "[GPU 1] coatnet-0_fold2 epoch 11/20: train loss 0.0258 acc 0.9932 | val loss 0.2114 acc 0.9641 AUC 0.9949"}
+{"time": 1791327961.8759441, "message": "[GPU 1] coatnet-0_fold2 epoch 12/20: train loss 0.0204 acc 0.9945 | val loss 0.1977 acc 0.9613 AUC 0.9953"}
+{"time": 1791327988.653626, "message": "[GPU 1] coatnet-0_fold2 epoch 13/20: train loss 0.0139 acc 0.9957 | val loss 0.1702 acc 0.9713 AUC 0.9959"}
+{"time": 1791328015.3435292, "message": "[GPU 1] coatnet-0_fold2 epoch 14/20: train loss 0.0038 acc 0.9990 | val loss 0.1675 acc 0.9770 AUC 0.9966"}
+{"time": 1791328041.9054742, "message": "[GPU 1] coatnet-0_fold2 epoch 15/20: train loss 0.0028 acc 0.9995 | val loss 0.1868 acc 0.9713 AUC 0.9965"}
+{"time": 1791328068.3694026, "message": "[GPU 1] coatnet-0_fold2 epoch 16/20: train loss 0.0015 acc 0.9995 | val loss 0.1657 acc 0.9756 AUC 0.9969"}
+{"time": 1791328094.6542351, "message": "[GPU 1] coatnet-0_fold2 epoch 17/20: train loss 0.0013 acc 0.9995 | val loss 0.1771 acc 0.9756 AUC 0.9968"}
+{"time": 1791328121.0758896, "message": "[GPU 1] coatnet-0_fold2 epoch 18/20: train loss 0.0004 acc 0.9997 | val loss 0.1778 acc 0.9770 AUC 0.9968"}
+{"time": 1791328147.5674632, "message": "[GPU 1] coatnet-0_fold2 epoch 19/20: train loss 0.0009 acc 0.9995 | val loss 0.1800 acc 0.9770 AUC 0.9968"}
+{"time": 1791328174.1165013, "message": "[GPU 1] coatnet-0_fold2 epoch 20/20: train loss 0.0008 acc 0.9995 | val loss 0.1766 acc 0.9756 AUC 0.9969"}
+{"time": 1791328175.9703448, "message": "[GPU 1] coatnet-0_fold2 done in 9.4 min, best epoch 5"}
+{"time": 1791328178.1328304, "message": "[GPU 1] coatnet-0_fold4: 2469 train / 2216 val / 45 test, micro-batch 64 x 1 accumulation = 64, 780 steps"}
+{"time": 1791328222.913307, "message": "[GPU 1] coatnet-0_fold4 epoch 1/20: train loss 0.7088 acc 0.6590 | val loss 3.2835 acc 0.2789 AUC 0.8530 | best"}
+{"time": 1791328244.8389018, "message": "[GPU 1] coatnet-0_fold4 epoch 2/20: train loss 0.3739 acc 0.8753 | val loss 0.2989 acc 0.8912 AUC 0.9831 | best"}
+{"time": 1791328265.6553447, "message": "[GPU 1] coatnet-0_fold4 epoch 3/20: train loss 0.2091 acc 0.9271 | val loss 0.3731 acc 0.8750 AUC 0.9847"}
+{"time": 1791328286.2527814, "message": "[GPU 1] coatnet-0_fold4 epoch 4/20: train loss 0.1646 acc 0.9461 | val loss 0.1524 acc 0.9449 AUC 0.9926 | best"}
+{"time": 1791328306.735016, "message": "[GPU 1] coatnet-0_fold4 epoch 5/20: train loss 0.1551 acc 0.9502 | val loss 0.7070 acc 0.7847 AUC 0.9676"}
+{"time": 1791328327.3952026, "message": "[GPU 1] coatnet-0_fold4 epoch 6/20: train loss 0.1166 acc 0.9652 | val loss 0.2031 acc 0.9449 AUC 0.9938"}
+{"time": 1791328348.0672352, "message": "[GPU 1] coatnet-0_fold4 epoch 7/20: train loss 0.0961 acc 0.9712 | val loss 0.4681 acc 0.8691 AUC 0.9843"}
+{"time": 1791328368.746302, "message": "[GPU 1] coatnet-0_fold4 epoch 8/20: train loss 0.0825 acc 0.9708 | val loss 0.3685 acc 0.9075 AUC 0.9814"}
+{"time": 1791328389.1099432, "message": "[GPU 1] coatnet-0_fold4 epoch 9/20: train loss 0.0602 acc 0.9806 | val loss 0.2333 acc 0.9517 AUC 0.9930"}
+{"time": 1791328409.555699, "message": "[GPU 1] coatnet-0_fold4 epoch 10/20: train loss 0.0529 acc 0.9834 | val loss 0.3371 acc 0.9350 AUC 0.9883"}
+{"time": 1791328429.8484917, "message": "[GPU 1] coatnet-0_fold4 epoch 11/20: train loss 0.0449 acc 0.9878 | val loss 0.5020 acc 0.9170 AUC 0.9860"}
+{"time": 1791328450.2073076, "message": "[GPU 1] coatnet-0_fold4 epoch 12/20: train loss 0.0350 acc 0.9911 | val loss 0.2128 acc 0.9508 AUC 0.9960"}
+{"time": 1791328470.640906, "message": "[GPU 1] coatnet-0_fold4 epoch 13/20: train loss 0.0172 acc 0.9959 | val loss 0.1506 acc 0.9657 AUC 0.9958 | best"}
+{"time": 1791328490.9703953, "message": "[GPU 1] coatnet-0_fold4 epoch 14/20: train loss 0.0162 acc 0.9959 | val loss 0.2580 acc 0.9553 AUC 0.9959"}
+{"time": 1791328511.4702466, "message": "[GPU 1] coatnet-0_fold4 epoch 15/20: train loss 0.0048 acc 0.9980 | val loss 0.1498 acc 0.9711 AUC 0.9975 | best"}
+{"time": 1791328531.6987243, "message": "[GPU 1] coatnet-0_fold4 epoch 16/20: train loss 0.0035 acc 0.9984 | val loss 0.2471 acc 0.9616 AUC 0.9965"}
+{"time": 1791328551.8842204, "message": "[GPU 1] coatnet-0_fold4 epoch 17/20: train loss 0.0008 acc 0.9996 | val loss 0.2330 acc 0.9612 AUC 0.9965"}
+{"time": 1791328571.8830886, "message": "[GPU 1] coatnet-0_fold4 epoch 18/20: train loss 0.0011 acc 0.9996 | val loss 0.2179 acc 0.9648 AUC 0.9967"}
+{"time": 1791328591.9435482, "message": "[GPU 1] coatnet-0_fold4 epoch 19/20: train loss 0.0007 acc 1.0000 | val loss 0.2087 acc 0.9671 AUC 0.9969"}
+{"time": 1791328612.0018249, "message": "[GPU 1] coatnet-0_fold4 epoch 20/20: train loss 0.0005 acc 0.9996 | val loss 0.2230 acc 0.9634 AUC 0.9966"}
+{"time": 1791328617.0220022, "message": "[GPU 1] coatnet-0_fold4 done in 7.2 min, best epoch 15"}
+{"time": 1791328619.15425, "message": "[GPU 1] coatnet-0_fold0_background: 4531 train / 154 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1420 steps"}
+{"time": 1791328649.9412258, "message": "[GPU 1] coatnet-0_fold0_background epoch 1/20: train loss 0.8738 acc 0.5740 | val loss 1.1218 acc 0.4805 AUC 0.7835 | best"}
+{"time": 1791328680.6735795, "message": "[GPU 1] coatnet-0_fold0_background epoch 2/20: train loss 0.7778 acc 0.6352 | val loss 1.0422 acc 0.4805 AUC 0.7788 | best"}
+{"time": 1791328710.9713616, "message": "[GPU 1] coatnet-0_fold0_background epoch 3/20: train loss 0.7024 acc 0.6628 | val loss 1.8269 acc 0.4091 AUC 0.7457"}
+{"time": 1791328741.374337, "message": "[GPU 1] coatnet-0_fold0_background epoch 4/20: train loss 0.6048 acc 0.7206 | val loss 1.3284 acc 0.4156 AUC 0.7785"}
+{"time": 1791328771.7422426, "message": "[GPU 1] coatnet-0_fold0_background epoch 5/20: train loss 0.5154 acc 0.7643 | val loss 1.5483 acc 0.4221 AUC 0.7121"}
+{"time": 1791328801.8091664, "message": "[GPU 1] coatnet-0_fold0_background epoch 6/20: train loss 0.4615 acc 0.7945 | val loss 1.5961 acc 0.4156 AUC 0.7306"}
+{"time": 1791328832.0231874, "message": "[GPU 1] coatnet-0_fold0_background epoch 7/20: train loss 0.3982 acc 0.8287 | val loss 1.8188 acc 0.4610 AUC 0.7418"}
+{"time": 1791328862.2901697, "message": "[GPU 1] coatnet-0_fold0_background epoch 8/20: train loss 0.3833 acc 0.8340 | val loss 2.3691 acc 0.4481 AUC 0.6879"}
+{"time": 1791328892.4233222, "message": "[GPU 1] coatnet-0_fold0_background epoch 9/20: train loss 0.3450 acc 0.8585 | val loss 1.2051 acc 0.5909 AUC 0.7970"}
+{"time": 1791328922.6666124, "message": "[GPU 1] coatnet-0_fold0_background epoch 10/20: train loss 0.2960 acc 0.8735 | val loss 1.1510 acc 0.5974 AUC 0.8697"}
+{"time": 1791328952.9788795, "message": "[GPU 1] coatnet-0_fold0_background epoch 11/20: train loss 0.2525 acc 0.8963 | val loss 0.7068 acc 0.7468 AUC 0.8939 | best"}
+{"time": 1791328983.202572, "message": "[GPU 1] coatnet-0_fold0_background epoch 12/20: train loss 0.2391 acc 0.9042 | val loss 0.5375 acc 0.7922 AUC 0.9312 | best"}
+{"time": 1791329013.2204936, "message": "[GPU 1] coatnet-0_fold0_background epoch 13/20: train loss 0.1921 acc 0.9194 | val loss 0.8019 acc 0.7338 AUC 0.9130"}
+{"time": 1791329043.0943646, "message": "[GPU 1] coatnet-0_fold0_background epoch 14/20: train loss 0.1584 acc 0.9358 | val loss 1.2656 acc 0.7338 AUC 0.9033"}
+{"time": 1791329073.1126962, "message": "[GPU 1] coatnet-0_fold0_background epoch 15/20: train loss 0.1150 acc 0.9554 | val loss 0.6219 acc 0.8117 AUC 0.9494"}
+{"time": 1791329103.2164946, "message": "[GPU 1] coatnet-0_fold0_background epoch 16/20: train loss 0.0926 acc 0.9645 | val loss 0.4237 acc 0.8377 AUC 0.9617 | best"}
+{"time": 1791329132.9197366, "message": "[GPU 1] coatnet-0_fold0_background epoch 17/20: train loss 0.0752 acc 0.9711 | val loss 0.5484 acc 0.8312 AUC 0.9580"}
+{"time": 1791329162.2810006, "message": "[GPU 1] coatnet-0_fold0_background epoch 18/20: train loss 0.0578 acc 0.9786 | val loss 0.6789 acc 0.8377 AUC 0.9520"}
+{"time": 1791329191.8444674, "message": "[GPU 1] coatnet-0_fold0_background epoch 19/20: train loss 0.0536 acc 0.9795 | val loss 0.6554 acc 0.8247 AUC 0.9530"}
+{"time": 1791329221.5114017, "message": "[GPU 1] coatnet-0_fold0_background epoch 20/20: train loss 0.0473 acc 0.9815 | val loss 0.6174 acc 0.8247 AUC 0.9562"}
+{"time": 1791329222.045666, "message": "[GPU 1] coatnet-0_fold0_background done in 10.0 min, best epoch 16"}
+{"time": 1791329228.3373284, "message": "[GPU 1] resnet50_fold2: 3988 train / 697 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1260 steps"}
+{"time": 1791329249.996282, "message": "[GPU 1] resnet50_fold2 epoch 1/20: train loss 0.5786 acc 0.7487 | val loss 0.4159 acc 0.8780 AUC 0.9652 | best"}
+{"time": 1791329266.0963464, "message": "[GPU 1] resnet50_fold2 epoch 2/20: train loss 0.1833 acc 0.9411 | val loss 0.2111 acc 0.9311 AUC 0.9894 | best"}
+{"time": 1791329282.21694, "message": "[GPU 1] resnet50_fold2 epoch 3/20: train loss 0.0979 acc 0.9692 | val loss 0.2378 acc 0.9268 AUC 0.9902"}
+{"time": 1791329298.1553535, "message": "[GPU 1] resnet50_fold2 epoch 4/20: train loss 0.0755 acc 0.9757 | val loss 0.1952 acc 0.9369 AUC 0.9904 | best"}
+{"time": 1791329313.9928472, "message": "[GPU 1] resnet50_fold2 epoch 5/20: train loss 0.0566 acc 0.9804 | val loss 0.1387 acc 0.9613 AUC 0.9956 | best"}
+{"time": 1791329329.6933572, "message": "[GPU 1] resnet50_fold2 epoch 6/20: train loss 0.0448 acc 0.9867 | val loss 0.2394 acc 0.9426 AUC 0.9919"}
+{"time": 1791329345.564829, "message": "[GPU 1] resnet50_fold2 epoch 7/20: train loss 0.0248 acc 0.9915 | val loss 0.1418 acc 0.9699 AUC 0.9953"}
+{"time": 1791329361.4019446, "message": "[GPU 1] resnet50_fold2 epoch 8/20: train loss 0.0177 acc 0.9942 | val loss 0.1471 acc 0.9699 AUC 0.9968"}
+{"time": 1791329377.240777, "message": "[GPU 1] resnet50_fold2 epoch 9/20: train loss 0.0180 acc 0.9945 | val loss 0.1725 acc 0.9598 AUC 0.9948"}
+{"time": 1791329392.978908, "message": "[GPU 1] resnet50_fold2 epoch 10/20: train loss 0.0088 acc 0.9965 | val loss 0.2033 acc 0.9570 AUC 0.9948"}
+{"time": 1791329408.6568787, "message": "[GPU 1] resnet50_fold2 epoch 11/20: train loss 0.0100 acc 0.9967 | val loss 0.1604 acc 0.9613 AUC 0.9959"}
+{"time": 1791329424.4482424, "message": "[GPU 1] resnet50_fold2 epoch 12/20: train loss 0.0035 acc 0.9987 | val loss 0.1965 acc 0.9584 AUC 0.9956"}
+{"time": 1791329440.0483627, "message": "[GPU 1] resnet50_fold2 epoch 13/20: train loss 0.0024 acc 0.9992 | val loss 0.1779 acc 0.9656 AUC 0.9960"}
+{"time": 1791329455.649748, "message": "[GPU 1] resnet50_fold2 epoch 14/20: train loss 0.0006 acc 1.0000 | val loss 0.1872 acc 0.9613 AUC 0.9962"}
+{"time": 1791329471.1787612, "message": "[GPU 1] resnet50_fold2 epoch 15/20: train loss 0.0016 acc 0.9992 | val loss 0.1760 acc 0.9670 AUC 0.9961"}
+{"time": 1791329486.604309, "message": "[GPU 1] resnet50_fold2 epoch 16/20: train loss 0.0005 acc 1.0000 | val loss 0.1821 acc 0.9641 AUC 0.9962"}
+{"time": 1791329502.1959102, "message": "[GPU 1] resnet50_fold2 epoch 17/20: train loss 0.0005 acc 1.0000 | val loss 0.1845 acc 0.9613 AUC 0.9963"}
+{"time": 1791329517.7162054, "message": "[GPU 1] resnet50_fold2 epoch 18/20: train loss 0.0007 acc 1.0000 | val loss 0.1766 acc 0.9627 AUC 0.9965"}
+{"time": 1791329533.2215362, "message": "[GPU 1] resnet50_fold2 epoch 19/20: train loss 0.0006 acc 0.9997 | val loss 0.1823 acc 0.9598 AUC 0.9963"}
+{"time": 1791329548.7295575, "message": "[GPU 1] resnet50_fold2 epoch 20/20: train loss 0.0005 acc 1.0000 | val loss 0.1749 acc 0.9641 AUC 0.9964"}
+{"time": 1791329550.4203312, "message": "[GPU 1] resnet50_fold2 done in 5.3 min, best epoch 5"}
+{"time": 1791329552.1418102, "message": "[GPU 1] resnet50_fold4: 2469 train / 2216 val / 45 test, micro-batch 64 x 1 accumulation = 64, 780 steps"}
+{"time": 1791329569.4063194, "message": "[GPU 1] resnet50_fold4 epoch 1/20: train loss 0.7040 acc 0.7027 | val loss 0.6274 acc 0.7563 AUC 0.9414 | best"}
+{"time": 1791329581.7187574, "message": "[GPU 1] resnet50_fold4 epoch 2/20: train loss 0.1843 acc 0.9299 | val loss 0.2527 acc 0.9120 AUC 0.9846 | best"}
+{"time": 1791329594.2105632, "message": "[GPU 1] resnet50_fold4 epoch 3/20: train loss 0.1325 acc 0.9587 | val loss 0.2314 acc 0.9197 AUC 0.9834 | best"}
+{"time": 1791329606.4819725, "message": "[GPU 1] resnet50_fold4 epoch 4/20: train loss 0.1110 acc 0.9656 | val loss 0.5804 acc 0.8357 AUC 0.9637"}
+{"time": 1791329618.7789648, "message": "[GPU 1] resnet50_fold4 epoch 5/20: train loss 0.0715 acc 0.9749 | val loss 0.2372 acc 0.9170 AUC 0.9897"}
+{"time": 1791329630.9746127, "message": "[GPU 1] resnet50_fold4 epoch 6/20: train loss 0.0505 acc 0.9850 | val loss 0.3843 acc 0.9075 AUC 0.9906"}
+{"time": 1791329643.1311817, "message": "[GPU 1] resnet50_fold4 epoch 7/20: train loss 0.0414 acc 0.9870 | val loss 0.2818 acc 0.9215 AUC 0.9913"}
+{"time": 1791329655.4028926, "message": "[GPU 1] resnet50_fold4 epoch 8/20: train loss 0.0330 acc 0.9887 | val loss 0.1446 acc 0.9580 AUC 0.9951 | best"}
+{"time": 1791329667.4348037, "message": "[GPU 1] resnet50_fold4 epoch 9/20: train loss 0.0155 acc 0.9951 | val loss 0.2410 acc 0.9486 AUC 0.9929"}
+{"time": 1791329679.4374394, "message": "[GPU 1] resnet50_fold4 epoch 10/20: train loss 0.0102 acc 0.9951 | val loss 0.2113 acc 0.9535 AUC 0.9942"}
+{"time": 1791329691.4934032, "message": "[GPU 1] resnet50_fold4 epoch 11/20: train loss 0.0068 acc 0.9972 | val loss 0.2478 acc 0.9526 AUC 0.9937"}
+{"time": 1791329703.627079, "message": "[GPU 1] resnet50_fold4 epoch 12/20: train loss 0.0051 acc 0.9984 | val loss 0.2145 acc 0.9607 AUC 0.9947"}
+{"time": 1791329715.7175896, "message": "[GPU 1] resnet50_fold4 epoch 13/20: train loss 0.0044 acc 0.9984 | val loss 0.2042 acc 0.9621 AUC 0.9946"}
+{"time": 1791329727.838523, "message": "[GPU 1] resnet50_fold4 epoch 14/20: train loss 0.0020 acc 0.9992 | val loss 0.2344 acc 0.9558 AUC 0.9943"}
+{"time": 1791329739.9725654, "message": "[GPU 1] resnet50_fold4 epoch 15/20: train loss 0.0014 acc 0.9996 | val loss 0.1827 acc 0.9662 AUC 0.9955"}
+{"time": 1791329752.0660644, "message": "[GPU 1] resnet50_fold4 epoch 16/20: train loss 0.0013 acc 0.9996 | val loss 0.1869 acc 0.9657 AUC 0.9957"}
+{"time": 1791329764.107508, "message": "[GPU 1] resnet50_fold4 epoch 17/20: train loss 0.0013 acc 0.9996 | val loss 0.1919 acc 0.9666 AUC 0.9955"}
+{"time": 1791329776.2140994, "message": "[GPU 1] resnet50_fold4 epoch 18/20: train loss 0.0024 acc 0.9988 | val loss 0.1937 acc 0.9657 AUC 0.9954"}
+{"time": 1791329788.2735934, "message": "[GPU 1] resnet50_fold4 epoch 19/20: train loss 0.0012 acc 0.9992 | val loss 0.1967 acc 0.9639 AUC 0.9957"}
+{"time": 1791329800.394697, "message": "[GPU 1] resnet50_fold4 epoch 20/20: train loss 0.0006 acc 1.0000 | val loss 0.2088 acc 0.9621 AUC 0.9953"}
+{"time": 1791329803.7053323, "message": "[GPU 1] resnet50_fold4 done in 4.1 min, best epoch 8"}
+{"time": 1791329810.101058, "message": "[GPU 1] densenet121_fold0: 4531 train / 154 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1420 steps"}
+{"time": 1791329838.3970995, "message": "[GPU 1] densenet121_fold0 epoch 1/20: train loss 0.4521 acc 0.7945 | val loss 0.3640 acc 0.8766 AUC 0.9811 | best"}
+{"time": 1791329860.8942983, "message": "[GPU 1] densenet121_fold0 epoch 2/20: train loss 0.1499 acc 0.9479 | val loss 0.2131 acc 0.9221 AUC 0.9940 | best"}
+{"time": 1791329883.3783665, "message": "[GPU 1] densenet121_fold0 epoch 3/20: train loss 0.0901 acc 0.9667 | val loss 0.1884 acc 0.9091 AUC 0.9970 | best"}
+{"time": 1791329905.8279316, "message": "[GPU 1] densenet121_fold0 epoch 4/20: train loss 0.0720 acc 0.9729 | val loss 0.1355 acc 0.9416 AUC 0.9955 | best"}
+{"time": 1791329928.1444552, "message": "[GPU 1] densenet121_fold0 epoch 5/20: train loss 0.0427 acc 0.9848 | val loss 0.1545 acc 0.9416 AUC 0.9962"}
+{"time": 1791329950.4888175, "message": "[GPU 1] densenet121_fold0 epoch 6/20: train loss 0.0442 acc 0.9861 | val loss 0.1261 acc 0.9416 AUC 0.9985 | best"}
+{"time": 1791329972.8336291, "message": "[GPU 1] densenet121_fold0 epoch 7/20: train loss 0.0240 acc 0.9925 | val loss 0.0589 acc 0.9805 AUC 0.9989 | best"}
+{"time": 1791329995.1514723, "message": "[GPU 1] densenet121_fold0 epoch 8/20: train loss 0.0149 acc 0.9949 | val loss 0.1075 acc 0.9610 AUC 0.9975"}
+{"time": 1791330017.4913077, "message": "[GPU 1] densenet121_fold0 epoch 9/20: train loss 0.0168 acc 0.9947 | val loss 0.0994 acc 0.9740 AUC 0.9977"}
+{"time": 1791330039.7856765, "message": "[GPU 1] densenet121_fold0 epoch 10/20: train loss 0.0104 acc 0.9978 | val loss 0.1598 acc 0.9545 AUC 0.9980"}
+{"time": 1791330062.0993953, "message": "[GPU 1] densenet121_fold0 epoch 11/20: train loss 0.0062 acc 0.9985 | val loss 0.1135 acc 0.9545 AUC 0.9985"}
+{"time": 1791330084.3134677, "message": "[GPU 1] densenet121_fold0 epoch 12/20: train loss 0.0044 acc 0.9991 | val loss 0.0877 acc 0.9675 AUC 0.9992"}
+{"time": 1791330106.411413, "message": "[GPU 1] densenet121_fold0 epoch 13/20: train loss 0.0027 acc 0.9991 | val loss 0.0964 acc 0.9610 AUC 0.9995"}
+{"time": 1791330128.659146, "message": "[GPU 1] densenet121_fold0 epoch 14/20: train loss 0.0028 acc 0.9993 | val loss 0.0664 acc 0.9805 AUC 0.9995"}
+{"time": 1791330151.0000114, "message": "[GPU 1] densenet121_fold0 epoch 15/20: train loss 0.0017 acc 0.9996 | val loss 0.0661 acc 0.9870 AUC 0.9991"}
+{"time": 1791330173.2264178, "message": "[GPU 1] densenet121_fold0 epoch 16/20: train loss 0.0008 acc 0.9998 | val loss 0.0808 acc 0.9805 AUC 0.9992"}
+{"time": 1791330195.4598882, "message": "[GPU 1] densenet121_fold0 epoch 17/20: train loss 0.0006 acc 1.0000 | val loss 0.0743 acc 0.9805 AUC 0.9993"}
+{"time": 1791330217.5674038, "message": "[GPU 1] densenet121_fold0 epoch 18/20: train loss 0.0006 acc 1.0000 | val loss 0.0688 acc 0.9870 AUC 0.9993"}
+{"time": 1791330239.8331482, "message": "[GPU 1] densenet121_fold0 epoch 19/20: train loss 0.0005 acc 1.0000 | val loss 0.0808 acc 0.9805 AUC 0.9994"}
+{"time": 1791330262.0909321, "message": "[GPU 1] densenet121_fold0 epoch 20/20: train loss 0.0004 acc 1.0000 | val loss 0.0793 acc 0.9805 AUC 0.9994"}
+{"time": 1791330263.4536142, "message": "[GPU 1] densenet121_fold0 done in 7.5 min, best epoch 7"}
+{"time": 1791330265.2113771, "message": "[GPU 1] densenet121_fold2: 3988 train / 697 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1260 steps"}
+{"time": 1791330290.928969, "message": "[GPU 1] densenet121_fold2 epoch 1/20: train loss 0.4479 acc 0.8152 | val loss 0.2244 acc 0.9225 AUC 0.9860 | best"}
+{"time": 1791330311.497718, "message": "[GPU 1] densenet121_fold2 epoch 2/20: train loss 0.1437 acc 0.9519 | val loss 0.2697 acc 0.9096 AUC 0.9899"}
+{"time": 1791330332.415476, "message": "[GPU 1] densenet121_fold2 epoch 3/20: train loss 0.0876 acc 0.9699 | val loss 0.2391 acc 0.9311 AUC 0.9913"}
+{"time": 1791330353.2017295, "message": "[GPU 1] densenet121_fold2 epoch 4/20: train loss 0.0663 acc 0.9779 | val loss 0.1704 acc 0.9469 AUC 0.9936 | best"}
+{"time": 1791330373.849674, "message": "[GPU 1] densenet121_fold2 epoch 5/20: train loss 0.0540 acc 0.9827 | val loss 0.1662 acc 0.9469 AUC 0.9941 | best"}
+{"time": 1791330394.370251, "message": "[GPU 1] densenet121_fold2 epoch 6/20: train loss 0.0362 acc 0.9875 | val loss 0.2007 acc 0.9484 AUC 0.9937"}
+{"time": 1791330415.0812204, "message": "[GPU 1] densenet121_fold2 epoch 7/20: train loss 0.0291 acc 0.9905 | val loss 0.1881 acc 0.9484 AUC 0.9933"}
+{"time": 1791330435.813482, "message": "[GPU 1] densenet121_fold2 epoch 8/20: train loss 0.0210 acc 0.9920 | val loss 0.1122 acc 0.9699 AUC 0.9971 | best"}
+{"time": 1791330456.5129871, "message": "[GPU 1] densenet121_fold2 epoch 9/20: train loss 0.0127 acc 0.9960 | val loss 0.1006 acc 0.9742 AUC 0.9977 | best"}
+{"time": 1791330477.202606, "message": "[GPU 1] densenet121_fold2 epoch 10/20: train loss 0.0156 acc 0.9942 | val loss 0.1510 acc 0.9584 AUC 0.9966"}
+{"time": 1791330497.8741562, "message": "[GPU 1] densenet121_fold2 epoch 11/20: train loss 0.0091 acc 0.9972 | val loss 0.1074 acc 0.9670 AUC 0.9969"}
+{"time": 1791330518.525553, "message": "[GPU 1] densenet121_fold2 epoch 12/20: train loss 0.0059 acc 0.9985 | val loss 0.1216 acc 0.9785 AUC 0.9959"}
+{"time": 1791330539.125601, "message": "[GPU 1] densenet121_fold2 epoch 13/20: train loss 0.0029 acc 0.9992 | val loss 0.1233 acc 0.9785 AUC 0.9961"}
+{"time": 1791330559.8083818, "message": "[GPU 1] densenet121_fold2 epoch 14/20: train loss 0.0018 acc 0.9992 | val loss 0.1104 acc 0.9799 AUC 0.9966"}
+{"time": 1791330580.4046557, "message": "[GPU 1] densenet121_fold2 epoch 15/20: train loss 0.0011 acc 1.0000 | val loss 0.1125 acc 0.9828 AUC 0.9965"}
+{"time": 1791330601.1363575, "message": "[GPU 1] densenet121_fold2 epoch 16/20: train loss 0.0008 acc 0.9997 | val loss 0.1102 acc 0.9813 AUC 0.9961"}
+{"time": 1791330621.6836052, "message": "[GPU 1] densenet121_fold2 epoch 17/20: train loss 0.0006 acc 1.0000 | val loss 0.1101 acc 0.9770 AUC 0.9964"}
+{"time": 1791330642.2303574, "message": "[GPU 1] densenet121_fold2 epoch 18/20: train loss 0.0007 acc 1.0000 | val loss 0.1103 acc 0.9799 AUC 0.9961"}
+{"time": 1791330662.7322414, "message": "[GPU 1] densenet121_fold2 epoch 19/20: train loss 0.0007 acc 0.9997 | val loss 0.1120 acc 0.9756 AUC 0.9963"}
+{"time": 1791330683.3179119, "message": "[GPU 1] densenet121_fold2 epoch 20/20: train loss 0.0005 acc 1.0000 | val loss 0.1111 acc 0.9828 AUC 0.9960"}
+{"time": 1791330685.0749452, "message": "[GPU 1] densenet121_fold2 done in 7.0 min, best epoch 9"}
+{"time": 1791330686.7779918, "message": "[GPU 1] densenet121_fold4: 2469 train / 2216 val / 45 test, micro-batch 64 x 1 accumulation = 64, 780 steps"}
+{"time": 1791330706.7058637, "message": "[GPU 1] densenet121_fold4 epoch 1/20: train loss 0.5163 acc 0.7914 | val loss 0.4325 acc 0.8448 AUC 0.9768 | best"}
+{"time": 1791330722.8763862, "message": "[GPU 1] densenet121_fold4 epoch 2/20: train loss 0.1523 acc 0.9449 | val loss 0.1596 acc 0.9350 AUC 0.9919 | best"}
+{"time": 1791330738.79942, "message": "[GPU 1] densenet121_fold4 epoch 3/20: train loss 0.0999 acc 0.9672 | val loss 0.2917 acc 0.8967 AUC 0.9881"}
+{"time": 1791330754.8224719, "message": "[GPU 1] densenet121_fold4 epoch 4/20: train loss 0.0755 acc 0.9712 | val loss 0.2373 acc 0.9251 AUC 0.9895"}
+{"time": 1791330770.8012347, "message": "[GPU 1] densenet121_fold4 epoch 5/20: train loss 0.0567 acc 0.9814 | val loss 0.1679 acc 0.9373 AUC 0.9938"}
+{"time": 1791330786.8747408, "message": "[GPU 1] densenet121_fold4 epoch 6/20: train loss 0.0294 acc 0.9919 | val loss 0.1681 acc 0.9422 AUC 0.9922"}
+{"time": 1791330802.9006805, "message": "[GPU 1] densenet121_fold4 epoch 7/20: train loss 0.0295 acc 0.9899 | val loss 0.5446 acc 0.8705 AUC 0.9796"}
+{"time": 1791330818.889492, "message": "[GPU 1] densenet121_fold4 epoch 8/20: train loss 0.0310 acc 0.9878 | val loss 0.2353 acc 0.9341 AUC 0.9897"}
+{"time": 1791330835.0049808, "message": "[GPU 1] densenet121_fold4 epoch 9/20: train loss 0.0176 acc 0.9927 | val loss 0.1351 acc 0.9571 AUC 0.9953 | best"}
+{"time": 1791330851.1315904, "message": "[GPU 1] densenet121_fold4 epoch 10/20: train loss 0.0152 acc 0.9943 | val loss 0.1211 acc 0.9698 AUC 0.9949 | best"}
+{"time": 1791330867.147823, "message": "[GPU 1] densenet121_fold4 epoch 11/20: train loss 0.0042 acc 0.9992 | val loss 0.1928 acc 0.9526 AUC 0.9933"}
+{"time": 1791330883.1712956, "message": "[GPU 1] densenet121_fold4 epoch 12/20: train loss 0.0066 acc 0.9972 | val loss 0.1305 acc 0.9662 AUC 0.9964"}
+{"time": 1791330899.1419742, "message": "[GPU 1] densenet121_fold4 epoch 13/20: train loss 0.0031 acc 0.9992 | val loss 0.1308 acc 0.9684 AUC 0.9959"}
+{"time": 1791330915.1850588, "message": "[GPU 1] densenet121_fold4 epoch 14/20: train loss 0.0023 acc 0.9992 | val loss 0.1388 acc 0.9630 AUC 0.9960"}
+{"time": 1791330931.2527304, "message": "[GPU 1] densenet121_fold4 epoch 15/20: train loss 0.0013 acc 0.9996 | val loss 0.1490 acc 0.9594 AUC 0.9955"}
+{"time": 1791330947.3193312, "message": "[GPU 1] densenet121_fold4 epoch 16/20: train loss 0.0017 acc 0.9996 | val loss 0.1329 acc 0.9657 AUC 0.9958"}
+{"time": 1791330963.3643172, "message": "[GPU 1] densenet121_fold4 epoch 17/20: train loss 0.0031 acc 0.9988 | val loss 0.1394 acc 0.9648 AUC 0.9960"}
+{"time": 1791330979.4278538, "message": "[GPU 1] densenet121_fold4 epoch 18/20: train loss 0.0009 acc 1.0000 | val loss 0.1457 acc 0.9630 AUC 0.9961"}
+{"time": 1791330995.5621805, "message": "[GPU 1] densenet121_fold4 epoch 19/20: train loss 0.0013 acc 1.0000 | val loss 0.1400 acc 0.9639 AUC 0.9968"}
+{"time": 1791331011.6937518, "message": "[GPU 1] densenet121_fold4 epoch 20/20: train loss 0.0010 acc 1.0000 | val loss 0.1611 acc 0.9603 AUC 0.9959"}
+{"time": 1791331016.2088666, "message": "[GPU 1] densenet121_fold4 done in 5.4 min, best epoch 10"}
+{"time": 1791331072.4430423, "message": "[GPU 1] efficientnetb0_fold0: 4531 train / 154 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1420 steps"}
+{"time": 1791331169.739015, "message": "[GPU 1] efficientnetb0_fold0 epoch 1/20: train loss 0.6468 acc 0.7217 | val loss 0.2954 acc 0.8701 AUC 0.9771 | best"}
+{"time": 1791331182.8832235, "message": "[GPU 1] efficientnetb0_fold0 epoch 2/20: train loss 0.1837 acc 0.9336 | val loss 0.0881 acc 0.9610 AUC 0.9982 | best"}
+{"time": 1791331195.9217968, "message": "[GPU 1] efficientnetb0_fold0 epoch 3/20: train loss 0.0884 acc 0.9700 | val loss 0.0611 acc 0.9740 AUC 0.9991 | best"}
+{"time": 1791331208.8535058, "message": "[GPU 1] efficientnetb0_fold0 epoch 4/20: train loss 0.0554 acc 0.9810 | val loss 0.0391 acc 0.9935 AUC 0.9995 | best"}
+{"time": 1791331221.7453609, "message": "[GPU 1] efficientnetb0_fold0 epoch 5/20: train loss 0.0312 acc 0.9898 | val loss 0.0379 acc 0.9870 AUC 0.9997 | best"}
+{"time": 1791331234.710478, "message": "[GPU 1] efficientnetb0_fold0 epoch 6/20: train loss 0.0244 acc 0.9912 | val loss 0.0118 acc 1.0000 AUC 1.0000 | best"}
+{"time": 1791331247.700835, "message": "[GPU 1] efficientnetb0_fold0 epoch 7/20: train loss 0.0204 acc 0.9934 | val loss 0.0451 acc 0.9870 AUC 0.9996"}
+{"time": 1791331260.6273203, "message": "[GPU 1] efficientnetb0_fold0 epoch 8/20: train loss 0.0122 acc 0.9965 | val loss 0.0403 acc 0.9935 AUC 0.9995"}
+{"time": 1791331273.7156312, "message": "[GPU 1] efficientnetb0_fold0 epoch 9/20: train loss 0.0097 acc 0.9974 | val loss 0.0089 acc 1.0000 AUC 1.0000 | best"}
+{"time": 1791331286.7598386, "message": "[GPU 1] efficientnetb0_fold0 epoch 10/20: train loss 0.0137 acc 0.9962 | val loss 0.0157 acc 0.9870 AUC 1.0000"}
+{"time": 1791331299.7135572, "message": "[GPU 1] efficientnetb0_fold0 epoch 11/20: train loss 0.0089 acc 0.9971 | val loss 0.0283 acc 0.9935 AUC 0.9999"}
+{"time": 1791331312.6334937, "message": "[GPU 1] efficientnetb0_fold0 epoch 12/20: train loss 0.0082 acc 0.9965 | val loss 0.0338 acc 0.9935 AUC 0.9997"}
+{"time": 1791331325.6377575, "message": "[GPU 1] efficientnetb0_fold0 epoch 13/20: train loss 0.0045 acc 0.9991 | val loss 0.0349 acc 0.9935 AUC 0.9999"}
+{"time": 1791331338.566622, "message": "[GPU 1] efficientnetb0_fold0 epoch 14/20: train loss 0.0056 acc 0.9987 | val loss 0.0496 acc 0.9935 AUC 0.9995"}
+{"time": 1791331351.5156953, "message": "[GPU 1] efficientnetb0_fold0 epoch 15/20: train loss 0.0029 acc 0.9996 | val loss 0.0376 acc 0.9935 AUC 0.9996"}
+{"time": 1791331364.4386656, "message": "[GPU 1] efficientnetb0_fold0 epoch 16/20: train loss 0.0034 acc 0.9987 | val loss 0.0472 acc 0.9935 AUC 0.9995"}
+{"time": 1791331377.405104, "message": "[GPU 1] efficientnetb0_fold0 epoch 17/20: train loss 0.0014 acc 0.9998 | val loss 0.0427 acc 0.9935 AUC 0.9999"}
+{"time": 1791331390.36503, "message": "[GPU 1] efficientnetb0_fold0 epoch 18/20: train loss 0.0010 acc 1.0000 | val loss 0.0446 acc 0.9935 AUC 0.9995"}
+{"time": 1791331403.2388885, "message": "[GPU 1] efficientnetb0_fold0 epoch 19/20: train loss 0.0026 acc 0.9996 | val loss 0.0489 acc 0.9935 AUC 0.9997"}
+{"time": 1791331416.189024, "message": "[GPU 1] efficientnetb0_fold0 epoch 20/20: train loss 0.0025 acc 0.9996 | val loss 0.0492 acc 0.9935 AUC 0.9995"}
+{"time": 1791331429.6344914, "message": "[GPU 1] efficientnetb0_fold0 done in 5.7 min, best epoch 9"}
+{"time": 1791331430.8958235, "message": "[GPU 1] efficientnetb0_fold1: 3943 train / 742 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1240 steps"}
+{"time": 1791331510.3630369, "message": "[GPU 1] efficientnetb0_fold1 epoch 1/20: train loss 0.6507 acc 0.7246 | val loss 0.3039 acc 0.8827 AUC 0.9702 | best"}
+{"time": 1791331522.5602686, "message": "[GPU 1] efficientnetb0_fold1 epoch 2/20: train loss 0.1713 acc 0.9343 | val loss 0.1730 acc 0.9407 AUC 0.9900 | best"}
+{"time": 1791331534.4986005, "message": "[GPU 1] efficientnetb0_fold1 epoch 3/20: train loss 0.0854 acc 0.9670 | val loss 0.1868 acc 0.9488 AUC 0.9936"}
+{"time": 1791331546.0837922, "message": "[GPU 1] efficientnetb0_fold1 epoch 4/20: train loss 0.0580 acc 0.9810 | val loss 0.1460 acc 0.9555 AUC 0.9952 | best"}
+{"time": 1791331557.7291899, "message": "[GPU 1] efficientnetb0_fold1 epoch 5/20: train loss 0.0374 acc 0.9881 | val loss 0.2644 acc 0.9420 AUC 0.9918"}
+{"time": 1791331569.2469409, "message": "[GPU 1] efficientnetb0_fold1 epoch 6/20: train loss 0.0267 acc 0.9911 | val loss 0.1556 acc 0.9636 AUC 0.9948"}
+{"time": 1791331580.902633, "message": "[GPU 1] efficientnetb0_fold1 epoch 7/20: train loss 0.0292 acc 0.9911 | val loss 0.1959 acc 0.9636 AUC 0.9948"}
+{"time": 1791331592.599618, "message": "[GPU 1] efficientnetb0_fold1 epoch 8/20: train loss 0.0167 acc 0.9947 | val loss 0.2217 acc 0.9609 AUC 0.9929"}
+{"time": 1791331604.3832963, "message": "[GPU 1] efficientnetb0_fold1 epoch 9/20: train loss 0.0110 acc 0.9967 | val loss 0.1943 acc 0.9623 AUC 0.9944"}
+{"time": 1791331616.242449, "message": "[GPU 1] efficientnetb0_fold1 epoch 10/20: train loss 0.0110 acc 0.9959 | val loss 0.1462 acc 0.9704 AUC 0.9973"}
+{"time": 1791331627.922059, "message": "[GPU 1] efficientnetb0_fold1 epoch 11/20: train loss 0.0080 acc 0.9975 | val loss 0.1741 acc 0.9636 AUC 0.9955"}
+{"time": 1791331639.5667603, "message": "[GPU 1] efficientnetb0_fold1 epoch 12/20: train loss 0.0087 acc 0.9962 | val loss 0.1630 acc 0.9690 AUC 0.9962"}
+{"time": 1791331651.2496257, "message": "[GPU 1] efficientnetb0_fold1 epoch 13/20: train loss 0.0030 acc 0.9992 | val loss 0.1813 acc 0.9663 AUC 0.9960"}
+{"time": 1791331662.896855, "message": "[GPU 1] efficientnetb0_fold1 epoch 14/20: train loss 0.0062 acc 0.9972 | val loss 0.1593 acc 0.9704 AUC 0.9966"}
+{"time": 1791331674.7514052, "message": "[GPU 1] efficientnetb0_fold1 epoch 15/20: train loss 0.0056 acc 0.9977 | val loss 0.1517 acc 0.9704 AUC 0.9972"}
+{"time": 1791331686.5904663, "message": "[GPU 1] efficientnetb0_fold1 epoch 16/20: train loss 0.0051 acc 0.9985 | val loss 0.1542 acc 0.9690 AUC 0.9970"}
+{"time": 1791331698.4174345, "message": "[GPU 1] efficientnetb0_fold1 epoch 17/20: train loss 0.0015 acc 0.9995 | val loss 0.1570 acc 0.9690 AUC 0.9968"}
+{"time": 1791331710.2035902, "message": "[GPU 1] efficientnetb0_fold1 epoch 18/20: train loss 0.0030 acc 0.9992 | val loss 0.1699 acc 0.9677 AUC 0.9966"}
+{"time": 1791331721.900657, "message": "[GPU 1] efficientnetb0_fold1 epoch 19/20: train loss 0.0019 acc 0.9995 | val loss 0.1665 acc 0.9704 AUC 0.9967"}
+{"time": 1791331733.404503, "message": "[GPU 1] efficientnetb0_fold1 epoch 20/20: train loss 0.0024 acc 0.9992 | val loss 0.1713 acc 0.9663 AUC 0.9966"}
+{"time": 1791331734.1652899, "message": "[GPU 1] efficientnetb0_fold1 done in 5.0 min, best epoch 4"}
+{"time": 1791331735.5679624, "message": "[GPU 1] efficientnetb0_fold3: 3809 train / 876 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1200 steps"}
+{"time": 1791331815.6685553, "message": "[GPU 1] efficientnetb0_fold3 epoch 1/20: train loss 0.6446 acc 0.7288 | val loss 0.3084 acc 0.8813 AUC 0.9765 | best"}
+{"time": 1791331827.7089562, "message": "[GPU 1] efficientnetb0_fold3 epoch 2/20: train loss 0.1744 acc 0.9346 | val loss 0.1286 acc 0.9669 AUC 0.9926 | best"}
+{"time": 1791331839.471683, "message": "[GPU 1] efficientnetb0_fold3 epoch 3/20: train loss 0.0925 acc 0.9664 | val loss 0.1053 acc 0.9715 AUC 0.9953 | best"}
+{"time": 1791331850.8439968, "message": "[GPU 1] efficientnetb0_fold3 epoch 4/20: train loss 0.0530 acc 0.9827 | val loss 0.1145 acc 0.9715 AUC 0.9951"}
+{"time": 1791331862.340566, "message": "[GPU 1] efficientnetb0_fold3 epoch 5/20: train loss 0.0371 acc 0.9863 | val loss 0.1153 acc 0.9726 AUC 0.9954"}
+{"time": 1791331873.7858322, "message": "[GPU 1] efficientnetb0_fold3 epoch 6/20: train loss 0.0267 acc 0.9913 | val loss 0.1347 acc 0.9772 AUC 0.9938"}
+{"time": 1791331885.257616, "message": "[GPU 1] efficientnetb0_fold3 epoch 7/20: train loss 0.0141 acc 0.9950 | val loss 0.1266 acc 0.9715 AUC 0.9931"}
+{"time": 1791331896.8743305, "message": "[GPU 1] efficientnetb0_fold3 epoch 8/20: train loss 0.0186 acc 0.9940 | val loss 0.1438 acc 0.9692 AUC 0.9950"}
+{"time": 1791331908.5563686, "message": "[GPU 1] efficientnetb0_fold3 epoch 9/20: train loss 0.0125 acc 0.9961 | val loss 0.1667 acc 0.9737 AUC 0.9925"}
+{"time": 1791331920.1104453, "message": "[GPU 1] efficientnetb0_fold3 epoch 10/20: train loss 0.0086 acc 0.9974 | val loss 0.1834 acc 0.9680 AUC 0.9927"}
+{"time": 1791331931.3820148, "message": "[GPU 1] efficientnetb0_fold3 epoch 11/20: train loss 0.0067 acc 0.9982 | val loss 0.1544 acc 0.9737 AUC 0.9946"}
+{"time": 1791331942.8349712, "message": "[GPU 1] efficientnetb0_fold3 epoch 12/20: train loss 0.0059 acc 0.9979 | val loss 0.1556 acc 0.9737 AUC 0.9934"}
+{"time": 1791331954.2193613, "message": "[GPU 1] efficientnetb0_fold3 epoch 13/20: train loss 0.0039 acc 0.9987 | val loss 0.1610 acc 0.9772 AUC 0.9935"}
+{"time": 1791331965.6917078, "message": "[GPU 1] efficientnetb0_fold3 epoch 14/20: train loss 0.0033 acc 0.9987 | val loss 0.1640 acc 0.9772 AUC 0.9939"}
+{"time": 1791331977.2878017, "message": "[GPU 1] efficientnetb0_fold3 epoch 15/20: train loss 0.0053 acc 0.9987 | val loss 0.1647 acc 0.9760 AUC 0.9937"}
+{"time": 1791331988.8761544, "message": "[GPU 1] efficientnetb0_fold3 epoch 16/20: train loss 0.0023 acc 0.9992 | val loss 0.1489 acc 0.9760 AUC 0.9942"}
+{"time": 1791332000.3947108, "message": "[GPU 1] efficientnetb0_fold3 epoch 17/20: train loss 0.0022 acc 0.9992 | val loss 0.1562 acc 0.9772 AUC 0.9943"}
+{"time": 1791332011.883985, "message": "[GPU 1] efficientnetb0_fold3 epoch 18/20: train loss 0.0014 acc 0.9992 | val loss 0.1467 acc 0.9772 AUC 0.9944"}
+{"time": 1791332023.3653743, "message": "[GPU 1] efficientnetb0_fold3 epoch 19/20: train loss 0.0011 acc 0.9997 | val loss 0.1534 acc 0.9772 AUC 0.9945"}
+{"time": 1791332034.8918087, "message": "[GPU 1] efficientnetb0_fold3 epoch 20/20: train loss 0.0022 acc 0.9997 | val loss 0.1540 acc 0.9772 AUC 0.9947"}
+{"time": 1791332035.7710905, "message": "[GPU 1] efficientnetb0_fold3 done in 5.0 min, best epoch 3"}
+{"time": 1791332037.3863838, "message": "[GPU 1] efficientnetb0_fold0_background: 4531 train / 154 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1420 steps"}
+{"time": 1791332050.7207701, "message": "[GPU 1] efficientnetb0_fold0_background epoch 1/20: train loss 0.8676 acc 0.5665 | val loss 0.6157 acc 0.7273 AUC 0.8975 | best"}
+{"time": 1791332063.938786, "message": "[GPU 1] efficientnetb0_fold0_background epoch 2/20: train loss 0.5190 acc 0.7687 | val loss 0.5101 acc 0.7662 AUC 0.9173 | best"}
+{"time": 1791332077.1369762, "message": "[GPU 1] efficientnetb0_fold0_background epoch 3/20: train loss 0.4022 acc 0.8252 | val loss 0.5571 acc 0.7727 AUC 0.9177"}
+{"time": 1791332090.347958, "message": "[GPU 1] efficientnetb0_fold0_background epoch 4/20: train loss 0.3437 acc 0.8528 | val loss 0.6425 acc 0.7078 AUC 0.9019"}
+{"time": 1791332103.4323187, "message": "[GPU 1] efficientnetb0_fold0_background epoch 5/20: train loss 0.3075 acc 0.8713 | val loss 0.5519 acc 0.7468 AUC 0.9263"}
+{"time": 1791332116.6499705, "message": "[GPU 1] efficientnetb0_fold0_background epoch 6/20: train loss 0.2623 acc 0.8905 | val loss 0.5171 acc 0.7792 AUC 0.9333"}
+{"time": 1791332129.5418792, "message": "[GPU 1] efficientnetb0_fold0_background epoch 7/20: train loss 0.2337 acc 0.9058 | val loss 0.4044 acc 0.8247 AUC 0.9430 | best"}
+{"time": 1791332142.624238, "message": "[GPU 1] efficientnetb0_fold0_background epoch 8/20: train loss 0.2032 acc 0.9201 | val loss 0.5429 acc 0.7727 AUC 0.9237"}
+{"time": 1791332155.588723, "message": "[GPU 1] efficientnetb0_fold0_background epoch 9/20: train loss 0.1701 acc 0.9336 | val loss 0.4791 acc 0.8117 AUC 0.9372"}
+{"time": 1791332168.7717898, "message": "[GPU 1] efficientnetb0_fold0_background epoch 10/20: train loss 0.1449 acc 0.9459 | val loss 0.4482 acc 0.8442 AUC 0.9492"}
+{"time": 1791332181.8242934, "message": "[GPU 1] efficientnetb0_fold0_background epoch 11/20: train loss 0.1143 acc 0.9552 | val loss 0.4076 acc 0.8442 AUC 0.9557"}
+{"time": 1791332195.0225587, "message": "[GPU 1] efficientnetb0_fold0_background epoch 12/20: train loss 0.1072 acc 0.9570 | val loss 0.4511 acc 0.8052 AUC 0.9476"}
+{"time": 1791332208.2766707, "message": "[GPU 1] efficientnetb0_fold0_background epoch 13/20: train loss 0.0910 acc 0.9667 | val loss 0.4581 acc 0.8506 AUC 0.9512"}
+{"time": 1791332221.4104106, "message": "[GPU 1] efficientnetb0_fold0_background epoch 14/20: train loss 0.0940 acc 0.9631 | val loss 0.4851 acc 0.7922 AUC 0.9479"}
+{"time": 1791332234.665631, "message": "[GPU 1] efficientnetb0_fold0_background epoch 15/20: train loss 0.0753 acc 0.9722 | val loss 0.4774 acc 0.8377 AUC 0.9480"}
+{"time": 1791332247.6996956, "message": "[GPU 1] efficientnetb0_fold0_background epoch 16/20: train loss 0.0597 acc 0.9779 | val loss 0.4890 acc 0.8377 AUC 0.9510"}
+{"time": 1791332260.8338993, "message": "[GPU 1] efficientnetb0_fold0_background epoch 17/20: train loss 0.0588 acc 0.9777 | val loss 0.4842 acc 0.8442 AUC 0.9510"}
+{"time": 1791332274.125465, "message": "[GPU 1] efficientnetb0_fold0_background epoch 18/20: train loss 0.0463 acc 0.9846 | val loss 0.4972 acc 0.8247 AUC 0.9497"}
+{"time": 1791332287.2684286, "message": "[GPU 1] efficientnetb0_fold0_background epoch 19/20: train loss 0.0429 acc 0.9857 | val loss 0.4968 acc 0.8377 AUC 0.9505"}
+{"time": 1791332300.4931715, "message": "[GPU 1] efficientnetb0_fold0_background epoch 20/20: train loss 0.0462 acc 0.9832 | val loss 0.5015 acc 0.8377 AUC 0.9498"}
+{"time": 1791332300.7673566, "message": "[GPU 1] efficientnetb0_fold0_background done in 4.4 min, best epoch 7"}
+{"time": 1791332350.1441774, "message": "[GPU 1] mobilenetv3-large_fold1: 3943 train / 742 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1240 steps"}
+{"time": 1791332426.049463, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 1/20: train loss 0.5965 acc 0.7403 | val loss 1.3682 acc 0.5377 AUC 0.8719 | best"}
+{"time": 1791332433.662024, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 2/20: train loss 0.1555 acc 0.9437 | val loss 1.2623 acc 0.5391 AUC 0.9271 | best"}
+{"time": 1791332441.311474, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 3/20: train loss 0.0586 acc 0.9792 | val loss 0.4380 acc 0.8396 AUC 0.9768 | best"}
+{"time": 1791332448.873336, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 4/20: train loss 0.0441 acc 0.9853 | val loss 0.6651 acc 0.7493 AUC 0.9738"}
+{"time": 1791332456.2414815, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 5/20: train loss 0.0325 acc 0.9901 | val loss 0.7253 acc 0.8504 AUC 0.9842"}
+{"time": 1791332463.731204, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 6/20: train loss 0.0258 acc 0.9906 | val loss 0.6552 acc 0.8639 AUC 0.9909"}
+{"time": 1791332471.1523674, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 7/20: train loss 0.0194 acc 0.9924 | val loss 0.8637 acc 0.8261 AUC 0.9866"}
+{"time": 1791332478.5659451, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 8/20: train loss 0.0120 acc 0.9957 | val loss 0.3001 acc 0.9313 AUC 0.9921 | best"}
+{"time": 1791332486.2214274, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 9/20: train loss 0.0091 acc 0.9975 | val loss 0.3669 acc 0.9353 AUC 0.9934"}
+{"time": 1791332493.7289395, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 10/20: train loss 0.0026 acc 0.9995 | val loss 0.3150 acc 0.9447 AUC 0.9952"}
+{"time": 1791332501.418816, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 11/20: train loss 0.0058 acc 0.9980 | val loss 0.2541 acc 0.9528 AUC 0.9965 | best"}
+{"time": 1791332509.1105418, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 12/20: train loss 0.0032 acc 0.9990 | val loss 0.3064 acc 0.9434 AUC 0.9961"}
+{"time": 1791332516.7675438, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 13/20: train loss 0.0004 acc 1.0000 | val loss 0.2507 acc 0.9596 AUC 0.9970 | best"}
+{"time": 1791332524.3724618, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 14/20: train loss 0.0005 acc 0.9997 | val loss 0.2586 acc 0.9623 AUC 0.9971"}
+{"time": 1791332531.9475734, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 15/20: train loss 0.0012 acc 0.9995 | val loss 0.2615 acc 0.9555 AUC 0.9966"}
+{"time": 1791332539.5472422, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 16/20: train loss 0.0003 acc 1.0000 | val loss 0.2425 acc 0.9582 AUC 0.9969 | best"}
+{"time": 1791332547.1935987, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 17/20: train loss 0.0016 acc 0.9997 | val loss 0.2389 acc 0.9582 AUC 0.9970 | best"}
+{"time": 1791332554.6957228, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 18/20: train loss 0.0018 acc 0.9997 | val loss 0.2345 acc 0.9596 AUC 0.9971 | best"}
+{"time": 1791332562.2710788, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 19/20: train loss 0.0003 acc 1.0000 | val loss 0.2335 acc 0.9596 AUC 0.9971 | best"}
+{"time": 1791332569.7935228, "message": "[GPU 1] mobilenetv3-large_fold1 epoch 20/20: train loss 0.0009 acc 0.9997 | val loss 0.2330 acc 0.9596 AUC 0.9971 | best"}
+{"time": 1791332578.8303347, "message": "[GPU 1] mobilenetv3-large_fold1 done in 3.7 min, best epoch 20"}
+{"time": 1791332579.939973, "message": "[GPU 1] mobilenetv3-large_fold3: 3809 train / 876 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1200 steps"}
+{"time": 1791332642.7939472, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 1/20: train loss 0.6051 acc 0.7212 | val loss 1.2748 acc 0.5571 AUC 0.8611 | best"}
+{"time": 1791332650.4422412, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 2/20: train loss 0.1505 acc 0.9472 | val loss 0.6495 acc 0.7032 AUC 0.9603 | best"}
+{"time": 1791332658.1232557, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 3/20: train loss 0.0892 acc 0.9680 | val loss 0.3216 acc 0.9018 AUC 0.9902 | best"}
+{"time": 1791332665.7657094, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 4/20: train loss 0.0444 acc 0.9858 | val loss 0.3169 acc 0.9098 AUC 0.9895 | best"}
+{"time": 1791332673.2652233, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 5/20: train loss 0.0312 acc 0.9887 | val loss 0.4179 acc 0.9098 AUC 0.9881"}
+{"time": 1791332680.6158125, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 6/20: train loss 0.0247 acc 0.9916 | val loss 0.2416 acc 0.9338 AUC 0.9883 | best"}
+{"time": 1791332687.788888, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 7/20: train loss 0.0162 acc 0.9953 | val loss 0.2851 acc 0.9395 AUC 0.9914"}
+{"time": 1791332694.9638019, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 8/20: train loss 0.0224 acc 0.9945 | val loss 0.1907 acc 0.9635 AUC 0.9951 | best"}
+{"time": 1791332702.3362226, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 9/20: train loss 0.0148 acc 0.9953 | val loss 0.3680 acc 0.9338 AUC 0.9934"}
+{"time": 1791332709.5814736, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 10/20: train loss 0.0047 acc 0.9984 | val loss 0.3036 acc 0.9521 AUC 0.9936"}
+{"time": 1791332717.0684848, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 11/20: train loss 0.0038 acc 0.9982 | val loss 0.2274 acc 0.9703 AUC 0.9949"}
+{"time": 1791332724.2564254, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 12/20: train loss 0.0051 acc 0.9984 | val loss 0.2652 acc 0.9692 AUC 0.9934"}
+{"time": 1791332731.5050523, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 13/20: train loss 0.0018 acc 0.9997 | val loss 0.2313 acc 0.9692 AUC 0.9939"}
+{"time": 1791332738.8112612, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 14/20: train loss 0.0015 acc 0.9995 | val loss 0.2457 acc 0.9680 AUC 0.9945"}
+{"time": 1791332746.2232916, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 15/20: train loss 0.0020 acc 0.9992 | val loss 0.2535 acc 0.9692 AUC 0.9936"}
+{"time": 1791332753.3745973, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 16/20: train loss 0.0006 acc 1.0000 | val loss 0.2362 acc 0.9703 AUC 0.9942"}
+{"time": 1791332760.6913493, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 17/20: train loss 0.0003 acc 1.0000 | val loss 0.2274 acc 0.9703 AUC 0.9944"}
+{"time": 1791332768.1992745, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 18/20: train loss 0.0017 acc 0.9995 | val loss 0.2268 acc 0.9680 AUC 0.9945"}
+{"time": 1791332775.5649521, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 19/20: train loss 0.0008 acc 0.9995 | val loss 0.2247 acc 0.9692 AUC 0.9945"}
+{"time": 1791332782.962319, "message": "[GPU 1] mobilenetv3-large_fold3 epoch 20/20: train loss 0.0003 acc 1.0000 | val loss 0.2242 acc 0.9692 AUC 0.9945"}
+{"time": 1791332783.5405107, "message": "[GPU 1] mobilenetv3-large_fold3 done in 3.4 min, best epoch 8"}
+{"time": 1791332784.8646293, "message": "[GPU 1] mobilenetv3-large_fold0_background: 4531 train / 154 val / 45 test, micro-batch 64 x 1 accumulation = 64, 1420 steps"}
+{"time": 1791332846.1803317, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 1/20: train loss 0.8101 acc 0.6069 | val loss 0.9349 acc 0.5455 AUC 0.7746 | best"}
+{"time": 1791332854.1707704, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 2/20: train loss 0.5120 acc 0.7702 | val loss 0.7230 acc 0.6364 AUC 0.8394 | best"}
+{"time": 1791332862.187002, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 3/20: train loss 0.4217 acc 0.8091 | val loss 1.1686 acc 0.5649 AUC 0.8274"}
+{"time": 1791332870.261412, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 4/20: train loss 0.3357 acc 0.8554 | val loss 0.9265 acc 0.6104 AUC 0.8698"}
+{"time": 1791332878.2894819, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 5/20: train loss 0.2842 acc 0.8810 | val loss 0.5892 acc 0.7597 AUC 0.8988 | best"}
+{"time": 1791332886.1950998, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 6/20: train loss 0.2704 acc 0.8890 | val loss 0.8017 acc 0.6883 AUC 0.8727"}
+{"time": 1791332894.0349305, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 7/20: train loss 0.2183 acc 0.9111 | val loss 0.7096 acc 0.6688 AUC 0.9004"}
+{"time": 1791332901.8649704, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 8/20: train loss 0.1875 acc 0.9190 | val loss 1.3591 acc 0.6558 AUC 0.8438"}
+{"time": 1791332909.6856294, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 9/20: train loss 0.1682 acc 0.9373 | val loss 0.9304 acc 0.7662 AUC 0.8999"}
+{"time": 1791332917.5167112, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 10/20: train loss 0.1432 acc 0.9492 | val loss 0.5719 acc 0.7987 AUC 0.9181 | best"}
+{"time": 1791332925.359159, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 11/20: train loss 0.1036 acc 0.9607 | val loss 0.5129 acc 0.8312 AUC 0.9382 | best"}
+{"time": 1791332933.228262, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 12/20: train loss 0.0916 acc 0.9623 | val loss 0.4560 acc 0.8182 AUC 0.9582 | best"}
+{"time": 1791332941.0743122, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 13/20: train loss 0.0787 acc 0.9711 | val loss 0.4586 acc 0.8442 AUC 0.9541"}
+{"time": 1791332948.965948, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 14/20: train loss 0.0690 acc 0.9724 | val loss 0.5700 acc 0.8442 AUC 0.9509"}
+{"time": 1791332956.8482504, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 15/20: train loss 0.0535 acc 0.9812 | val loss 0.5078 acc 0.8701 AUC 0.9597"}
+{"time": 1791332964.7204704, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 16/20: train loss 0.0479 acc 0.9834 | val loss 0.4672 acc 0.8571 AUC 0.9638"}
+{"time": 1791332972.6090038, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 17/20: train loss 0.0445 acc 0.9861 | val loss 0.4497 acc 0.8442 AUC 0.9651 | best"}
+{"time": 1791332980.4109244, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 18/20: train loss 0.0386 acc 0.9859 | val loss 0.4382 acc 0.8442 AUC 0.9653 | best"}
+{"time": 1791332988.2200317, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 19/20: train loss 0.0339 acc 0.9892 | val loss 0.4376 acc 0.8442 AUC 0.9651 | best"}
+{"time": 1791332995.9850059, "message": "[GPU 1] mobilenetv3-large_fold0_background epoch 20/20: train loss 0.0318 acc 0.9874 | val loss 0.4357 acc 0.8506 AUC 0.9658 | best"}
+{"time": 1791332996.1814237, "message": "[GPU 1] mobilenetv3-large_fold0_background done in 3.5 min, best epoch 20"}

@@ -1,0 +1,22 @@
+{
+	"run_id": "swin-base_fold1",
+	"model": "Swin-Base",
+	"family": "Transformer",
+	"fold": 1,
+	"mode": "full",
+	"input_size": 224,
+	"parameters": 86746299,
+	"micro_batch": 32,
+	"accumulation": 2,
+	"effective_batch": 64,
+	"optimizer_steps": 1240,
+	"epochs": 20,
+	"best_epoch": 8,
+	"best_val_loss": 0.10952732055335032,
+	"train_seconds": 1379.3093888270005,
+	"train_images_per_second": 57.173539627004594,
+	"peak_train_memory_gb": 6.445899776,
+	"train_images": 3943,
+	"val_images": 742,
+	"gpu": "Tesla T4"
+}

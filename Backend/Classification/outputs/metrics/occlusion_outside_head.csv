@@ -1,0 +1,10 @@
+model,outside_mean,outside_sd,images
+ResNet50,0.0791,0.1853,17
+VGG16,0.0788,0.1993,17
+DenseNet121,0.1103,0.1489,17
+EfficientNetB0,0.0655,0.1263,17
+MobileNetV3-Large,0.0709,0.1019,17
+InceptionV3,0.0993,0.1855,17
+ViT-B/16,0.1066,0.1144,17
+Swin-Base,0.1219,0.1159,17
+CoAtNet-0,0.1241,0.1426,17

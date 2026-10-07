@@ -1,0 +1,10 @@
+model,temperature-scaled,uncalibrated
+CoAtNet-0,0.0253,0.0259
+DenseNet121,0.0215,0.0165
+EfficientNetB0,0.0277,0.0263
+InceptionV3,0.0088,0.0045
+MobileNetV3-Large,0.0285,0.0204
+ResNet50,0.0222,0.0125
+Swin-Base,0.0109,0.0044
+VGG16,0.0371,0.0355
+ViT-B/16,0.0182,0.0114

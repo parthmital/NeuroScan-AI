@@ -1,0 +1,10 @@
+model,family,folds,accuracy,accuracy_ci,balanced_accuracy,f1_macro,roc_auc,ece,parameters_m,gflops_native,latency_ms_mean,latency_ms_sd,throughput_img_s_mean,separable_from_leader
+ResNet50,Classical CNN,5,1.0,"[1.0000, 1.0000]",1.0,1.0,1.0,0.0222,23.5142,8.1743,9.0737,0.3626,716.8034,False
+DenseNet121,Classical CNN,5,1.0,"[1.0000, 1.0000]",1.0,1.0,1.0,0.0215,6.9569,5.6663,22.8048,1.2213,607.676,False
+InceptionV3,Efficient CNN,5,1.0,"[1.0000, 1.0000]",1.0,1.0,1.0,0.0088,21.7917,11.4223,16.69,1.2514,438.1739,False
+ViT-B/16,Transformer,5,1.0,"[1.0000, 1.0000]",1.0,1.0,1.0,0.0182,85.801,22.5407,10.2545,1.0975,240.9577,False
+Swin-Base,Transformer,5,1.0,"[1.0000, 1.0000]",1.0,1.0,1.0,0.0109,86.7463,30.8599,34.6494,1.5132,173.0714,False
+CoAtNet-0,Hybrid,5,1.0,"[1.0000, 1.0000]",1.0,1.0,1.0,0.0253,26.6689,8.4165,15.875,0.7255,448.3763,False
+VGG16,Classical CNN,5,0.9778,"[0.9333, 1.0000]",0.9744,0.8756,1.0,0.0371,134.2728,30.9324,8.0146,0.3948,332.0999,False
+EfficientNetB0,Efficient CNN,5,0.9778,"[0.9333, 1.0000]",0.9744,0.8756,1.0,0.0277,4.0114,0.7691,12.8046,0.7961,1265.6831,False
+MobileNetV3-Large,Efficient CNN,5,0.9778,"[0.9333, 1.0000]",0.9744,0.8756,1.0,0.0285,4.2059,0.4306,9.9849,0.9226,2183.1405,False

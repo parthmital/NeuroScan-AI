@@ -1,0 +1,10 @@
+model,accuracy_gap_to_leader,ci_low,ci_high,separable_from_leader,mcnemar_holm_p
+ResNet50,0.0,0.0,0.0,False,1.0
+VGG16,0.0222,0.0,0.0667,False,1.0
+DenseNet121,0.0,0.0,0.0,False,1.0
+EfficientNetB0,0.0222,0.0,0.0667,False,1.0
+MobileNetV3-Large,0.0222,0.0,0.0667,False,1.0
+InceptionV3,0.0,0.0,0.0,False,1.0
+ViT-B/16,0.0,0.0,0.0,False,1.0
+Swin-Base,0.0,0.0,0.0,False,1.0
+CoAtNet-0,0.0,0.0,0.0,False,1.0

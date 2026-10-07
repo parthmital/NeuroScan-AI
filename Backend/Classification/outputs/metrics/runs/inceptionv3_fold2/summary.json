@@ -1,0 +1,22 @@
+{
+	"run_id": "inceptionv3_fold2",
+	"model": "InceptionV3",
+	"family": "Efficient CNN",
+	"fold": 2,
+	"mode": "full",
+	"input_size": 299,
+	"parameters": 21791715,
+	"micro_batch": 64,
+	"accumulation": 1,
+	"effective_batch": 64,
+	"optimizer_steps": 1260,
+	"epochs": 20,
+	"best_epoch": 10,
+	"best_val_loss": 0.10310317796135222,
+	"train_seconds": 478.6860222059986,
+	"train_images_per_second": 166.62278884273738,
+	"peak_train_memory_gb": 4.132625408,
+	"train_images": 3988,
+	"val_images": 697,
+	"gpu": "Tesla T4"
+}

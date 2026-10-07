@@ -1,0 +1,12 @@
+{
+	"task": "multiclass",
+	"architecture": "torchvision efficientnet_b0, classifier[1] replaced",
+	"classes": ["Glioma", "Meningioma", "Pituitary"],
+	"outputs": 3,
+	"input_size": 224,
+	"preprocessing": "crop_to_brain (blur 5x5, threshold 45, largest contour box), resize, ImageNet normalisation",
+	"run_id": "efficientnetb0_fold0",
+	"temperature": 0.049787320548964786,
+	"decision_threshold": null,
+	"fold_test_accuracy": 0.9777777777777777
+}

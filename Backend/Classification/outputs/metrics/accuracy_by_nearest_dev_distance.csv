@@ -1,0 +1,10 @@
+model,13-16,9-12
+CoAtNet-0,1.0,1.0
+DenseNet121,1.0,1.0
+EfficientNetB0,1.0,0.9773
+InceptionV3,1.0,1.0
+MobileNetV3-Large,1.0,0.9773
+ResNet50,1.0,1.0
+Swin-Base,1.0,1.0
+VGG16,1.0,0.9773
+ViT-B/16,1.0,1.0

@@ -1,0 +1,22 @@
+{
+	"run_id": "resnet50_fold0_background",
+	"model": "ResNet50",
+	"family": "Classical CNN",
+	"fold": 0,
+	"mode": "background",
+	"input_size": 224,
+	"parameters": 23514179,
+	"micro_batch": 64,
+	"accumulation": 1,
+	"effective_batch": 64,
+	"optimizer_steps": 1420,
+	"epochs": 20,
+	"best_epoch": 20,
+	"best_val_loss": 0.5016491877568232,
+	"train_seconds": 361.0638368619984,
+	"train_images_per_second": 250.98054900091174,
+	"peak_train_memory_gb": 3.288598528,
+	"train_images": 4531,
+	"val_images": 154,
+	"gpu": "Tesla T4"
+}

@@ -1,0 +1,22 @@
+{
+	"run_id": "vgg16_fold2",
+	"model": "VGG16",
+	"family": "Classical CNN",
+	"fold": 2,
+	"mode": "full",
+	"input_size": 224,
+	"parameters": 134272835,
+	"micro_batch": 64,
+	"accumulation": 1,
+	"effective_batch": 64,
+	"optimizer_steps": 1260,
+	"epochs": 20,
+	"best_epoch": 2,
+	"best_val_loss": 0.3058760874240607,
+	"train_seconds": 573.586753375,
+	"train_images_per_second": 139.0548152144205,
+	"peak_train_memory_gb": 5.624583168,
+	"train_images": 3988,
+	"val_images": 697,
+	"gpu": "Tesla T4"
+}

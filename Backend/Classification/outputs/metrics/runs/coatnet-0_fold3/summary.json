@@ -1,0 +1,22 @@
+{
+	"run_id": "coatnet-0_fold3",
+	"model": "CoAtNet-0",
+	"family": "Hybrid",
+	"fold": 3,
+	"mode": "full",
+	"input_size": 224,
+	"parameters": 26668869,
+	"micro_batch": 64,
+	"accumulation": 1,
+	"effective_batch": 64,
+	"optimizer_steps": 1200,
+	"epochs": 20,
+	"best_epoch": 6,
+	"best_val_loss": 0.1173694035778307,
+	"train_seconds": 589.9767645780012,
+	"train_images_per_second": 129.12372922769265,
+	"peak_train_memory_gb": 6.096759296,
+	"train_images": 3809,
+	"val_images": 876,
+	"gpu": "Tesla T4"
+}

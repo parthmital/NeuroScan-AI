@@ -1,0 +1,16 @@
+model_a,model_b,median_dice_difference,p_raw,p_holm
+UNet,nnU-Net,0.00231,0.02335,0.04195
+UNet,VNet,0.01186,0.0,0.0
+UNet,UNETR,0.11386,0.0,0.0
+UNet,Swin UNETR,0.07378,0.0,0.0
+UNet,TransBTS,0.07886,0.0,0.0
+nnU-Net,VNet,0.01003,0.0,1e-05
+nnU-Net,UNETR,0.1066,0.0,0.0
+nnU-Net,Swin UNETR,0.06871,0.0,0.0
+nnU-Net,TransBTS,0.07945,0.0,0.0
+VNet,UNETR,0.08583,0.0,0.0
+VNet,Swin UNETR,0.06041,0.0,0.0
+VNet,TransBTS,0.0666,0.0,0.0
+UNETR,Swin UNETR,-0.03594,0.0,0.0
+UNETR,TransBTS,-0.01936,6e-05,0.00018
+Swin UNETR,TransBTS,0.00638,0.02097,0.04195

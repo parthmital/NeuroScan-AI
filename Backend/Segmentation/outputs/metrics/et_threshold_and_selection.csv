@@ -1,0 +1,7 @@
+run_id,et_min_voxels,best_epoch,best_val_dice
+nnu-net_seed42,200,50,0.7824
+swin-unetr_seed42,0,33,0.7235
+transbts_seed42,0,45,0.7102
+unet_seed42,100,45,0.7845
+unetr_seed42,800,39,0.696
+vnet_seed42,200,44,0.7598

@@ -1,0 +1,32 @@
+{
+	"run_id": "unet_seed42",
+	"model": "UNet",
+	"family": "CNN",
+	"seed": 42,
+	"parameters": 5604361,
+	"micro_batch": 2,
+	"accumulation": 2,
+	"optimizer_steps": 3250,
+	"epochs_run": 50,
+	"best_epoch": 45,
+	"best_val_dice": 0.7845175987600426,
+	"et_min_voxels": 100,
+	"et_tuning": {
+		"0": 0.7429030022466491,
+		"50": 0.7427279322186379,
+		"100": 0.7605850750757808,
+		"200": 0.7605850750757808,
+		"300": 0.7605850750757808,
+		"500": 0.7605850750757808,
+		"800": 0.7605850750757808
+	},
+	"train_seconds": 4610.5816759149875,
+	"peak_train_memory_gb": 5.24969984,
+	"peak_inference_memory_gb": 1.536044544,
+	"latency_s": 0.10762540524956421,
+	"latency_s_sd": 0.0013327995930795364,
+	"latency_tta_s": 0.8610892292499557,
+	"latency_tta_s_sd": 0.0018661508360368747,
+	"test_dice_mean": 0.8199338499735742,
+	"gpu": "Tesla T4"
+}

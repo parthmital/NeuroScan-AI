@@ -1,0 +1,10 @@
+model,family,input_size,parameters_m,gflops_native,gflops_224
+ResNet50,Classical CNN,224,23.514,8.174,8.174
+VGG16,Classical CNN,224,134.273,30.932,30.932
+DenseNet121,Classical CNN,224,6.957,5.666,5.666
+EfficientNetB0,Efficient CNN,224,4.011,0.769,0.769
+MobileNetV3-Large,Efficient CNN,224,4.206,0.431,0.431
+InceptionV3,Efficient CNN,299,21.792,11.422,5.672
+ViT-B/16,Transformer,224,85.801,22.541,22.541
+Swin-Base,Transformer,224,86.746,30.86,30.86
+CoAtNet-0,Hybrid,224,26.669,8.416,8.416
