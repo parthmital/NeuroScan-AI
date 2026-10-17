@@ -1,3 +1,6 @@
+% The CAS front matter prints the corresponding-author and e-mail notes as footnotes
+% without a mark, which hyperref cannot anchor; the paper has no other footnotes.
+\PassOptionsToPackage{hyperfootnotes=false}{hyperref}
 \documentclass[a4paper,fleqn]{cas-sc}
 % Elsevier CAS single-column class (cas-sc.cls, cas-common.sty and cas-model2-names.bst,
 % version 2.4, are in this folder). The class loads hyperref, booktabs, multirow and array.
@@ -54,6 +57,31 @@
         \group_end:
       }
   }
+% cas-common.sty sets the keywords box inside a zero-width box with no stretch, which TeX
+% reports as a 117pt overfull box at \maketitle. Same environment with \hss added, so the
+% output is unchanged and the warning is gone.
+\RenewDocumentEnvironment { Abstract } { o }
+  {
+    \group_begin:
+    \IfNoValueTF { #1 } { }
+    { \tex_gdef:D \abstractname { #1 } }
+    \parindent \z@
+    \box_if_empty:NTF \g_stm_key_box
+    { \leftskip = .35 \textwidth }
+    {
+      \dim_gset:Nn \l_tmpa_dim { \box_ht:N \g_stm_key_box }
+      \dim_gadd:Nn \l_tmpa_dim { \box_dp:N \g_stm_key_box }
+      \leftskip .35\textwidth
+      \hspace*{-.35 \textwidth }
+      \noindent\hbox_to_wd:nn { \z@ } { \box \g_stm_key_box \hss }
+      \skip_vertical:n { - \l_tmpa_dim }
+    }
+    \noindent \abstractname \par
+    \skip_vertical:n { -4pt}
+    \noindent \rule{.65\textwidth}{.2pt}\par \footnotesize
+    \ignorespaces \everypar { \parindent=1.5em }
+  }
+  { \par \group_end: }
 \ExplSyntaxOff
 \makeatother
 \raggedbottom
@@ -108,7 +136,7 @@ This study addresses these gaps with the following objectives. First, to establi
 
 The evolution of medical image segmentation has been marked by several foundational architectures. The UNet architecture, introduced by \citet{ronneberger2015}, revolutionised medical image segmentation by introducing a symmetric encoder-decoder structure with skip connections. The encoder progressively downsamples the input to capture context, while the decoder upsamples to recover spatial details. The 3D UNet, proposed by \citet{cicek2016}, extended this architecture to volumetric data by replacing 2D convolutions with 3D counterparts, enabling direct processing of 3D MRI volumes. The VNet, developed by \citet{milletari2016}, introduced residual connections allowing deeper networks without gradient degradation, and PReLU activations that improve gradient flow. The nnU-Net, presented by \citet{isensee2021}, represented a paradigm shift by automating architecture design based on dataset characteristics. Rather than a fixed architecture, nnU-Net analyses the dataset fingerprint, including image sizes, voxel spacings, and class imbalances, to configure network depth and width, patch size, batch size, and training schedule.
 
-Parallel to CNN innovations, transformer-based architectures have emerged. Vision Transformers (ViT), introduced by \citet{dosovitskiy2021}, demonstrated that pure transformer architectures could match or exceed CNN performance on image classification tasks by modelling long-range dependencies through self-attention mechanisms. TransUNet \citep{chen2021} placed a transformer encoder on top of a CNN feature extractor for 2D medical segmentation. UNETR, proposed by \citet{hatamizadeh2022unetr}, integrated a ViT encoder with a CNN decoder for 3D segmentation. Swin UNETR, developed by \citet{hatamizadeh2022swin}, replaced the standard ViT with a Swin Transformer backbone, using window-based self-attention and shifted windows to reduce computational complexity. TransBTS, introduced by \citet{wang2021}, took a hybrid approach, placing transformer layers only at the bottleneck of a CNN encoder-decoder. Transformers are known to need large datasets or distillation to train well from scratch \citep{touvron2021}, and several medical variants modify attention to cope with limited data \citep{valanarasu2021,cao2023}.
+Parallel to CNN innovations, transformer-based architectures have emerged. Vision Transformers (ViT), introduced by \citet{dosovitskiy2021}, demonstrated that pure transformer architectures could match or exceed CNN performance on image classification tasks by modelling long-range dependencies through self-attention mechanisms. TransUNet \citep{chen2024} placed transformer layers on top of a CNN feature extractor in a U-shaped network for medical image segmentation. UNETR, proposed by \citet{hatamizadeh2022unetr}, integrated a ViT encoder with a CNN decoder for 3D segmentation. Swin UNETR, developed by \citet{hatamizadeh2022swin}, replaced the standard ViT with a Swin Transformer backbone, using window-based self-attention and shifted windows to reduce computational complexity. TransBTS, introduced by \citet{wang2021}, took a hybrid approach, placing transformer layers only at the bottleneck of a CNN encoder-decoder. Transformers are known to need large datasets or distillation to train well from scratch \citep{touvron2021}, and several medical variants modify attention to cope with limited data \citep{valanarasu2021,cao2023}.
 
 Despite the proliferation of architectures, several gaps remain: lack of systematic comparison under controlled conditions; implementation variability in preprocessing, data splits and training protocols; inadequate reporting of statistical significance, boundary accuracy, subgroup performance and computational cost; and insufficient code and documentation for reproduction. This study addresses these gaps by implementing all six architectures from scratch in one notebook with identical preprocessing and training budget, evaluating them per case at native resolution with confidence intervals and significance tests, reporting results by tumour grade, measuring latency and memory, and releasing the notebook and its outputs.
 

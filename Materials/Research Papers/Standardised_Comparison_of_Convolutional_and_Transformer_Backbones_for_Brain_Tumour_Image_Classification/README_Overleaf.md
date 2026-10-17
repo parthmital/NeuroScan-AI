@@ -7,16 +7,18 @@ Elsevier CAS single-column (`cas-sc`) manuscript for _Engineering Applications o
 | File                                                   | Purpose                                                                           |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------- |
 | `main.tex`                                             | The paper; set it as the main document.                                           |
-| `refs.bib`                                             | References (BibTeX), checked against Crossref, DataCite and arXiv records.        |
+| `supplementary.tex`                                    | The supplementary material, a separate document (Sections S1 to S7).              |
+| `preamble.tex`                                         | Packages, plot helpers and template patches shared by both documents.             |
+| `refs.bib`                                             | References (BibTeX) of both documents, checked against Crossref and DataCite.     |
 | `cas-sc.cls`, `cas-common.sty`, `cas-model2-names.bst` | Elsevier CAS template files, version 2.4 (single column, author-year references). |
 | `thumbnails/cas-email.jpeg`                            | E-mail icon the CAS front matter prints beside the corresponding author.          |
 | `highlights.tex`                                       | Standalone highlights file (5 items, each at most 85 characters).                 |
 | `graphical_abstract.tex`                               | Standalone graphical abstract (TikZ only, no images). Compile separately.         |
-| `main.pdf`                                             | `main.tex` compiled with Tectonic (`npm run papers`).                             |
+| `main.pdf`, `supplementary.pdf`                        | Both documents compiled with Tectonic (`npm run papers`).                         |
 
 ## Figures
 
-`main.tex` includes the notebook plots by their notebook path, for example `binary-detection/plots/09_confusion_matrices.png`, and sets
+`main.tex` and `supplementary.tex` include the notebook plots by their notebook path, for example `binary-detection/plots/09_confusion_matrices.png`, and sets
 
 ```latex
 \graphicspath{{figures/}{../../Notebooks/}}
@@ -25,11 +27,24 @@ Elsevier CAS single-column (`cas-sc`) manuscript for _Engineering Applications o
 - **Local build** (`npm run papers -- Standardised` from the repository root, or any TeX installation run from this folder): the plots are read in place from `Materials/Notebooks/<task>/plots/`; nothing needs copying.
 - **Overleaf**: create a `figures/` folder in the project and upload the two plot folders so that they sit at `figures/binary-detection/plots/` and `figures/classification/plots/`.
 
-All 25 binary and 26 classification plots appear in `main.tex`. The former separate supplement (`supplementary.tex`, Tables S1 to S8, Figures S1 to S26) was merged into the paper, because references from the paper into a separate PDF cannot be links; it remains in Git history.
+All 25 binary detection and 26 subtype classification plots appear in the two documents. The paper (`main.pdf`, 18 pages including references) keeps Figures 1 to 3 and Tables 1 to 10; every other plot and table is in the separate supplementary material (`supplementary.pdf`, 28 pages: Sections S1 to S7, Figures S1 to S27, Tables S1 to S10). The Introduction's last paragraph lists what each supplementary section holds.
+
+## Cross-references between the two PDFs
+
+Each document loads `xr-hyper` and reads the other's labels from its `.aux` file (`\externaldocument`), so "Supplementary Figure S3" in the paper and "Figure 3 of the paper" in the supplement are numbered automatically and link into the other PDF. Three details make this work:
+
+- `xr-hyper` is loaded with `\RequirePackage` before `\documentclass`, because the CAS class loads hyperref.
+- `\externaldocument` runs inside a group with `\bibcite` disabled, so only labels are imported and the two documents' citation keys do not clash.
+- The documents must be compiled in the order main, supplementary, main. `npm run papers` does this and keeps the `.aux` files (Git-ignored) between runs.
+
+On Overleaf, compile `supplementary.tex` once as the main document, then `main.tex`; for automatic rebuilds, add the `latexmkrc` from Overleaf's guide [Cross referencing with the xr package in Overleaf](https://www.overleaf.com/learn/how-to/Cross_referencing_with_the_xr_package_in_Overleaf).
 
 ## Layout
 
-- Figures and tables are not floats. `main.tex` defines `herefigure` and `heretable`, which keep the CAS caption style but set each item exactly where it is written, directly after the paragraph that first cites it. A page can therefore end short when the next item does not fit.
+- Figure 1, the methodology diagram, is drawn in TikZ in `main.tex` (five coloured stages, four steps each, with the information passed between stages).
+- Supplementary sections, figures and tables are numbered S1, S2, ... in `supplementary.tex`; in `main.tex`, `\supp{Figure}{label}` prints "Supplementary Figure S<n>".
+- `preamble.tex` patches two CAS template quirks without editing the class: the keywords box is set with `\hss` so `\maketitle` no longer reports a 117pt overfull box, and hyperref footnote links are off (`hyperfootnotes=false`) because the unmarked corresponding-author and e-mail notes cannot be anchored. It also resets hyperref's remote page number between links into the other PDF, and loads `xurl` so long URLs break cleanly.
+- Figures and tables are not floats. `preamble.tex` defines `herefigure` and `heretable`, which keep the CAS caption style but set each item exactly where it is written, directly after the paragraph that first cites it. A page can therefore end short when the next item does not fit.
 - Every plot is scaled to the text width and capped at a fraction of the text height (`\plot`), so no figure overflows the page.
 - Citations are author-year (natbib with `cas-model2-names.bst`), as the EAAI guide asks; citations, cross-references, DOIs and URLs are links.
 
@@ -66,19 +81,33 @@ The previous version reported 15 separate per-model notebooks (nine binary, six 
 
 Headline results in this version: binary fold-ensemble accuracy 99.42% for CoAtNet-0, EfficientNetB0 and ViT-B/16 on 171 test images, with no significant pairwise difference; multiclass test set of only 45 images (one group of 1,431 images could not be split), on which six models are error-free; background-only shortcut models above chance for 7 of 9 binary and 9 of 9 multiclass backbones.
 
+## Changes in the 2026-10-17 restructuring
+
+- Main paper cut from 40 pages to 18 (text and references); per-run tables, per-model figures, the dataset overview, sample images, threshold sweep, cross-label pairs, group audit, augmentation examples, training settings, the fold-ensemble result tables of both tasks, confusion matrices, curves, McNemar, distance, reliability, the summary efficiency table, accuracy--latency, per-class attention, occlusion, eight of the nine Grad-CAM figures, masking and shortcut results moved to the supplementary material. Binary detection and subtype classification items always move together.
+- Section 3 restructured: two-sentence introduction, Data Collection in two paragraphs, Preprocessing and Deduplication with Brain cropping and Label-aware deduplication subsections, a one-paragraph Group-Aware Splitting section, and Training Configuration and Evaluation Protocol merged (one training paragraph, one sentence per evaluation item).
+- Section 4.1 renamed "Five-Fold Cross-Validation Spread of the Fold Models" with one paragraph per task; every results section opens by defining its terms; Section 4.6 defines each interpretability metric separately and explains the EfficientNetB0 Grad-CAM figure and the masking findings.
+- Terminology standardised to "binary detection" and "subtype classification" in text, tables, captions, highlights and the graphical abstract.
+- The efficiency table in the paper gives each model's parameter count in brackets; the literature comparison table has "Our work" rows instead of a column.
+- Data availability lists every dataset link and the repository link directly; the former Appendix A (code repository) was folded into it.
+- 34 references added for architectural, methodological and background claims (for example He et al. 2016 for ResNet50's 50 layers, Otsu 1979, McNemar 1947, Efron 1979, Youden 1950, AdamW, mixed precision, Grad-CAM, occlusion, shortcut learning); VGG now cites its ICLR 2015 publication instead of the arXiv preprint. Each added entry was checked on Crossref or the publisher's proceedings page. Uncited claims about prevalence documentation and radiologist supply in India were removed.
+- The supplementary material became a separate document and PDF (`supplementary.tex`), linked to the paper with `xr-hyper`; it now cites the methods it describes.
+- The arXiv-only audit of Vangala et al. (2026) was removed: its test-set duplicate percentages were dropped, the leakage context now cites the peer-reviewed BRISC dataset paper (Fateh et al., 2026, Scientific Data), the NCC definition cites Zitova and Flusser (2003), and the inflated-score remark cites Kapoor and Narayanan (2023) and Roberts et al. (2021). Gneiting and Raftery (2007) was added for proper scoring rules.
+- Entries for venues that publish no page numbers (ICLR, NeurIPS 2017 and 2019, AAAI-15) are `@misc` with the venue in `howpublished`, because `cas-model2-names.bst` warns about missing pages for `@inproceedings`.
+
 ## Changes for the EAAI template
 
 - Moved from `elsarticle` to the Elsevier CAS single-column class, with author-year citations from `refs.bib` in place of the numbered manual bibliography.
 - Title and abstract no longer use the undefined acronym "MRI" in the title (now "Magnetic Resonance Image"); the abstract is 243 words (EAAI asks for about 250) and states the AI contribution and the engineering application.
 - Reference corrections found while checking every entry against Crossref, DataCite and arXiv: full author lists in place of "et al.", DenseNet pages 2261--2269 and Swin Transformer pages 9992--10002 (IEEE Xplore pagination of the DOI version), the full page range of Seetha and Raja (2018), the issue number of Kapoor and Narayanan (2023), and DOIs for every entry that has one.
-- The supplement was merged into the paper (see Figures). No numbers changed.
+- The supplement was merged into the paper at the time (see Figures); it was split out again into `supplementary.tex` in the 2026-10-17 restructuring. No numbers changed.
 
 ## Build
 
-`npm run papers` (repository root) compiles `main.tex` of every paper project with Tectonic; `npm run papers -- Standardised` compiles only this one. Tectonic runs BibTeX itself; with another TeX installation, run `pdflatex main`, `bibtex main`, then `pdflatex main` twice.
+`npm run papers` (repository root) compiles every paper project with Tectonic; `npm run papers -- Standardised` compiles only this one, in the order `main.tex`, `supplementary.tex`, `main.tex`. Tectonic runs BibTeX itself; use Tectonic 0.17.0 or later, because 0.15.0 reruns TeX six times with "internal consistency problem when checking if main.bbl changed". With another TeX installation, run for each document in the same order: `pdflatex <doc>`, `bibtex <doc>`, then `pdflatex <doc>` twice.
 
 ## Verification status
 
-- `main.pdf` (40 pages) compiles with Tectonic 0.15.0 with no undefined references or citations, no missing figures and no overfull lines in the body. The one overfull-box warning comes from an empty box inside the CAS `\maketitle` and also appears in Elsevier's own sample.
-- A PDF check confirmed every figure and table appears on the page of its first mention or the next, every image and text line lies inside the text block, and every internal link resolves.
+- `main.pdf` (18 pages) and `supplementary.pdf` (28 pages) compile with Tectonic 0.17.0 with no TeX, LaTeX, hyperref, natbib or BibTeX warnings, and no overfull or underfull boxes.
+- The paper check (`paper_check.py` of the `latex-research-papers` skill, with link checks) reports CLEAN for both documents: every figure and table sits on the page of its first mention or the next, every cross-reference into the other document resolves, every reference is cited, peer-reviewed and has a DOI or URL, and every DOI is registered. Publishers that refuse automated requests (403 or 406) were confirmed through the DOI handle API.
+- The repository linked in Data availability is private, so its link does not resolve for readers until it is made public.
 - Not checked: a pdfLaTeX build on Overleaf.

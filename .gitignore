@@ -84,3 +84,10 @@ Desktop.ini
 *.zip
 *.exe
 Materials/tectonic.exe
+
+# LaTeX intermediates kept for cross-document references (xr-hyper)
+Materials/Research Papers/**/*.aux
+Materials/Research Papers/**/*.bbl
+Materials/Research Papers/**/*.blg
+Materials/Research Papers/**/*.out
+Materials/Research Papers/**/*.abs

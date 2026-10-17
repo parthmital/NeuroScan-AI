@@ -1,5 +1,6 @@
 % References for main.tex. Authors, venues, pages and DOIs were checked against
-% Crossref, DataCite and arXiv records.
+% Crossref, DataCite and arXiv records; entries without a DOI were checked against the
+% publisher's proceedings page given in their url field.
 
 @article{zacharaki2009,
   author  = {Zacharaki, Evangelia I. and Wang, Sumei and Chawla, Sanjeev and Soo Yoo, Dong and Wolf, Ronald and Melhem, Elias R. and Davatzikos, Christos},
@@ -34,12 +35,12 @@
   doi     = {10.1016/j.mri.2013.05.002}
 }
 
-@misc{simonyan2014,
-  author        = {Simonyan, Karen and Zisserman, Andrew},
-  title         = {Very deep convolutional networks for large-scale image recognition},
-  year          = {2014},
-  eprint        = {1409.1556},
-  howpublished  = {arXiv preprint}
+@misc{simonyan2015,
+  author       = {Simonyan, Karen and Zisserman, Andrew},
+  title        = {Very deep convolutional networks for large-scale image recognition},
+  year         = {2015},
+  url          = {https://mlanthology.org/iclr/2015/simonyan2015iclr-very/},
+  howpublished = {International Conference on Learning Representations ({ICLR})}
 }
 
 @article{cheng2015,
@@ -87,7 +88,8 @@
   series    = {Proceedings of Machine Learning Research},
   volume    = {70},
   pages     = {1321--1330},
-  year      = {2017}
+  year      = {2017},
+  url       = {https://proceedings.mlr.press/v70/guo17a.html}
 }
 
 @inproceedings{selvaraju2017,
@@ -159,7 +161,8 @@
   series    = {Proceedings of Machine Learning Research},
   volume    = {97},
   pages     = {6105--6114},
-  year      = {2019}
+  year      = {2019},
+  url       = {https://proceedings.mlr.press/v97/tan19a.html}
 }
 
 @inproceedings{howard2019,
@@ -238,12 +241,12 @@
   doi          = {10.34740/KAGGLE/DSV/1183165}
 }
 
-@inproceedings{dosovitskiy2021,
-  author    = {Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas and Dehghani, Mostafa and Minderer, Matthias and Heigold, Georg and Gelly, Sylvain and Uszkoreit, Jakob and Houlsby, Neil},
-  title     = {An image is worth 16x16 words: Transformers for image recognition at scale},
-  booktitle = {International Conference on Learning Representations ({ICLR})},
-  year      = {2021},
-  url       = {https://openreview.net/forum?id=YicbFdNTTy}
+@misc{dosovitskiy2021,
+  author       = {Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas and Dehghani, Mostafa and Minderer, Matthias and Heigold, Georg and Gelly, Sylvain and Uszkoreit, Jakob and Houlsby, Neil},
+  title        = {An image is worth 16x16 words: Transformers for image recognition at scale},
+  year         = {2021},
+  url          = {https://openreview.net/forum?id=YicbFdNTTy},
+  howpublished = {International Conference on Learning Representations ({ICLR})}
 }
 
 @inproceedings{liu2021,
@@ -261,7 +264,8 @@
   booktitle = {Advances in Neural Information Processing Systems ({NeurIPS})},
   volume    = {34},
   pages     = {3965--3977},
-  year      = {2021}
+  year      = {2021},
+  url       = {https://proceedings.neurips.cc/paper/2021/hash/20568692db622456cc42a2e853ca21f8-Abstract.html}
 }
 
 @article{khan2022,
@@ -335,7 +339,8 @@
   volume  = {6},
   number  = {2},
   pages   = {65--70},
-  year    = {1979}
+  year    = {1979},
+  url     = {https://www.jstor.org/stable/4615733}
 }
 
 @misc{cheng2017,
@@ -362,10 +367,384 @@
   url          = {https://www.kaggle.com/datasets/moundir8/jun-cheng-brain-tumor-mri-dataset-jpg}
 }
 
-@misc{vangala2026,
-  author       = {Vangala, Bhanu Prakash and Guda, Sowmya and Peddi, Latha and Vangala, Navya},
-  title        = {Scores that hold, benchmarks that leak: Measuring dataset contamination in public brain-tumor {MRI} classification},
-  howpublished = {arXiv preprint},
-  year         = {2026},
-  eprint       = {2610.00421}
+
+@article{hamming1950,
+  author  = {Hamming, R. W.},
+  title   = {Error detecting and error correcting codes},
+  journal = {Bell System Technical Journal},
+  volume  = {29},
+  number  = {2},
+  pages   = {147--160},
+  year    = {1950},
+  doi     = {10.1002/j.1538-7305.1950.tb00463.x}
+}
+
+@article{mcnemar1947,
+  author  = {McNemar, Quinn},
+  title   = {Note on the sampling error of the difference between correlated proportions or percentages},
+  journal = {Psychometrika},
+  volume  = {12},
+  number  = {2},
+  pages   = {153--157},
+  year    = {1947},
+  doi     = {10.1007/BF02295996}
+}
+
+@article{youden1950,
+  author  = {Youden, W. J.},
+  title   = {Index for rating diagnostic tests},
+  journal = {Cancer},
+  volume  = {3},
+  number  = {1},
+  pages   = {32--35},
+  year    = {1950},
+  doi     = {10.1002/1097-0142(1950)3:1<32::AID-CNCR2820030106>3.0.CO;2-3}
+}
+
+@article{stone1974,
+  author  = {Stone, M.},
+  title   = {Cross-validatory choice and assessment of statistical predictions},
+  journal = {Journal of the Royal Statistical Society: Series B (Methodological)},
+  volume  = {36},
+  number  = {2},
+  pages   = {111--133},
+  year    = {1974},
+  doi     = {10.1111/j.2517-6161.1974.tb00994.x}
+}
+
+@article{matthews1975,
+  author  = {Matthews, B. W.},
+  title   = {Comparison of the predicted and observed secondary structure of {T4} phage lysozyme},
+  journal = {Biochimica et Biophysica Acta (BBA) -- Protein Structure},
+  volume  = {405},
+  number  = {2},
+  pages   = {442--451},
+  year    = {1975},
+  doi     = {10.1016/0005-2795(75)90109-9}
+}
+
+@article{efron1979,
+  author  = {Efron, Bradley},
+  title   = {Bootstrap methods: Another look at the jackknife},
+  journal = {The Annals of Statistics},
+  volume  = {7},
+  number  = {1},
+  pages   = {1--26},
+  year    = {1979},
+  doi     = {10.1214/aos/1176344552}
+}
+
+@article{otsu1979,
+  author  = {Otsu, Nobuyuki},
+  title   = {A threshold selection method from gray-level histograms},
+  journal = {IEEE Transactions on Systems, Man, and Cybernetics},
+  volume  = {9},
+  number  = {1},
+  pages   = {62--66},
+  year    = {1979},
+  doi     = {10.1109/TSMC.1979.4310076}
+}
+
+@article{hanley1982,
+  author  = {Hanley, James A. and McNeil, Barbara J.},
+  title   = {The meaning and use of the area under a receiver operating characteristic ({ROC}) curve},
+  journal = {Radiology},
+  volume  = {143},
+  number  = {1},
+  pages   = {29--36},
+  year    = {1982},
+  doi     = {10.1148/radiology.143.1.7063747}
+}
+
+@article{suzuki1985,
+  author  = {Suzuki, Satoshi and Abe, Keiichi},
+  title   = {Topological structural analysis of digitized binary images by border following},
+  journal = {Computer Vision, Graphics, and Image Processing},
+  volume  = {30},
+  number  = {1},
+  pages   = {32--46},
+  year    = {1985},
+  doi     = {10.1016/0734-189X(85)90016-7}
+}
+
+@article{lecun1998,
+  author  = {LeCun, Yann and Bottou, L{\'e}on and Bengio, Yoshua and Haffner, Patrick},
+  title   = {Gradient-based learning applied to document recognition},
+  journal = {Proceedings of the IEEE},
+  volume  = {86},
+  number  = {11},
+  pages   = {2278--2324},
+  year    = {1998},
+  doi     = {10.1109/5.726791}
+}
+
+@article{fawcett2006,
+  author  = {Fawcett, Tom},
+  title   = {An introduction to {ROC} analysis},
+  journal = {Pattern Recognition Letters},
+  volume  = {27},
+  number  = {8},
+  pages   = {861--874},
+  year    = {2006},
+  doi     = {10.1016/j.patrec.2005.10.010}
+}
+
+@article{monga2006,
+  author  = {Monga, Vishal and Evans, Brian L.},
+  title   = {Perceptual image hashing via feature points: Performance evaluation and tradeoffs},
+  journal = {IEEE Transactions on Image Processing},
+  volume  = {15},
+  number  = {11},
+  pages   = {3452--3465},
+  year    = {2006},
+  doi     = {10.1109/TIP.2006.881948}
+}
+
+@inproceedings{deng2009,
+  author    = {Deng, Jia and Dong, Wei and Socher, Richard and Li, Li-Jia and Li, Kai and Fei-Fei, Li},
+  title     = {{ImageNet}: A large-scale hierarchical image database},
+  booktitle = {Proceedings of the {IEEE} Conference on Computer Vision and Pattern Recognition ({CVPR})},
+  pages     = {248--255},
+  year      = {2009},
+  doi       = {10.1109/CVPR.2009.5206848}
+}
+
+@article{pedregosa2011,
+  author  = {Pedregosa, Fabian and Varoquaux, Ga{\"e}l and Gramfort, Alexandre and Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel, Mathieu and Prettenhofer, Peter and Weiss, Ron and Dubourg, Vincent and Vanderplas, Jake and Passos, Alexandre and Cournapeau, David and Brucher, Matthieu and Perrot, Matthieu and Duchesnay, {\'E}douard},
+  title   = {Scikit-learn: Machine learning in {Python}},
+  journal = {Journal of Machine Learning Research},
+  volume  = {12},
+  number  = {85},
+  pages   = {2825--2830},
+  year    = {2011},
+  url     = {https://jmlr.org/papers/v12/pedregosa11a.html}
+}
+
+@inproceedings{pascanu2013,
+  author    = {Pascanu, Razvan and Mikolov, Tomas and Bengio, Yoshua},
+  title     = {On the difficulty of training recurrent neural networks},
+  booktitle = {Proceedings of the 30th International Conference on Machine Learning ({ICML})},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {28},
+  pages     = {1310--1318},
+  year      = {2013},
+  url       = {https://proceedings.mlr.press/v28/pascanu13.html}
+}
+
+@inproceedings{zeiler2014,
+  author    = {Zeiler, Matthew D. and Fergus, Rob},
+  title     = {Visualizing and understanding convolutional networks},
+  booktitle = {Computer Vision -- {ECCV} 2014},
+  series    = {Lecture Notes in Computer Science},
+  pages     = {818--833},
+  year      = {2014},
+  doi       = {10.1007/978-3-319-10590-1_53}
+}
+
+@article{lecun2015,
+  author  = {LeCun, Yann and Bengio, Yoshua and Hinton, Geoffrey},
+  title   = {Deep learning},
+  journal = {Nature},
+  volume  = {521},
+  number  = {7553},
+  pages   = {436--444},
+  year    = {2015},
+  doi     = {10.1038/nature14539}
+}
+
+@article{russakovsky2015,
+  author  = {Russakovsky, Olga and Deng, Jia and Su, Hao and Krause, Jonathan and Satheesh, Sanjeev and Ma, Sean and Huang, Zhiheng and Karpathy, Andrej and Khosla, Aditya and Bernstein, Michael and Berg, Alexander C. and Fei-Fei, Li},
+  title   = {{ImageNet} large scale visual recognition challenge},
+  journal = {International Journal of Computer Vision},
+  volume  = {115},
+  number  = {3},
+  pages   = {211--252},
+  year    = {2015},
+  doi     = {10.1007/s11263-015-0816-y}
+}
+
+@misc{naeini2015,
+  author       = {Pakdaman Naeini, Mahdi and Cooper, Gregory and Hauskrecht, Milos},
+  title        = {Obtaining well calibrated probabilities using {Bayesian} binning},
+  year         = {2015},
+  doi          = {10.1609/aaai.v29i1.9602},
+  howpublished = {Proceedings of the {AAAI} Conference on Artificial Intelligence 29(1)}
+}
+
+@misc{loshchilov2017,
+  author       = {Loshchilov, Ilya and Hutter, Frank},
+  title        = {{SGDR}: Stochastic gradient descent with warm restarts},
+  year         = {2017},
+  url          = {https://mlanthology.org/iclr/2017/loshchilov2017iclr-sgdr/},
+  howpublished = {International Conference on Learning Representations ({ICLR})}
+}
+
+@misc{vaswani2017,
+  author       = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  title        = {Attention is all you need},
+  year         = {2017},
+  url          = {https://proceedings.neurips.cc/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html},
+  howpublished = {Advances in Neural Information Processing Systems ({NeurIPS}) 30}
+}
+
+@article{krizhevsky2017,
+  author  = {Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E.},
+  title   = {{ImageNet} classification with deep convolutional neural networks},
+  journal = {Communications of the ACM},
+  volume  = {60},
+  number  = {6},
+  pages   = {84--90},
+  year    = {2017},
+  doi     = {10.1145/3065386}
+}
+
+@article{litjens2017,
+  author  = {Litjens, Geert and Kooi, Thijs and Bejnordi, Babak Ehteshami and Setio, Arnaud Arindra Adiyoso and Ciompi, Francesco and Ghafoorian, Mohsen and {van der Laak}, Jeroen A. W. M. and {van Ginneken}, Bram and S{\'a}nchez, Clara I.},
+  title   = {A survey on deep learning in medical image analysis},
+  journal = {Medical Image Analysis},
+  volume  = {42},
+  pages   = {60--88},
+  year    = {2017},
+  doi     = {10.1016/j.media.2017.07.005}
+}
+
+@article{villanueva2017,
+  author  = {Villanueva-Meyer, Javier E. and Mabray, Marc C. and Cha, Soonmee},
+  title   = {Current clinical brain tumor imaging},
+  journal = {Neurosurgery},
+  volume  = {81},
+  number  = {3},
+  pages   = {397--415},
+  year    = {2017},
+  doi     = {10.1093/neuros/nyx103}
+}
+
+@misc{micikevicius2018,
+  author       = {Micikevicius, Paulius and Narang, Sharan and Alben, Jonah and Diamos, Gregory and Elsen, Erich and Garcia, David and Ginsburg, Boris and Houston, Michael and Kuchaiev, Oleksii and Venkatesh, Ganesh and Wu, Hao},
+  title        = {Mixed precision training},
+  year         = {2018},
+  url          = {https://mlanthology.org/iclr/2018/micikevicius2018iclr-mixed/},
+  howpublished = {International Conference on Learning Representations ({ICLR})}
+}
+
+@inproceedings{sandler2018,
+  author    = {Sandler, Mark and Howard, Andrew and Zhu, Menglong and Zhmoginov, Andrey and Chen, Liang-Chieh},
+  title     = {{MobileNetV2}: Inverted residuals and linear bottlenecks},
+  booktitle = {Proceedings of the {IEEE/CVF} Conference on Computer Vision and Pattern Recognition ({CVPR})},
+  pages     = {4510--4520},
+  year      = {2018},
+  doi       = {10.1109/CVPR.2018.00474}
+}
+
+@article{zech2018,
+  author  = {Zech, John R. and Badgeley, Marcus A. and Liu, Manway and Costa, Anthony B. and Titano, Joseph J. and Oermann, Eric Karl},
+  title   = {Variable generalization performance of a deep learning model to detect pneumonia in chest radiographs: A cross-sectional study},
+  journal = {PLOS Medicine},
+  volume  = {15},
+  number  = {11},
+  pages   = {e1002683},
+  year    = {2018},
+  doi     = {10.1371/journal.pmed.1002683}
+}
+
+@misc{loshchilov2019,
+  author       = {Loshchilov, Ilya and Hutter, Frank},
+  title        = {Decoupled weight decay regularization},
+  year         = {2019},
+  url          = {https://mlanthology.org/iclr/2019/loshchilov2019iclr-decoupled/},
+  howpublished = {International Conference on Learning Representations ({ICLR})}
+}
+
+@misc{paszke2019,
+  author       = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and Kopf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
+  title        = {{PyTorch}: An imperative style, high-performance deep learning library},
+  year         = {2019},
+  url          = {https://proceedings.neurips.cc/paper/2019/hash/bdbca288fee7f92f2bfa9f7012727740-Abstract.html},
+  howpublished = {Advances in Neural Information Processing Systems ({NeurIPS}) 32}
+}
+
+@article{chicco2020,
+  author  = {Chicco, Davide and Jurman, Giuseppe},
+  title   = {The advantages of the {Matthews} correlation coefficient ({MCC}) over {F1} score and accuracy in binary classification evaluation},
+  journal = {BMC Genomics},
+  volume  = {21},
+  pages   = {6},
+  year    = {2020},
+  doi     = {10.1186/s12864-019-6413-7}
+}
+
+@article{geirhos2020,
+  author  = {Geirhos, Robert and Jacobsen, J{\"o}rn-Henrik and Michaelis, Claudio and Zemel, Richard and Brendel, Wieland and Bethge, Matthias and Wichmann, Felix A.},
+  title   = {Shortcut learning in deep neural networks},
+  journal = {Nature Machine Intelligence},
+  volume  = {2},
+  number  = {11},
+  pages   = {665--673},
+  year    = {2020},
+  doi     = {10.1038/s42256-020-00257-z}
+}
+
+@article{degrave2021,
+  author  = {DeGrave, Alex J. and Janizek, Joseph D. and Lee, Su-In},
+  title   = {{AI} for radiographic {COVID-19} detection selects shortcuts over signal},
+  journal = {Nature Machine Intelligence},
+  volume  = {3},
+  number  = {7},
+  pages   = {610--619},
+  year    = {2021},
+  doi     = {10.1038/s42256-021-00338-7}
+}
+
+@article{roberts2021,
+  author  = {Roberts, Michael and Driggs, Derek and Thorpe, Matthew and Gilbey, Julian and Yeung, Michael and Ursprung, Stephan and Aviles-Rivero, Angelica I. and Etmann, Christian and McCague, Cathal and Beer, Lucian and Weir-McCall, Jonathan R. and Teng, Zhongzhao and Gkrania-Klotsas, Effrossyni and {AIX-COVNET} and Rudd, James H. F. and Sala, Evis and Sch{\"o}nlieb, Carola-Bibiane},
+  title   = {Common pitfalls and recommendations for using machine learning to detect and prognosticate for {COVID-19} using chest radiographs and {CT} scans},
+  journal = {Nature Machine Intelligence},
+  volume  = {3},
+  number  = {3},
+  pages   = {199--217},
+  year    = {2021},
+  doi     = {10.1038/s42256-021-00307-0}
+}
+
+@article{louis2021,
+  author  = {Louis, David N. and Perry, Arie and Wesseling, Pieter and Brat, Daniel J. and Cree, Ian A. and Figarella-Branger, Dominique and Hawkins, Cynthia and Ng, H. K. and Pfister, Stefan M. and Reifenberger, Guido and Soffietti, Riccardo and {von Deimling}, Andreas and Ellison, David W.},
+  title   = {The 2021 {WHO} classification of tumors of the central nervous system: A summary},
+  journal = {Neuro-Oncology},
+  volume  = {23},
+  number  = {8},
+  pages   = {1231--1251},
+  year    = {2021},
+  doi     = {10.1093/neuonc/noab106}
+}
+
+@article{zitova2003,
+  author  = {Zitov{\'a}, Barbara and Flusser, Jan},
+  title   = {Image registration methods: A survey},
+  journal = {Image and Vision Computing},
+  volume  = {21},
+  number  = {11},
+  pages   = {977--1000},
+  year    = {2003},
+  doi     = {10.1016/S0262-8856(03)00137-9}
+}
+
+@article{fateh2026,
+  author  = {Fateh, Amirreza and Rezvani, Yasin and Moayedi, Sara and Rezvani, Sadjad and Fateh, Fatemeh and Fateh, Mansoor and Abolghasemi, Vahid},
+  title   = {{BRISC}: Annotated dataset for brain tumor segmentation and classification},
+  journal = {Scientific Data},
+  volume  = {13},
+  pages   = {361},
+  year    = {2026},
+  doi     = {10.1038/s41597-026-06753-y}
+}
+
+@article{gneiting2007,
+  author  = {Gneiting, Tilmann and Raftery, Adrian E.},
+  title   = {Strictly proper scoring rules, prediction, and estimation},
+  journal = {Journal of the American Statistical Association},
+  volume  = {102},
+  number  = {477},
+  pages   = {359--378},
+  year    = {2007},
+  doi     = {10.1198/016214506000001437}
 }

@@ -1,10 +1,11 @@
 // `npm run papers [-- <filter>]`: compile the LaTeX paper projects in Materials/Research Papers
-// with Tectonic. Each project builds main.tex, or every .tex file when it has no main.tex.
+// with Tectonic. Each project builds main.tex (and supplementary.tex when present), or every
+// .tex file when it has no main.tex.
 // <filter> keeps only project folders whose name contains it (case-insensitive).
 // Uses only Node built-ins.
 
 import { spawnSync } from "node:child_process";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { styleText } from "node:util";
 
@@ -24,6 +25,21 @@ const TECTONIC =
 // Keep Tectonic's package and font cache inside the repository (Git-ignored).
 process.env.TECTONIC_CACHE_DIR ??= path.join(ROOT, ".cache", "tectonic");
 
+// The papers use only TeX fonts from the bundle, but Tectonic's font lookup still loads a
+// Fontconfig configuration and prints "Cannot load default config file" when the system
+// has none (Windows). Point it at an empty one inside the repository instead.
+if (!process.env.FONTCONFIG_FILE) {
+	const fontconfig = path.join(ROOT, ".cache", "fontconfig", "fonts.conf");
+	if (!existsSync(fontconfig)) {
+		mkdirSync(path.dirname(fontconfig), { recursive: true });
+		writeFileSync(
+			fontconfig,
+			'<?xml version="1.0"?>\n<!DOCTYPE fontconfig SYSTEM "fonts.dtd">\n<fontconfig></fontconfig>\n',
+		);
+	}
+	process.env.FONTCONFIG_FILE = fontconfig;
+}
+
 const filter = (process.argv[2] ?? "").toLowerCase();
 const projects = readdirSync(PAPERS, { withFileTypes: true })
 	.filter(
@@ -40,10 +56,23 @@ const failed = [];
 for (const project of projects) {
 	const dir = path.join(PAPERS, project);
 	const texFiles = readdirSync(dir).filter((file) => file.endsWith(".tex"));
-	const targets = texFiles.includes("main.tex") ? ["main.tex"] : texFiles;
+	// A paper with a separate supplementary.tex cross-references it through xr-hyper, which
+	// reads the other document's .aux: keep the intermediates (Git-ignored) and compile
+	// main, supplementary, then main again so both sides resolve.
+	const linked =
+		texFiles.includes("main.tex") && texFiles.includes("supplementary.tex");
+	const targets = linked
+		? ["main.tex", "supplementary.tex", "main.tex"]
+		: texFiles.includes("main.tex")
+			? ["main.tex"]
+			: texFiles.filter((file) => file !== "preamble.tex");
+	const args = linked ? ["--keep-intermediates"] : [];
 	for (const tex of targets) {
 		console.log(styleText("cyan", `\n${project}: ${tex}`));
-		const result = spawnSync(TECTONIC, [tex], { cwd: dir, stdio: "inherit" });
+		const result = spawnSync(TECTONIC, [...args, tex], {
+			cwd: dir,
+			stdio: "inherit",
+		});
 		if (result.error?.code === "ENOENT") {
 			console.error(
 				styleText(

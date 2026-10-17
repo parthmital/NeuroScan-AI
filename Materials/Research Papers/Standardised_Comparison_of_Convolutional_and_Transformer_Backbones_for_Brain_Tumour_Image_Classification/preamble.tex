@@ -1,0 +1,94 @@
+% Preamble shared by main.tex and supplementary.tex: packages, plot helpers, and the
+% non-floating figure and table environments with the cas-sc caption style.
+\usepackage[authoryear]{natbib}
+\usepackage{tabularx}
+% Long URLs (proceedings pages, datasets) may break at any character instead of leaving
+% badly spaced lines in the reference list and the data availability statement.
+\usepackage{xurl}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,shadows}
+% Figures are the notebook plots: figures/<task>/plots/<file>.png when uploaded with the
+% project (Overleaf), otherwise read in place from Materials/Notebooks/<task>/plots/.
+\graphicspath{{figures/}{../../Notebooks/}}
+% DOIs in the reference list link to https://doi.org (the .bst default is dx.doi.org)
+\newcommand*{\doi}[1]{\href{https://doi.org/#1}{\path{#1}}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.08}
+\emergencystretch=2em
+% One plot scaled to the text width, but never taller than #1 of the text height.
+\newcommand{\plot}[2]{\includegraphics[width=\linewidth,height=#1\textheight,keepaspectratio]{#2}}
+% A labelled panel of a figure that stacks the two tasks.
+\newcommand{\panel}[3]{\plot{#1}{#2}\par\smallskip{\small #3}\par}
+% Figures and tables are not floats: each is set exactly where it is written, right after
+% the paragraph that first cites it, with the cas-sc caption style. A page may end short
+% when the next figure or table does not fit on it.
+\makeatletter
+\ExplSyntaxOn
+\NewDocumentEnvironment { herefigure } { }
+  {
+    \par \addvspace { \intextsep } \noindent
+    \begin{minipage}{\linewidth}
+    \__reset_fig:
+    \dim_set:Nn \l_fig_width_dim { \linewidth }
+    \cs_set_eq:NN \@makecaption \__make_fig_caption:nn
+    \def \@captype { figure }
+    \centering \sffamily \small
+  }
+  { \end{minipage} \par \addvspace { \intextsep } }
+\NewDocumentEnvironment { heretable } { }
+  {
+    \par \addvspace { \intextsep } \noindent
+    \begin{minipage}{\linewidth}
+    \__reset_tbl:
+    \dim_set:Nn \l_tbl_width_dim { \linewidth }
+    \csgdef { tblwidth } { \dim_use:N \l_tbl_width_dim }
+    \cs_set_eq:NN \@makecaption \__make_tbl_caption:nn
+    \def \@captype { table }
+    \centering \sffamily \small
+  }
+  { \end{minipage} \par \addvspace { \intextsep } }
+% cas-common.sty prints an empty "ORCID(s):" footnote when no author has an ORCID iD.
+\RenewDocumentCommand \printorcid { }
+  {
+    \seq_if_empty:NF \g_stm_orcid_seq
+      {
+        \group_begin:
+          \tex_let:D \thefootnote \relax \footnotetext
+            { \raggedright \textsc{orcid}(s):\c_space_token \seq_use:Nn \g_stm_orcid_seq { ;~ } }
+        \group_end:
+      }
+  }
+% cas-common.sty sets the keywords box inside a zero-width box with no stretch, which TeX
+% reports as a 117pt overfull box at \maketitle. Same environment with \hss added, so the
+% output is unchanged and the warning is gone.
+\RenewDocumentEnvironment { Abstract } { o }
+  {
+    \group_begin:
+    \IfNoValueTF { #1 } { }
+    { \tex_gdef:D \abstractname { #1 } }
+    \parindent \z@
+    \box_if_empty:NTF \g_stm_key_box
+    { \leftskip = .35 \textwidth }
+    {
+      \dim_gset:Nn \l_tmpa_dim { \box_ht:N \g_stm_key_box }
+      \dim_gadd:Nn \l_tmpa_dim { \box_dp:N \g_stm_key_box }
+      \leftskip .35\textwidth
+      \hspace*{-.35 \textwidth }
+      \noindent\hbox_to_wd:nn { \z@ } { \box \g_stm_key_box \hss }
+      \skip_vertical:n { - \l_tmpa_dim }
+    }
+    \noindent \abstractname \par
+    \skip_vertical:n { -4pt}
+    \noindent \rule{.65\textwidth}{.2pt}\par \footnotesize
+    \ignorespaces \everypar { \parindent=1.5em }
+  }
+  { \par \group_end: }
+\ExplSyntaxOff
+% hyperref leaves \Hy@href@page at 0 after the first link into the other PDF, so every
+% later one in the same paragraph warns "Invalid page number (0)"; treat 0 as unset again.
+\def\Hy@zero@page{0}
+\pretocmd{\Hy@MakeRemoteAction}
+  {\ifx\Hy@href@page\Hy@zero@page\let\Hy@href@page\@empty\fi}{}
+  {\PackageWarningNoLine{preamble}{Could not patch \string\Hy@MakeRemoteAction}}
+\makeatother
+\raggedbottom

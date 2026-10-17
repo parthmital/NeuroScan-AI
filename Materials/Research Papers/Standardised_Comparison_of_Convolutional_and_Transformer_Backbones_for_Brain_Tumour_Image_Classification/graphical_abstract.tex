@@ -27,7 +27,7 @@
 ]
 \fill[white] (0,0) rectangle (12.92,4.95);
 \node[title, anchor=north] at (6.46,4.82)
-  {Brain tumour detection and subtype classification benchmark};
+  {Brain tumour binary detection and subtype classification benchmark};
 
 \node[panel=nsblue, minimum width=3.25cm, minimum height=3.35cm, anchor=north west] (data) at (0.20,4.18) {};
 \node[heading] at (1.83,3.88) {MRI datasets};
@@ -44,8 +44,8 @@
 
 \node[panel=nsamber, minimum width=3.85cm, minimum height=3.35cm, anchor=north west] (results) at (9.00,4.18) {};
 \node[heading] at (10.93,3.88) {Key findings};
-\node[metric] at (10.93,3.05) {99.42\% detection};
-\node[body] at (10.93,2.55) {CoAtNet-0, EfficientNetB0, ViT-B/16;\\no significant differences};
+\node[metric] at (10.93,3.05) {99.42\% binary detection};
+\node[body] at (10.93,2.55) {CoAtNet-0, EfficientNetB0,\\ViT-B/16;\\no significant differences};
 \node[metric] at (10.93,1.88) {Background shortcut};
 \node[body] at (10.93,1.38) {16 of 18 background-only\\models above chance};
 
