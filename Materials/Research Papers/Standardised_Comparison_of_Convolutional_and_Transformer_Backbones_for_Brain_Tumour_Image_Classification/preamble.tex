@@ -19,6 +19,8 @@
 \newcommand{\plot}[2]{\includegraphics[width=\linewidth,height=#1\textheight,keepaspectratio]{#2}}
 % A labelled panel of a figure that stacks the two tasks.
 \newcommand{\panel}[3]{\plot{#1}{#2}\par\smallskip{\small #3}\par}
+% Cross-reference to a supplementary item, printed as "Supplementary F3" or "Supplementary T2".
+\newcommand{\supp}[1]{Supplementary~\ref{#1}}
 % Figures and tables are not floats: each is set exactly where it is written, right after
 % the paragraph that first cites it, with the cas-sc caption style. A page may end short
 % when the next figure or table does not fit on it.
