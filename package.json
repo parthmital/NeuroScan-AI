@@ -5,7 +5,8 @@
 	"description": "Sets up and starts the NeuroScan AI backend and frontend with one command, and builds the research papers.",
 	"scripts": {
 		"dev": "node scripts/dev.mjs",
-		"papers": "node scripts/build-papers.mjs"
+		"papers": "node scripts/build-papers.mjs",
+		"format": "node Frontend/node_modules/prettier/bin/prettier.cjs . --write"
 	},
 	"engines": {
 		"node": ">=22"

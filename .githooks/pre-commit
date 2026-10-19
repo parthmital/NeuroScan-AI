@@ -1,0 +1,15 @@
+#!/bin/sh
+# Blocks commits whose staged frontend sources fail the same Prettier check CI runs,
+# using the version pinned in Frontend/package.json. Installed by `npm install` in Frontend/.
+files=$(git diff --cached --name-only --diff-filter=ACMR -- 'Frontend/src/*')
+[ -z "$files" ] && exit 0
+bin=Frontend/node_modules/prettier/bin/prettier.cjs
+if [ ! -f "$bin" ]; then
+	echo "pre-commit: run 'npm install' in Frontend/ first." >&2
+	exit 1
+fi
+# shellcheck disable=SC2086
+node "$bin" --check $files || {
+	echo "pre-commit: run 'npm run format' in Frontend/, stage the result, and commit again." >&2
+	exit 1
+}

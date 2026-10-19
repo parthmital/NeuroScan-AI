@@ -1,25 +1,8 @@
-import React, { createContext, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { authApi, setUnauthorizedHandler, type LoginResult } from "@/lib/api";
+import { authApi, setUnauthorizedHandler } from "@/lib/api";
 import type { User } from "@/lib/types";
-
-interface AuthContextType {
-	user: User | null;
-	isAuthenticated: boolean;
-	isLoading: boolean;
-	login: (
-		username: string,
-		password: string,
-		otp?: string,
-	) => Promise<LoginResult>;
-	register: (data: Parameters<typeof authApi.register>[0]) => Promise<User>;
-	logout: () => Promise<void>;
-	setUser: (user: User) => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export { AuthContext };
+import { AuthContext } from "./auth-context";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,

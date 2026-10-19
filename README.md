@@ -442,7 +442,7 @@ CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs all of these on
 | Everything frontend       | `npm run check` (in `Frontend/`)                                                          | Strict typecheck, lint, Prettier, jscpd (0 clones), 39 tests, and build all pass |
 | Frontend dependency audit | `npm audit`                                                                               | 0 vulnerabilities                                                                |
 
-From the repository root, `black .` and `npx prettier . --write` produce the same output CI checks: black uses ruff's 100-character line length from the root `pyproject.toml`, and `.gitattributes` checks files out with LF so Prettier does not rewrite line endings on Windows.
+From the repository root, `black .` and `npm run format` produce the same output CI checks. `npm run format` runs the Prettier version pinned exactly in `Frontend/package.json`; do not use `npx prettier` from the root, which downloads whatever Prettier is newest and formats differently. `npm install` in `Frontend/` also sets `core.hooksPath` to `.githooks`, whose pre-commit hook rejects staged frontend files that fail the CI Prettier check. In addition, black uses ruff's 100-character line length from the root `pyproject.toml`, and `.gitattributes` checks files out with LF so Prettier does not rewrite line endings on Windows.
 
 ## Troubleshooting
 
