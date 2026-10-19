@@ -6,9 +6,13 @@
 	"scripts": {
 		"dev": "node scripts/dev.mjs",
 		"papers": "node scripts/build-papers.mjs",
-		"format": "node Frontend/node_modules/prettier/bin/prettier.cjs . --write"
+		"format": "prettier . --write",
+		"format:check": "prettier . --check"
 	},
 	"engines": {
 		"node": ">=22"
+	},
+	"devDependencies": {
+		"prettier": "3.8.1"
 	}
 }

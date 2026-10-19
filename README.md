@@ -272,7 +272,7 @@ The frontend calls `/api` on its own origin. `VITE_API_URL` (in `Frontend/.env`)
 See [Quick start](#quick-start). [`scripts/dev.mjs`](scripts/dev.mjs) uses only Node.js built-ins and:
 
 - Creates `.venv` with Python 3.11 (or a newer Python 3 if 3.11 is missing) when it does not exist.
-- Installs `Backend/requirements-dev.txt` (the runtime `requirements.txt` plus test, lint and `black[jupyter]` tooling) into `.venv` and runs `npm ci` in `Frontend/` only when those files or `Frontend/package-lock.json` changed since the last install, tracked by SHA-256 stamps in `.venv/` and `Frontend/node_modules/`.
+- Installs `Backend/requirements-dev.txt` (the runtime `requirements.txt` plus test, lint and `black[jupyter]` tooling) into `.venv` and runs `npm ci` in `Frontend/` and at the root (pinned Prettier) only when those files or the matching `package-lock.json` changed since the last install, tracked by SHA-256 stamps in `.venv/`, `Frontend/node_modules/` and `node_modules/`.
 - Creates a development `.env` with random secrets if there is none, and warns about missing model weights.
 - Keeps the pip and npm download caches in `.cache/` (Git-ignored) unless `PIP_CACHE_DIR` or `npm_config_cache` is already set.
 - Starts `uvicorn main:app --reload --host 127.0.0.1 --port 8000 --log-config log-config.dev.json` in `Backend/` (the log config gives the reloader the same readable format as the app) and `npm run dev` in `Frontend/`.
@@ -442,7 +442,7 @@ CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs all of these on
 | Everything frontend       | `npm run check` (in `Frontend/`)                                                          | Strict typecheck, lint, Prettier, jscpd (0 clones), 39 tests, and build all pass |
 | Frontend dependency audit | `npm audit`                                                                               | 0 vulnerabilities                                                                |
 
-From the repository root, `black .` and `npm run format` produce the same output CI checks. `npm run format` runs the Prettier version pinned exactly in `Frontend/package.json`; do not use `npx prettier` from the root, which downloads whatever Prettier is newest and formats differently. `npm install` in `Frontend/` also sets `core.hooksPath` to `.githooks`, whose pre-commit hook rejects staged frontend files that fail the CI Prettier check. In addition, black uses ruff's 100-character line length from the root `pyproject.toml`, and `.gitattributes` checks files out with LF so Prettier does not rewrite line endings on Windows.
+From the repository root, `black .` and `npm run format` produce the same output CI checks. Prettier is pinned to the same exact version in the root `package.json` and `Frontend/package.json`, so after `npm install` at the root (`npm run dev` does this automatically), `npm run format` and `npx prettier . --write` both use that version and match CI. The CI `format` job fails if the two pins differ and checks the whole repository with `npm run format:check`; `.prettierignore` keeps lockfiles untouched. `npm install` in `Frontend/` also sets `core.hooksPath` to `.githooks`, whose pre-commit hook rejects staged frontend files that fail the CI Prettier check. In addition, black uses ruff's 100-character line length from the root `pyproject.toml`, and `.gitattributes` checks files out with LF so Prettier does not rewrite line endings on Windows.
 
 ## Troubleshooting
 

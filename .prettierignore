@@ -1,0 +1,2 @@
+# Lockfiles are written by npm; Prettier must never rewrite them.
+package-lock.json

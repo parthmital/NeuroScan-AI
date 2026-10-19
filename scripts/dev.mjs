@@ -24,6 +24,8 @@ const RUNTIME_REQUIREMENTS = path.join(BACKEND, "requirements.txt");
 const PYTHON_STAMP = path.join(VENV, ".requirements.sha256");
 const LOCKFILE = path.join(FRONTEND, "package-lock.json");
 const NODE_STAMP = path.join(FRONTEND, "node_modules", ".package-lock.sha256");
+const ROOT_LOCKFILE = path.join(ROOT, "package-lock.json");
+const ROOT_NODE_STAMP = path.join(ROOT, "node_modules", ".package-lock.sha256");
 const ENV_FILE = path.join(ROOT, ".env");
 const FRONTEND_URL = "http://localhost:8080";
 const BACKEND_HEALTH_URL = "http://127.0.0.1:8000/api/health";
@@ -166,6 +168,16 @@ function setUpFrontend() {
 	const [command, args, options] = npmCommand(["ci"]);
 	run(command, args, { cwd: FRONTEND, ...options });
 	writeFileSync(NODE_STAMP, `${hash}\n`);
+}
+
+// Root tooling (the pinned Prettier), so `npx prettier` from the root matches CI.
+function setUpRootTools() {
+	const hash = sha256(ROOT_LOCKFILE);
+	if (isCurrent(ROOT_NODE_STAMP, hash)) return;
+	log("Installing root tooling from package-lock.json...");
+	const [command, args, options] = npmCommand(["ci"]);
+	run(command, args, { cwd: ROOT, ...options });
+	writeFileSync(ROOT_NODE_STAMP, `${hash}\n`);
 }
 
 // A development .env with fresh random secrets on first run (Git-ignored, never overwritten).
@@ -445,6 +457,7 @@ async function openWhenReady() {
 checkNode();
 setUpPython();
 setUpFrontend();
+setUpRootTools();
 setUpEnvFile();
 checkWeights();
 
