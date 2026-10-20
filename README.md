@@ -231,7 +231,10 @@ NeuroScan-AI/
 |   |   |-- binary-detection.ipynb, classification.ipynb, segmentation.ipynb
 |   |   `-- <task>/           metrics/, plots/, logs/, predictions/, src/, weights/ (incl. deploy/)
 |   |-- Research Papers/      Two LaTeX paper projects (main.tex, highlights, graphical abstract; one with supplementary.tex)
-|   `-- Screenshots/          UI screenshots used in this README
+|   |-- Screenshots/          UI screenshots used in this README
+|   |-- Presentation.pptx     Review 3 deck (20 slides, both papers), built from a copy of the template
+|   |-- Presentation Template.pptx, Presentation Template.md   VIT review template and the deck's slide-by-slide content
+|   `-- Report Template.docx, Report Template.md               VIT report template and the report's section-by-section content
 `-- Frontend/
     |-- vite.config.ts        Port 8080, /api proxy, security headers for preview
     `-- src/

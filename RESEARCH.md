@@ -45,3 +45,22 @@ Overleaf's guide [Cross referencing with the xr package in Overleaf](https://www
 - _Journal of Imaging Informatics in Medicine_ (Springer, official SIIM journal, renamed from _Journal of Digital Imaging_): scope covers machine learning and AI in medical imaging informatics ([SIIM](https://siim.org/resources/publications/journal-of-imaging-informatics)). Reported impact factors range from 3.1 to 5.3 ([SciJournal](https://www.scijournal.org/journal-of-imaging-informatics-in-medicine), [WoS-journal.info](https://wos-journal.info/journalid/25296)). Needs reformatting to the Springer template.
 
 **Recommendation.** Submit to _Engineering Applications of Artificial Intelligence_ first, then _Computers in Biology and Medicine_ (Elsevier transfer, no reformatting), then _Journal of Imaging Informatics in Medicine_. Confirm impact factors in Clarivate JCR before deciding on metrics alone.
+
+## Literature table of the classification paper (2026-10-20)
+
+**Brief.** Before reusing the classification paper's Table 1 (existing studies) in the Review 3 deck, check each row's model, dataset, task and accuracy against the cited article.
+
+**Scope.** Abstracts from Europe PMC and the Semantic Scholar API by DOI, the publisher page of Seetha and Raja (2018), and a web search for Rehman et al. (2020). Publisher pages of Elsevier, Springer and IEEE refused automated requests. Searched 2026-10-20.
+
+**Findings.**
+
+- Noreen et al. (2020), IEEE Access, [doi:10.1109/ACCESS.2020.2978629](https://doi.org/10.1109/ACCESS.2020.2978629): Inception-v3 99.34% and DenseNet201 99.51% on the three-class figshare dataset. Table 1 lists it as DenseNet121, binary detection, 99.51%.
+- Rehman et al. (2020), Circuits, Systems, and Signal Processing, [doi:10.1007/s00034-019-01246-3](https://doi.org/10.1007/s00034-019-01246-3): AlexNet, GoogLeNet and VGG16 on the three-class figshare dataset; fine-tuned VGG16 reached 98.69%. Table 1 lists it as InceptionV3, binary detection, 99.34%.
+- Khan et al. (2020), Diagnostics, [doi:10.3390/diagnostics10080565](https://doi.org/10.3390/diagnostics10080565): VGG16 and VGG19 features with ELM-based selection on BraTS 2015, 2017 and 2018, accuracy 97.8%, 96.9% and 92.5%. Table 1 lists it as VGG16 on 3,064 images, binary detection, 98.69%.
+- Talo et al. (2019), Cognitive Systems Research, [doi:10.1016/j.cogsys.2018.12.007](https://doi.org/10.1016/j.cogsys.2018.12.007): ResNet34, normal vs abnormal, 613 MR images, 100% five-fold accuracy. Table 1 lists it as ResNet50 on 253 images, 95.23%.
+- Deepak and Ameer (2019), Computers in Biology and Medicine, [doi:10.1016/j.compbiomed.2019.103345](https://doi.org/10.1016/j.compbiomed.2019.103345): GoogLeNet features, patient-level five-fold cross-validation, mean accuracy 98%. Table 1 lists it as InceptionV3, 97.50%.
+- Ghassemi et al. (2020), Biomedical Signal Processing and Control, [doi:10.1016/j.bspc.2019.101678](https://doi.org/10.1016/j.bspc.2019.101678): a six-layer CNN pretrained as a GAN discriminator, three-class figshare dataset, five-fold cross-validation; the abstract gives no accuracy figure. Table 1 lists it as EfficientNet, binary detection, 98.87%.
+- Seetha and Raja (2018), [Biomedical and Pharmacology Journal 11(3)](https://biomedpharmajournal.org/vol11no3/brain-tumor-classification-using-convolutional-neural-networks/): ImageNet-pretrained CNN with the last layer trained, tumour vs non-tumour (Radiopaedia, BRATS 2015); 97.5% is the training accuracy.
+- Cheng et al. (2015), PLoS ONE, [doi:10.1371/journal.pone.0140381](https://doi.org/10.1371/journal.pone.0140381): accuracy up to 91.28% (bag-of-words with ring partition); the paper rounds it to 90%. Zacharaki et al. (2009), [doi:10.1002/mrm.22147](https://doi.org/10.1002/mrm.22147): 85% for metastasis vs glioma and 88% for glioma grading, leave-one-out. Tummala et al. (2022) 98.7% and Asiri et al. (2024) 97% match Table 1, but Asiri et al. classify four classes including no tumour.
+
+**Recommendation.** The deck (`Materials/Presentation.pptx`, slide 5) uses the verified figures above. Correct Table 1, the matching sentences of the literature review and Table 11 (comparison with existing literature) in the classification paper before submission: the 3,064-image figshare studies are subtype classification, not binary detection.
