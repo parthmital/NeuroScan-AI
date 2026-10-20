@@ -31,3 +31,17 @@
 Overleaf's guide [Cross referencing with the xr package in Overleaf](https://www.overleaf.com/learn/how-to/Cross_referencing_with_the_xr_package_in_Overleaf) explains that the external document must be compiled first so its `.aux` exists, and provides a `latexmkrc` (by John Collins) that rebuilds external documents automatically.
 
 **Sources.** [Crossref API](https://api.crossref.org/works); [NeurIPS proceedings](https://proceedings.neurips.cc/); [PMLR](https://proceedings.mlr.press/); [JMLR](https://jmlr.org/papers/v12/pedregosa11a.html); [ML Anthology](https://mlanthology.org/).
+
+## Target journals for the classification benchmark paper (2026-10-20)
+
+**Brief.** Pick three journals for `Materials/Research Papers/Standardised_Comparison_of_Convolutional_and_Transformer_Backbones_for_Brain_Tumour_Image_Classification/main.tex`: a nine-backbone 2D MRI benchmark whose main contribution is the evaluation protocol (perceptual-hash deduplication, group-aware splits, calibration, Holm-corrected McNemar tests) and the head-masked shortcut audit.
+
+**Scope.** Web searches for journal scope and metrics; Elsevier and Springer journal pages refused automated requests (HTTP 403 and a login redirect), so metrics come from third-party aggregators, which disagree. Searched 2026-10-20.
+
+**Findings.**
+
+- _Engineering Applications of Artificial Intelligence_ (Elsevier, IFAC journal): scope asks for novel AI aspects in a real-world engineering application, validated on public datasets for replicability. Aggregators list a 2025 impact factor between 8.0 and 9.0, Q1 ([Journal Metrics](https://www.journalmetrics.org/journal/engineering-applications-of-artificial-intelligence), [BioxBio](https://www.bioxbio.com/journal/ENG-APPL-ARTIF-INTEL)). The manuscript is already in its `cas-sc` template and its abstract states the contribution to AI and the engineering application.
+- _Computers in Biology and Medicine_ (Elsevier): aggregators list a 2025 impact factor between 6.3 and 8.35, Q1, with roughly 4 months to acceptance ([Journal Metrics](https://www.journalmetrics.org/journal/computers-in-biology-and-medicine), [SciJournal](https://www.scijournal.org/impact-factor-of-comput-biol-med.shtml)). Uses the same Elsevier CAS template.
+- _Journal of Imaging Informatics in Medicine_ (Springer, official SIIM journal, renamed from _Journal of Digital Imaging_): scope covers machine learning and AI in medical imaging informatics ([SIIM](https://siim.org/resources/publications/journal-of-imaging-informatics)). Reported impact factors range from 3.1 to 5.3 ([SciJournal](https://www.scijournal.org/journal-of-imaging-informatics-in-medicine), [WoS-journal.info](https://wos-journal.info/journalid/25296)). Needs reformatting to the Springer template.
+
+**Recommendation.** Submit to _Engineering Applications of Artificial Intelligence_ first, then _Computers in Biology and Medicine_ (Elsevier transfer, no reformatting), then _Journal of Imaging Informatics in Medicine_. Confirm impact factors in Clarivate JCR before deciding on metrics alone.
