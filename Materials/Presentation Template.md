@@ -243,7 +243,7 @@ Serve the most efficient models, EfficientNetB0 and VNet, in a secure web applic
 
 CNNs stack learned convolutional filters [63, 64]; transformers relate all image patches through self-attention. All models are ImageNet-pretrained [65, 66] torchvision or timm models in PyTorch [67], with a one-output (detection) or three-output (subtype) head.
 
-Cost was measured on one Tesla T4 in half precision: latency at batch size 1, throughput at batch size 32. **It spans two orders of magnitude** (0.43 to 30.93 GFLOPs) while detection accuracy spans 2.34 points, and latency does not follow size: VGG16 (134 M parameters) takes 7.7 ms, DenseNet121 (6.95 M) 23.6 ms.
+Cost was measured on one Tesla T4 in half precision: latency at batch size 1, throughput at batch size 32. **It spans a factor of about 72** (0.43 to 30.93 GFLOPs) while detection accuracy spans 2.34 points, and latency does not follow size: VGG16 (134 M parameters) takes 7.7 ms, DenseNet121 (6.95 M) 23.6 ms.
 
 **Identical training: 54 runs per task**
 

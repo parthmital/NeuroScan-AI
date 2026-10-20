@@ -325,29 +325,28 @@ Out of scope: clinical validation, regulatory approval, DICOM input, multi-insti
 
 **2.1 Literature Review**
 
-_Hand-engineered features._ Early work combined hand-crafted texture, shape and intensity descriptors with classifiers such as the support vector machine (SVM). Zacharaki et al. [12] obtained about 85% accuracy for tumour type recognition with texture and shape features and an SVM, and Cheng et al. [13] reached 90% on 3,064 contrast-enhanced T1 slices with region augmentation and partition. Such features must be redesigned for each problem and generalise poorly across datasets [8].
+_Hand-engineered features._ Early work combined hand-crafted texture, shape and intensity descriptors with classifiers such as the support vector machine (SVM). Zacharaki et al. [12] separated metastases from gliomas with 85% accuracy and high-grade from low-grade tumours with 88% using texture and shape features and an SVM, and Cheng et al. [13] reached 91.28% subtype accuracy on 3,064 contrast-enhanced T1 slices with region augmentation and partition. Such features must be redesigned for each problem and generalise poorly across datasets [8].
 
-_Convolutional neural networks._ The success of AlexNet [14] brought deep learning to medical imaging [8]. He et al. [15] introduced residual connections in ResNet; with a pretrained ResNet50, Talo et al. [16] reported 95.23% accuracy on 253 brain MRI images and Seetha and Raja [17] reported 97.5%. Simonyan and Zisserman [18] built deep networks from small 3 x 3 filters (VGG16), and Khan et al. [19] reported 98.69% with VGG16 features on 3,064 slices. Huang et al. [20] connected every layer of a dense block to all preceding layers (DenseNet121), and Noreen et al. [21] reported 99.51% with a DenseNet121-based model. Szegedy et al. [22] used parallel convolutions of different sizes (InceptionV3), which reached 97.5% in the subtype classification study of Deepak and Ameer [23] and 99.34% in that of Rehman et al. [24]. Tan and Le [25] scaled depth, width and resolution together from the EfficientNetB0 baseline to obtain high accuracy with few parameters, Howard et al. [26] designed MobileNetV3 for mobile devices, and Ghassemi et al. [27] reported 98.87% with a pretrained deep network on the Cheng collection.
+_Convolutional neural networks._ The success of AlexNet [14] brought deep learning to medical imaging [8]. He et al. [15] introduced residual connections in ResNet; fine-tuning a pretrained ResNet34, Talo et al. [16] separated normal from abnormal brain MR images with 100% five-fold accuracy on 613 images, and Seetha and Raja [17] reported 97.5% training accuracy for tumour versus non-tumour images with an ImageNet-pretrained CNN. Simonyan and Zisserman [18] built deep networks from small 3 x 3 filters (VGG16), and Khan et al. [19] reached 97.8% on BraTS 2015 with VGG16 and VGG19 features and an extreme learning machine. Huang et al. [20] connected every layer of a dense block to all preceding layers (DenseNet), and Noreen et al. [21] reached 99.51% subtype accuracy on the 3,064 Cheng slices with concatenated DenseNet201 features. Szegedy et al. [22] used parallel convolutions of different sizes (Inception): GoogLeNet features gave 98% mean accuracy under patient-level cross-validation in Deepak and Ameer [23], concatenated Inception-v3 features reached 99.34% [21], and Rehman et al. [24] reached 98.69% by fine-tuning VGG16 on the same slices. Tan and Le [25] scaled depth, width and resolution together from the EfficientNetB0 baseline to obtain high accuracy with few parameters, Howard et al. [26] designed MobileNetV3 for mobile devices, and Ghassemi et al. [27] pretrained a six-layer CNN as the discriminator of a generative adversarial network on the Cheng collection.
 
-_Transformers and hybrids._ Dosovitskiy et al. [28] applied the transformer to images by treating a 16 x 16 pixel patch as a token (ViT); it matches CNNs when pretrained on very large datasets but lacks the locality bias of convolution. Liu et al. [29] restricted attention to shifted local windows in a hierarchy (Swin Transformer), and Dai et al. [30] combined convolution stages with attention stages in the hybrid CoAtNet. For brain tumour MRI, Tummala et al. [31] reported 98.7% subtype accuracy with an ensemble of ViTs, and Asiri et al. [32] reported 97% with a Swin Transformer.
+_Transformers and hybrids._ Dosovitskiy et al. [28] applied the transformer to images by treating a 16 x 16 pixel patch as a token (ViT); it matches CNNs when pretrained on very large datasets but lacks the locality bias of convolution. Liu et al. [29] restricted attention to shifted local windows in a hierarchy (Swin Transformer), and Dai et al. [30] combined convolution stages with attention stages in the hybrid CoAtNet. For brain tumour MRI, Tummala et al. [31] reported 98.7% subtype accuracy with an ensemble of ViTs, and Asiri et al. [32] reported 97% with a Swin Transformer on four classes, including no tumour.
 
 _Three-dimensional segmentation._ Ronneberger et al. [33] introduced the UNet encoder-decoder with skip connections, and Çiçek et al. [34] extended it to 3D volumes. Milletari et al. [35] added residual blocks and PReLU activations in VNet. Isensee et al. [36] automated the design of UNet-style pipelines in nnU-Net from dataset properties. On the transformer side, UNETR [37] attaches a ViT encoder to a convolutional decoder, Swin UNETR [38] uses a Swin Transformer encoder for brain tumour segmentation, and TransBTS [39] places transformer layers only at the bottleneck of a CNN. Transformers are known to need large datasets or distillation to train well [40].
 
 _Reliability of benchmarks._ Kapoor and Narayanan [9] documented data leakage as a recurring cause of over-optimistic results in 17 fields. Fateh et al. [41], curating a widely used aggregate of the Cheng, Bhuvaji and Br35H collections, removed exact and near-duplicates before splitting and noted that the original release records no patient, sequence or slice information. In chest radiography, models have been shown to exploit hospital-specific markers and image borders instead of pathology [42], [43].
 
-**Table 2.1:** Comparison of existing studies for brain tumour detection and classification.
+**Table 2.1:** Accuracies reported by existing brain tumour MRI studies; the 3,064 images are the Cheng collection.
 
-| Study                 | Model            | Dataset size | Task                   | Accuracy |
-| --------------------- | ---------------- | ------------ | ---------------------- | -------- |
-| Talo et al. [16]      | ResNet50         | 253          | Binary detection       | 95.23%   |
-| Khan et al. [19]      | VGG16            | 3,064        | Binary detection       | 98.69%   |
-| Noreen et al. [21]    | DenseNet121      | 3,064        | Binary detection       | 99.51%   |
-| Rehman et al. [24]    | InceptionV3      | 3,064        | Binary detection       | 99.34%   |
-| Ghassemi et al. [27]  | EfficientNet     | 3,064        | Binary detection       | 98.87%   |
-| Cheng et al. [13]     | SVM + features   | 3,064        | Subtype classification | 90.00%   |
-| Deepak and Ameer [23] | InceptionV3      | 3,064        | Subtype classification | 97.50%   |
-| Tummala et al. [31]   | ViT ensemble     | 3,064        | Subtype classification | 98.70%   |
-| Asiri et al. [32]     | Swin Transformer | 2,870        | Subtype classification | 97.00%   |
+| Study                 | Model            | Dataset size | Task                          | Accuracy |
+| --------------------- | ---------------- | ------------ | ----------------------------- | -------- |
+| Talo et al. [16]      | ResNet34         | 613          | Normal vs abnormal            | 100.00%  |
+| Cheng et al. [13]     | SVM + features   | 3,064        | Subtype classification        | 91.28%   |
+| Noreen et al. [21]    | DenseNet201      | 3,064        | Subtype classification        | 99.51%   |
+| Noreen et al. [21]    | Inception-v3     | 3,064        | Subtype classification        | 99.34%   |
+| Deepak and Ameer [23] | GoogLeNet        | 3,064        | Subtype classification        | 98.00%   |
+| Rehman et al. [24]    | VGG16            | 3,064        | Subtype classification        | 98.69%   |
+| Tummala et al. [31]   | ViT ensemble     | 3,064        | Subtype classification        | 98.70%   |
+| Asiri et al. [32]     | Swin Transformer | 2,870        | Four classes, incl. no tumour | 97.00%   |
 
 **Table 2.2:** 3D brain tumour segmentation architectures reviewed.
 
@@ -961,7 +960,7 @@ No pair of models differs significantly by the McNemar test after Holm correctio
 | MobileNetV3-Large | 97.08        | 4.20           | 10.55        | 2,301.1               |
 | VGG16             | 97.08        | 134.26         | 7.72         | 386.5                 |
 
-Cost varies by more than two orders of magnitude, from 0.43 GFLOPs for MobileNetV3-Large to 30.9 GFLOPs for Swin-Base and VGG16, while accuracy varies by only 2.34 points. EfficientNetB0 matches the leaders with 4.01 million parameters and 0.77 GFLOPs, and has the second-highest throughput (1,393 images per second). It was therefore chosen for deployment.
+Cost varies by a factor of about 72, from 0.43 GFLOPs for MobileNetV3-Large to 30.9 GFLOPs for Swin-Base and VGG16, while accuracy varies by only 2.34 points. EfficientNetB0 matches the leaders with 4.01 million parameters and 0.77 GFLOPs, and has the second-highest throughput (1,393 images per second). It was therefore chosen for deployment.
 
 > Figure 7.1: insert `Materials/Notebooks/binary-detection/plots/09_confusion_matrices.png`.
 
@@ -1061,7 +1060,7 @@ Parameter count does not predict accuracy: UNETR, the largest model, has the low
 | Classification | EfficientNet-B0 | 4,011,391  | Fold 0     | Accuracy 0.9778               |
 | Segmentation   | VNet            | 1,398,761  | Seed 42    | Mean Dice 0.7965              |
 
-In three tasks, accuracy differences between architectures were small or not significant, while cost differed by orders of magnitude. That makes efficiency the deciding factor for deployment. Our results agree with the literature in Table 2.1 in magnitude but are measured after deduplication and group-aware splitting, which removes exactly the images most likely to inflate a score [9].
+In three tasks, accuracy differences between architectures were small or not significant, while cost differed many-fold. That makes efficiency the deciding factor for deployment. Our results agree with the literature in Table 2.1 in magnitude but are measured after deduplication and group-aware splitting, which removes exactly the images most likely to inflate a score [9].
 
 The web application does not reproduce the notebook evaluation exactly, for three reasons:
 

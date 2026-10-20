@@ -64,3 +64,14 @@ Overleaf's guide [Cross referencing with the xr package in Overleaf](https://www
 - Cheng et al. (2015), PLoS ONE, [doi:10.1371/journal.pone.0140381](https://doi.org/10.1371/journal.pone.0140381): accuracy up to 91.28% (bag-of-words with ring partition); the paper rounds it to 90%. Zacharaki et al. (2009), [doi:10.1002/mrm.22147](https://doi.org/10.1002/mrm.22147): 85% for metastasis vs glioma and 88% for glioma grading, leave-one-out. Tummala et al. (2022) 98.7% and Asiri et al. (2024) 97% match Table 1, but Asiri et al. classify four classes including no tumour.
 
 **Recommendation.** The deck (`Materials/Presentation.pptx`, slide 5) uses the verified figures above. Correct Table 1, the matching sentences of the literature review and Table 11 (comparison with existing literature) in the classification paper before submission: the 3,064-image figshare studies are subtype classification, not binary detection.
+
+_Applied 2026-10-21:_ the paper's literature review, Table 1 and Table 11, and the project report's Section 2.1 and Table 2.1 (`Materials/Report Template.md`), now use these figures. A second check the same day (Semantic Scholar and Europe PMC abstracts by DOI, the Seetha and Raja publisher page) confirmed every finding above. Ghassemi et al. (2020) gives no accuracy in its abstract and a web search found none attributable to it, so the paper cites it for its method only and drops it from both tables. Khan et al. (2020) stays in the text only, because its BraTS dataset sizes were not verified.
+
+## Introduction statistics and cost ratio of the classification paper (2026-10-21)
+
+**Brief.** Check the CBTRUS figures in the paper's Introduction, and the claim that model cost spans two orders of magnitude.
+
+**Findings.**
+
+- Ostrom et al. (2023), CBTRUS 2016-2020 report, [PMC10550277](https://pmc.ncbi.nlm.nih.gov/articles/PMC10550277/): "Counts and rates from the 453,623 brain and other CNS tumors", Figure 14 caption "Annual Average Cases=90,725", and the abstract "Gliomas accounted for 26.3% of all tumors". The paper's figures match.
+- From the notebooks' `model_profiles.csv`, GFLOPs range from 0.431 (MobileNetV3-Large) to 30.932 (VGG16), a factor of 72, and parameters from 4.01 M to 134.27 M, a factor of 33. Neither is two orders of magnitude (100), so the paper, report and deck now give the factor instead.

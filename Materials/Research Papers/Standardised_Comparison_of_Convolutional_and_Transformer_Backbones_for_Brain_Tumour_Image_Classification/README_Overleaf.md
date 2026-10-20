@@ -82,6 +82,18 @@ The previous version reported 15 separate per-model notebooks (nine binary, six 
 
 Headline results in this version: binary fold-ensemble accuracy 99.42% for CoAtNet-0, EfficientNetB0 and ViT-B/16 on 171 test images, with no significant pairwise difference; multiclass test set of only 45 images (one group of 1,431 images could not be split), on which six models are error-free; background-only shortcut models above chance for 7 of 9 binary and 9 of 9 multiclass backbones.
 
+## Corrections of 2026-10-21
+
+Each item was checked against the notebook outputs or the cited article (see `RESEARCH.md`).
+
+- Literature review, Table 1 and Table 11: the 3,064-image studies are subtype classification, not binary detection. Talo et al. (2019) is ResNet34, normal vs abnormal, 613 images, 100%; Rehman et al. (2020) is fine-tuned VGG16, 98.69%; Noreen et al. (2020) is DenseNet201 (99.51%) and Inception-v3 (99.34%); Deepak and Ameer (2019) is GoogLeNet, 98%; Cheng et al. (2015) is 91.28%; Seetha and Raja (2018) report 97.5% training accuracy; Khan et al. (2020) is BraTS 2015, 97.8%; Asiri et al. (2024) classify four classes, including no tumour. Ghassemi et al. (2020) reports no verifiable accuracy, so it is cited for its method only and is not in the tables. Table 11's "Our work" rows now match the tasks of the published rows.
+- Model cost spans a factor of about 72 in GFLOPs and 33 in parameters, not two orders of magnitude (Sections 4.5 and 4.7).
+- Table 9: the subtype classification parameter counts of DenseNet121, MobileNetV3-Large and Swin-Base are 6.96, 4.21 and 86.75 million (`classification/metrics/model_profiles.csv`); the caption no longer says that only binary detection counts are shown.
+- Table 3 caption and Section 3.2.2: of the 10 subtype classification images in label-noise pairs, 6 were already removed as duplicates, which is why the table lists 4 (`split_roles.csv`, `run_summary.json`, notebook cell 22).
+- Section 3.3: the test set is one of seven stratified group folds (`TEST_FRACTION = 0.15`, so `round(1 / 0.15) = 7`), about 14% of the images, not "about 15%".
+- Section 4.6: ViT-B/16 Grad-CAM on the glioma test image (32.6% outside the head against a uniform 21.3%) and ViT-B/16 attention rollout on meningioma and pituitary images (35.0% and 35.8% against 26.8% and 26.7%) also exceed the uniform share; the text said only CoAtNet-0 did.
+- Table 2 caption: the last column counts images removed as duplicates.
+
 ## Changes in the 2026-10-19 revision
 
 - Figure 1 redrawn as a branching top-down flowchart with role-coloured nodes and dashed side arms, in place of the five-column stage grid.
