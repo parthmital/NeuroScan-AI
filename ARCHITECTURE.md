@@ -33,7 +33,7 @@ NeuroScan AI is one deployable web application (a FastAPI backend and a React si
 
 ### Research and materials
 
-`Materials/` holds everything that is not the application: `Notebooks/` (the three Kaggle notebooks `binary-detection.ipynb`, `classification.ipynb` and `segmentation.ipynb`, each with its downloaded outputs in a folder of the same name), `Research Papers/` (two LaTeX projects, built with `npm run papers` through `scripts/build-papers.mjs`), and `Screenshots/`. The application never imports any of it; it only reads the three checkpoints the notebooks export to `Materials/Notebooks/<task>/weights/deploy/` by default (paths are configurable).
+`Materials/` holds everything that is not the application: `Notebooks/` (the three Kaggle notebooks `binary-detection.ipynb`, `classification.ipynb` and `segmentation.ipynb`, each with its downloaded outputs in a folder of the same name), `Research Papers/` (two LaTeX projects, built with `npm run papers` through `scripts/build-papers.mjs`), and `Screenshots/`. The application never imports any of it; it only reads the three checkpoints in `Materials/Notebooks/<task>/weights/deploy/` by default (paths are configurable). The two 2D notebooks export theirs; the segmentation checkpoint (`VNet.pth`) comes from the previous version of the segmentation notebook, because the rewritten hybrid-ensemble notebook exports none.
 
 ### Frontend (`Frontend/src/`)
 

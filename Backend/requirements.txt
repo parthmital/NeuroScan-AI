@@ -7,7 +7,7 @@ fastapi==0.143.0
 nibabel==5.4.2
 numpy==2.4.6
 opencv-python-headless==5.0.0.93
-pillow==12.3.0
+pillow==13.0.0
 pydantic==2.14.0
 PyJWT==2.15.1
 PyOTP==2.10.0

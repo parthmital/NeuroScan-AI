@@ -75,3 +75,20 @@ _Applied 2026-10-21:_ the paper's literature review, Table 1 and Table 11, and t
 
 - Ostrom et al. (2023), CBTRUS 2016-2020 report, [PMC10550277](https://pmc.ncbi.nlm.nih.gov/articles/PMC10550277/): "Counts and rates from the 453,623 brain and other CNS tumors", Figure 14 caption "Annual Average Cases=90,725", and the abstract "Gliomas accounted for 26.3% of all tumors". The paper's figures match.
 - From the notebooks' `model_profiles.csv`, GFLOPs range from 0.431 (MobileNetV3-Large) to 30.932 (VGG16), a factor of 72, and parameters from 4.01 M to 134.27 M, a factor of 33. Neither is two orders of magnitude (100), so the paper, report and deck now give the factor instead.
+
+## Segmentation notebook redesign: hybrid ensemble and external validation (2026-10-22)
+
+**Brief.** The segmentation results (best mean Dice 0.8199, UNet) were weaker than GCSER-UNet (Mukherjee et al., [arXiv:2605.30510](https://arxiv.org/abs/2605.30510), submitted 2026-05-28), which reports BraTS 2020 Dice of 0.95 (WT), 0.92 (TC) and 0.90 (ET), and the method had no novel contribution. Constraints: one Kaggle session on 2x T4 (about 12 hours), fully rerunnable, no BraTS 2021+ pretrained weights (BraTS 2021 contains the BraTS 2020 cases).
+
+**Findings.**
+
+- GCSER-UNet is a 2D model. From the PDF (Sections III-B1, IV-B, IV-D2): it keeps "slices containing at least one positive pixel" per region, splits the processed data 75:15:10 without stating a patient-level split, and does not state how Dice is aggregated. Its numbers are therefore slice-wise on tumour-containing slices and not comparable with per-patient 3D BraTS Dice. The notebook now reports both protocols for every model.
+- The previous pipeline resampled each 240x240x155 volume to 128^3 and trained 50 epochs with flips and intensity jitter only. Native-resolution patches, nnU-Net-style augmentation and sliding-window inference are the standard remedies (nnU-Net, Isensee et al., Nature Methods 18, 203-211 (2021), [doi:10.1038/s41592-020-01008-z](https://doi.org/10.1038/s41592-020-01008-z)).
+- The earlier run showed complementary behaviour: transformers had higher sensitivity (Swin UNETR WT 0.9619 against UNet 0.9059) and CNNs higher Dice (`segmentation/metrics/test_results.csv`), which motivates region-wise fusion of a CNN and a transformer.
+- External data on Kaggle (Kaggle dataset API, checked 2026-10-22): `aiocta/brats2023-ssa-training-dataset` holds the official `ASNR-MICCAI-BraTS2023-SSA-Challenge-TrainingData_V2` folder with 60 cases of five NIfTI files each (`-t1c`, `-t1n`, `-t2f`, `-t2w`, `-seg`; ET is label 3). Other BraTS-Africa uploads exist (for example `aondonamoses/brats-africa`, `zenjapainai/brats-africa`) with re-organised folders. BraTS 2021 copies (`dschettler8845/brats-2021-task1`) overlap BraTS 2020 and were rejected as an external set.
+
+**Decision.** Adapt MONAI 1.6.1 (Apache-2.0, released 2026-09-27 on PyPI; requires torch >= 2.8, which Kaggle's 2.11 satisfies) for the networks (DynUNet as nnU-Net, SegResNetDS, SwinUNETR-v2) and sliding-window inference, installed with `--no-deps` so Kaggle's PyTorch is untouched; einops (MIT) is installed if missing because SwinUNETR imports it. The fusion, the quality-control analysis and Seg-Grad-CAM (Vinogradova et al., AAAI 2020) are written in the notebook. BraTS-Africa is the external test set; the internal validation and test patients are fixed to those of the earlier benchmark.
+
+**Alternatives considered.** Keeping the hand-written networks (more code to maintain, no pretrained-free advantage); MedNeXt from MONAI as a third CNN (dropped to fit the session); BraTS 2021 new cases as a second external set (overlap with BraTS 2020 must be removed by image matching, and about 880 cases would not fit the session with TTA); `monai.visualize.GradCAM` (built for classification targets, so the segmentation target is implemented directly).
+
+**Not verified.** Run time, memory and all results of the new notebook; they exist only after a Kaggle run.

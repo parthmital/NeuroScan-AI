@@ -2,13 +2,13 @@
 
 This folder holds the three Kaggle notebooks behind NeuroScan AI and the outputs downloaded from their executed runs. Every number and figure below is copied from those outputs (`metrics/`, `logs/`, `plots/`, `weights/deploy/metadata.json`); nothing here was re-run locally.
 
-| Notebook                                           | Task                                                                   | Models | Outputs folder                           | Notebook time |
-| -------------------------------------------------- | ---------------------------------------------------------------------- | ------ | ---------------------------------------- | ------------- |
-| [`binary-detection.ipynb`](binary-detection.ipynb) | Tumour-positive vs tumour-negative 2D MRI slices                       | 9      | [`binary-detection/`](binary-detection/) | 71.8 min      |
-| [`classification.ipynb`](classification.ipynb)     | Glioma vs meningioma vs pituitary 2D MRI slices                        | 9      | [`classification/`](classification/)     | 273.6 min     |
-| [`segmentation.ipynb`](segmentation.ipynb)         | Whole tumour (WT), tumour core (TC), enhancing tumour (ET), BraTS 2020 | 6      | [`segmentation/`](segmentation/)         | 521.7 min     |
+| Notebook                                           | Task                                                                   | Models                                              | Outputs folder                           | Notebook time                |
+| -------------------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------- | ---------------------------------------- | ---------------------------- |
+| [`binary-detection.ipynb`](binary-detection.ipynb) | Tumour-positive vs tumour-negative 2D MRI slices                       | 9                                                   | [`binary-detection/`](binary-detection/) | 71.8 min                     |
+| [`classification.ipynb`](classification.ipynb)     | Glioma vs meningioma vs pituitary 2D MRI slices                        | 9                                                   | [`classification/`](classification/)     | 273.6 min                    |
+| [`segmentation.ipynb`](segmentation.ipynb)         | Whole tumour (WT), tumour core (TC), enhancing tumour (ET), BraTS 2020 | 3 + ensemble (outputs: 6 from the previous version) | [`segmentation/`](segmentation/)         | 521.7 min (previous version) |
 
-Notebook times are `notebook_minutes` in each `metrics/run_summary.json`.
+Notebook times are `notebook_minutes` in each `metrics/run_summary.json`. The segmentation notebook has since been rewritten and not yet run; its outputs folder still holds the previous version's run (see [Segmentation notebook](#segmentation-notebook)).
 
 ## Contents
 
@@ -26,19 +26,19 @@ Notebook times are `notebook_minutes` in each `metrics/run_summary.json`.
 Materials/Notebooks/
 |-- binary-detection.ipynb       Executed notebook with all cell outputs (25 inline figures)
 |-- classification.ipynb         Executed notebook with all cell outputs (26 inline figures)
-|-- segmentation.ipynb           Executed notebook with all cell outputs (10 inline figures)
+|-- segmentation.ipynb           Revised notebook, not yet run (no outputs)
 `-- <task>/                      Outputs downloaded from the executed Kaggle run
     |-- __notebook__.ipynb       Kaggle's copy of the same run (Git-ignored); same cells, without the last cell's output
     |-- metrics/                 CSV tables and JSON summaries; metrics/runs/<run>/ per-run history
     |-- plots/                   Every figure as PNG
     |-- logs/                    notebook.log, worker_gpu0/1.log, events_gpu0/1.jsonl, status_gpu0/1.json
-    |-- predictions/             2D tasks: <run>.npz logits; segmentation: <run>.npy test probabilities
+    |-- predictions/             2D tasks: <run>.npz logits; segmentation: <run>.npy test probabilities (current notebook: <run>/<split>/<case>.npz)
     |-- weights/<model>/         Best-validation checkpoint of every run (*.pth, Git-ignored)
     |-- weights/deploy/          Checkpoint exported for the web app plus metadata.json
     `-- src/                     The library and worker modules each notebook writes and imports
 ```
 
-The root `.gitignore` excludes `__notebook__.ipynb`, `*.pth`, `*.log` and `*.npy`, so a fresh clone has the three executed notebooks, `deploy/metadata.json`, metrics, plots, JSON logs and `.npz` predictions, but not Kaggle's duplicate notebook copies, the weights, the text logs or the segmentation probability files.
+The root `.gitignore` excludes `__notebook__.ipynb`, `*.pth`, `*.log` and `*.npy`, and `Materials/Notebooks/segmentation/predictions/`, so a fresh clone has the two executed 2D notebooks, the revised segmentation notebook, `deploy/metadata.json`, metrics, plots, JSON logs and `.npz` predictions, but not Kaggle's duplicate notebook copies, the weights, the text logs or the segmentation probability files.
 
 Each notebook writes its shared code to `src/` in an early cell and runs training in one worker process per GPU: the 2D notebooks write `image_lib.py`, `image_worker.py` and `shared_lib.py`; the segmentation notebook writes `volume_lib.py`, `volume_worker.py` and `shared_lib.py`.
 
@@ -613,6 +613,26 @@ Output: `Exported /kaggle/working/weights/deploy/EfficientNetB0.pth (16.3 MB); r
 
 Source: [`segmentation.ipynb`](segmentation.ipynb). Outputs: [`segmentation/`](segmentation/).
 
+### Current notebook: region-adaptive hybrid ensemble (not yet run)
+
+The notebook was rewritten after the six-network benchmark below. It has no saved outputs yet, and none of its results exist until it is run on Kaggle; the `segmentation/` folder still holds the outputs of the previous version, documented in the next subsections. A new run writes the same folder layout, with these changes:
+
+| Aspect         | Previous version (results below)                                     | Current notebook                                                                                                                                                                                                                                                                                                        |
+| -------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Networks       | UNet, nnU-Net, VNet, UNETR, Swin UNETR, TransBTS, written in PyTorch | nnU-Net (residual DynUNet, 31.4 M parameters), SegResNet (SegResNetDS, 19.9 M) and Swin UNETR-v2 (feature size 48, 72.8 M), from MONAI 1.6.1                                                                                                                                                                            |
+| Input          | Whole volume resampled to 128^3                                      | Native 1 mm volume cropped to the brain; 128^3 training patches, one third centred on tumour                                                                                                                                                                                                                            |
+| Augmentation   | Flips, intensity scale and shift                                     | Rotation up to 30 degrees and zoom 0.7 to 1.4 (p = 0.2 each), flips, noise, brightness, contrast, gamma, on the GPU                                                                                                                                                                                                     |
+| Training       | 50 epochs of the 257 training cases                                  | `EPOCHS = {"nnU-Net": 60, "SegResNet": 60, "Swin UNETR": 30}` of 250 steps x 2 patches; validation every 5 epochs                                                                                                                                                                                                       |
+| Inference      | Whole 128^3 volume, 8-flip TTA                                       | Gaussian sliding windows (128^3, overlap 0.5), 8-flip TTA                                                                                                                                                                                                                                                               |
+| Ensemble       | Plain mean of all models and of the CNNs                             | Region-adaptive hybrid ensemble: one convex weight vector and one threshold per region (WT, TC, ET), chosen on the 56 validation cases; ablations: each member, plain mean, CNN mean, weights without threshold tuning                                                                                                  |
+| Validation     | 56 internal test cases                                               | The same 56 internal test cases (fixed by ID, so paired with the results below) and 60 external BraTS-Africa cases (`aiocta/brats2023-ssa-training-dataset`)                                                                                                                                                            |
+| Added analyses |                                                                      | Paired Wilcoxon tests of the proposed ensemble with bootstrap CIs; generalisation gap; slice-wise protocol of 2D studies next to the published GCSER-UNet results; CNN-transformer disagreement as a failure detector (Spearman, AUROC); 3D Seg-Grad-CAM maps with attribution-in-region scores; sequence-drop ablation |
+| Web-app export | `weights/deploy/VNet.pth`                                            | None: keep the existing `weights/deploy/` folder when copying new outputs                                                                                                                                                                                                                                               |
+
+Kaggle settings: GPU T4 x2, Internet on, and both datasets attached. `RESUME_DIR` continues an interrupted run. The new outputs add `metrics/fusion_weights.csv`, `test_results.csv`, `external_results.csv`, `generalisation_gap.csv`, `slice_protocol_comparison.csv`, `quality_control.csv`, `gradcam_attribution.csv`, `modality_ablation_summary.csv` and `predictions/<run>/<split>/<case>.npz` (compressed uint8 probabilities on the brain crop, Git-ignored).
+
+The subsections below describe the previous version of the notebook (commit `4a3ffae`) and the outputs it produced.
+
 ### 1. Setup
 
 - **Configuration.** Models UNet, nnU-Net, VNet, UNETR, Swin UNETR and TransBTS; `SEEDS = [42]`, `IMG_SIZE = 128`, `EPOCHS = 50`, `EFFECTIVE_BATCH = 4`, `GRAD_CLIP = 1.0`, 70/15/15 split with `SPLIT_SEED = 42`, `TTA = True`, `EARLY_STOP_PATIENCE = None`, `ET_CANDIDATES = [0, 50, 100, 200, 300, 500, 800]`, `TRAINING_BUDGET_HOURS = 9.5`, `DEPLOY_MODEL = "VNet"`. Output: `Models: [...] | seeds: [42] | epochs: 50 | input 128^3`.
@@ -803,7 +823,7 @@ The 2D metadata records the preprocessing `crop_to_brain (blur 5x5, threshold 45
 From `run_summary.json`:
 
 - 2D tasks: the MRI sequence of the images is not recorded by the sources; binary negatives are tumour-negative, not certified normal; there are no patient identifiers, so grouping by image similarity is a proxy for a patient-level split; only two-dimensional public slices are used, with no institutional or three-dimensional external data.
-- Segmentation: a single dataset (BraTS 2020 training cases) with no external multi-centre test set with public labels; no large-scale pretraining of the transformer encoders; one input resolution per run (128^3, whole volume resampled).
+- Segmentation (previous version): a single dataset (BraTS 2020 training cases) with no external multi-centre test set with public labels; no large-scale pretraining of the transformer encoders; one input resolution per run (128^3, whole volume resampled). The current notebook addresses the first and last of these (BraTS-Africa external set, native-resolution patches) and records its own limitations in `run_summary.json` when run.
 
 Found in the outputs and worth knowing before citing the results:
 

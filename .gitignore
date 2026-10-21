@@ -59,6 +59,8 @@ bun-debug.log*
 *.mha
 *.mhd
 *.npy
+# Per-case segmentation probabilities of the hybrid-ensemble notebook (one file per run, split and case)
+Materials/Notebooks/segmentation/predictions/
 
 # Trained model weights and exported ML models
 *.keras
