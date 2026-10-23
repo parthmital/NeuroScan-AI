@@ -21,6 +21,8 @@
 \newcommand{\panel}[3]{\plot{#1}{#2}\par\smallskip{\small #3}\par}
 % Cross-reference to a supplementary item, printed as "Supplementary F3" or "Supplementary T2".
 \newcommand{\supp}[1]{Supplementary~\ref{#1}}
+% PDF bookmarks carry the section numbers ("3.2.2 Label-aware deduplication").
+\hypersetup{bookmarksnumbered=true}
 % Figures and tables are not floats: each is set exactly where it is written, right after
 % the paragraph that first cites it, with the cas-sc caption style. A page may end short
 % when the next figure or table does not fit on it.
@@ -62,10 +64,13 @@
   }
 % cas-common.sty sets the keywords box inside a zero-width box with no stretch, which TeX
 % reports as a 117pt overfull box at \maketitle. Same environment with \hss added, so the
-% output is unchanged and the warning is gone.
+% output is unchanged and the warning is gone. It also adds the PDF bookmark of the abstract
+% heading, since the abstract text is written verbatim to \jobname.abs and cannot hold one.
 \RenewDocumentEnvironment { Abstract } { o }
   {
     \group_begin:
+    % Set before the keywords box, so the outline lists Abstract before Keywords.
+    \pdfbookmark[1]{Abstract}{abstract}
     \IfNoValueTF { #1 } { }
     { \tex_gdef:D \abstractname { #1 } }
     \parindent \z@

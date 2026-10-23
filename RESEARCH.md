@@ -76,6 +76,20 @@ _Applied 2026-10-21:_ the paper's literature review, Table 1 and Table 11, and t
 - Ostrom et al. (2023), CBTRUS 2016-2020 report, [PMC10550277](https://pmc.ncbi.nlm.nih.gov/articles/PMC10550277/): "Counts and rates from the 453,623 brain and other CNS tumors", Figure 14 caption "Annual Average Cases=90,725", and the abstract "Gliomas accounted for 26.3% of all tumors". The paper's figures match.
 - From the notebooks' `model_profiles.csv`, GFLOPs range from 0.431 (MobileNetV3-Large) to 30.932 (VGG16), a factor of 72, and parameters from 4.01 M to 134.27 M, a factor of 33. Neither is two orders of magnitude (100), so the paper, report and deck now give the factor instead.
 
+## Deduplication threshold and curation throughput of the classification paper (2026-10-24)
+
+**Brief.** Supervisor feedback asked for the pHash pipeline's measured throughput and scalability, and for a reference or experiment behind the Hamming threshold of 5. Scope: the notebook outputs, the ImageHash source, and one reference for sub-quadratic Hamming search.
+
+**Findings.**
+
+- Implementation (`Materials/Notebooks/*/src/image_lib.py`, notebook cell 22): `imagehash.phash` with its default 8 x 8 hash on the original image, and a greedy pass in folder order that drops an image when an already kept same-label image is within the tolerance. The ImageHash 4.3.2 wheel (downloaded to `.agent-local/downloads/imagehash/`, not installed) thresholds the 8 x 8 lowest DCT coefficients at their median. The version used on Kaggle is not recorded in `run_summary.json`.
+- Every hash in `metrics/splits.csv` of both notebooks has exactly 32 set bits, so all 5,289,378 and 16,979,878 pairwise distances are even, and tolerances 4 and 5 give the same pool (1,185 and 4,734 before label noise), matching `deduplication_threshold_sweep.csv`. Cross-label pairs at exact distances 0, 2, 4, 6: binary 0, 0, 0, 1; classification 2, 10, 19, 222. Computed with `.agent-local/scripts/audit_phash_dedup.py`.
+- No reference in `refs.bib` or the repository justifies 5. The notebook says it "reproduces the paper's pass" of an earlier version. Hamming (1950) defines the distance and Monga and Evans (2006) evaluate perceptual hashing in general.
+- Timing: `logs/notebook.log` gives "Cached 3253 images in 39s" and "Cached 5828 images in 68s" (decode, hash, thumbnail, crop, resize, head mask, four CPU worker processes). The deduplication cell is bracketed by one-second timestamps at about 2 s and 3 s. The hash alone was never timed. The figures in the feedback (142 frames per second, 0.007 s per slice, 5,000 slices in 40 s) appear nowhere in the outputs.
+- Norouzi, Punjani and Fleet (2014), "Fast exact search in Hamming space with multi-index hashing", IEEE TPAMI 36(6):1107-1119, doi:10.1109/TPAMI.2013.231 (Crossref, opened 2026-10-24). The abstract (Semantic Scholar API) reports exact k-nearest-neighbour search in Hamming space, sub-linear run time for uniformly distributed codes, and speedups over linear scan for up to one billion 64-, 128- or 256-bit codes.
+
+**Recommendation.** Report only the logged timings, state that 4 and 5 are equivalent and that 5 is unvalidated, recommend a sensitivity analysis at 2, 4, 6 and 8 against visually confirmed pairs, and cite Norouzi et al. (2014) only for indexed search, not for any measured speed-up on MRI hashes.
+
 ## Segmentation notebook redesign: hybrid ensemble and external validation (2026-10-22)
 
 **Brief.** The segmentation results (best mean Dice 0.8199, UNet) were weaker than GCSER-UNet (Mukherjee et al., [arXiv:2605.30510](https://arxiv.org/abs/2605.30510), submitted 2026-05-28), which reports BraTS 2020 Dice of 0.95 (WT), 0.92 (TC) and 0.90 (ET), and the method had no novel contribution. Constraints: one Kaggle session on 2x T4 (about 12 hours), fully rerunnable, no BraTS 2021+ pretrained weights (BraTS 2021 contains the BraTS 2020 cases).

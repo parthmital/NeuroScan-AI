@@ -1,6 +1,6 @@
 # Brain Tumour Detection and Classification: Overleaf project
 
-Elsevier CAS single-column (`cas-sc`) manuscript for _Engineering Applications of Artificial Intelligence_: the nine-backbone benchmark of 2D tumour detection and subtype classification. Every number, table and figure comes from the executed notebooks and their downloaded outputs in `Materials/Notebooks/binary-detection/` and `Materials/Notebooks/classification/` (see `Materials/Notebooks/README.md`).
+Elsevier CAS single-column (`cas-sc`) manuscript for _Engineering Applications of Artificial Intelligence_: the nine-backbone benchmark of 2D tumour detection and subtype classification, titled "Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication: A Comparative Study Using Advanced Deep Learning Models". The folder keeps its earlier name so that `npm run papers -- Standardised` and existing links still work. Every number, table and figure comes from the executed notebooks and their downloaded outputs in `Materials/Notebooks/binary-detection/` and `Materials/Notebooks/classification/` (see `Materials/Notebooks/README.md`).
 
 ## Files
 
@@ -27,7 +27,7 @@ Elsevier CAS single-column (`cas-sc`) manuscript for _Engineering Applications o
 - **Local build** (`npm run papers -- Standardised` from the repository root, or any TeX installation run from this folder): the plots are read in place from `Materials/Notebooks/<task>/plots/`; nothing needs copying.
 - **Overleaf**: create a `figures/` folder in the project and upload the two plot folders so that they sit at `figures/binary-detection/plots/` and `figures/classification/plots/`.
 
-24 of the 25 binary detection and 25 of the 26 subtype classification plots appear in the two documents; the dataset overview plots (`01_dataset_overview.png`) are not used, since Table 2 of the paper gives the same counts and image sizes. The paper (`main.pdf`, 19 pages including references) keeps Figures 1 to 3 and Tables 1 to 11; Figure 2 shows only the class-distribution panel of each task's `03_deduplication.png`, cropped in LaTeX (`\dedupbars`, `trim` and `clip`) so the plot file is unchanged. Every other plot and table is in the separate supplementary material (`supplementary.pdf`, 24 pages: Sections S1 to S7, Supplementary F1 to F26, Supplementary T1 to T9). The Introduction's last paragraph lists what each supplementary section holds.
+24 of the 25 binary detection and 25 of the 26 subtype classification plots appear in the two documents; the dataset overview plots (`01_dataset_overview.png`) are not used, since Table 2 of the paper gives the same counts and image sizes. The paper (`main.pdf`, 21 pages including references) keeps Figures 1 to 3 and Tables 1 to 12; Figure 2 shows only the class-distribution panel of each task's `03_deduplication.png`, cropped in LaTeX (`\dedupbars`, `trim` and `clip`) so the plot file is unchanged. Every other plot and table is in the separate supplementary material (`supplementary.pdf`, 24 pages: Sections S1 to S7, Supplementary F1 to F26, Supplementary T1 to T9). The Introduction's last paragraph lists what each supplementary section holds.
 
 ## Cross-references between the two PDFs
 
@@ -48,6 +48,8 @@ On Overleaf, compile `supplementary.tex` once as the main document, then `main.t
 - Figures and tables are not floats. `preamble.tex` defines `herefigure` and `heretable`, which keep the CAS caption style but set each item exactly where it is written, directly after the paragraph that first cites it. A page can therefore end short when the next item does not fit.
 - Every plot is scaled to the text width and capped at a fraction of the text height (`\plot`), so no figure overflows the page.
 - Citations are author-year (natbib with `cas-model2-names.bst`), as the EAAI guide asks; citations, cross-references, DOIs and URLs are links.
+- Both PDFs have numbered bookmarks. `main.pdf` lists the title, abstract, keywords, every section and subsection, the declaration of competing interest, data availability and the references; `supplementary.pdf` lists the title and Sections S1 to S7. The Elsevier sample line `\let\WriteBookmarks
+elax` is not used, because under Tectonic's XeTeX driver it removes every bookmark. The abstract bookmark is set in the `Abstract` environment patch of `preamble.tex`, since CAS writes the abstract text verbatim to `main.abs`, which drops a leading command, and the reference-list bookmark is appended to natbib's `ibsection`.
 
 ## Where each result comes from
 
@@ -66,7 +68,21 @@ On Overleaf, compile `supplementary.tex` once as the main document, then `main.t
 | Accuracy by distance to the development pool   | `metrics/accuracy_by_nearest_dev_distance.csv`                                                                                   |
 | Calibration                                    | `metrics/calibration_ece.csv`, `metrics/run_metrics.csv`                                                                         |
 | Efficiency                                     | `metrics/efficiency.csv`, `metrics/model_profiles.csv`                                                                           |
+| Curation processing time (Table 10)            | `logs/notebook.log`: "Cached ... images in ...s" and the timestamps around the deduplication cell                                |
+| Hash bit weights, pair counts by distance      | `hash` column of `metrics/splits.csv` (Supplementary T1, Section 3.2.3)                                                          |
 | Attention, masking, shortcut                   | `metrics/outside_head_energy.csv`, `metrics/occlusion_outside_head.csv`, `metrics/masking_test.csv`, `metrics/shortcut_test.csv` |
+
+## Revision of 2026-10-24 (supervisor feedback)
+
+Every number below was checked against the notebook outputs; nothing was added that the outputs do not support.
+
+- Title changed to "Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication: A Comparative Study Using Advanced Deep Learning Models" in both documents, the PDF metadata, the running heads and the graphical abstract.
+- New Section 4.6 and Table 10, processing time and scalability of the curation stage. The only measurements are the notebook's logged time for decoding, hashing, thumbnailing, cropping, resizing and head masking (3,253 images in 39 s and 5,828 in 68 s on four CPU cores, about 83 and 86 images per second) and the one-second log timestamps around the deduplication cell (at most about 2 s and 3 s). The hash was not timed on its own, and no figure such as frames per second, seconds per slice or a 5,000-slice time is reported, because none was measured. Scalability is argued from the quadratic size of the pairwise distance matrix, with multi-index hashing (Norouzi et al., 2014, added and checked on Crossref) as the indexed alternative.
+- Section 3.2.2 now describes the implementation exactly: the ImageHash DCT hash of the original image (greyscale, 32 x 32, 8 x 8 lowest DCT coefficients against their median) and a greedy pass in fixed folder order that drops an image when an already kept same-label image is within Hamming distance 5. The earlier wording "all but one image of each duplicate set" did not match this.
+- New Section 3.2.3 on the threshold. No reference supports 5: Hamming (1950) only defines the distance and Monga and Evans (2006) evaluate perceptual hashing in general. The threshold was carried over from the earlier version. Every stored hash has exactly 32 bits set, so all distances are even and thresholds 4 and 5 give the same pool. Cross-label pairs rise from 0 and 31 within distance 4 to 1 and 253 within distance 6. The section states the limitation and recommends a sensitivity analysis at thresholds 2, 4, 6 and 8 against visually confirmed pairs. Supplementary T1 gains same-label and cross-label pair counts at each exact distance.
+- Every semicolon in the prose of both documents, the captions, the settings table, the graphical abstract and one bibliography note was replaced with full stops or conjunctions. The remaining semicolons are the separators between grouped author-year citations that the Elsevier style prints, and one inside a DOI.
+- PDF bookmarks added (see Layout).
+- Conclusion and limitations name the unvalidated threshold and the limited timing evidence. The abstract gives the curation rate and stays at about 250 words.
 
 ## What changed from the previous version of the paper
 
@@ -129,7 +145,7 @@ Each item was checked against the notebook outputs or the cited article (see `RE
 
 ## Verification status
 
-- `main.pdf` (19 pages) and `supplementary.pdf` (24 pages) compile with Tectonic 0.17.0 with no TeX, LaTeX, hyperref, natbib or BibTeX warnings, and no overfull or underfull boxes.
+- `main.pdf` (21 pages) and `supplementary.pdf` (24 pages) compile with Tectonic 0.17.0 with no TeX, LaTeX, hyperref, natbib or BibTeX warnings, and no overfull or underfull boxes.
 - The paper check (`paper_check.py` of the `latex-research-papers` skill, with link checks) reports CLEAN for `main.tex`. For `supplementary.tex` its only finding is that the 35 figures and tables are not referenced in body text, which is by design since the supplement has no body text; most are referenced from the paper. The 2026-10-17 check found, for both documents: every figure and table sits on the page of its first mention or the next, every cross-reference into the other document resolves, every reference is cited, peer-reviewed and has a DOI or URL, and every DOI is registered. Publishers that refuse automated requests (403 or 406) were confirmed through the DOI handle API.
 - The repository linked in Data availability is private, so its link does not resolve for readers until it is made public.
 - Not checked: a pdfLaTeX build on Overleaf.

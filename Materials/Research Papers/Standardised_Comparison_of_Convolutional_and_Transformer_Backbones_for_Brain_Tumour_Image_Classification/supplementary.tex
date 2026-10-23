@@ -21,7 +21,7 @@
 \panel{0.18}{binary-detection/plots/13_gradcam_#1.png}{(a) Binary detection.}
 \medskip
 \panel{0.18}{classification/plots/13_gradcam_#1.png}{(b) Subtype classification.}
-\caption{Grad-CAM maps of #2 on its most confident correct (green titles) and most confident wrong (red titles) test predictions, from the fold with the lowest validation loss, in the layout of Figure~\ref{fig:gradcam} of the paper. T: true class; P: predicted class and probability.}
+\caption{Grad-CAM maps of #2 on its most confident correct (green titles) and most confident wrong (red titles) test predictions, from the fold with the lowest validation loss, in the layout of Figure~\ref{fig:gradcam} of the paper. T: true class. P: predicted class and probability.}
 \label{fig:gradcam-#1}
 \end{herefigure}}
 % Sections are numbered S1, S2, ...; figures and tables print as "Supplementary F1: ..." and
@@ -57,18 +57,20 @@
 \ExplSyntaxOff
 \makeatother
 \hypersetup{
-  pdftitle={Supplementary Material: Backbone Benchmark for Brain Tumour MRI Classification},
+  pdftitle={Supplementary Material: Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication},
   pdfauthor={Parth Mital, Ved Lawand, Biji C. L., Muzaffar Ahamad Dar, George Priya Doss C.},
 }
 
 \begin{document}
-\let\WriteBookmarks\relax
+% \let\WriteBookmarks\relax (Elsevier sample file) would drop every PDF bookmark under
+% Tectonic's XeTeX driver, so it is not set here.
 
-\shorttitle{Supplementary material: backbone benchmark for brain tumour MRI classification}
+\shorttitle{Supplementary material: brain tumour MR image classification with perceptual-hash deduplication}
 \shortauthors{P. Mital et al.}
 
-\title[mode=title]{Supplementary Material: Backbone Benchmark for Brain Tumour MRI Classification}
+\title[mode=title]{Supplementary Material: Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication}
 
+\pdfbookmark[1]{Supplementary Material: Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication}{title}
 \maketitle
 
 \section{Data}
@@ -88,23 +90,28 @@
 
 \begin{heretable}
 \centering
-\caption{Images kept by the label-aware perceptual-hash pass at each Hamming tolerance; the study uses tolerance 5, and tolerances 4 and 5 give the same pool in both tasks. Duplicates were removed keeping the copy from the first-listed folder. Binary detection, 2,068 removals: 729 Br35H images whose retained copy is a Chakrabarty image, 1,292 duplicates within Br35H and 47 within Chakrabarty. Subtype classification, 1,094 removals: 608 within Bhuvaji, 483 within Cheng and 3 Cheng meningioma images against a Bhuvaji copy; the label-noise exclusion then brings the 4,734 images at tolerance 5 to 4,730. The per-image split table records the same pool as 1,088 duplicates and 10 label-noise exclusions (2 glioma, 8 meningioma).}
+\caption{Images kept by the label-aware perceptual-hash pass at each Hamming tolerance, with the number of image pairs of the whole pool at each exact distance. The study uses tolerance 5. Every recorded hash has exactly 32 of its 64 bits set, so every distance is even, no pair lies at an odd distance, and the tolerances paired in each column give the same pool. Pair counts were computed from the hashes stored in the per-image split table of each notebook. Cross-label pairs are image pairs with different labels. Duplicates were removed keeping the copy from the first-listed folder. Binary detection, 2,068 removals: 729 Br35H images whose retained copy is a Chakrabarty image, 1,292 duplicates within Br35H and 47 within Chakrabarty. Subtype classification, 1,094 removals: 608 within Bhuvaji, 483 within Cheng and 3 Cheng meningioma images against a Bhuvaji copy. The label-noise exclusion then brings the 4,734 images at tolerance 5 to 4,730. The per-image split table records the same pool as 1,088 duplicates and 10 label-noise exclusions (2 glioma, 8 meningioma).}
 \label{tab:sweep}
 \small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
 \toprule
 Tolerance & 0, 1 & 2, 3 & 4, 5 & 6, 7 & 8, 9 & 10, 11 & 12 \\
+Exact distance of pairs & 0 & 2 & 4 & 6 & 8 & 10 & 12 \\
 \midrule
 \multicolumn{8}{@{}l}{\textit{Binary detection}} \\
 Tumour-negative & 860 & 583 & 455 & 395 & 341 & 310 & 285 \\
 Tumour & 1,217 & 912 & 730 & 607 & 541 & 494 & 424 \\
 \textbf{Total} & \textbf{2,077} & \textbf{1,495} & \textbf{1,185} & \textbf{1,002} & \textbf{882} & \textbf{804} & \textbf{709} \\
+Same-label pairs & 2,299 & 2,345 & 1,754 & 1,335 & 1,069 & 1,343 & 3,993 \\
+Cross-label pairs & 0 & 0 & 0 & 1 & 64 & 334 & 1,408 \\
 \midrule
 \multicolumn{8}{@{}l}{\textit{Subtype classification}} \\
 Glioma & 2,303 & 2,221 & 2,010 & 1,653 & 1,277 & 919 & 627 \\
 Meningioma & 1,518 & 1,453 & 1,316 & 1,130 & 935 & 704 & 506 \\
 Pituitary & 1,751 & 1,663 & 1,408 & 1,145 & 886 & 663 & 478 \\
 \textbf{Total} & \textbf{5,572} & \textbf{5,337} & \textbf{4,734} & \textbf{3,928} & \textbf{3,098} & \textbf{2,286} & \textbf{1,611} \\
+Same-label pairs & 334 & 338 & 920 & 1,854 & 3,658 & 8,423 & 19,926 \\
+Cross-label pairs & 2 & 10 & 19 & 222 & 1,116 & 4,928 & 15,895 \\
 \bottomrule
 \end{tabular*}
 \end{heretable}
@@ -112,7 +119,7 @@ Pituitary & 1,751 & 1,663 & 1,408 & 1,145 & 886 & 663 & 478 \\
 \begin{herefigure}
 \centering
 \plot{0.25}{classification/plots/04_cross_label_pairs.png}
-\caption{Subtype classification cross-label pairs within Hamming distance 5, label-noise pairs first. All 31 pairs are glioma against meningioma. The 8 label-noise pairs lie inside the Bhuvaji collection with a normalised cross-correlation (NCC) of at least 0.9997, and both copies were excluded; the 23 hash false positives have NCC between 0.67 and 0.86 and were kept. The binary detection pool has no cross-label pair.}
+\caption{Subtype classification cross-label pairs within Hamming distance 5, label-noise pairs first. All 31 pairs are glioma against meningioma. The 8 label-noise pairs lie inside the Bhuvaji collection with a normalised cross-correlation (NCC) of at least 0.9997, and both copies were excluded. The 23 hash false positives have NCC between 0.67 and 0.86 and were kept. The binary detection pool has no cross-label pair.}
 \label{fig:crosslabel}
 \end{herefigure}
 
@@ -121,7 +128,7 @@ Pituitary & 1,751 & 1,663 & 1,408 & 1,145 & 886 & 663 & 478 \\
 \panel{0.25}{binary-detection/plots/05_groups_and_leakage.png}{(a) Binary detection: 821 groups, the largest of 7 images.}
 \medskip
 \panel{0.25}{classification/plots/05_groups_and_leakage.png}{(b) Subtype classification: 1,867 groups, the largest of 1,431 images.}
-\caption{Group sizes, and the Hamming distance and NCC from each test image to its nearest development image (leakage audit). No test image has a development image within Hamming distance 5 or 8 or at $\mathrm{NCC}\geq 0.98$. The subtype classification group of 1,431 images holds more than 5\% of the pool; the notebook warned that a smaller grouping tolerance should be considered, and the run kept tolerance 8.}
+\caption{Group sizes, and the Hamming distance and NCC from each test image to its nearest development image (leakage audit). No test image has a development image within Hamming distance 5 or 8 or at $\mathrm{NCC}\geq 0.98$. The subtype classification group of 1,431 images holds more than 5\% of the pool. The notebook warned that a smaller grouping tolerance should be considered, and the run kept tolerance 8.}
 \label{fig:groups}
 \end{herefigure}
 
@@ -153,26 +160,26 @@ Pituitary & 1,751 & 1,663 & 1,408 & 1,145 & 886 & 663 & 478 \\
 \toprule
 Setting & Value \\
 \midrule
-Hardware & Kaggle, two NVIDIA Tesla T4 GPUs, four CPU cores, 33.7~GB system memory; one worker process per GPU, training different (model, fold) jobs in parallel \\
+Hardware & Kaggle, two NVIDIA Tesla T4 GPUs, four CPU cores, 33.7~GB system memory, and one worker process per GPU training different (model, fold) jobs in parallel \\
 Software & Python 3.13.15, PyTorch 2.11.0, torchvision 0.26.0, timm 1.0.29, CUDA 12.8 \\
 Input & $224\times 224$ pixels ($299\times 299$ for InceptionV3), scaled to $[0,1]$ and normalised with the ImageNet channel means (0.485, 0.456, 0.406) and standard deviations (0.229, 0.224, 0.225) \\
 Augmentation & Horizontal flip ($p=0.5$), rotation up to $\pm 10^{\circ}$, brightness and contrast jitter of 20\% \\
-Epochs & 20, with 1 warm-up epoch; every training image is used in every epoch \\
+Epochs & 20, with 1 warm-up epoch, and every training image is used in every epoch \\
 Effective batch & 64 images: micro-batches of 64, or of 32 accumulated over two steps for Swin-Base, the largest that fitted on one GPU \\
-Optimiser steps & Equal for every model on a given fold: 260 per binary detection run (13 per epoch); 1,420, 1,240, 1,260, 1,200 and 780 on subtype classification folds 0 to 4, whose training sets differ in size \\
+Optimiser steps & Equal for every model on a given fold: 260 per binary detection run (13 per epoch), and 1,420, 1,240, 1,260, 1,200 and 780 on subtype classification folds 0 to 4, whose training sets differ in size \\
 Optimiser & AdamW, learning rate $3\times 10^{-4}$, weight decay 0.01 \\
 Learning rate schedule & Linear warm-up, then cosine decay per optimiser step \\
-Loss & Binary cross-entropy with logits (binary detection); cross-entropy (subtype classification) \\
+Loss & Binary cross-entropy with logits (binary detection) and cross-entropy (subtype classification) \\
 Precision & Half-precision autocasting with gradient scaling \\
 Gradient clipping & Norm 1.0 \\
 Checkpoint selection & Lowest validation log-loss (a strictly proper scoring rule), evaluated after every epoch \\
 Cross-validation & 5 group-aware folds plus a fixed held-out test set \\
-Runs per task & 45 full-image runs and 9 background-only runs, all 54 completed; 63.5 minutes of training for binary detection and 264.6 for subtype classification \\
-Random seed & 42; deterministic kernels not enforced, so reruns reproduce the figures closely but not bit for bit \\
-Calibration & Temperature fitted per run on its validation fold over $\log T\in[-3, 3]$; binary detection reported at threshold 0.5 and at the mean validation-tuned Youden threshold \\
-Uncertainty & Bootstrap 95\% confidence intervals of accuracy and of the accuracy gap to the leading model; a gap interval that includes zero cannot separate a model from the leader \\
-Attention maps & Grad-CAM at the last spatial or token stage (the last convolution for VGG16) of the fold model with the lowest validation loss; occlusion sensitivity computed identically for every model on a common stratified test sample, because Grad-CAM maps of convolutional and attention stages are not strictly commensurable \\
-Efficiency & Latency over 100 single-image passes after 10 warm-up passes; throughput at batch size 32 over 20 passes after 3 warm-up passes; three repeats; training time, throughput and peak memory averaged over the folds \\
+Runs per task & 45 full-image runs and 9 background-only runs, all 54 completed, with 63.5 minutes of training for binary detection and 264.6 for subtype classification \\
+Random seed & 42, with deterministic kernels not enforced, so reruns reproduce the figures closely but not bit for bit \\
+Calibration & Temperature fitted per run on its validation fold over $\log T\in[-3, 3]$, with binary detection reported at threshold 0.5 and at the mean validation-tuned Youden threshold \\
+Uncertainty & Bootstrap 95\% confidence intervals of accuracy and of the accuracy gap to the leading model. A gap interval that includes zero cannot separate a model from the leader \\
+Attention maps & Grad-CAM at the last spatial or token stage (the last convolution for VGG16) of the fold model with the lowest validation loss. Occlusion sensitivity computed identically for every model on a common stratified test sample, because Grad-CAM maps of convolutional and attention stages are not strictly commensurable \\
+Efficiency & Latency over 100 single-image passes after 10 warm-up passes, and throughput at batch size 32 over 20 passes after 3 warm-up passes, each repeated three times. Training time, throughput and peak memory averaged over the folds \\
 \bottomrule
 \end{tabularx}
 \end{heretable}
@@ -196,7 +203,7 @@ Efficiency & Latency over 100 single-image passes after 10 warm-up passes; throu
 
 \begin{heretable}
 \centering
-\caption{Binary detection: every full-image run. Every run took 260 optimiser steps. $T$ is the temperature fitted on the run's validation fold and Thr.\ the Youden threshold chosen there; accuracy and log-loss are on the 171 test images after temperature scaling. In fold 4 the temperature of six models lies at or near the lower search bound $e^{-3}\approx 0.0498$.}
+\caption{Binary detection: every full-image run. Every run took 260 optimiser steps. $T$ is the temperature fitted on the run's validation fold and Thr.\ the Youden threshold chosen there. Accuracy and log-loss are on the 171 test images after temperature scaling. In fold 4 the temperature of six models lies at or near the lower search bound $e^{-3}\approx 0.0498$.}
 \label{tab:runs-binary}
 \scriptsize
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
@@ -262,7 +269,7 @@ Model & Fold & Best epoch & $T$ & Thr. & Test accuracy & Test log-loss & Train i
 
 \begin{heretable}
 \centering
-\caption{Subtype classification: every full-image run. Optimiser steps depend on the fold because the group-aware folds differ in size; within a fold they are equal for every model. In fold 0, whose validation fold has 154 images, the temperature of EfficientNetB0, InceptionV3 and Swin-Base lies at or near the lower search bound.}
+\caption{Subtype classification: every full-image run. Optimiser steps depend on the fold because the group-aware folds differ in size, but within a fold they are equal for every model. In fold 0, whose validation fold has 154 images, the temperature of EfficientNetB0, InceptionV3 and Swin-Base lies at or near the lower search bound.}
 \label{tab:runs-multiclass}
 \scriptsize
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
@@ -331,7 +338,7 @@ Model & Fold & Steps & Best epoch & $T$ & Test accuracy & Test log-loss & Train 
 
 \begin{heretable}
 \centering
-\caption{Binary detection: fold ensembles on the 171 held-out test images (107 tumour, 64 tumour-negative). Sensitivity is recall of the tumour class and specificity recall of the tumour-negative class, both at threshold 0.5; FN and FP are missed tumours and false alarms. Accuracy has a bootstrap 95\% confidence interval. Rows are ordered by accuracy. At the mean validation-tuned Youden thresholds, from 0.43 to 0.84, accuracy lies between 96.49\% and 98.83\%: the tuned thresholds raise it only for DenseNet121 (97.66\%), leave it unchanged for InceptionV3 and VGG16 and lower it for the other six models, and EfficientNetB0 sensitivity falls to 96.26\% with specificity unchanged at 98.44\%.}
+\caption{Binary detection: fold ensembles on the 171 held-out test images (107 tumour, 64 tumour-negative). Sensitivity is recall of the tumour class and specificity recall of the tumour-negative class, both at threshold 0.5. FN and FP are missed tumours and false alarms. Accuracy has a bootstrap 95\% confidence interval. Rows are ordered by accuracy. At the mean validation-tuned Youden thresholds, from 0.43 to 0.84, accuracy lies between 96.49\% and 98.83\%: the tuned thresholds raise it only for DenseNet121 (97.66\%), leave it unchanged for InceptionV3 and VGG16 and lower it for the other six models, and EfficientNetB0 sensitivity falls to 96.26\% with specificity unchanged at 98.44\%.}
 \label{tab:binary-results}
 \small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccc@{}}
@@ -426,7 +433,7 @@ ViT-B/16 & 1.0000 & 0.9863 & 1.0000 & 1.0000 & 1.0000 \\
 
 \begin{heretable}
 \centering
-\caption{Computational cost of the nine backbones; Bin.\ and Sub.\ denote binary detection and subtype classification. Parameters and GFLOPs are measured on the binary detection models at the native input ($299\times 299$ for InceptionV3, which needs 5.67 GFLOPs at $224\times 224$). Latency is the mean of single-image passes and throughput the mean at batch size 32, both on one Tesla T4 under half-precision autocasting and pooled over three repeats. Training time is minutes per run, averaged over folds. Peak training memory ranges from 2.1~GB (MobileNetV3-Large) to 11.4~GB (CoAtNet-0). Rows are ordered by parameter count.}
+\caption{Computational cost of the nine backbones. Bin.\ and Sub.\ denote binary detection and subtype classification. Parameters and GFLOPs are measured on the binary detection models at the native input ($299\times 299$ for InceptionV3, which needs 5.67 GFLOPs at $224\times 224$). Latency is the mean of single-image passes and throughput the mean at batch size 32, both on one Tesla T4 under half-precision autocasting and pooled over three repeats. Training time is minutes per run, averaged over folds. Peak training memory ranges from 2.1~GB (MobileNetV3-Large) to 11.4~GB (CoAtNet-0). Rows are ordered by parameter count.}
 \label{tab:efficiency}
 \small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccc@{}}
@@ -490,7 +497,7 @@ Uniform map & 0.356 & 0.328 & & 0.213 & 0.268 & 0.267 & \\
 \panel{0.3}{binary-detection/plots/14_outside_head_energy.png}{(a) Binary detection.}
 \medskip
 \panel{0.3}{classification/plots/14_outside_head_energy.png}{(b) Subtype classification.}
-\caption{Share of Grad-CAM energy outside the head per model and class, the values of \supp{tab:energy}; the black mark is the share of a uniform map.}
+\caption{Share of Grad-CAM energy outside the head per model and class, the values of \supp{tab:energy}. The black mark is the share of a uniform map.}
 \label{fig:energy}
 \end{herefigure}
 
@@ -551,7 +558,7 @@ CoAtNet-0 & 0.7953 & 0.8756 & $<10^{-4}$ & 0.8222 & 0.9752 & 0.0337 \\
 \begin{herefigure}
 \centering
 \sidepanels{0.3}{17_shortcut_test.png}{17_shortcut_test.png}
-\caption{Shortcut test: accuracy on background-only test images of models trained on background-only images (fold 0), the values of \supp{tab:shortcut}; red bars are significantly above the majority-class rate after Holm correction.}
+\caption{Shortcut test: accuracy on background-only test images of models trained on background-only images (fold 0), the values of \supp{tab:shortcut}. Red bars are significantly above the majority-class rate after Holm correction.}
 \label{fig:shortcut}
 \end{herefigure}
 
