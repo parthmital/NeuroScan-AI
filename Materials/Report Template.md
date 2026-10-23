@@ -1,12 +1,12 @@
 # Report Content
 
-Content for `Report Template.docx`, section by section in template order, ready to paste over the template's placeholder text. Lines starting with `>` are notes for whoever pastes the content (formatting, figure files, diagrams); they are not report text.
+Content of `Report.docx`, the project report built from a duplicate of `Report Template.docx`, section by section in template order. This file is the report's content source: the build fills the template's placeholders and chapters from it, so edit the content here and rebuild. Lines starting with `>` are notes (formatting, figure files, diagrams); they are not report text.
 
 > Formatting from the template: project title Times New Roman 18, bold, upper case, line spacing 1.5; chapter headings (ABSTRACT, CHAPTER n) Times New Roman 16, bold, upper case, line spacing 1.5; body text Times New Roman 12, line spacing 1.15 (table of contents 1.5); figure and table captions font size 10, figure captions below the figure, table captions above the table.
 >
-> Page numbers: the template's page-number columns (contents, figures, tables) depend on the final Word layout. After pasting, generate them in Word (References > Table of Contents / Insert Table of Figures) or fill them from the final document.
+> Page numbers: the page-number columns of the contents and both lists are PAGEREF fields to bookmarks on the headings and captions, filled from a render of the finished document. After editing `Report.docx` in Word, select all and press F9 to update them.
 >
-> Diagrams in Chapter 4 are given as Mermaid code. Render each at https://mermaid.live, export PNG, and insert it above its caption.
+> Diagrams in Chapter 4 are given as Mermaid code; the build renders each to PNG and inserts it above its caption.
 
 ## Title Page
 
@@ -140,7 +140,7 @@ Thank you all for your contributions and support.
 | **9.**    | **REFERENCES**                            |              |
 |           | **APPENDIX A – SAMPLE CODE**              |              |
 
-> Fill the Page No. column from the final Word document.
+> The Page No. column is filled by the build (see the note on page numbers above).
 
 ## List of Figures
 
@@ -169,7 +169,7 @@ Thank you all for your contributions and support.
 | 7.5            | Test Dice per region by tumour grade                             |              |
 | 7.6            | Test mean Dice against latency per volume                        |              |
 
-(In the chapters, figure caption should come below the figure and table caption should come above the table. Figure and table captions should be of font size 10.)
+> Template rule: in the chapters, figure captions come below the figure and table captions above the table, in font size 10.
 
 ## List of Tables
 
@@ -244,7 +244,7 @@ Thank you all for your contributions and support.
 | WAL          | Write-Ahead Logging                                          |
 | WT           | Whole Tumour                                                 |
 
-Note: All the abbreviations should follow Alphabetical order
+> Template rule: abbreviations are listed in alphabetical order.
 
 ## Symbols and Notations
 
@@ -496,7 +496,7 @@ The frontend follows `pages -> components -> hooks -> lib`, with `lib/api.ts` as
 > Figure 4.1: render the Mermaid code below.
 
 ```mermaid
-flowchart LR
+flowchart TB
     U[Browser] -->|"same origin, HttpOnly session cookie"| F["Vite dev server or reverse proxy :8080"]
     F -->|"/api requests"| B["FastAPI app (api)"]
     B --> Q["PipelineRunner (one background worker)"]

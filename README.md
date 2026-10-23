@@ -234,6 +234,7 @@ NeuroScan-AI/
 |   |-- Screenshots/          UI screenshots used in this README
 |   |-- Presentation.pptx     Review 3 deck (20 slides, both papers), built from a copy of the template
 |   |-- Presentation Template.pptx, Presentation Template.md   VIT review template and the deck's slide-by-slide content
+|   |-- Report.docx           Project report (55 pages, all chapters, figures and diagrams), built from a copy of the template
 |   `-- Report Template.docx, Report Template.md               VIT report template and the report's section-by-section content
 `-- Frontend/
     |-- vite.config.ts        Port 8080, /api proxy, security headers for preview
