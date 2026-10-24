@@ -1,16 +1,13 @@
-model_a,model_b,median_dice_difference,p_raw,p_holm
-UNet,nnU-Net,0.00231,0.02335,0.04195
-UNet,VNet,0.01186,0.0,0.0
-UNet,UNETR,0.11386,0.0,0.0
-UNet,Swin UNETR,0.07378,0.0,0.0
-UNet,TransBTS,0.07886,0.0,0.0
-nnU-Net,VNet,0.01003,0.0,1e-05
-nnU-Net,UNETR,0.1066,0.0,0.0
-nnU-Net,Swin UNETR,0.06871,0.0,0.0
-nnU-Net,TransBTS,0.07945,0.0,0.0
-VNet,UNETR,0.08583,0.0,0.0
-VNet,Swin UNETR,0.06041,0.0,0.0
-VNet,TransBTS,0.0666,0.0,0.0
-UNETR,Swin UNETR,-0.03594,0.0,0.0
-UNETR,TransBTS,-0.01936,6e-05,0.00018
-Swin UNETR,TransBTS,0.00638,0.02097,0.04195
+set,compared_with,mean_difference,ci_low,ci_high,median_difference,p_raw,p_holm
+Internal test (BraTS 2020),nnU-Net,0.01258,0.004,0.02761,0.00328,1e-05,7e-05
+Internal test (BraTS 2020),SegResNet,-0.01872,-0.04425,0.00352,-0.00342,0.00442,0.01766
+Internal test (BraTS 2020),Swin UNETR,0.01701,0.0041,0.03639,0.00447,0.00139,0.00693
+Internal test (BraTS 2020),CNN mean ensemble,0.00179,-0.00643,0.01425,-0.00208,0.02143,0.06429
+Internal test (BraTS 2020),Mean ensemble (all members),0.00352,-0.0061,0.01838,-0.00141,0.19464,0.38369
+Internal test (BraTS 2020),Region-adaptive weights (threshold 0.5),0.00418,-0.00174,0.01443,-0.00129,0.19185,0.38369
+External (BraTS-Africa),nnU-Net,0.02008,0.00987,0.03196,0.01075,1e-05,5e-05
+External (BraTS-Africa),SegResNet,-0.00015,-0.01165,0.01129,-0.00032,0.82673,1.0
+External (BraTS-Africa),Swin UNETR,0.00775,-0.00207,0.01915,0.00031,0.36907,1.0
+External (BraTS-Africa),CNN mean ensemble,-0.00393,-0.0155,0.00691,0.00161,0.73411,1.0
+External (BraTS-Africa),Mean ensemble (all members),-0.00057,-0.00592,0.00449,-0.00128,0.46407,1.0
+External (BraTS-Africa),Region-adaptive weights (threshold 0.5),0.00934,0.00056,0.01992,-0.00014,0.42805,1.0

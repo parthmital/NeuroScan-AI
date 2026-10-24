@@ -1,5 +1,6 @@
-role,HGG,LGG,Total
-train,204,53,257
-val,45,11,56
-test,44,12,56
-Total,293,76,369
+role,HGG,LGG,SSA,Total
+train,204,53,0,257
+val,45,11,0,56
+test,44,12,0,56
+external,0,0,60,60
+Total,293,76,60,429

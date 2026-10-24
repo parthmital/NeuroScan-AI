@@ -1,3 +1,4 @@
-grade,cases_without_ET,share
-HGG,0,0.0
-LGG,27,0.355
+cohort,cases_without_ET,share
+BraTS 2020 HGG,0,0.0
+BraTS 2020 LGG,27,0.355
+BraTS-Africa,0,0.0

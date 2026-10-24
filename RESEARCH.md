@@ -105,4 +105,22 @@ _Applied 2026-10-21:_ the paper's literature review, Table 1 and Table 11, and t
 
 **Alternatives considered.** Keeping the hand-written networks (more code to maintain, no pretrained-free advantage); MedNeXt from MONAI as a third CNN (dropped to fit the session); BraTS 2021 new cases as a second external set (overlap with BraTS 2020 must be removed by image matching, and about 880 cases would not fit the session with TTA); `monai.visualize.GradCAM` (built for classification targets, so the segmentation target is implemented directly).
 
-**Not verified.** Run time, memory and all results of the new notebook; they exist only after a Kaggle run.
+**Outcome (Kaggle run of 2026-10-24, `segmentation/metrics/`).** The run finished in 547.9 min. Native-resolution training raised every member well above the old benchmark (internal mean Dice: SegResNet 0.8717, nnU-Net 0.8404, Swin UNETR 0.8360, against 0.8199 for the old best). The region-adaptive ensemble reached 0.8530 internally and 0.7966 externally: better than nnU-Net and Swin UNETR internally (Holm p < 0.01), but significantly worse than SegResNet alone internally (Holm p = 0.018) and not different from it externally. Architectural disagreement flagged failures (mean Dice below 0.80) with AUROC 0.9932 internally and 0.8704 externally, better than TTA spread (0.7160 and 0.7910). Under the slice-wise protocol the proposed ensemble scores 0.8443 / 0.7883 / 0.7683 (WT / TC / ET, internal), still below the published GCSER-UNet values, which also use their own slice split.
+
+## Web-app segmentation model after the hybrid-ensemble run (2026-10-25)
+
+**Brief.** Extracting the run's outputs replaced `segmentation/weights/` and removed the Git-ignored `weights/deploy/VNet.pth` the backend loaded; the run exports no deployment checkpoint.
+
+**Options.** (1) SegResNet alone; (2) the full region-adaptive ensemble; (3) restoring the old 128^3 VNet. The ensemble needs all three members (Swin UNETR has weight 0.1 for TC), 124.1 M parameters and 6.0 s per case on a T4 without TTA, and is not better than SegResNet. The VNet scored 0.7965 on the same test set.
+
+**Decision (chosen by the project owner).** Deploy `segresnet_seed42.pth` unchanged as `weights/deploy/SegResNet.pth`, built with MONAI 1.6.1 `SegResNetDS` (the training version, now pinned in `Backend/requirements.txt`) and run as in the notebook (brain crop, foreground z-score, 128^3 Gaussian sliding window with overlap 0.5, threshold 0.5, ET minimum 800 voxels from validation, region hierarchy), without TTA. Checked locally: the state dict loads with all 85 keys matched; on `Materials/Input/BraTS20_Training_001` (a training case) it gives WT 197.4, TC 46.8, ET 29.0 cm^3 against reference volumes of 212.0, 43.2 and 27.7 cm^3, in 83.5 s on an Intel Core i7-9750H CPU.
+
+**Not verified.** Accuracy of the deployed model without TTA; the notebook measured only the TTA version (internal 0.8717, external 0.7967).
+
+## References for the rewritten segmentation paper (2026-10-25)
+
+**Brief.** Peer-reviewed sources for `Materials/Research Papers/Region-Adaptive_CNN-Transformer_Ensembles_for_Brain_Tumour_Segmentation/main.tex`, rewritten around the hybrid-ensemble run.
+
+**Findings.** Every entry was checked against its Crossref record (`.agent-local/scripts/crossref_lookup.py` by title, `crossref_doi.py` by DOI). BraTS-Africa has a peer-reviewed dataset paper: Adewole et al., Radiology: Artificial Intelligence 7(4), e240528 (2025), [doi:10.1148/ryai.240528](https://doi.org/10.1148/ryai.240528). SwinUNETR-V2 is He et al., MICCAI 2023, LNCS 14223, 416-426, [doi:10.1007/978-3-031-43901-8_40](https://doi.org/10.1007/978-3-031-43901-8_40); SegResNet is Myronenko, BrainLes 2018, LNCS 11384, 311-320, [doi:10.1007/978-3-030-11726-9_28](https://doi.org/10.1007/978-3-030-11726-9_28). GCSER-UNet (arXiv:2605.30510) and Bakas et al. (2018, arXiv:1811.02629) are preprints only.
+
+**Decision.** The paper cites no preprints: the GCSER-UNet values and plot `08_protocol_comparison.png` are left out (the slice-wise protocol is reported for the study's own models), and Bakas et al. (2018) was removed even though the BraTS data-use terms ask for it; re-add it before submission if the journal accepts it. This supersedes the 2026-10-17 recommendation to keep it.

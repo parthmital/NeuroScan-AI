@@ -1,0 +1,4 @@
+region,weight_nnU-Net,weight_SegResNet,weight_Swin UNETR,threshold,val_dice_region_adaptive,val_dice_weights_only,val_dice_mean_ensemble,best_single_member,val_dice_best_single
+WT,0.4,0.6,0.0,0.4,0.8951,0.8935,0.8879,SegResNet,0.8913
+TC,0.4,0.5,0.1,0.3,0.8552,0.849,0.8413,nnU-Net,0.8455
+ET,0.5,0.5,0.0,0.4,0.7974,0.7963,0.7916,nnU-Net,0.7929

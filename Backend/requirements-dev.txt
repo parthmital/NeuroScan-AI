@@ -3,7 +3,7 @@
 bandit==1.9.4
 # Root-level `black .` formatting, including the research notebooks.
 black[jupyter]==26.10.1
-httpx==0.28.1
+httpx2==2.16.0
 import-linter==2.15
 mypy==2.4.0
 pip-audit==2.10.1

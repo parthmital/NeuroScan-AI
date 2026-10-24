@@ -30,7 +30,13 @@ from reportlab.platypus import (
 )
 
 from neuroscan.inference import volumes
-from neuroscan.inference.processor import CLASSES, IMG_SIZE, SEG_SIZE, SEGMENTATION_CHANNELS
+from neuroscan.inference.processor import (
+    CLASSES,
+    ET_MIN_VOXELS,
+    IMG_SIZE,
+    SEG_WINDOW,
+    SEGMENTATION_CHANNELS,
+)
 from neuroscan.models import Modality, Scan, User
 from neuroscan.scans.pipeline import DETECTION_THRESHOLD, REPRESENTATIVE_ORDER
 from neuroscan.scans.storage import ScanStorage
@@ -567,7 +573,7 @@ def _key_images(
 
 
 def _methodology_rows() -> list[list[str]]:
-    size = _BY.join(str(d) for d in SEG_SIZE)
+    window = _BY.join([str(SEG_WINDOW)] * 3)
     return [
         [
             "Detection",
@@ -584,10 +590,11 @@ def _methodology_rows() -> list[list[str]]:
         ],
         [
             "Segmentation",
-            "3D V-Net",
-            f"{', '.join(m.upper() for m in SEGMENTATION_CHANNELS)} volumes, z-score normalised "
-            f"and resampled to {size}",
-            "WT, TC and ET masks (sigmoid above 0.5), resampled to FLAIR space",
+            "3D SegResNet",
+            f"{', '.join(m.upper() for m in SEGMENTATION_CHANNELS)} volumes at native resolution, "
+            f"cropped to the brain, z-score normalised, {window} sliding window",
+            f"WT, TC and ET masks (sigmoid above 0.5; ET under {ET_MIN_VOXELS} voxels removed) "
+            "in FLAIR space",
         ],
     ]
 
@@ -743,9 +750,10 @@ def scan_to_pdf(scan: Scan, user: User, storage: ScanStorage) -> bytes:
         ),
         Spacer(1, 2 * mm),
         _para(
-            "Volumes are voxel counts on the resampled segmentation grid divided by 1000. They "
-            "equal cm³ only when that grid has 1 mm isotropic spacing, so treat them as estimates "
-            "for comparison between studies processed the same way.",
+            "Volumes are voxel counts times the FLAIR voxel volume from the file header. The "
+            "segmentation model was trained on co-registered, skull-stripped 1 mm BraTS "
+            "volumes, so volumes from other preparations are estimates for comparison between "
+            "studies processed the same way.",
             "small",
         ),
         *_section("Limitations"),

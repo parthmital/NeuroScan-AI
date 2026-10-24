@@ -2,13 +2,13 @@
 
 This folder holds the three Kaggle notebooks behind NeuroScan AI and the outputs downloaded from their executed runs. Every number and figure below is copied from those outputs (`metrics/`, `logs/`, `plots/`, `weights/deploy/metadata.json`); nothing here was re-run locally.
 
-| Notebook                                           | Task                                                                   | Models                                              | Outputs folder                           | Notebook time                |
-| -------------------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------- | ---------------------------------------- | ---------------------------- |
-| [`binary-detection.ipynb`](binary-detection.ipynb) | Tumour-positive vs tumour-negative 2D MRI slices                       | 9                                                   | [`binary-detection/`](binary-detection/) | 71.8 min                     |
-| [`classification.ipynb`](classification.ipynb)     | Glioma vs meningioma vs pituitary 2D MRI slices                        | 9                                                   | [`classification/`](classification/)     | 273.6 min                    |
-| [`segmentation.ipynb`](segmentation.ipynb)         | Whole tumour (WT), tumour core (TC), enhancing tumour (ET), BraTS 2020 | 3 + ensemble (outputs: 6 from the previous version) | [`segmentation/`](segmentation/)         | 521.7 min (previous version) |
+| Notebook                                           | Task                                                                   | Models          | Outputs folder                           | Notebook time |
+| -------------------------------------------------- | ---------------------------------------------------------------------- | --------------- | ---------------------------------------- | ------------- |
+| [`binary-detection.ipynb`](binary-detection.ipynb) | Tumour-positive vs tumour-negative 2D MRI slices                       | 9               | [`binary-detection/`](binary-detection/) | 71.8 min      |
+| [`classification.ipynb`](classification.ipynb)     | Glioma vs meningioma vs pituitary 2D MRI slices                        | 9               | [`classification/`](classification/)     | 273.6 min     |
+| [`segmentation.ipynb`](segmentation.ipynb)         | Whole tumour (WT), tumour core (TC), enhancing tumour (ET), BraTS 2020 | 3 + 4 ensembles | [`segmentation/`](segmentation/)         | 547.9 min     |
 
-Notebook times are `notebook_minutes` in each `metrics/run_summary.json`. The segmentation notebook has since been rewritten and not yet run; its outputs folder still holds the previous version's run (see [Segmentation notebook](#segmentation-notebook)).
+Notebook times are `notebook_minutes` in each `metrics/run_summary.json`. The segmentation notebook is also validated externally on 60 BraTS-Africa cases.
 
 ## Contents
 
@@ -26,19 +26,19 @@ Notebook times are `notebook_minutes` in each `metrics/run_summary.json`. The se
 Materials/Notebooks/
 |-- binary-detection.ipynb       Executed notebook with all cell outputs (25 inline figures)
 |-- classification.ipynb         Executed notebook with all cell outputs (26 inline figures)
-|-- segmentation.ipynb           Revised notebook, not yet run (no outputs)
+|-- segmentation.ipynb           Executed notebook with all cell outputs (17 inline figures)
 `-- <task>/                      Outputs downloaded from the executed Kaggle run
     |-- __notebook__.ipynb       Kaggle's copy of the same run (Git-ignored); same cells, without the last cell's output
     |-- metrics/                 CSV tables and JSON summaries; metrics/runs/<run>/ per-run history
     |-- plots/                   Every figure as PNG
     |-- logs/                    notebook.log, worker_gpu0/1.log, events_gpu0/1.jsonl, status_gpu0/1.json
-    |-- predictions/             2D tasks: <run>.npz logits; segmentation: <run>.npy test probabilities (current notebook: <run>/<split>/<case>.npz)
+    |-- predictions/             2D tasks: <run>.npz logits; segmentation: <run>/<val|test|external>/<case>.npz probabilities
     |-- weights/<model>/         Best-validation checkpoint of every run (*.pth, Git-ignored)
-    |-- weights/deploy/          Checkpoint exported for the web app plus metadata.json
+    |-- weights/deploy/          Checkpoint the web app loads plus metadata.json (segmentation: copied from this run by hand)
     `-- src/                     The library and worker modules each notebook writes and imports
 ```
 
-The root `.gitignore` excludes `__notebook__.ipynb`, `*.pth`, `*.log` and `*.npy`, and `Materials/Notebooks/segmentation/predictions/`, so a fresh clone has the two executed 2D notebooks, the revised segmentation notebook, `deploy/metadata.json`, metrics, plots, JSON logs and `.npz` predictions, but not Kaggle's duplicate notebook copies, the weights, the text logs or the segmentation probability files.
+The root `.gitignore` excludes `__notebook__.ipynb`, `*.pth`, `*.log` and `*.npy`, and `Materials/Notebooks/segmentation/predictions/`, so a fresh clone has the three executed notebooks, `deploy/metadata.json`, metrics, plots, JSON logs and `.npz` predictions, but not Kaggle's duplicate notebook copies, the weights, the text logs or the segmentation probability files.
 
 Each notebook writes its shared code to `src/` in an early cell and runs training in one worker process per GPU: the 2D notebooks write `image_lib.py`, `image_worker.py` and `shared_lib.py`; the segmentation notebook writes `volume_lib.py`, `volume_worker.py` and `shared_lib.py`.
 
@@ -52,12 +52,13 @@ All three runs used Kaggle with two Tesla T4 GPUs (14.6 GB each as reported by t
 | PyTorch       | 2.11.0+cu128     | 2.11.0+cu128   | 2.11.0+cu128 |
 | torchvision   | 0.26.0+cu128     | 0.26.0+cu128   | not recorded |
 | timm          | 1.0.29           | 1.0.29         | not used     |
+| MONAI         | not used         | not used       | 1.6.1        |
 | CUDA          | 12.8             | 12.8           | 12.8         |
 | Deterministic | False            | False          | False        |
-| Training wall | 63.5 min         | 264.6 min      | 515.0 min    |
-| Jobs finished | 54 of 54         | 54 of 54       | 6 of 6 runs  |
+| Training wall | 63.5 min         | 264.6 min      | 528.3 min    |
+| Jobs finished | 54 of 54         | 54 of 54       | 3 of 3 runs  |
 
-The 2D notebooks also print numpy 2.1.3 and pandas 2.3.3 in their first cell.
+The 2D notebooks also print numpy 2.1.3 and pandas 2.3.3 in their first cell; the segmentation notebook prints numpy 2.1.3 and nibabel 5.4.2.
 
 ## Binary detection notebook
 
@@ -613,221 +614,360 @@ Output: `Exported /kaggle/working/weights/deploy/EfficientNetB0.pth (16.3 MB); r
 
 Source: [`segmentation.ipynb`](segmentation.ipynb). Outputs: [`segmentation/`](segmentation/).
 
-### Current notebook: region-adaptive hybrid ensemble (not yet run)
+The notebook trains three 3D segmentation networks on BraTS 2020, fuses them with a region-adaptive hybrid ensemble, and tests every model on the 56 held-out BraTS 2020 patients (internal test) and on 60 BraTS-Africa patients (external test, never used for training or selection). It replaced an earlier six-network benchmark (UNet, nnU-Net, VNet, UNETR, Swin UNETR, TransBTS at 128^3); that run's outputs were overwritten by this one and are only in Git history (commit `6902ac6` and earlier). The validation and test patients are the same 56 + 56 IDs as that benchmark.
 
-The notebook was rewritten after the six-network benchmark below. It has no saved outputs yet, and none of its results exist until it is run on Kaggle; the `segmentation/` folder still holds the outputs of the previous version, documented in the next subsections. A new run writes the same folder layout, with these changes:
-
-| Aspect         | Previous version (results below)                                     | Current notebook                                                                                                                                                                                                                                                                                                        |
-| -------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Networks       | UNet, nnU-Net, VNet, UNETR, Swin UNETR, TransBTS, written in PyTorch | nnU-Net (residual DynUNet, 31.4 M parameters), SegResNet (SegResNetDS, 19.9 M) and Swin UNETR-v2 (feature size 48, 72.8 M), from MONAI 1.6.1                                                                                                                                                                            |
-| Input          | Whole volume resampled to 128^3                                      | Native 1 mm volume cropped to the brain; 128^3 training patches, one third centred on tumour                                                                                                                                                                                                                            |
-| Augmentation   | Flips, intensity scale and shift                                     | Rotation up to 30 degrees and zoom 0.7 to 1.4 (p = 0.2 each), flips, noise, brightness, contrast, gamma, on the GPU                                                                                                                                                                                                     |
-| Training       | 50 epochs of the 257 training cases                                  | `EPOCHS = {"nnU-Net": 60, "SegResNet": 60, "Swin UNETR": 30}` of 250 steps x 2 patches; validation every 5 epochs                                                                                                                                                                                                       |
-| Inference      | Whole 128^3 volume, 8-flip TTA                                       | Gaussian sliding windows (128^3, overlap 0.5), 8-flip TTA                                                                                                                                                                                                                                                               |
-| Ensemble       | Plain mean of all models and of the CNNs                             | Region-adaptive hybrid ensemble: one convex weight vector and one threshold per region (WT, TC, ET), chosen on the 56 validation cases; ablations: each member, plain mean, CNN mean, weights without threshold tuning                                                                                                  |
-| Validation     | 56 internal test cases                                               | The same 56 internal test cases (fixed by ID, so paired with the results below) and 60 external BraTS-Africa cases (`aiocta/brats2023-ssa-training-dataset`)                                                                                                                                                            |
-| Added analyses |                                                                      | Paired Wilcoxon tests of the proposed ensemble with bootstrap CIs; generalisation gap; slice-wise protocol of 2D studies next to the published GCSER-UNet results; CNN-transformer disagreement as a failure detector (Spearman, AUROC); 3D Seg-Grad-CAM maps with attribution-in-region scores; sequence-drop ablation |
-| Web-app export | `weights/deploy/VNet.pth`                                            | None: keep the existing `weights/deploy/` folder when copying new outputs                                                                                                                                                                                                                                               |
-
-Kaggle settings: GPU T4 x2, Internet on, both datasets attached, and the Environment preference set to "Always use latest environment". MONAI 1.6.1 needs PyTorch 2.8 or newer: a second attempt on 2026-10-22 ran on an older pinned image (Python 3.10) and failed at `import monai`, so the setup cell now stops at once with this instruction when PyTorch is older than 2.8. `RESUME_DIR` continues an interrupted run. The first Kaggle attempt (2026-10-22) stopped in the model-profile cell, because MONAI's Swin UNETR calls `.item()` while it is built and the cell built the models on the meta device. The cell now builds each model on the CPU to count its parameters and measures GFLOPs with one forward pass on GPU 0. Case discovery also accepts a sequence stored inside a folder named like the NIfTI file, a layout Kaggle can produce when it unpacks an upload. A third attempt (2026-10-23, PyTorch 2.11, MONAI 1.6.1) logged nothing for 45 minutes after writing `src/shared_lib.py`; the previous version had cached all cases within 6 minutes. The likely cause is the preprocessing pool, which forked the kernel after the models had been built on the CPU and run on GPU 0 (CUDA, OpenMP and debugger threads alive); forking a multithreaded process can deadlock the children. Both CPU process pools now use `spawn` (`POOL_CONTEXT`), and the preprocessing worker no longer calls PyTorch. Training workers create their DataLoader once per run instead of once per epoch. tqdm bars are widgets, which the log of a saved Kaggle run does not show, so every long stage now also logs every tenth of its items (`progress`), and the training monitor logs each GPU's step every 5 minutes. A fourth attempt (2026-10-23, PyTorch 2.11, MONAI 1.6.1, Python 3.13) preprocessed the 429 cases in 3031 s with the `spawn` pool, logging steadily; case discovery alone took 87 s against 9 s in the earlier run, so the slowdown points at slow reads from `/kaggle/input` in that session, and the third attempt was probably still preprocessing rather than deadlocked. Training then failed: the Swin UNETR worker on GPU 0 ran out of GPU memory in its first epoch at micro-batch 2 (a 2.63 GiB allocation in the window-attention mask sum, with 6.4 GiB reserved but unallocated), while GPU 1 trained nnU-Net (internal test mean Dice 0.8364, external 0.7706) and SegResNet (0.8603, 0.7956). The monitor only raised when GPU 1 finished, 8 hours later, and the outputs of that run were not kept. Fixes: Swin UNETR now uses micro-batch 1 with 2 accumulation steps (the effective batch is still 2); the micro-batch probe keeps 10% of GPU memory free; workers run with `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`, release GPU memory between jobs and retry a job that runs out of memory from its last checkpoint with half the micro-batch; the monitor stops the other worker and raises as soon as one worker fails, and warns with the end of a worker's log after 30 minutes without progress; workers enable `faulthandler`; `progress` also logs at least every 2 minutes with an ETA; preprocessing uses twice the CPU cores as processes (`PREPROCESS_WORKERS`) and logs the mean read and processing time per case; and the ensemble's ET-threshold search logs its progress. The new outputs add `metrics/fusion_weights.csv`, `test_results.csv`, `external_results.csv`, `generalisation_gap.csv`, `slice_protocol_comparison.csv`, `quality_control.csv`, `gradcam_attribution.csv`, `modality_ablation_summary.csv` and `predictions/<run>/<split>/<case>.npz` (compressed uint8 probabilities on the brain crop, Git-ignored). A fifth attempt (2026-10-23, same environment) trained all three members in 555 min (internal test mean Dice: nnU-Net 0.8347, SegResNet 0.8693, Swin UNETR 0.8397; external 0.7581, 0.7880, 0.7896), finished the fusion search, ensemble scoring, statistics, quality control and the Seg-Grad-CAM figures, and then failed 9.6 hours in, in the Seg-Grad-CAM attribution cell: CUDA ran out of memory in the backward pass on GPU 0 (1.32 GiB requested, 5.70 GiB reserved but unallocated), because all three members sat on GPU 0, each map ran a full backward pass through the network, and the notebook process, unlike the workers, did not use expandable segments. Fixes: `seg_grad_cam` freezes the weights and replaces the hooked layer's output with a detached leaf, so the backward pass stops at that layer and no weight gradients or encoder graph are kept (identical maps; 51 to 59% less memory saved for backward in a CPU check at 96^3); the members are spread over both GPUs; the notebook sets `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` before importing PyTorch; a map that still runs out of memory is retried once after freeing cached memory and then left out with a warning. `TRAINING_BUDGET_HOURS` is replaced by `SESSION_HOURS = 12` and `POST_TRAINING_HOURS = 1.0`: training must end one hour before the 12-hour limit, counted from the start of the notebook, and a worker stops at an epoch boundary when the next epoch plus its member's evaluation (estimated from the last validation; Swin UNETR's evaluation took about 1.7 hours) would pass that deadline. It then evaluates the best checkpoint, marks the run `truncated` and keeps its last checkpoint so that `RESUME_DIR` can continue it. Scoring waits now time out after `SCORE_TIMEOUT` seconds, and the efficiency table adds the ensemble rows by concatenation. The cells after the failure (sequence-drop summary, efficiency, summary, zip) have not run on Kaggle yet.
-
-The subsections below describe the previous version of the notebook (commit `4a3ffae`) and the outputs it produced.
+The run documented below is the sixth Kaggle attempt (2026-10-24, notebook time 547.9 min). Earlier attempts stopped in the model-profile cell (MONAI's Swin UNETR cannot be built on the meta device), on an old pinned Kaggle image (PyTorch older than 2.8), in a silent preprocessing stretch (a fork-based pool, now `spawn`), on a Swin UNETR out-of-memory error at micro-batch 2 (now micro-batch 1 with 2 accumulation steps), and in the Seg-Grad-CAM attribution cell (now layer-only gradients with members spread over both GPUs). Their outputs were not kept.
 
 ### 1. Setup
 
-- **Configuration.** Models UNet, nnU-Net, VNet, UNETR, Swin UNETR and TransBTS; `SEEDS = [42]`, `IMG_SIZE = 128`, `EPOCHS = 50`, `EFFECTIVE_BATCH = 4`, `GRAD_CLIP = 1.0`, 70/15/15 split with `SPLIT_SEED = 42`, `TTA = True`, `EARLY_STOP_PATIENCE = None`, `ET_CANDIDATES = [0, 50, 100, 200, 300, 500, 800]`, `TRAINING_BUDGET_HOURS = 9.5`, `DEPLOY_MODEL = "VNet"`. Output: `Models: [...] | seeds: [42] | epochs: 50 | input 128^3`.
-- **Hardware check.** Two Tesla T4 GPUs, 4 CPU cores, 33.7 GB RAM.
-- **Shared library and workers.** `src/volume_lib.py` holds case discovery, foreground z-score normalisation and resampling, GPU augmentation (random flips on each axis, per-channel intensity scale 0.9 to 1.1 and shift -0.1 to 0.1), the six architectures written from scratch in PyTorch (VNet with the web app's exact module names), the soft Dice plus binary cross-entropy loss per region with deep supervision, 8-flip test-time augmentation, the BraTS region hierarchy with ET size post-processing, and per-case Dice, HD95, sensitivity and specificity.
+- **Install and import.** Installs MONAI 1.6.1 (`--no-deps`), `einops` and `nibabel` only if missing and stops if PyTorch is older than 2.8. Output: `torch 2.11.0+cu128 | monai 1.6.1 | nibabel 5.4.2 | numpy 2.1.3`.
+- **Configuration.** `SEEDS = [42]`, `PATCH = 128` (training patch and sliding window at native 1 mm), `SOURCE = 160` (cube read before rotation and zoom), `EPOCHS = {"nnU-Net": 60, "SegResNet": 60, "Swin UNETR": 30}`, `ITERS_PER_EPOCH = 250`, `BATCH = 2`, `FG_PROBABILITY = 0.33` (share of tumour-centred patches), `VAL_EVERY = 5`, `SW_OVERLAP = 0.5`, `TTA = True` (8 axis flips), `ET_CANDIDATES = [0, 50, 100, 200, 300, 500, 800]`, `FUSION_STEP = 0.1`, `FUSION_THRESHOLDS = [0.3, 0.4, 0.5, 0.6, 0.7]`, `QC_FAIL_DICE = 0.80`, `CAM_MARGIN = 5`, `SESSION_HOURS = 12`, `POST_TRAINING_HOURS = 1.0`, `SCORE_TIMEOUT = 900`. Output: `Members: ['nnU-Net', 'SegResNet', 'Swin UNETR'] | seeds: [42] | epochs: {...} x 250 steps | patch 128^3`.
+- **Hardware check.** Two Tesla T4 GPUs (14.6 GB each), 4 CPU cores, 33.7 GB RAM (31.4 GB available), 20.9 GB free in `/kaggle/working`.
+- **Shared library, worker and launcher.** The cells write `src/volume_lib.py` (case discovery for both naming conventions, brain cropping, foreground z-score, region bit mask, patch sampling, GPU augmentation, the three MONAI networks, Dice + BCE loss with deep supervision, Gaussian sliding-window inference with flip TTA, region hierarchy and ET filter, metrics, fusion search, Seg-Grad-CAM), `src/volume_worker.py` (one training worker per GPU) and `src/shared_lib.py` (launcher, live monitor, Holm correction).
+- **Model profiles** (`model_profiles.csv`; GFLOPs for one 128^3 patch):
 
-Training recipes (`model_profiles.csv`):
+| Model      | Family      | Parameters (M) | GFLOPs per patch | Optimiser | LR   | Weight decay | Warm-up epochs | Grad. clip | Micro-batch | Deep-supervision weights | Seg-Grad-CAM layer   |
+| ---------- | ----------- | -------------- | ---------------- | --------- | ---- | ------------ | -------------- | ---------- | ----------- | ------------------------ | -------------------- |
+| nnU-Net    | CNN         | 31.422         | 968.1            | SGD       | 1e-2 | 3e-5         | 0              | 12.0       | 2           | 1.0, 0.5, 0.25           | `upsamples.2`        |
+| SegResNet  | CNN         | 19.917         | 1218.2           | AdamW     | 2e-4 | 1e-5         | 2              | 1.0        | 2           | 1.0, 0.5, 0.25           | `up_layers.0.blocks` |
+| Swin UNETR | Transformer | 72.767         | 1665.6           | AdamW     | 1e-4 | 1e-5         | 2              | 1.0        | 1           | 1.0                      | `decoder3`           |
 
-| Model      | Family      | Parameters (M) | GFLOPs per volume | Optimiser                   | LR   | Weight decay | Warm-up epochs | Micro-batch | Grad. checkpointing | Deep supervision weights |
-| ---------- | ----------- | -------------- | ----------------- | --------------------------- | ---- | ------------ | -------------- | ----------- | ------------------- | ------------------------ |
-| UNet       | CNN         | 5.604          | 907.0             | SGD, Nesterov momentum 0.99 | 0.01 | 3e-5         | 0              | 2           | No                  | 1.0, 0.5, 0.25           |
-| nnU-Net    | CNN         | 16.548         | 956.3             | SGD, Nesterov momentum 0.99 | 0.01 | 3e-5         | 0              | 2           | No                  | 1.0, 0.5, 0.25, 0.125    |
-| VNet       | CNN         | 1.399          | 149.9             | SGD, Nesterov momentum 0.99 | 0.01 | 3e-5         | 0              | 2           | No                  | 1.0, 0.5, 0.25           |
-| UNETR      | Transformer | 137.597        | 1761.7            | AdamW                       | 1e-4 | 1e-5         | 3              | 2           | Yes                 | 1.0                      |
-| Swin UNETR | Transformer | 10.521         | 797.1             | AdamW                       | 1e-4 | 1e-5         | 3              | 1           | Yes                 | 1.0                      |
-| TransBTS   | Hybrid      | 35.805         | 996.2             | AdamW                       | 1e-4 | 1e-5         | 3              | 2           | No                  | 1.0, 0.5, 0.25           |
-
-SGD runs use polynomial decay (power 0.9) per step; AdamW runs use linear warm-up then cosine decay to 1% of the initial rate.
+nnU-Net is MONAI's residual `DynUNet` (six stages, 32 to 320 channels), SegResNet is `SegResNetDS` (32 initial filters, blocks 1-2-2-4), and Swin UNETR is Swin UNETR-v2 (feature size 48, gradient checkpointing).
 
 ### 2. Data
 
-- **Find the cases and their grades.** Dataset `awsaf49/brats20-dataset-training-validation`. Masks are found by name pattern, which also picks up the misnamed mask of case 355. Output: `369 complete cases | grades: {'HGG': 293, 'LGG': 76}`.
-- **Preprocess and cache.** Foreground z-score per sequence, trilinear resampling of images and nearest-neighbour resampling of masks to 128^3. Output: `Cached 369 cases in 316s (6.96 GB)`.
-- **Dataset overview.** 27 of 76 LGG cases (35.5%) and 0 of 293 HGG cases have no ET (`cases_without_et.csv`). Region volumes in cm^3 (`region_volumes_by_grade.csv`):
+- **Find the cases.** BraTS 2020 (`awsaf49/brats20-dataset-training-validation`) and BraTS-Africa (`aiocta/brats2023-ssa-training-dataset`, ET label 3). Output: `429 complete cases: {'BraTS 2020': 369, 'BraTS-Africa': 60}`; grades HGG 293, LGG 76, BraTS-Africa 60 (no grade recorded).
+- **Preprocess and cache.** Eight `spawn` processes crop each case to its brain box, z-score each sequence over its non-zero voxels and cache float16 images at native resolution. Output: `Cached 429 cases in 337s (12.45 GB)`, `Per case: 3.1s reading from /kaggle/input, 2.9s processing and writing`. Every case is 240x240x155 at 1x1x1 mm. Brain crops average 137.4 x 169.9 x 138.1 voxels (minimum 122 x 128 x 98, maximum 157 x 193 x 155). The check found 22 reference voxels outside the brain crop: 4 in training case 091 and 18 in validation case 344, none in a test or external case (`cases.csv`, `label_outside_crop`).
+- **Dataset overview.** Region volumes in cm^3 per cohort (`region_volumes_by_cohort.csv`) and cases without ET (`cases_without_et.csv`: 0 of 293 HGG, 27 of 76 LGG (35.5%), 0 of 60 BraTS-Africa):
 
-| Region | Grade | Mean   | SD    | Min   | Median | Max    |
-| ------ | ----- | ------ | ----- | ----- | ------ | ------ |
-| WT     | HGG   | 96.44  | 53.78 | 7.28  | 91.13  | 256.88 |
-| WT     | LGG   | 111.54 | 76.72 | 17.08 | 86.32  | 361.78 |
-| TC     | HGG   | 37.66  | 29.26 | 0.56  | 32.54  | 126.72 |
-| TC     | LGG   | 57.85  | 49.66 | 0.83  | 44.59  | 190.19 |
-| ET     | HGG   | 23.39  | 18.50 | 0.11  | 19.46  | 111.25 |
-| ET     | LGG   | 5.46   | 13.53 | 0.00  | 0.82   | 89.55  |
+| Region | Cohort         | Mean   | SD    | Min   | Median | Max    |
+| ------ | -------------- | ------ | ----- | ----- | ------ | ------ |
+| WT     | BraTS 2020 HGG | 96.44  | 53.78 | 7.28  | 91.13  | 256.88 |
+| WT     | BraTS 2020 LGG | 111.54 | 76.72 | 17.08 | 86.32  | 361.78 |
+| WT     | BraTS-Africa   | 161.36 | 92.28 | 1.03  | 163.75 | 394.41 |
+| TC     | BraTS 2020 HGG | 37.66  | 29.26 | 0.56  | 32.54  | 126.72 |
+| TC     | BraTS 2020 LGG | 57.85  | 49.66 | 0.83  | 44.59  | 190.19 |
+| TC     | BraTS-Africa   | 61.68  | 58.32 | 0.49  | 39.81  | 228.44 |
+| ET     | BraTS 2020 HGG | 23.39  | 18.50 | 0.11  | 19.46  | 111.25 |
+| ET     | BraTS 2020 LGG | 5.46   | 13.53 | 0.00  | 0.82   | 89.55  |
+| ET     | BraTS-Africa   | 36.32  | 30.98 | 0.49  | 28.43  | 122.36 |
 
 ![Segmentation region volumes](segmentation/plots/01_region_volumes.png)
 
+_Region volumes per cohort: BraTS-Africa tumours are larger on average than BraTS 2020 tumours._
+
 ![Segmentation modalities and masks](segmentation/plots/02_modalities_and_masks.png)
 
-_One case with its four sequences and three region masks._
+_One internal and one external case with their four sequences and three region masks._
 
-- **Grade-stratified split** (`split.csv`; per-case roles in `cases.csv`):
+- **Split** (`split.csv`; validation and test IDs fixed to those of the earlier benchmark; per-case roles in `cases.csv`):
 
-| Split      | HGG | LGG | Total |
-| ---------- | --- | --- | ----- |
-| Train      | 204 | 53  | 257   |
-| Validation | 45  | 11  | 56    |
-| Test       | 44  | 12  | 56    |
-| Total      | 293 | 76  | 369   |
+| Role       | HGG | LGG | BraTS-Africa | Total |
+| ---------- | --- | --- | ------------ | ----- |
+| Train      | 204 | 53  | 0            | 257   |
+| Validation | 45  | 11  | 0            | 56    |
+| Test       | 44  | 12  | 0            | 56    |
+| External   | 0   | 0   | 60           | 60    |
+| Total      | 293 | 76  | 60           | 429   |
 
-- **Augmentation preview.**
+- **Augmentation preview.** Rotation up to 30 degrees and zoom 0.7 to 1.4 (p = 0.2 each), mirroring, noise, brightness, contrast and gamma, on the GPU.
 
 ![Segmentation augmentation](segmentation/plots/03_augmentation.png)
 
 ### 3. Training
 
-Output: `6 jobs, 0 already finished; launching 2 workers` and `Training stage finished in 515.0 min; pending runs: none`. Every run trained 50 epochs, 3,250 optimiser steps. The best checkpoint is chosen on validation mean Dice, and the ET size threshold is tuned on the validation cases (`et_threshold_and_selection.csv`):
+Output: `3 jobs, 0 already finished; launching 2 workers; training ends by 21:16` and `Training stage finished in 528.3 min; pending runs: none; stopped early by the time budget: none`. GPU 1 trained Swin UNETR; GPU 0 trained nnU-Net, then SegResNet. Per run (`metrics/runs/<run>/summary.json`, `et_threshold_and_selection.csv`):
 
-| Run               | Best epoch | Best validation Dice | ET minimum voxels |
-| ----------------- | ---------- | -------------------- | ----------------- |
-| unet_seed42       | 45         | 0.7845               | 100               |
-| nnu-net_seed42    | 50         | 0.7824               | 200               |
-| vnet_seed42       | 44         | 0.7598               | 200               |
-| swin-unetr_seed42 | 33         | 0.7235               | 0                 |
-| transbts_seed42   | 45         | 0.7102               | 0                 |
-| unetr_seed42      | 39         | 0.6960               | 800               |
+| Run               | Steps  | Patches seen | Throughput (patches/s) | Train hours | Best epoch | Best validation Dice | ET minimum voxels | Peak train memory (GB) |
+| ----------------- | ------ | ------------ | ---------------------- | ----------- | ---------- | -------------------- | ----------------- | ---------------------- |
+| nnu-net_seed42    | 15,000 | 30,000       | 2.24 to 2.28           | 3.69        | 55         | 0.8415               | 500               | 5.69                   |
+| segresnet_seed42  | 15,000 | 30,000       | 2.19 to 2.23           | 3.77        | 50         | 0.8390               | 800               | 6.02                   |
+| swin-unetr_seed42 | 7,500  | 15,000       | 0.62 to 0.63           | 6.65        | 30         | 0.8191               | 500               | 8.67                   |
 
-### 4. Results
+Validation Dice is measured with sliding windows and no TTA every 5 epochs; the ET threshold is the one with the best validation mean Dice after TTA. No run was truncated by the time budget. Predicting the 56 validation, 56 test and 60 external cases with TTA took about 7 min per split for each CNN and about 28 min per split for Swin UNETR.
+
+### 4. Internal validation of the members
 
 ![Segmentation training curves](segmentation/plots/04_training_curves.png)
 
-_Training and validation loss and validation Dice per region for every run._
+_Training loss, validation Dice per region and throughput for each member._
 
-**Test results at native resolution** on 56 cases with 8-flip TTA (`test_results.csv`). Dice is the mean over cases; HD95 (mm) is summarised by its median because empty-region cases contribute the fixed BraTS value of 373.13 mm (`notebook.log`):
+Internal test results of the members on 56 cases with 8-flip TTA (`member_test_results.csv`). Dice is the mean over cases with a bootstrap 95% CI for the mean of the three regions; HD95 (mm) is the median over cases, because a missed or spurious region costs the fixed BraTS value of 373.13 mm:
 
-| Model      | Mean Dice (95% CI)      | Dice WT | Dice TC | Dice ET | HD95 WT | HD95 TC | HD95 ET | Sens. WT | Sens. TC | Sens. ET |
-| ---------- | ----------------------- | ------- | ------- | ------- | ------- | ------- | ------- | -------- | -------- | -------- |
-| UNet       | 0.8199 [0.7826, 0.8533] | 0.9012  | 0.8300  | 0.7286  | 4.24    | 3.24    | 3.67    | 0.9059   | 0.8797   | 0.8486   |
-| nnU-Net    | 0.8192 [0.7837, 0.8511] | 0.9002  | 0.8309  | 0.7264  | 4.24    | 3.46    | 3.80    | 0.9070   | 0.8831   | 0.8538   |
-| VNet       | 0.7965 [0.7497, 0.8340] | 0.8865  | 0.7972  | 0.7058  | 4.06    | 4.18    | 3.46    | 0.8899   | 0.8697   | 0.8278   |
-| Swin UNETR | 0.7462 [0.7134, 0.7772] | 0.8714  | 0.7495  | 0.6176  | 5.10    | 6.70    | 6.28    | 0.9619   | 0.9316   | 0.9407   |
-| TransBTS   | 0.7291 [0.6876, 0.7661] | 0.8743  | 0.7488  | 0.5642  | 4.42    | 6.58    | 5.96    | 0.9468   | 0.9384   | 0.9475   |
-| UNETR      | 0.7056 [0.6700, 0.7384] | 0.8758  | 0.6692  | 0.5720  | 5.05    | 11.29   | 9.15    | 0.9492   | 0.9481   | 0.9520   |
+| Model      | Mean Dice (95% CI)      | Dice WT (SD)    | Dice TC (SD)    | Dice ET (SD)    | HD95 WT | HD95 TC | HD95 ET | Sens. WT | Sens. TC | Sens. ET |
+| ---------- | ----------------------- | --------------- | --------------- | --------------- | ------- | ------- | ------- | -------- | -------- | -------- |
+| nnU-Net    | 0.8404 [0.8008, 0.8760] | 0.9139 (0.0629) | 0.8493 (0.2052) | 0.7580 (0.2735) | 3.39    | 3.00    | 2.34    | 0.9110   | 0.8838   | 0.8611   |
+| SegResNet  | 0.8717 [0.8389, 0.8987] | 0.9264 (0.0437) | 0.8791 (0.1542) | 0.8095 (0.2317) | 3.08    | 2.64    | 1.57    | 0.9280   | 0.8900   | 0.8400   |
+| Swin UNETR | 0.8360 [0.7923, 0.8742] | 0.9162 (0.0651) | 0.8427 (0.2066) | 0.7490 (0.2858) | 3.00    | 3.00    | 2.24    | 0.9151   | 0.8688   | 0.8562   |
 
-Per-case standard deviations of Dice (WT, TC, ET): UNet 0.0575, 0.2146, 0.2500; nnU-Net 0.0533, 0.2063, 0.2462; VNet 0.0848, 0.2210, 0.2678; Swin UNETR 0.0596, 0.2022, 0.2584; TransBTS 0.0683, 0.2115, 0.2709; UNETR 0.0601, 0.2204, 0.2577. Specificity is between 0.9973 and 0.9996 for every model and region. Per-case values are in `test_per_case.csv` and `metrics/runs/<run>/test_cases.csv`.
+Specificity is between 0.9992 and 0.9998 for every member and region. Per-case values are in `metrics/runs/<run>/test_cases.csv` and `test_per_case.csv`.
 
-**Ensembles** (`ensemble_results.csv`; each uses the median of its members' ET thresholds):
+### 5. Region-adaptive hybrid ensemble
 
-| Ensemble   | Mean Dice (95% CI)      | Dice WT | Dice TC | Dice ET | HD95 WT | HD95 TC | HD95 ET |
-| ---------- | ----------------------- | ------- | ------- | ------- | ------- | ------- | ------- |
-| All models | 0.7991 [0.7631, 0.8309] | 0.8993  | 0.8027  | 0.6953  | 4.12    | 4.12    | 4.47    |
-| CNN models | 0.8178 [0.7782, 0.8522] | 0.9010  | 0.8262  | 0.7262  | 4.06    | 3.61    | 3.87    |
+**Fusion search on the validation cases** (`fusion_weights.csv`). For each region, every weight vector on a 0.1 grid of the simplex (66 vectors plus the exact equal-weight vector) is combined with every threshold in `FUSION_THRESHOLDS`:
 
-**Statistical comparison.** Pairwise Wilcoxon signed-rank tests on per-case mean Dice, Holm-corrected (`wilcoxon_tests.csv`):
+| Region | nnU-Net | SegResNet | Swin UNETR | Threshold | Val. Dice (proposed) | Val. Dice (weights only, threshold 0.5) | Val. Dice (mean ensemble) | Best single member (val. Dice) |
+| ------ | ------- | --------- | ---------- | --------- | -------------------- | --------------------------------------- | ------------------------- | ------------------------------ |
+| WT     | 0.4     | 0.6       | 0.0        | 0.4       | 0.8951               | 0.8935                                  | 0.8879                    | SegResNet (0.8913)             |
+| TC     | 0.4     | 0.5       | 0.1        | 0.3       | 0.8552               | 0.8490                                  | 0.8413                    | nnU-Net (0.8455)               |
+| ET     | 0.5     | 0.5       | 0.0        | 0.4       | 0.7974               | 0.7963                                  | 0.7916                    | nnU-Net (0.7929)               |
 
-| Model A    | Model B    | Median Dice difference | Holm p  |
-| ---------- | ---------- | ---------------------- | ------- |
-| UNet       | nnU-Net    | 0.00231                | 0.04195 |
-| UNet       | VNet       | 0.01186                | < 1e-5  |
-| UNet       | UNETR      | 0.11386                | < 1e-5  |
-| UNet       | Swin UNETR | 0.07378                | < 1e-5  |
-| UNet       | TransBTS   | 0.07886                | < 1e-5  |
-| nnU-Net    | VNet       | 0.01003                | 1e-5    |
-| nnU-Net    | UNETR      | 0.10660                | < 1e-5  |
-| nnU-Net    | Swin UNETR | 0.06871                | < 1e-5  |
-| nnU-Net    | TransBTS   | 0.07945                | < 1e-5  |
-| VNet       | UNETR      | 0.08583                | < 1e-5  |
-| VNet       | Swin UNETR | 0.06041                | < 1e-5  |
-| VNet       | TransBTS   | 0.06660                | < 1e-5  |
-| UNETR      | Swin UNETR | -0.03594               | < 1e-5  |
-| UNETR      | TransBTS   | -0.01936               | 0.00018 |
-| Swin UNETR | TransBTS   | 0.00638                | 0.04195 |
+The search gives the transformer weight only for TC (0.1). Each ensemble then gets its own ET size threshold on validation: CNN mean ensemble 300 voxels, the other three ensembles 500 voxels.
 
-"< 1e-5" marks p-values stored as 0.0 at five decimals.
+![Segmentation fusion search](segmentation/plots/05_fusion_search.png)
 
-![Segmentation Wilcoxon p-values](segmentation/plots/05_wilcoxon.png)
+_Left: the selected weights per region. Right: validation Dice against the threshold for the selected weights and the plain mean ensemble._
 
-**Results by tumour grade** (`test_results_by_grade.csv`, 44 HGG and 12 LGG test cases):
+**Internal test results, members and ensembles** (`test_results.csv`, 56 cases, TTA):
 
-| Model      | Grade | Dice WT | Dice TC | Dice ET | Mean Dice | 95% CI           |
-| ---------- | ----- | ------- | ------- | ------- | --------- | ---------------- |
-| UNet       | HGG   | 0.8984  | 0.8786  | 0.8117  | 0.8629    | [0.8300, 0.8889] |
-| UNet       | LGG   | 0.9115  | 0.6520  | 0.4237  | 0.6624    | [0.6055, 0.7253] |
-| nnU-Net    | HGG   | 0.8985  | 0.8785  | 0.8124  | 0.8632    | [0.8357, 0.8865] |
-| nnU-Net    | LGG   | 0.9065  | 0.6561  | 0.4112  | 0.6579    | [0.6032, 0.7175] |
-| VNet       | HGG   | 0.8819  | 0.8412  | 0.7923  | 0.8385    | [0.7965, 0.8716] |
-| VNet       | LGG   | 0.9032  | 0.6359  | 0.3885  | 0.6425    | [0.5750, 0.7131] |
-| Swin UNETR | HGG   | 0.8620  | 0.7859  | 0.7262  | 0.7913    | [0.7666, 0.8147] |
-| Swin UNETR | LGG   | 0.9061  | 0.6161  | 0.2193  | 0.5805    | [0.5249, 0.6299] |
-| TransBTS   | HGG   | 0.8665  | 0.7837  | 0.6740  | 0.7748    | [0.7389, 0.8073] |
-| TransBTS   | LGG   | 0.9029  | 0.6206  | 0.1613  | 0.5616    | [0.5043, 0.6120] |
-| UNETR      | HGG   | 0.8686  | 0.6843  | 0.6773  | 0.7434    | [0.7100, 0.7736] |
-| UNETR      | LGG   | 0.9021  | 0.6137  | 0.1857  | 0.5672    | [0.5037, 0.6325] |
+| Model                                      | Mean Dice (95% CI)      | Dice WT | Dice TC | Dice ET | HD95 WT | HD95 TC | HD95 ET | Sens. WT | Sens. TC | Sens. ET |
+| ------------------------------------------ | ----------------------- | ------- | ------- | ------- | ------- | ------- | ------- | -------- | -------- | -------- |
+| nnU-Net                                    | 0.8404 [0.8008, 0.8760] | 0.9139  | 0.8493  | 0.7580  | 3.39    | 3.00    | 2.34    | 0.9110   | 0.8838   | 0.8611   |
+| SegResNet                                  | 0.8717 [0.8389, 0.8987] | 0.9264  | 0.8791  | 0.8095  | 3.08    | 2.64    | 1.57    | 0.9280   | 0.8900   | 0.8400   |
+| Swin UNETR                                 | 0.8360 [0.7923, 0.8742] | 0.9162  | 0.8427  | 0.7490  | 3.00    | 3.00    | 2.24    | 0.9151   | 0.8688   | 0.8562   |
+| CNN mean ensemble                          | 0.8512 [0.8150, 0.8838] | 0.9225  | 0.8630  | 0.7680  | 3.39    | 2.53    | 2.24    | 0.9192   | 0.8858   | 0.8580   |
+| Mean ensemble (all members)                | 0.8494 [0.8115, 0.8834] | 0.9213  | 0.8601  | 0.7669  | 3.24    | 2.91    | 2.24    | 0.9176   | 0.8816   | 0.8589   |
+| Region-adaptive weights (threshold 0.5)    | 0.8488 [0.8121, 0.8819] | 0.9260  | 0.8563  | 0.7640  | 3.32    | 2.91    | 2.24    | 0.9248   | 0.8854   | 0.8599   |
+| Region-adaptive hybrid ensemble (proposed) | 0.8530 [0.8204, 0.8836] | 0.9256  | 0.8639  | 0.7694  | 3.27    | 2.83    | 2.19    | 0.9345   | 0.9122   | 0.8727   |
 
-![Segmentation Dice by grade](segmentation/plots/06_dice_by_grade.png)
+Per-case Dice SD of the proposed ensemble: WT 0.0441, TC 0.1797, ET 0.2636 (the smallest of all models for TC). Specificity is 0.9992 to 0.9997 for every ensemble.
 
-![Segmentation per-case distributions](segmentation/plots/07_per_case_distributions.png)
+**Statistical comparison** (`wilcoxon_tests.csv`). Wilcoxon signed-rank tests of the proposed ensemble against each comparator on per-case mean Dice, Holm-corrected within each set; the difference is proposed minus comparator with a bootstrap 95% CI:
 
-_Box plots of per-case Dice and HD95 per region and model, including the ensembles._
+| Set           | Comparator                              | Mean difference | 95% CI              | Median difference | Holm p  |
+| ------------- | --------------------------------------- | --------------- | ------------------- | ----------------- | ------- |
+| Internal test | nnU-Net                                 | 0.01258         | [0.00400, 0.02761]  | 0.00328           | 0.00007 |
+| Internal test | SegResNet                               | -0.01872        | [-0.04425, 0.00352] | -0.00342          | 0.01766 |
+| Internal test | Swin UNETR                              | 0.01701         | [0.00410, 0.03639]  | 0.00447           | 0.00693 |
+| Internal test | CNN mean ensemble                       | 0.00179         | [-0.00643, 0.01425] | -0.00208          | 0.06429 |
+| Internal test | Mean ensemble (all members)             | 0.00352         | [-0.00610, 0.01838] | -0.00141          | 0.38369 |
+| Internal test | Region-adaptive weights (threshold 0.5) | 0.00418         | [-0.00174, 0.01443] | -0.00129          | 0.38369 |
+| External      | nnU-Net                                 | 0.02008         | [0.00987, 0.03196]  | 0.01075           | 0.00005 |
+| External      | SegResNet                               | -0.00015        | [-0.01165, 0.01129] | -0.00032          | 1.0     |
+| External      | Swin UNETR                              | 0.00775         | [-0.00207, 0.01915] | 0.00031           | 1.0     |
+| External      | CNN mean ensemble                       | -0.00393        | [-0.01550, 0.00691] | 0.00161           | 1.0     |
+| External      | Mean ensemble (all members)             | -0.00057        | [-0.00592, 0.00449] | -0.00128          | 1.0     |
+| External      | Region-adaptive weights (threshold 0.5) | 0.00934         | [0.00056, 0.01992]  | -0.00014          | 1.0     |
 
-![Segmentation qualitative comparison](segmentation/plots/08_qualitative_comparison.png)
+On the internal test set the proposed ensemble beats nnU-Net and Swin UNETR but is significantly worse than SegResNet alone (Holm p = 0.018); it is not significantly different from the other ensembles. On the external set it differs significantly only from nnU-Net.
 
-_The test cases with the median and the lowest all-model-ensemble Dice: reference and every model's prediction on FLAIR (oedema-only WT green, TC yellow, ET red)._
+![Segmentation paired differences](segmentation/plots/06_paired_differences.png)
 
-**Uncertainty and error.** Spearman correlation between the mean TTA standard deviation inside the predicted WT and per-case mean Dice (`uncertainty_correlation.csv`):
+_Mean paired Dice difference (proposed minus comparator) with 95% CI and Holm p per set._
 
-| Model      | Spearman rho | p      |
-| ---------- | ------------ | ------ |
-| UNet       | -0.3034      | 0.0230 |
-| nnU-Net    | -0.3040      | 0.0228 |
-| VNet       | -0.4018      | 0.0021 |
-| UNETR      | -0.0936      | 0.4924 |
-| Swin UNETR | -0.0796      | 0.5596 |
-| TransBTS   | -0.1401      | 0.3030 |
+### 6. External validation and the slice-wise protocol
 
-![Segmentation uncertainty against Dice](segmentation/plots/09_uncertainty_vs_dice.png)
+**External results** on 60 BraTS-Africa cases (`external_results.csv`, same models, weights and thresholds, TTA):
 
-**Efficiency** (`efficiency.csv`; latency per volume at batch 1, fp16, mean +/- sd):
+| Model                                      | Mean Dice (95% CI)      | Dice WT | Dice TC | Dice ET | HD95 WT | HD95 TC | HD95 ET | Sens. WT | Sens. TC | Sens. ET |
+| ------------------------------------------ | ----------------------- | ------- | ------- | ------- | ------- | ------- | ------- | -------- | -------- | -------- |
+| nnU-Net                                    | 0.7765 [0.7224, 0.8203] | 0.8892  | 0.7241  | 0.7162  | 5.05    | 8.70    | 5.92    | 0.8836   | 0.8172   | 0.6679   |
+| SegResNet                                  | 0.7967 [0.7417, 0.8400] | 0.9005  | 0.7798  | 0.7099  | 3.16    | 5.57    | 4.79    | 0.9168   | 0.8705   | 0.6140   |
+| Swin UNETR                                 | 0.7888 [0.7355, 0.8325] | 0.9012  | 0.7292  | 0.7361  | 3.93    | 6.77    | 4.58    | 0.9012   | 0.8416   | 0.6970   |
+| CNN mean ensemble                          | 0.8005 [0.7484, 0.8419] | 0.9000  | 0.7686  | 0.7328  | 4.06    | 5.39    | 4.74    | 0.9016   | 0.8483   | 0.6411   |
+| Mean ensemble (all members)                | 0.7971 [0.7456, 0.8400] | 0.9021  | 0.7553  | 0.7340  | 3.61    | 5.24    | 4.53    | 0.9029   | 0.8505   | 0.6690   |
+| Region-adaptive weights (threshold 0.5)    | 0.7872 [0.7327, 0.8304] | 0.9002  | 0.7441  | 0.7174  | 3.46    | 7.60    | 5.24    | 0.9078   | 0.8306   | 0.6586   |
+| Region-adaptive hybrid ensemble (proposed) | 0.7966 [0.7430, 0.8391] | 0.8979  | 0.7507  | 0.7411  | 3.53    | 6.52    | 5.00    | 0.9185   | 0.8998   | 0.6883   |
 
-| Model      | Train hours | Peak train memory (GB) | Peak inference memory (GB) | Latency (s)       | Latency with TTA (s) | Dice per M params | Dice per train hour |
-| ---------- | ----------- | ---------------------- | -------------------------- | ----------------- | -------------------- | ----------------- | ------------------- |
-| UNet       | 1.281       | 5.250                  | 1.536                      | 0.1076 +/- 0.0013 | 0.8611 +/- 0.0019    | 0.1463            | 0.6402              |
-| nnU-Net    | 1.350       | 5.218                  | 1.648                      | 0.1112 +/- 0.0017 | 0.8963 +/- 0.0021    | 0.0495            | 0.6066              |
-| VNet       | 0.533       | 3.442                  | 0.978                      | 0.0375 +/- 0.0003 | 0.2973 +/- 0.0007    | 0.5694            | 1.4939              |
-| UNETR      | 2.487       | 9.303                  | 3.798                      | 0.2094 +/- 0.0029 | 1.6966 +/- 0.0048    | 0.0051            | 0.2837              |
-| Swin UNETR | 5.291       | 7.070                  | 6.971                      | 0.4893 +/- 0.0034 | 3.9512 +/- 0.0044    | 0.0709            | 0.1410              |
-| TransBTS   | 1.562       | 7.459                  | 1.990                      | 0.1291 +/- 0.0010 | 1.0336 +/- 0.0022    | 0.0204            | 0.4669              |
+Per-case values are in `external_per_case.csv` and `metrics/runs/<run>/external_cases.csv`. The CNN mean ensemble has the best external mean Dice (0.8005); the proposed ensemble has the best external ET Dice (0.7411).
 
-![Segmentation Dice against latency](segmentation/plots/10_dice_vs_latency.png)
+**Generalisation gap** (`generalisation_gap.csv`, external minus internal Dice):
 
-### 5. Export and summary
+| Model                                      | Mean    | WT      | TC      | ET      |
+| ------------------------------------------ | ------- | ------- | ------- | ------- |
+| nnU-Net                                    | -0.0639 | -0.0248 | -0.1252 | -0.0417 |
+| SegResNet                                  | -0.0750 | -0.0260 | -0.0994 | -0.0996 |
+| Swin UNETR                                 | -0.0471 | -0.0150 | -0.1135 | -0.0129 |
+| CNN mean ensemble                          | -0.0507 | -0.0225 | -0.0944 | -0.0351 |
+| Mean ensemble (all members)                | -0.0523 | -0.0192 | -0.1048 | -0.0329 |
+| Region-adaptive weights (threshold 0.5)    | -0.0616 | -0.0258 | -0.1123 | -0.0466 |
+| Region-adaptive hybrid ensemble (proposed) | -0.0564 | -0.0277 | -0.1132 | -0.0284 |
 
-Output: `Exported /kaggle/working/weights/deploy/VNet.pth (5.6 MB); reload check passed (max diff 0.0026)` and `Best model: UNet; finished 6 runs, pending 0`. `run_summary.json` also records the ensembles (all models 0.7991, CNN models 0.8178).
+Swin UNETR loses the least (mean -0.0471, ET -0.0129); SegResNet loses the most (mean -0.0750, ET -0.0996).
+
+![Segmentation internal against external](segmentation/plots/07_internal_vs_external.png)
+
+_Internal test and external Dice per model and region._
+
+**The 2D slice-wise protocol** (`slice_protocol_comparison.csv`). Per-patient 3D Dice (the BraTS protocol) against the mean Dice over tumour-containing axial slices and the Dice pooled over those slices. The GCSER-UNet row is the published slice-wise result of a 2D study on its own 75:15:10 slice split (an arXiv preprint, `REFERENCE_2D`); nothing of it is rerun:
+
+| Set                   | Model                    | 3D WT  | Slice mean WT | Slice pooled WT | 3D TC  | Slice mean TC | Slice pooled TC | 3D ET  | Slice mean ET | Slice pooled ET |
+| --------------------- | ------------------------ | ------ | ------------- | --------------- | ------ | ------------- | --------------- | ------ | ------------- | --------------- |
+| Internal test         | nnU-Net                  | 0.9139 | 0.8246        | 0.9209          | 0.8493 | 0.7667        | 0.8698          | 0.7580 | 0.7543        | 0.8626          |
+| Internal test         | SegResNet                | 0.9264 | 0.8424        | 0.9317          | 0.8791 | 0.7897        | 0.8864          | 0.8095 | 0.7639        | 0.8740          |
+| Internal test         | Swin UNETR               | 0.9162 | 0.8218        | 0.9197          | 0.8427 | 0.7557        | 0.8616          | 0.7490 | 0.7511        | 0.8584          |
+| Internal test         | CNN mean ensemble        | 0.9225 | 0.8346        | 0.9269          | 0.8630 | 0.7776        | 0.8805          | 0.7680 | 0.7623        | 0.8686          |
+| Internal test         | Mean ensemble            | 0.9213 | 0.8302        | 0.9248          | 0.8601 | 0.7730        | 0.8775          | 0.7669 | 0.7617        | 0.8677          |
+| Internal test         | Region-adaptive weights  | 0.9260 | 0.8396        | 0.9309          | 0.8563 | 0.7719        | 0.8757          | 0.7640 | 0.7593        | 0.8666          |
+| Internal test         | Proposed                 | 0.9256 | 0.8443        | 0.9316          | 0.8639 | 0.7883        | 0.8856          | 0.7694 | 0.7683        | 0.8704          |
+| External              | nnU-Net                  | 0.8892 | 0.8168        | 0.9217          | 0.7241 | 0.6975        | 0.8234          | 0.7162 | 0.6420        | 0.7758          |
+| External              | SegResNet                | 0.9005 | 0.8520        | 0.9324          | 0.7798 | 0.7591        | 0.8747          | 0.7099 | 0.6166        | 0.7599          |
+| External              | Swin UNETR               | 0.9012 | 0.8337        | 0.9308          | 0.7292 | 0.7160        | 0.8365          | 0.7361 | 0.6771        | 0.7938          |
+| External              | CNN mean ensemble        | 0.9000 | 0.8379        | 0.9321          | 0.7686 | 0.7427        | 0.8629          | 0.7328 | 0.6391        | 0.7726          |
+| External              | Mean ensemble            | 0.9021 | 0.8388        | 0.9321          | 0.7553 | 0.7349        | 0.8544          | 0.7340 | 0.6551        | 0.7837          |
+| External              | Region-adaptive weights  | 0.9002 | 0.8438        | 0.9322          | 0.7441 | 0.7192        | 0.8418          | 0.7174 | 0.6414        | 0.7751          |
+| External              | Proposed                 | 0.8979 | 0.8495        | 0.9312          | 0.7507 | 0.7502        | 0.8611          | 0.7411 | 0.6637        | 0.7919          |
+| Published (own split) | GCSER-UNet ensemble (2D) |        | 0.9500        |                 |        | 0.9200        |                 |        | 0.9000        |                 |
+
+Pooled slice Dice is higher than per-patient 3D Dice for every model, region and set; the slice mean is lower for WT and TC. Numbers from different protocols and splits are therefore not comparable.
+
+![Segmentation protocol comparison](segmentation/plots/08_protocol_comparison.png)
+
+_Dice of the proposed ensemble under each protocol, next to the published slice-wise GCSER-UNet results._
+
+**Results by tumour grade** (`test_results_by_grade.csv`, 44 HGG and 12 LGG internal test cases):
+
+| Model                                      | Grade | Dice WT | Dice TC | Dice ET | Mean Dice | 95% CI           |
+| ------------------------------------------ | ----- | ------- | ------- | ------- | --------- | ---------------- |
+| nnU-Net                                    | HGG   | 0.9147  | 0.8989  | 0.8531  | 0.8889    | [0.8531, 0.9154] |
+| nnU-Net                                    | LGG   | 0.9110  | 0.6675  | 0.4089  | 0.6625    | [0.6068, 0.7232] |
+| SegResNet                                  | HGG   | 0.9250  | 0.9237  | 0.8715  | 0.9067    | [0.8906, 0.9221] |
+| SegResNet                                  | LGG   | 0.9317  | 0.7157  | 0.5822  | 0.7432    | [0.6465, 0.8298] |
+| Swin UNETR                                 | HGG   | 0.9132  | 0.8913  | 0.8529  | 0.8858    | [0.8467, 0.9146] |
+| Swin UNETR                                 | LGG   | 0.9270  | 0.6645  | 0.3681  | 0.6532    | [0.5833, 0.7237] |
+| CNN mean ensemble                          | HGG   | 0.9211  | 0.9106  | 0.8622  | 0.8980    | [0.8669, 0.9212] |
+| CNN mean ensemble                          | LGG   | 0.9277  | 0.6886  | 0.4223  | 0.6796    | [0.6257, 0.7375] |
+| Mean ensemble (all members)                | HGG   | 0.9189  | 0.9068  | 0.8613  | 0.8957    | [0.8616, 0.9207] |
+| Mean ensemble (all members)                | LGG   | 0.9298  | 0.6889  | 0.4210  | 0.6799    | [0.6243, 0.7392] |
+| Region-adaptive weights (threshold 0.5)    | HGG   | 0.9247  | 0.9063  | 0.8589  | 0.8967    | [0.8671, 0.9198] |
+| Region-adaptive weights (threshold 0.5)    | LGG   | 0.9308  | 0.6730  | 0.4159  | 0.6732    | [0.6211, 0.7306] |
+| Region-adaptive hybrid ensemble (proposed) | HGG   | 0.9245  | 0.9142  | 0.8648  | 0.9012    | [0.8825, 0.9189] |
+| Region-adaptive hybrid ensemble (proposed) | LGG   | 0.9297  | 0.6793  | 0.4197  | 0.6762    | [0.6250, 0.7320] |
+
+SegResNet's lead over the ensembles comes mostly from LGG cases (LGG ET Dice 0.5822 against 0.4197 for the proposed ensemble).
+
+![Segmentation Dice by grade](segmentation/plots/09_dice_by_grade.png)
+
+![Segmentation per-case distributions](segmentation/plots/10_per_case_distributions.png)
+
+_Box plots of per-case Dice and HD95 per region for every member and ensemble, internal and external._
+
+![Segmentation qualitative comparison](segmentation/plots/11_qualitative_comparison.png)
+
+_Internal and external cases with the median and the lowest proposed-ensemble Dice: reference, members and proposed ensemble on FLAIR (oedema-only WT green, TC yellow, ET red). Internal median BraTS20_Training_084 (0.897); internal lowest BraTS20_Training_335 (0.565; SegResNet 0.878); external median BraTS-SSA-00044-000 (0.854); external lowest BraTS-SSA-00215-000, a small tumour that every model misses completely (Dice 0.000)._
+
+### 7. Uncertainty and quality control
+
+Two per-case warning signals against the proposed ensemble's per-case mean Dice (`quality_control.csv`; per case in `qc_per_case.csv`); a failure is a case with mean Dice below 0.80:
+
+| Set           | Signal                     | Cases | Failures | Spearman rho | p       | AUROC for failures |
+| ------------- | -------------------------- | ----- | -------- | ------------ | ------- | ------------------ |
+| Internal test | Architectural disagreement | 56    | 14       | -0.8018      | 1.1e-13 | 0.9932             |
+| Internal test | TTA spread                 | 56    | 14       | -0.3894      | 0.0030  | 0.7160             |
+| External      | Architectural disagreement | 60    | 18       | -0.8163      | 1.9e-15 | 0.8704             |
+| External      | TTA spread                 | 60    | 18       | -0.6096      | 2.4e-7  | 0.7910             |
+
+Disagreement is 1 minus the mean pairwise Dice between the members' masks, averaged over the three regions; TTA spread is the mean flip standard deviation inside the predicted WT, averaged over members. Disagreement flags failures better than TTA spread in both sets.
+
+![Segmentation quality control](segmentation/plots/12_quality_control.png)
+
+_Per-case mean Dice of the proposed ensemble against each signal; red points are failures, the dashed line is the 0.80 failure threshold._
+
+### 8. Explainability
+
+**Seg-Grad-CAM maps** on the internal (BraTS20_Training_084) and external (BraTS-SSA-00044-000) cases with the median proposed-ensemble Dice, a 128^3 crop around the tumour, one map per member and region:
+
+![Segmentation Seg-Grad-CAM, internal](segmentation/plots/13_gradcam_test.png)
+
+![Segmentation Seg-Grad-CAM, external](segmentation/plots/13_gradcam_external.png)
+
+_FLAIR, the Seg-Grad-CAM map and the reference region outline (white). nnU-Net and Swin UNETR maps concentrate on the tumour; SegResNet's TC map in the internal case is diffuse, with a grid pattern._
+
+**Quantitative attribution** (`gradcam_attribution.csv`; per map in `gradcam_attribution_per_case.csv`). Output: `Seg-Grad-CAM attribution: 1035 maps scored, 0 left out (out of memory)`. Share of the map inside the reference region dilated by 5 voxels, against the share expected by chance:
+
+| Set           | Model      | Region | Inside | Chance | Enrichment |
+| ------------- | ---------- | ------ | ------ | ------ | ---------- |
+| Internal test | nnU-Net    | WT     | 0.9382 | 0.1145 | 9.90       |
+| Internal test | nnU-Net    | TC     | 0.8280 | 0.0522 | 22.62      |
+| Internal test | nnU-Net    | ET     | 0.2435 | 0.0387 | 6.42       |
+| Internal test | SegResNet  | WT     | 0.9709 | 0.1145 | 10.40      |
+| Internal test | SegResNet  | TC     | 0.1937 | 0.0522 | 5.16       |
+| Internal test | SegResNet  | ET     | 0.5737 | 0.0387 | 15.88      |
+| Internal test | Swin UNETR | WT     | 0.1604 | 0.1145 | 1.48       |
+| Internal test | Swin UNETR | TC     | 0.0850 | 0.0522 | 1.50       |
+| Internal test | Swin UNETR | ET     | 0.0737 | 0.0387 | 1.68       |
+| External      | nnU-Net    | WT     | 0.9767 | 0.1572 | 8.65       |
+| External      | nnU-Net    | TC     | 0.8804 | 0.0689 | 22.18      |
+| External      | nnU-Net    | ET     | 0.4320 | 0.0629 | 7.64       |
+| External      | SegResNet  | WT     | 0.9609 | 0.1572 | 8.38       |
+| External      | SegResNet  | TC     | 0.2933 | 0.0689 | 4.25       |
+| External      | SegResNet  | ET     | 0.7575 | 0.0629 | 18.85      |
+| External      | Swin UNETR | WT     | 0.1942 | 0.1572 | 1.27       |
+| External      | Swin UNETR | TC     | 0.1248 | 0.0689 | 1.49       |
+| External      | Swin UNETR | ET     | 0.0824 | 0.0629 | 1.06       |
+
+The CNN maps are 4 to 23 times enriched in the tumour region; the Swin UNETR maps, taken at `decoder3`, are close to chance (1.06 to 1.68) even though they look focused in the median cases, so they spread a large share of their mass over the rest of the crop.
+
+![Segmentation Seg-Grad-CAM attribution](segmentation/plots/14_gradcam_attribution.png)
+
+**Sequence-drop ablation** (`modality_ablation_summary.csv`; per case in `metrics/runs/<run>/modality_ablation.csv`). Dice drop on the 56 internal test cases when one sequence is replaced by its brain mean, without TTA:
+
+| Model      | Dropped | Drop WT | Drop TC | Drop ET |
+| ---------- | ------- | ------- | ------- | ------- |
+| nnU-Net    | FLAIR   | 0.5945  | 0.4389  | 0.4128  |
+| nnU-Net    | T1      | 0.0140  | 0.0587  | 0.0504  |
+| nnU-Net    | T1CE    | 0.0225  | 0.3048  | 0.6388  |
+| nnU-Net    | T2      | 0.0853  | 0.0788  | 0.0427  |
+| SegResNet  | FLAIR   | 0.2448  | 0.0981  | 0.0865  |
+| SegResNet  | T1      | 0.0078  | 0.0284  | 0.0400  |
+| SegResNet  | T1CE    | 0.0401  | 0.3880  | 0.7554  |
+| SegResNet  | T2      | 0.0238  | 0.0180  | -0.0129 |
+| Swin UNETR | FLAIR   | 0.3611  | 0.1186  | 0.1037  |
+| Swin UNETR | T1      | 0.0097  | 0.0461  | 0.0495  |
+| Swin UNETR | T1CE    | 0.0135  | 0.3211  | 0.6920  |
+| Swin UNETR | T2      | 0.0372  | 0.0468  | -0.0145 |
+
+Every member relies on FLAIR for WT and on T1CE for TC and ET, the expected clinical pattern; nnU-Net depends on FLAIR far more than the others for all three regions.
+
+![Segmentation sequence drop](segmentation/plots/15_sequence_drop.png)
+
+### 9. Efficiency and summary
+
+**Efficiency** (`efficiency.csv`). Latency per case is the sliding window over the median test crop (136 x 170 x 139) at fp16 on one T4, mean of 4 runs; an ensemble costs the sum of the members it uses:
+
+| Model                                      | Parameters (M) | GFLOPs per patch | Train hours | Peak inference memory (GB) | Latency (s) | Latency with TTA (s) | Internal Dice | External Dice |
+| ------------------------------------------ | -------------- | ---------------- | ----------- | -------------------------- | ----------- | -------------------- | ------------- | ------------- |
+| nnU-Net                                    | 31.42          | 968.1            | 3.69        | 3.15                       | 1.03        | 8.20                 | 0.8404        | 0.7765        |
+| SegResNet                                  | 19.92          | 1218.2           | 3.77        | 2.91                       | 1.01        | 8.08                 | 0.8717        | 0.7967        |
+| Swin UNETR                                 | 72.77          | 1665.6           | 6.65        | 8.58                       | 3.99        | 31.92                | 0.8360        | 0.7888        |
+| CNN mean ensemble                          | 51.34          | 2186.3           | 7.46        |                            | 2.04        | 16.28                | 0.8512        | 0.8005        |
+| Mean ensemble (all members)                | 124.11         | 3851.9           | 14.11       |                            | 6.03        | 48.20                | 0.8494        | 0.7971        |
+| Region-adaptive weights (threshold 0.5)    | 51.34          | 2186.3           | 7.46        |                            | 2.04        | 16.28                | 0.8488        | 0.7872        |
+| Region-adaptive hybrid ensemble (proposed) | 124.11         | 3851.9           | 14.11       |                            | 6.03        | 48.20                | 0.8530        | 0.7966        |
+
+Latency standard deviations are below 0.05 s. The proposed ensemble needs all three members because Swin UNETR carries weight 0.1 for TC.
+
+![Segmentation Dice against latency](segmentation/plots/16_dice_vs_latency.png)
+
+**Summary.** Output: `Proposed ensemble: internal mean Dice 0.8530, external 0.7966; pending runs: 0`. `summary_table.csv` collects the internal and external Dice and HD95 per model; `run_summary.json` records the case counts, fusion weights and thresholds, ET thresholds, quality-control results, environment, the slice-protocol Dice of the proposed ensemble and the limitations below. Its last limitation (that the web app still runs the earlier VNet) was true at run time; the web app has since switched to this run's SegResNet (see [Checkpoints used by the web app](#checkpoints-used-by-the-web-app)).
+
+**Package the outputs.** Output: `Zipped 590 files (0.72 GB) into /kaggle/working/outputs.zip`. The zip holds `src/`, `metrics/`, `plots/`, `logs/`, `weights/<model>/<run>.pth` (best-validation checkpoints: nnU-Net 251.4 MB, SegResNet 79.7 MB, Swin UNETR 294.9 MB; Git-ignored) and `predictions/<run>/<val|test|external>/<case>.npz` (516 files, 86.6 MB in total: uint8 TTA probabilities on the brain crop with the case's TTA spread; Git-ignored).
+
+**What the numbers support.** All three members and all ensembles are within overlapping confidence intervals. The region-adaptive ensemble beats nnU-Net and Swin UNETR internally and nnU-Net externally, but not SegResNet, which is the best single model internally (0.8717) and matches the proposed ensemble externally (0.7967 against 0.7966). The clearest positive results are the quality-control signal (architectural disagreement, AUROC 0.99 internal and 0.87 external) and the explainability checks; every result rests on one seed per member.
 
 ## Checkpoints used by the web app
 
-Each notebook exports one checkpoint to `weights/deploy/` with a `metadata.json`. The backend loads these three files by default (see the root [README](../../README.md#configuration)).
+The 2D notebooks export one checkpoint each to `weights/deploy/` with a `metadata.json`; the segmentation notebook does not, and `segmentation/weights/deploy/SegResNet.pth` is a byte-identical copy of its `weights/segresnet/segresnet_seed42.pth` (SHA-256 in `metadata.json`), made with `cp Materials/Notebooks/segmentation/weights/segresnet/segresnet_seed42.pth Materials/Notebooks/segmentation/weights/deploy/SegResNet.pth`. The backend loads these three files by default (see the root [README](../../README.md#configuration)).
 
-| File                                                 | Run                    | Selection                         | Recorded result                                    | Other metadata                                       |
-| ---------------------------------------------------- | ---------------------- | --------------------------------- | -------------------------------------------------- | ---------------------------------------------------- |
-| `binary-detection/weights/deploy/EfficientNetB0.pth` | `efficientnetb0_fold4` | Lowest validation loss of 5 folds | Fold test accuracy 0.9766 (171 images)             | Temperature 0.0498, decision threshold 1.0, 1 output |
-| `classification/weights/deploy/EfficientNetB0.pth`   | `efficientnetb0_fold0` | Lowest validation loss of 5 folds | Fold test accuracy 0.9778 (45 images)              | Temperature 0.0498, no threshold, 3 outputs          |
-| `segmentation/weights/deploy/VNet.pth`               | `vnet_seed42`          | Only VNet run                     | Best validation Dice 0.7598, test mean Dice 0.7965 | ET minimum 200 voxels at native resolution           |
+| File                                                 | Run                    | Selection                                | Recorded result                                                                                   | Other metadata                                       |
+| ---------------------------------------------------- | ---------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `binary-detection/weights/deploy/EfficientNetB0.pth` | `efficientnetb0_fold4` | Lowest validation loss of 5 folds        | Fold test accuracy 0.9766 (171 images)                                                            | Temperature 0.0498, decision threshold 1.0, 1 output |
+| `classification/weights/deploy/EfficientNetB0.pth`   | `efficientnetb0_fold0` | Lowest validation loss of 5 folds        | Fold test accuracy 0.9778 (45 images)                                                             | Temperature 0.0498, no threshold, 3 outputs          |
+| `segmentation/weights/deploy/SegResNet.pth`          | `segresnet_seed42`     | Best internal test Dice of the 3 members | Best validation Dice 0.8390 (epoch 50); with TTA: internal test mean Dice 0.8717, external 0.7967 | ET minimum 800 voxels, no TTA in the web app         |
 
-The 2D metadata records the preprocessing `crop_to_brain (blur 5x5, threshold 45, largest contour box), resize, ImageNet normalisation`, which is the same crop as `Backend/neuroscan/inference/processor.py`. The backend does not read `metadata.json`: it applies no temperature, uses a fixed 0.5 detection threshold, and segments without TTA, region hierarchy or ET size filtering.
+The 2D metadata records the preprocessing `crop_to_brain (blur 5x5, threshold 45, largest contour box), resize, ImageNet normalisation`, which is the same crop as `Backend/neuroscan/inference/processor.py`. The backend does not read `metadata.json`: it applies no temperature and uses a fixed 0.5 detection threshold. It segments like the notebook (native-resolution brain crop, foreground z-score, 128^3 Gaussian sliding window with overlap 0.5, threshold 0.5, ET size filter of 800 voxels, region hierarchy) but without the 8-flip TTA, which would make CPU inference eight times slower; the published Dice values were measured with TTA. On an Intel Core i7-9750H (6 cores, CPU-only PyTorch) the sample case `Materials/Input/BraTS20_Training_001` took 83.5 s.
 
 ## Limitations recorded by the notebooks
 
 From `run_summary.json`:
 
 - 2D tasks: the MRI sequence of the images is not recorded by the sources; binary negatives are tumour-negative, not certified normal; there are no patient identifiers, so grouping by image similarity is a proxy for a patient-level split; only two-dimensional public slices are used, with no institutional or three-dimensional external data.
-- Segmentation (previous version): a single dataset (BraTS 2020 training cases) with no external multi-centre test set with public labels; no large-scale pretraining of the transformer encoders; one input resolution per run (128^3, whole volume resampled). The current notebook addresses the first and last of these (BraTS-Africa external set, native-resolution patches) and records its own limitations in `run_summary.json` when run.
+- Segmentation: one seed per member, so seed-to-seed variance of the ensemble is not measured; fusion weights, thresholds and the ET size filter are selected on 56 validation cases (the test and external sets are never used for selection); BraTS-Africa shares the BraTS annotation protocol and preprocessing (co-registration, skull stripping), so it tests acquisition and population shift, not protocol shift; the comparison with 2D studies uses their published numbers on their own splits; and "the web app still runs the earlier 128^3 VNet", which is no longer true (see above).
 
 Found in the outputs and worth knowing before citing the results:
 
 - The classification split is dominated by one group of 1,431 images, and its test set has 45 images (1 glioma, 13 meningioma, 31 pituitary). Six models score 45 of 45 and the other three 44 of 45, so the test set cannot rank the models.
 - The background-only shortcut test is positive for 7 of 9 binary models and all 9 classification models.
-- Every segmentation run used one seed, so seed-to-seed spread is not available (`dice_mean_seed_sd` is empty).
-- The markdown overview of each notebook still says "Runtime. Not measured yet", and the export cells tell the reader to copy the checkpoint to `Backend/Binary Detection/`, `Backend/Classification/` or `Backend/Segmentation/`. Those folders no longer exist; the backend now reads the checkpoints from `weights/deploy/` directly.
+- Every segmentation run used one seed, so seed-to-seed spread is not available. The proposed ensemble does not beat SegResNet alone (internal Holm p = 0.018 in SegResNet's favour; external difference -0.00015), and every model misses external case BraTS-SSA-00215-000 completely.
+- The segmentation GCSER-UNet comparison values come from an arXiv preprint (arXiv:2605.30510), not a peer-reviewed paper.
+- The markdown overview of each 2D notebook still says "Runtime. Not measured yet", and the export cells tell the reader to copy the checkpoint to `Backend/Binary Detection/`, `Backend/Classification/` or `Backend/Segmentation/`. Those folders no longer exist; the backend now reads the checkpoints from `weights/deploy/` directly.

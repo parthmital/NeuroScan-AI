@@ -1,9 +1,14 @@
 {
-	"architecture": "VNet3D (Backend/neuroscan/inference/networks.py)",
-	"input": "FLAIR, T1, T1CE, T2; foreground z-score; trilinear resample to 128^3",
-	"output": "WT, TC, ET logits (first element of the output tuple)",
-	"run_id": "vnet_seed42",
-	"best_val_dice": 0.7598035474445833,
-	"test_dice_mean": 0.796479458488382,
-	"et_min_voxels_native": 200
+	"architecture": "MONAI 1.6.1 SegResNetDS (init_filters 32, blocks_down 1-2-2-4, instance norm, dsdepth 3; Backend/neuroscan/inference/networks.py)",
+	"source": "weights/segresnet/segresnet_seed42.pth (best validation epoch of the hybrid-ensemble run), copied unchanged",
+	"sha256": "32ca41857843d1518a531e3ebba02c041a517593eae4d961ff1cb22bcdf14cf6",
+	"input": "FLAIR, T1, T1CE, T2 at native resolution (1 mm in BraTS); cropped to the brain box; each sequence z-scored over its non-zero voxels",
+	"inference": "Gaussian sliding window, 128^3 windows, overlap 0.5, no test-time augmentation",
+	"output": "WT, TC, ET logits; sigmoid above 0.5; ET below et_min_voxels removed; ET inside TC inside WT",
+	"run_id": "segresnet_seed42",
+	"best_epoch": 50,
+	"best_val_dice": 0.8389606001696978,
+	"et_min_voxels": 800,
+	"test_dice_mean_tta": 0.8716882663471404,
+	"external_dice_mean_tta": 0.7967159006185437
 }

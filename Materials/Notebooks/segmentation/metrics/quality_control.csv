@@ -1,0 +1,5 @@
+set,signal,cases,failures,spearman_rho,p_value,auroc_failure
+External (BraTS-Africa),disagreement,60,18,-0.8163,0.0,0.8704
+External (BraTS-Africa),tta_spread,60,18,-0.6096,0.0,0.791
+Internal test (BraTS 2020),disagreement,56,14,-0.8018,0.0,0.9932
+Internal test (BraTS 2020),tta_spread,56,14,-0.3894,0.003,0.716

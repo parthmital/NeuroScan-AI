@@ -1,39 +1,143 @@
 {
-	"cases": 369,
-	"split": {
+	"cases": {
 		"train": 257,
+		"external": 60,
 		"val": 56,
 		"test": 56
 	},
-	"epochs": 50,
+	"members": ["nnU-Net", "SegResNet", "Swin UNETR"],
+	"epochs": {
+		"nnU-Net": 60,
+		"SegResNet": 60,
+		"Swin UNETR": 30
+	},
+	"iters_per_epoch": 250,
 	"seeds": [42],
 	"tta": true,
 	"deterministic": false,
-	"finished_runs": [
-		"nnu-net_seed42",
-		"swin-unetr_seed42",
-		"transbts_seed42",
-		"unet_seed42",
-		"unetr_seed42",
-		"vnet_seed42"
-	],
+	"finished_runs": ["nnu-net_seed42", "segresnet_seed42", "swin-unetr_seed42"],
 	"pending_runs": [],
-	"best_model": "UNet",
-	"ensembles": {
-		"All models": 0.7991,
-		"CNN models": 0.8178
+	"truncated_runs": [],
+	"fusion": {
+		"WT": {
+			"weights": {
+				"nnU-Net": 0.4000000059604645,
+				"SegResNet": 0.6000000238418579,
+				"Swin UNETR": 0.0
+			},
+			"threshold": 0.4
+		},
+		"TC": {
+			"weights": {
+				"nnU-Net": 0.4000000059604645,
+				"SegResNet": 0.5,
+				"Swin UNETR": 0.10000000149011612
+			},
+			"threshold": 0.3
+		},
+		"ET": {
+			"weights": {
+				"nnU-Net": 0.5,
+				"SegResNet": 0.5,
+				"Swin UNETR": 0.0
+			},
+			"threshold": 0.4
+		}
 	},
-	"training_wall_minutes": 515.0124568012167,
-	"notebook_minutes": 521.7155808965365,
+	"et_min_voxels": {
+		"CNN mean ensemble": 300,
+		"Mean ensemble (all members)": 500,
+		"Region-adaptive weights (threshold 0.5)": 500,
+		"Region-adaptive hybrid ensemble (proposed)": 500
+	},
+	"internal_dice_mean": {
+		"nnU-Net": 0.8404,
+		"SegResNet": 0.8717,
+		"Swin UNETR": 0.836,
+		"CNN mean ensemble": 0.8512,
+		"Mean ensemble (all members)": 0.8494,
+		"Region-adaptive weights (threshold 0.5)": 0.8488,
+		"Region-adaptive hybrid ensemble (proposed)": 0.853
+	},
+	"external_dice_mean": {
+		"nnU-Net": 0.7765,
+		"SegResNet": 0.7967,
+		"Swin UNETR": 0.7888,
+		"CNN mean ensemble": 0.8005,
+		"Mean ensemble (all members)": 0.7971,
+		"Region-adaptive weights (threshold 0.5)": 0.7872,
+		"Region-adaptive hybrid ensemble (proposed)": 0.7966
+	},
+	"proposed_slice_protocol": {
+		"Internal test (BraTS 2020)": {
+			"WT": 0.8442593437667947,
+			"TC": 0.7882958651255058,
+			"ET": 0.7682679322519511
+		},
+		"External (BraTS-Africa)": {
+			"WT": 0.8495011370409223,
+			"TC": 0.7502330266105126,
+			"ET": 0.663729882403418
+		}
+	},
+	"reference_2d": {
+		"model": "GCSER-UNet ensemble (published, 2D)",
+		"WT": 0.95,
+		"TC": 0.92,
+		"ET": 0.9
+	},
+	"quality_control": [
+		{
+			"set": "External (BraTS-Africa)",
+			"signal": "disagreement",
+			"cases": 60,
+			"failures": 18,
+			"spearman_rho": -0.8163378716310088,
+			"p_value": 1.888870568689183e-15,
+			"auroc_failure": 0.8703703703703705
+		},
+		{
+			"set": "External (BraTS-Africa)",
+			"signal": "tta_spread",
+			"cases": 60,
+			"failures": 18,
+			"spearman_rho": -0.6095582106140596,
+			"p_value": 2.3521289546136272e-7,
+			"auroc_failure": 0.791005291005291
+		},
+		{
+			"set": "Internal test (BraTS 2020)",
+			"signal": "disagreement",
+			"cases": 56,
+			"failures": 14,
+			"spearman_rho": -0.8018455228981546,
+			"p_value": 1.1192119119871802e-13,
+			"auroc_failure": 0.9931972789115646
+		},
+		{
+			"set": "Internal test (BraTS 2020)",
+			"signal": "tta_spread",
+			"cases": 56,
+			"failures": 14,
+			"spearman_rho": -0.3894053315105947,
+			"p_value": 0.0030133354112997215,
+			"auroc_failure": 0.7159863945578231
+		}
+	],
+	"training_wall_minutes": 528.3120294832,
+	"notebook_minutes": 547.9028487245242,
 	"environment": {
 		"python": "3.13.15",
 		"torch": "2.11.0+cu128",
+		"monai": "1.6.1",
 		"cuda": "12.8",
 		"gpus": ["Tesla T4", "Tesla T4"]
 	},
 	"limitations": [
-		"single dataset (BraTS 2020 training cases); no external multi-centre test set with public labels",
-		"no large-scale pretraining of the transformer encoders",
-		"one input resolution per run (128^3, whole volume resampled)"
+		"1 seed(s) per member; seed-to-seed variance of the ensemble is not measured with one seed",
+		"fusion weights, thresholds and the ET size filter are selected on 56 validation cases; the test and external sets are never used for selection",
+		"BraTS-Africa shares the BraTS annotation protocol and preprocessing (co-registration, skull stripping), so it tests acquisition and population shift, not protocol shift",
+		"the comparison with 2D studies uses their published numbers on their own splits",
+		"the web app still runs the earlier 128^3 VNet; this notebook does not export a deployment checkpoint"
 	]
 }

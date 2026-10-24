@@ -165,9 +165,10 @@ Thank you all for your contributions and support.
 | 7.1            | Confusion matrices of the binary detection fold ensembles        |              |
 | 7.2            | Grad-CAM maps of EfficientNetB0 (binary detection)               |              |
 | 7.3            | Background-only shortcut test (binary detection)                 |              |
-| 7.4            | Qualitative segmentation comparison of the six 3D networks       |              |
+| 7.4            | Qualitative segmentation comparison, internal and external cases |              |
 | 7.5            | Test Dice per region by tumour grade                             |              |
-| 7.6            | Test mean Dice against latency per volume                        |              |
+| 7.6            | Mean Dice against latency per case                               |              |
+| 7.7            | Member disagreement and TTA spread against per-case Dice         |              |
 
 > Template rule: in the chapters, figure captions come below the figure and table captions above the table, in font size 10.
 
@@ -185,14 +186,14 @@ Thank you all for your contributions and support.
 | 5.1           | Image sources of the two 2D tasks                                            |              |
 | 5.2           | Deduplication outcome per class                                              |              |
 | 5.3           | Training settings of the 2D benchmark                                        |              |
-| 5.4           | Training settings of the 3D benchmark                                        |              |
+| 5.4           | Training settings of the 3D segmentation models                              |              |
 | 5.5           | Automated test suites and quality checks                                     |              |
 | 5.6           | Representative test cases                                                    |              |
 | 7.1           | Binary detection fold-ensemble results and efficiency                        |              |
 | 7.2           | Subtype classification fold-ensemble results                                 |              |
-| 7.3           | 3D segmentation test results (56 BraTS 2020 cases)                           |              |
-| 7.4           | Test Dice by tumour grade                                                    |              |
-| 7.5           | Computational cost of the 3D networks                                        |              |
+| 7.3           | 3D segmentation results, internal and external test sets                     |              |
+| 7.4           | Internal test Dice by tumour grade                                           |              |
+| 7.5           | Computational cost of the 3D models                                          |              |
 | 7.6           | Deployed models                                                              |              |
 | 7.7           | Cost analysis                                                                |              |
 
@@ -272,11 +273,11 @@ Brain tumours are diagnosed and planned for treatment from magnetic resonance im
 
 For two-dimensional analysis, nine ImageNet-pretrained backbones (ResNet50, VGG16, DenseNet121, EfficientNetB0, MobileNetV3-Large, InceptionV3, ViT-B/16, Swin-Base and CoAtNet-0) were trained with identical settings for binary tumour detection and three-way subtype classification (glioma, meningioma, pituitary). Label-aware perceptual-hash deduplication before splitting reduced the detection pool from 3,253 to 1,185 images and the classification pool from 5,828 to 4,730, and a group-aware split with five-fold cross-validation, fold ensembles, bootstrap confidence intervals and Holm-corrected McNemar tests was used for evaluation. On 171 held-out detection images, CoAtNet-0, EfficientNetB0 and ViT-B/16 reached 99.42% accuracy (95% confidence interval 98.25% to 100%), with no significant difference between any pair of models. A background-only shortcut test showed that these public collections carry label information outside the brain, a limitation that is reported rather than hidden.
 
-For three-dimensional segmentation of the whole tumour, tumour core and enhancing tumour, six networks (UNet, an nnU-Net-style network, VNet, UNETR, Swin UNETR and TransBTS) were implemented from scratch and trained on BraTS 2020 with an equal budget of 3,250 optimiser steps. UNet achieved the highest test mean Dice of 0.8199, and VNet reached 0.7965 with only 1.40 million parameters, the lowest latency and less than half the training time of UNet.
+For three-dimensional segmentation of the whole tumour, tumour core and enhancing tumour, two convolutional networks (nnU-Net and SegResNet) and one transformer (Swin UNETR-v2) were trained at native resolution on BraTS 2020 and combined in a region-adaptive hybrid ensemble, then tested on 56 internal cases and on 60 external BraTS-Africa cases. SegResNet alone achieved the best internal mean Dice of 0.8717 and matched the ensemble externally (0.7967 against 0.7966), while the disagreement between the three networks flagged poorly segmented cases with an area under the ROC curve of 0.993 internally and 0.870 externally.
 
-EfficientNetB0, with 4.01 million parameters, and VNet were deployed in a web application built with FastAPI, PyTorch, SQLite and React. A user uploads FLAIR, T1, T1CE and T2 NIfTI volumes; a background worker runs detection, classification and segmentation, and the results are shown in a linked axial, coronal, sagittal and 3D viewer with a tumour overlay and exported as PDF and CSV reports. The application uses cookie-based sessions, optional two-factor authentication, per-user data isolation and validated uploads, and is covered by 61 backend and 39 frontend automated tests. The work produced two research manuscripts. NeuroScan AI is a research prototype, not a diagnostic device.
+EfficientNetB0, with 4.01 million parameters, and SegResNet were deployed in a web application built with FastAPI, PyTorch, SQLite and React. A user uploads FLAIR, T1, T1CE and T2 NIfTI volumes; a background worker runs detection, classification and segmentation, and the results are shown in a linked axial, coronal, sagittal and 3D viewer with a tumour overlay and exported as PDF and CSV reports. The application uses cookie-based sessions, optional two-factor authentication, per-user data isolation and validated uploads, and is covered by 64 backend and 39 frontend automated tests. The work produced two research manuscripts. NeuroScan AI is a research prototype, not a diagnostic device.
 
-**Keywords:** brain tumour, MRI, deep learning, convolutional neural networks, vision transformers, 3D segmentation, BraTS, data leakage, web application.
+**Keywords:** brain tumour, MRI, deep learning, convolutional neural networks, vision transformers, 3D segmentation, ensemble learning, external validation, BraTS, data leakage, web application.
 
 ## Chapter 1: Introduction
 
@@ -305,13 +306,13 @@ The project has a research part and an engineering part.
 The research part covers:
 
 - Binary tumour detection and three-way subtype classification (glioma, meningioma, pituitary) on two-dimensional MRI slices from four public collections, with nine CNN, transformer and hybrid backbones trained under identical settings.
-- Three-dimensional segmentation of WT, TC and ET on the 369 BraTS 2020 training cases with six networks implemented from scratch.
+- Three-dimensional segmentation of WT, TC and ET on the 369 BraTS 2020 training cases with three networks and a region-adaptive ensemble, validated externally on 60 BraTS-Africa cases.
 - Leakage control (perceptual-hash deduplication and group-aware splitting), statistical comparison, calibration, efficiency measurement and interpretability and shortcut audits.
 
 The engineering part covers a web application that:
 
 - Accepts FLAIR, T1, T1CE and T2 volumes in NIfTI format.
-- Runs EfficientNetB0 detection and classification on a representative slice and VNet segmentation on the four-sequence volume.
+- Runs EfficientNetB0 detection and classification on a representative slice and SegResNet segmentation on the four-sequence volume.
 - Shows the results in a multi-planar and 3D viewer and exports PDF and CSV reports.
 - Protects accounts and patient data with secure sessions, optional two-factor authentication and per-user isolation.
 
@@ -374,8 +375,8 @@ The literature leaves five gaps that this project addresses:
 1. To benchmark nine ImageNet-pretrained 2D backbones for binary tumour detection and three-way subtype classification with one code path, identical splits and an equal number of optimiser steps.
 2. To control leakage with label-aware perceptual-hash deduplication and a group-aware split before any training, and to audit the split for leakage.
 3. To evaluate every model with five-fold cross-validation, fold ensembles, bootstrap confidence intervals, Holm-corrected McNemar tests, calibration, measured efficiency, and attention and background-only shortcut audits.
-4. To implement six 3D segmentation networks from scratch, train them on BraTS 2020 with an equal budget, and compare them per case at native resolution with Dice, HD95, results by tumour grade, significance tests and measured cost.
-5. To deploy the most efficient models (EfficientNetB0 for detection and classification, VNet for segmentation) in a secure web application with multi-planar and 3D visualisation and PDF and CSV reports.
+4. To train two 3D CNNs and one 3D transformer at native resolution on BraTS 2020, fuse them with weights and thresholds chosen per tumour region, and compare every model internally and on an external cohort with Dice, HD95, results by grade, significance tests, quality-control signals, explainability and measured cost.
+5. To deploy the most efficient models (EfficientNetB0 for detection and classification, SegResNet for segmentation) in a secure web application with multi-planar and 3D visualisation and PDF and CSV reports.
 6. To release the notebooks, splits, per-run outputs and application code for reproduction, and to write up the two benchmarks as research manuscripts.
 
 **2.4 Problem Statement**
@@ -388,15 +389,15 @@ The project ran from February to October 2026. The timeline below is taken from 
 
 **Table 2.3:** Project plan and timeline.
 
-| Phase                              | Period                 | Work                                                                                                                                  |
-| ---------------------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| 1. Literature survey and setup     | February 2026          | Review of 2D classification, 3D segmentation and transformer literature; first application skeleton (React frontend, FastAPI backend) |
-| 2. Initial model training          | February to March 2026 | First binary detection, classification and 3D segmentation notebooks; 3D segmentation completed on 25 March 2026                      |
-| 3. Visualisation and review 2      | May to September 2026  | Visualisation notebooks; first project report and review 2 deck (September 2026)                                                      |
-| 4. Standardised benchmark          | September 2026         | Unified notebooks with deduplication, group-aware split, five-fold cross-validation and statistical tests; first research manuscripts |
-| 5. Application hardening           | Late September 2026    | Security hardening, modular backend with tests, Alembic migrations, new multi-planar and 3D viewer, PDF reports                       |
-| 6. Final benchmark runs and papers | October 2026           | One unified notebook per task executed on Kaggle; both manuscripts ported to the Elsevier template and revised                        |
-| 7. Documentation and review 3      | October 2026           | Architecture, design and security documentation; final report and review 3 presentation                                               |
+| Phase                              | Period                 | Work                                                                                                                                           |
+| ---------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Literature survey and setup     | February 2026          | Review of 2D classification, 3D segmentation and transformer literature; first application skeleton (React frontend, FastAPI backend)          |
+| 2. Initial model training          | February to March 2026 | First binary detection, classification and 3D segmentation notebooks; 3D segmentation completed on 25 March 2026                               |
+| 3. Visualisation and review 2      | May to September 2026  | Visualisation notebooks; first project report and review 2 deck (September 2026)                                                               |
+| 4. Standardised benchmark          | September 2026         | Unified notebooks with deduplication, group-aware split, five-fold cross-validation and statistical tests; first research manuscripts          |
+| 5. Application hardening           | Late September 2026    | Security hardening, modular backend with tests, Alembic migrations, new multi-planar and 3D viewer, PDF reports                                |
+| 6. Final benchmark runs and papers | October 2026           | One unified notebook per task executed on Kaggle; segmentation rebuilt as a hybrid ensemble with external validation; both manuscripts revised |
+| 7. Documentation and review 3      | October 2026           | Architecture, design and security documentation; final report and review 3 presentation                                                        |
 
 ## Chapter 3: Technical Specification
 
@@ -421,7 +422,7 @@ The project ran from February to October 2026. The timeline below is taken from 
 
 **3.1.2 Non-Functional**
 
-1. **Performance.** One four-sequence BraTS case is processed in about 4 seconds on a CPU-only development machine (measured once end to end); uploads return immediately and processing runs on one background worker.
+1. **Performance.** Uploads return immediately and processing runs on one background worker. Segmentation of one four-sequence BraTS case took 83.5 seconds on the CPU-only development machine (Intel Core i7-9750H, measured once); on a Tesla T4 it takes about 1 second.
 2. **Security.** Passwords are hashed with bcrypt; sessions use an HttpOnly, Secure, SameSite=Strict cookie carrying a signed token that can be revoked; unsafe requests need a custom CSRF header; five wrong passwords lock an account for 15 minutes and authentication routes are rate limited; every scan route checks ownership.
 3. **Reliability.** Unfinished scans are re-queued at start-up, a bounded queue rejects work with HTTP 503 when full, the database schema is migrated automatically, and the server refuses to start with missing or example secrets.
 4. **Input safety.** Each file is size-capped (300 MB by default) and its NIfTI header must describe a 3D or 4D volume of at most 32 Mi voxels before any data is read; client file names never become paths.
@@ -434,7 +435,7 @@ The project ran from February to October 2026. The timeline below is taken from 
 
 **3.2.1 Technical Feasibility**
 
-All components use mature open-source software: PyTorch and torchvision for the models, nibabel for NIfTI files, OpenCV for image processing, FastAPI and SQLModel for the backend, and React with vtk.js for the frontend. The benchmark showed that small models are sufficient: EfficientNetB0 (4.01 million parameters) matched the best detection accuracy, and VNet (1.40 million parameters) reached 97% of the best segmentation Dice. Both run on a CPU, so the application does not require a GPU at inference time. Training needed GPUs, which Kaggle provided (two NVIDIA Tesla T4). The complete pipeline was implemented and runs end to end, which confirms technical feasibility.
+All components use mature open-source software: PyTorch and torchvision for the models, nibabel for NIfTI files, OpenCV for image processing, FastAPI and SQLModel for the backend, and React with vtk.js for the frontend. The benchmark showed that small models are sufficient: EfficientNetB0 (4.01 million parameters) matched the best detection accuracy, and SegResNet (19.9 million parameters) had the best internal segmentation Dice of the three 3D models. Both run on a CPU, so the application does not require a GPU at inference time, although segmentation then takes over a minute per case. Training needed GPUs, which Kaggle provided (two NVIDIA Tesla T4). The complete pipeline was implemented and runs end to end, which confirms technical feasibility.
 
 **3.2.2 Economic Feasibility**
 
@@ -503,7 +504,7 @@ flowchart TB
     Q --> P["BrainProcessor (inference)"]
     P --> M1["EfficientNet-B0 detection"]
     P --> M2["EfficientNet-B0 classification"]
-    P --> M3["VNet3D segmentation"]
+    P --> M3["SegResNet segmentation (MONAI)"]
     B --> DB[("SQLite + Alembic migrations")]
     Q --> DB
     B --> FS["uploads/scan-id/ flair.nii ... segmentation.nii"]
@@ -657,14 +658,14 @@ classDiagram
         +float tc
         +float et
     }
-    class VNet3D {
+    class SegResNetDS {
         +forward(x)
     }
     User "1" --> "*" Scan : owns
     PipelineRunner --> BrainProcessor : uses
     PipelineRunner --> ScanStorage : uses
     PipelineRunner --> Scan : updates
-    BrainProcessor --> VNet3D : segmentation model
+    BrainProcessor --> SegResNetDS : segmentation model
     BrainProcessor --> Classification : returns
     BrainProcessor --> Volumes : returns
 ```
@@ -778,38 +779,37 @@ After training:
 | Checkpoint             | Lowest validation log-loss                                                                                                             |
 | Hardware               | 2 x NVIDIA Tesla T4 on Kaggle; 63.5 min (detection) and 264.6 min (classification) of training                                         |
 
-**Module 3: 3D segmentation benchmark.** The 369 BraTS 2020 training cases [5], [6], [57] (293 HGG and 76 LGG) are split by grade, with seed 42, into 257 training, 56 validation and 56 test cases. The labels are converted into three nested binary regions:
+**Module 3: 3D segmentation with a region-adaptive hybrid ensemble.** The 369 BraTS 2020 training cases [5], [6], [57] (293 HGG and 76 LGG) are split by grade into 257 training, 56 validation and 56 internal test cases. The 60 labelled BraTS-Africa cases from Sub-Saharan Africa [58] form an external test set that is never used for training or selection. The labels are converted into three nested binary regions:
 
 - WT: all tumour labels.
 - TC: necrotic or non-enhancing core plus enhancing tumour.
 - ET: enhancing tumour only.
 
-Each sequence is z-score normalised over its non-zero voxels and resampled from 240 x 240 x 155 to 128 x 128 x 128. The four sequences are stacked in the order FLAIR, T1, T1CE, T2 (Figure 5.3). Training augmentation uses random flips and per-channel intensity scale and shift.
+Each case is cropped to its brain and each sequence is z-score normalised over its non-zero voxels at the native 1 mm resolution, without resampling. The four sequences are stacked in the order FLAIR, T1, T1CE, T2 (Figure 5.3). Training uses 128 x 128 x 128 patches, one third centred on tumour, with rotation, scaling, mirroring, noise, brightness, contrast and gamma augmentation.
 
-Six networks are implemented from scratch: UNet (5.60 M parameters), an nnU-Net-style network (16.55 M), VNet (1.40 M), UNETR (137.60 M), Swin UNETR (10.52 M) and TransBTS (35.81 M). The loss is soft Dice plus binary cross-entropy with deep supervision, and all models take the same 3,250 optimiser steps (Table 5.4).
+Three networks from MONAI 1.6.1 are trained: an nnU-Net-style residual DynUNet [36] (31.4 M parameters), SegResNet [59] (19.9 M) and Swin UNETR-v2 [38], [60] (72.8 M). The loss is soft Dice plus binary cross-entropy with deep supervision (Table 5.4).
 
 At test time:
 
-- Probabilities are averaged over eight flip combinations (test-time augmentation) and resampled to the native grid.
-- The region hierarchy is enforced, and small ET predictions are removed with a threshold tuned on validation.
+- Each case is segmented with Gaussian-weighted 128^3 sliding windows, averaged over eight flip combinations (test-time augmentation).
+- The region-adaptive hybrid ensemble combines the members' probabilities with one convex weight vector and one threshold per region (WT, TC, ET), chosen on the validation cases only. The search selected nnU-Net 0.4 and SegResNet 0.6 for WT (threshold 0.4), 0.4, 0.5 and 0.1 (Swin UNETR) for TC (threshold 0.3), and 0.5 and 0.5 for ET (threshold 0.4).
+- The region hierarchy is enforced, and small ET predictions are removed with a size threshold tuned on validation.
 - Dice, HD95, sensitivity and specificity are computed per case, with bootstrap confidence intervals and Holm-corrected Wilcoxon signed-rank tests.
+- The disagreement between the members and the spread across TTA flips are tested as per-case warning signals; Seg-Grad-CAM [56], [61] maps are scored by how much of their mass lies inside the tumour, and each sequence is removed in turn to measure its contribution.
 
-**Table 5.4:** Training settings of the 3D benchmark.
+**Table 5.4:** Training settings of the 3D segmentation models.
 
-| Model         | Optimiser           | Learning rate | Weight decay | Schedule                | Micro-batch |
-| ------------- | ------------------- | ------------- | ------------ | ----------------------- | ----------- |
-| UNet          | SGD (Nesterov 0.99) | 0.01          | 3 x 10^-5    | Polynomial (power 0.9)  | 2           |
-| nnU-Net-style | SGD (Nesterov 0.99) | 0.01          | 3 x 10^-5    | Polynomial (power 0.9)  | 2           |
-| VNet          | SGD (Nesterov 0.99) | 0.01          | 3 x 10^-5    | Polynomial (power 0.9)  | 2           |
-| UNETR         | AdamW               | 10^-4         | 10^-5        | 3-epoch warm-up, cosine | 2           |
-| Swin UNETR    | AdamW               | 10^-4         | 10^-5        | 3-epoch warm-up, cosine | 1           |
-| TransBTS      | AdamW               | 10^-4         | 10^-5        | 3-epoch warm-up, cosine | 2           |
+| Model         | Optimiser | Learning rate | Weight decay | Schedule                | Epochs (steps) | Micro-batch |
+| ------------- | --------- | ------------- | ------------ | ----------------------- | -------------- | ----------- |
+| nnU-Net       | SGD       | 0.01          | 3 x 10^-5    | Polynomial              | 60 (15,000)    | 2           |
+| SegResNet     | AdamW     | 2 x 10^-4     | 10^-5        | 2-epoch warm-up, cosine | 60 (15,000)    | 2           |
+| Swin UNETR-v2 | AdamW     | 10^-4         | 10^-5        | 2-epoch warm-up, cosine | 30 (7,500)     | 1           |
 
-All models: 50 epochs, effective batch of 4 volumes (3,250 optimiser steps), half-precision autocasting, gradient clipping at 1.0, checkpoint with the best validation mean Dice. Total training time on 2 x Tesla T4: 515.0 minutes.
+All models: 2 patches per optimiser step, half-precision autocasting, validation every 5 epochs and the checkpoint with the best validation mean Dice, one seed. Total training time on 2 x Tesla T4: 528.3 minutes.
 
 > Figure 5.3: insert `Materials/Notebooks/segmentation/plots/02_modalities_and_masks.png`.
 
-**Figure 5.3:** One BraTS 2020 case: the four MRI sequences and the three nested tumour regions.
+**Figure 5.3:** One BraTS 2020 case and one BraTS-Africa case: the four MRI sequences and the three nested tumour regions.
 
 **Module 4: Inference engine.** `BrainProcessor` loads the three exported checkpoints with `torch.load(weights_only=True)`, so a weights file cannot execute code, and uses CUDA when available.
 
@@ -818,7 +818,7 @@ For detection and classification, it takes the middle axial slice of one represe
 - Detection reports a tumour when sigmoid(output) > 0.5.
 - Classification takes the softmax argmax over glioma, meningioma and pituitary.
 
-For segmentation, it z-scores and resamples each of the four volumes to 128^3 and runs VNet. Each output channel is thresholded at 0.5, and the label mask (1 = WT, 2 = TC, 3 = ET) is saved resized to the FLAIR grid. Volumes are reported as voxel counts on the 128^3 grid divided by 1,000.
+For segmentation, it crops the four volumes to the brain, z-scores each at native resolution and runs SegResNet with 128^3 Gaussian sliding windows, as in the notebook but without test-time augmentation. Each output channel is thresholded at 0.5, ET predictions under 800 voxels are removed, ET is kept inside TC and TC inside WT, and the label mask (1 = WT, 2 = TC, 3 = ET) is saved on the FLAIR grid. Volumes are voxel counts times the FLAIR voxel volume, in cm^3.
 
 **Module 5: Backend API and pipeline.** FastAPI exposes 23 routes under `/api` for authentication, scans, slices, downloads, reports and health checks.
 
@@ -860,19 +860,19 @@ CSV reports are generated per scan and for all completed scans.
 
 **5.2 Testing**
 
-Testing combined automated unit and integration tests, static analysis and an end-to-end run with a real BraTS case. The backend tests use a fake inference engine, so they run without the model weights. Both suites were run on 17 October 2026: all 61 backend tests and all 39 frontend tests passed.
+Testing combined automated unit and integration tests, static analysis and an end-to-end run with a real BraTS case. The backend tests use a fake inference engine, so they run without the model weights; separate tests check the SegResNet layout against the trained checkpoint and the segmentation post-processing with a stand-in network. Both suites were run on 25 October 2026: all 64 backend tests and all 39 frontend tests passed.
 
 **Table 5.5:** Automated test suites and quality checks.
 
-| Check           | Tool                                   | Scope                                                  | Result    |
-| --------------- | -------------------------------------- | ------------------------------------------------------ | --------- |
-| Backend tests   | pytest                                 | Authentication, CLI, platform, scans (61 tests)        | 61 passed |
-| Frontend tests  | Vitest, Testing Library                | API client, helpers, login, viewer geometry (39 tests) | 39 passed |
-| Lint and format | ruff, ESLint, Prettier, black          | Backend, frontend, notebooks                           | Run in CI |
-| Types           | mypy (strict), TypeScript (strict)     | Backend and frontend                                   | Run in CI |
-| Architecture    | import-linter, ESLint import rules     | Layer boundaries (3 backend contracts)                 | Run in CI |
-| Duplication     | jscpd                                  | Backend and frontend, clones of 60+ tokens             | Run in CI |
-| Security        | bandit, pip-audit, npm audit, gitleaks | Code, dependencies, Git history                        | Run in CI |
+| Check           | Tool                                   | Scope                                                      | Result    |
+| --------------- | -------------------------------------- | ---------------------------------------------------------- | --------- |
+| Backend tests   | pytest                                 | Authentication, CLI, inference, platform, scans (64 tests) | 64 passed |
+| Frontend tests  | Vitest, Testing Library                | API client, helpers, login, viewer geometry (39 tests)     | 39 passed |
+| Lint and format | ruff, ESLint, Prettier, black          | Backend, frontend, notebooks                               | Run in CI |
+| Types           | mypy (strict), TypeScript (strict)     | Backend and frontend                                       | Run in CI |
+| Architecture    | import-linter, ESLint import rules     | Layer boundaries (3 backend contracts)                     | Run in CI |
+| Duplication     | jscpd                                  | Backend and frontend, clones of 60+ tokens                 | Run in CI |
+| Security        | bandit, pip-audit, npm audit, gitleaks | Code, dependencies, Git history                            | Run in CI |
 
 **Table 5.6:** Representative test cases.
 
@@ -897,7 +897,7 @@ Testing combined automated unit and integration tests, static analysis and an en
 | TC17 | Models not loaded                                                 | Upload returns HTTP 503; `/api/ready` reports models false         | Pass   |
 | TC18 | Insecure configuration (example secret)                           | Server refuses to start                                            | Pass   |
 
-The end-to-end test uploaded the four sequences of BraTS 2020 training case 001 through the web interface. The scan was processed in about 4 seconds on the CPU-only development machine, and the result, viewer overlay and PDF and CSV reports were produced. The notebooks were verified on their target runtime: all three executed fully on Kaggle, and all 54 detection runs, 54 classification runs and 6 segmentation runs finished.
+The end-to-end test uploaded the four sequences of BraTS 2020 training case 001 through the web interface. With the earlier VNet segmentation model the scan was processed in about 4 seconds on the CPU-only development machine, and the result, viewer overlay and PDF and CSV reports were produced. With SegResNet, the segmentation step alone took 83.5 seconds on the same machine and gave WT, TC and ET volumes of 197.4, 46.8 and 29.0 cm^3 against reference volumes of 212.0, 43.2 and 27.7 cm^3; the full web pipeline was not re-run end to end. The notebooks were verified on their target runtime: all three executed fully on Kaggle, and all 54 detection runs, 54 classification runs and 3 segmentation runs finished.
 
 ## Chapter 6: Project Demonstration
 
@@ -997,68 +997,73 @@ The masking test shows that models trained on full images depend on the head: wi
 
 **7.4 3D Segmentation**
 
-UNet achieved the highest test mean Dice of 0.8199, followed by the nnU-Net-style network at 0.8192 and VNet at 0.7965 (Table 7.3). The transformer-based models followed at a clear distance, and the confidence intervals of all three lie below those of the two leading CNNs. All pairwise differences are significant after Holm correction, but the UNet and nnU-Net-style difference (median 0.0023 Dice) is practically negligible.
+On the 56 internal test cases, SegResNet alone achieved the highest mean Dice of 0.8717 and the best Dice in every region (Table 7.3). The region-adaptive hybrid ensemble reached 0.8530, the best of the four ensembles and significantly better than nnU-Net and Swin UNETR (Holm-corrected Wilcoxon p = 0.0001 and 0.007), but significantly worse than SegResNet (p = 0.018). It had the highest sensitivity of all models in every region.
 
-The ranking is decided by the tumour core and enhancing tumour: WT Dice varies only from 0.8714 to 0.9012. The transformer-based models are more sensitive than the CNNs on every region, but their lower Dice shows that this comes from over-segmentation (Figure 7.4).
+On the 60 external BraTS-Africa cases every model lost Dice, by 0.047 (Swin UNETR) to 0.075 (SegResNet), mostly in the tumour core. The CNN mean ensemble scored 0.8005, SegResNet 0.7967 and the proposed ensemble 0.7966, with overlapping confidence intervals; the only significant external difference was the ensemble's lead over nnU-Net.
 
-**Table 7.3:** 3D segmentation test results on 56 BraTS 2020 cases at native resolution (eight-flip TTA, tuned ET post-processing).
+**Table 7.3:** 3D segmentation results with eight-flip TTA: mean Dice [95% CI] and per-region Dice on 56 internal BraTS 2020 test cases, and mean Dice on 60 external BraTS-Africa cases.
 
-| Model         | Mean Dice [95% CI]      | WT Dice | TC Dice | ET Dice | WT HD95 (mm) | TC HD95 (mm) | ET HD95 (mm) |
-| ------------- | ----------------------- | ------- | ------- | ------- | ------------ | ------------ | ------------ |
-| UNet          | 0.8199 [0.7826, 0.8533] | 0.9012  | 0.8300  | 0.7286  | 4.24         | 3.24         | 3.67         |
-| nnU-Net-style | 0.8192 [0.7837, 0.8511] | 0.9002  | 0.8309  | 0.7264  | 4.24         | 3.46         | 3.80         |
-| VNet          | 0.7965 [0.7497, 0.8340] | 0.8865  | 0.7972  | 0.7058  | 4.06         | 4.18         | 3.46         |
-| Swin UNETR    | 0.7462 [0.7134, 0.7772] | 0.8714  | 0.7495  | 0.6176  | 5.10         | 6.70         | 6.28         |
-| TransBTS      | 0.7291 [0.6876, 0.7661] | 0.8743  | 0.7488  | 0.5642  | 4.42         | 6.58         | 5.96         |
-| UNETR         | 0.7056 [0.6700, 0.7384] | 0.8758  | 0.6692  | 0.5720  | 5.05         | 11.29        | 9.15         |
+| Model             | Internal mean Dice [95% CI] | WT Dice | TC Dice | ET Dice | External mean Dice [95% CI] |
+| ----------------- | --------------------------- | ------- | ------- | ------- | --------------------------- |
+| nnU-Net           | 0.8404 [0.8008, 0.8760]     | 0.9139  | 0.8493  | 0.7580  | 0.7765 [0.7224, 0.8203]     |
+| SegResNet         | 0.8717 [0.8389, 0.8987]     | 0.9264  | 0.8791  | 0.8095  | 0.7967 [0.7417, 0.8400]     |
+| Swin UNETR-v2     | 0.8360 [0.7923, 0.8742]     | 0.9162  | 0.8427  | 0.7490  | 0.7888 [0.7355, 0.8325]     |
+| CNN mean ensemble | 0.8512 [0.8150, 0.8838]     | 0.9225  | 0.8630  | 0.7680  | 0.8005 [0.7484, 0.8419]     |
+| Mean of all three | 0.8494 [0.8115, 0.8834]     | 0.9213  | 0.8601  | 0.7669  | 0.7971 [0.7456, 0.8400]     |
+| Proposed ensemble | 0.8530 [0.8204, 0.8836]     | 0.9256  | 0.8639  | 0.7694  | 0.7966 [0.7430, 0.8391]     |
 
-On low-grade gliomas every model drops sharply (Table 7.4, Figure 7.5): ET Dice falls to between 0.1613 and 0.4237, because many LGG cases have little or no enhancing tumour and any false-positive ET voxel then gives a Dice of zero. An ensemble of the three CNNs reached 0.8178 and an ensemble of all six 0.7991, so neither improved on UNet alone.
+Low-grade gliomas remain the hardest cases (Table 7.4, Figure 7.5): every model's mean Dice falls from about 0.89 to 0.91 on HGG to 0.65 to 0.74 on LGG, mainly through ET Dice, because 27 of the 76 LGG cases have no enhancing tumour and a single false-positive ET region then gives an ET Dice of zero. SegResNet's internal lead comes mostly from these cases.
 
-**Table 7.4:** Test Dice by tumour grade (44 HGG, 12 LGG cases).
+**Table 7.4:** Internal test Dice by tumour grade (44 HGG, 12 LGG cases).
 
-| Model         | HGG mean Dice | HGG ET Dice | LGG mean Dice | LGG ET Dice |
-| ------------- | ------------- | ----------- | ------------- | ----------- |
-| UNet          | 0.8629        | 0.8117      | 0.6624        | 0.4237      |
-| nnU-Net-style | 0.8632        | 0.8124      | 0.6579        | 0.4112      |
-| VNet          | 0.8385        | 0.7923      | 0.6425        | 0.3885      |
-| Swin UNETR    | 0.7913        | 0.7262      | 0.5805        | 0.2193      |
-| TransBTS      | 0.7748        | 0.6740      | 0.5616        | 0.1613      |
-| UNETR         | 0.7434        | 0.6773      | 0.5672        | 0.1857      |
+| Model             | HGG mean Dice | HGG ET Dice | LGG mean Dice | LGG ET Dice |
+| ----------------- | ------------- | ----------- | ------------- | ----------- |
+| nnU-Net           | 0.8889        | 0.8531      | 0.6625        | 0.4089      |
+| SegResNet         | 0.9067        | 0.8715      | 0.7432        | 0.5822      |
+| Swin UNETR-v2     | 0.8858        | 0.8529      | 0.6532        | 0.3681      |
+| CNN mean ensemble | 0.8980        | 0.8622      | 0.6796        | 0.4223      |
+| Proposed ensemble | 0.9012        | 0.8648      | 0.6762        | 0.4197      |
 
-Parameter count does not predict accuracy: UNETR, the largest model, has the lowest Dice (Table 7.5, Figure 7.6). VNet is the cheapest model on every measure, with 1.40 million parameters, 0.53 training hours, 3.44 GB of training memory and 0.0375 seconds per volume. It reaches 97% of the UNet Dice at a third of its latency, so it was chosen for deployment.
+The disagreement between the three networks was the most useful product of the ensemble (Figure 7.7). It correlated with the ensemble's per-case Dice (Spearman rho -0.80 internally, -0.82 externally) and detected cases with a mean Dice below 0.80 with an area under the ROC curve of 0.993 internally and 0.870 externally, against 0.716 and 0.791 for the spread across TTA flips. It cannot flag a tumour that all networks miss: one small external tumour was missed by every model (Figure 7.4).
 
-**Table 7.5:** Computational cost of the 3D networks (latency per 128^3 volume, batch size 1, half precision, one Tesla T4).
+Seg-Grad-CAM maps of the two CNNs were 4 to 23 times more concentrated in the tumour than chance, but those of Swin UNETR only 1.1 to 1.7 times. Removing FLAIR hurt WT most and removing T1CE hurt TC and ET most for every model, the expected clinical pattern.
 
-| Model         | Parameters (M) | GFLOPs  | Training (h) | Training memory (GB) | Latency, no TTA (s) |
-| ------------- | -------------- | ------- | ------------ | -------------------- | ------------------- |
-| UNet          | 5.60           | 907.0   | 1.28         | 5.25                 | 0.1076              |
-| nnU-Net-style | 16.55          | 956.3   | 1.35         | 5.22                 | 0.1112              |
-| VNet          | 1.40           | 149.9   | 0.53         | 3.44                 | 0.0375              |
-| UNETR         | 137.60         | 1,761.7 | 2.49         | 9.30                 | 0.2094              |
-| Swin UNETR    | 10.52          | 797.1   | 5.29         | 7.07                 | 0.4893              |
-| TransBTS      | 35.81          | 996.2   | 1.56         | 7.46                 | 0.1291              |
+SegResNet is also the cheapest model (Table 7.5, Figure 7.6). The proposed ensemble needs all three networks because Swin UNETR keeps a small weight for TC, so it costs six times SegResNet's latency for a lower internal and an equal external Dice. SegResNet was therefore chosen for deployment.
 
-> Figure 7.4: insert `Materials/Notebooks/segmentation/plots/08_qualitative_comparison.png`.
+**Table 7.5:** Computational cost of the 3D models (latency per case over the median 136 x 170 x 139 test crop, half precision, one Tesla T4).
 
-**Figure 7.4:** Reference and predictions of every model on the test cases with the median and the lowest ensemble Dice (oedema-only WT green, TC yellow, ET red).
+| Model             | Parameters (M) | GFLOPs per patch | Training (h) | Inference memory (GB) | Latency, no TTA (s) | Latency, TTA (s) |
+| ----------------- | -------------- | ---------------- | ------------ | --------------------- | ------------------- | ---------------- |
+| nnU-Net           | 31.42          | 968.1            | 3.69         | 3.15                  | 1.03                | 8.20             |
+| SegResNet         | 19.92          | 1,218.2          | 3.77         | 2.91                  | 1.01                | 8.08             |
+| Swin UNETR-v2     | 72.77          | 1,665.6          | 6.65         | 8.58                  | 3.99                | 31.92            |
+| Proposed ensemble | 124.11         | 3,851.9          | 14.11        | -                     | 6.03                | 48.20            |
 
-> Figure 7.5: insert `Materials/Notebooks/segmentation/plots/06_dice_by_grade.png`.
+> Figure 7.4: insert `Materials/Notebooks/segmentation/plots/11_qualitative_comparison.png`.
 
-**Figure 7.5:** Test Dice per region for HGG and LGG cases.
+**Figure 7.4:** Reference, members and proposed ensemble on the internal and external cases with the median and the lowest ensemble Dice (oedema-only WT green, TC yellow, ET red).
 
-> Figure 7.6: insert `Materials/Notebooks/segmentation/plots/10_dice_vs_latency.png`.
+> Figure 7.5: insert `Materials/Notebooks/segmentation/plots/09_dice_by_grade.png`.
 
-**Figure 7.6:** Test mean Dice against latency per volume.
+**Figure 7.5:** Internal test Dice per region for HGG and LGG cases.
+
+> Figure 7.6: insert `Materials/Notebooks/segmentation/plots/16_dice_vs_latency.png`.
+
+**Figure 7.6:** Mean Dice against latency per case with TTA, internally and externally.
+
+> Figure 7.7: insert `Materials/Notebooks/segmentation/plots/12_quality_control.png`.
+
+**Figure 7.7:** Per-case ensemble Dice against member disagreement (top) and TTA spread (bottom), internally (left) and externally (right); red points are cases with mean Dice below 0.80.
 
 **7.5 Deployed Models and Discussion**
 
 **Table 7.6:** Deployed models.
 
-| Task           | Model           | Parameters | Checkpoint | Test result of the checkpoint |
-| -------------- | --------------- | ---------- | ---------- | ----------------------------- |
-| Detection      | EfficientNet-B0 | 4,008,829  | Fold 4     | Accuracy 0.9766               |
-| Classification | EfficientNet-B0 | 4,011,391  | Fold 0     | Accuracy 0.9778               |
-| Segmentation   | VNet            | 1,398,761  | Seed 42    | Mean Dice 0.7965              |
+| Task           | Model           | Parameters | Checkpoint | Test result of the checkpoint                         |
+| -------------- | --------------- | ---------- | ---------- | ----------------------------------------------------- |
+| Detection      | EfficientNet-B0 | 4,008,829  | Fold 4     | Accuracy 0.9766                                       |
+| Classification | EfficientNet-B0 | 4,011,391  | Fold 0     | Accuracy 0.9778                                       |
+| Segmentation   | SegResNet       | 19,917,353 | Seed 42    | Mean Dice 0.8717 internal, 0.7967 external (with TTA) |
 
 In three tasks, accuracy differences between architectures were small or not significant, while cost differed many-fold. That makes efficiency the deciding factor for deployment. Our results agree with the literature in Table 2.1 in magnitude but are measured after deduplication and group-aware splitting, which removes exactly the images most likely to inflate a score [9].
 
@@ -1066,24 +1071,24 @@ The web application does not reproduce the notebook evaluation exactly, for thre
 
 - Detection and classification use the middle axial slice of an uploaded volume, while the models were trained on public JPEG slices of unknown sequence.
 - The backend uses the fixed 0.5 threshold and no temperature scaling.
-- Segmentation runs without the test-time augmentation and post-processing used in the notebook.
+- Segmentation uses SegResNet alone and without the test-time augmentation used in the notebook.
 
-The accuracy of the full web pipeline on NIfTI uploads has not been measured, and the reported volumes are voxel counts on the 128^3 grid divided by 1,000 rather than physical volumes.
+The accuracy of the full web pipeline on NIfTI uploads has not been measured. Volumes are computed from the voxel spacing in the file header, but the segmentation model expects co-registered, skull-stripped, 1 mm BraTS-style volumes.
 
 **7.6 Cost Analysis**
 
 **Table 7.7:** Cost analysis.
 
-| Item                          | Resource used                                                                                                                           | Cost                     |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-| Model training                | Kaggle 2 x Tesla T4 GPU sessions: 71.8 min (detection), 273.6 min (classification), 521.7 min (segmentation), about 14.5 hours in total | ₹0 (free tier)           |
-| Datasets                      | Br35H, Brain MRI Images for Brain Tumor Detection, Brain Tumor Classification (MRI), Cheng dataset, BraTS 2020 (all public)             | ₹0                       |
-| Software                      | Python, PyTorch, FastAPI, SQLite, React, vtk.js and all other libraries (open source)                                                   | ₹0                       |
-| Development and testing       | Team members' own computers; GitHub repository and GitHub Actions CI                                                                    | ₹0                       |
-| Deployment                    | One backend process on an ordinary computer or server; no GPU or paid database required                                                 | Hardware or hosting only |
-| **Total project expenditure** |                                                                                                                                         | **₹0**                   |
+| Item                          | Resource used                                                                                                                             | Cost                     |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| Model training                | Kaggle 2 x Tesla T4 GPU sessions: 71.8 min (detection), 273.6 min (classification), 547.9 min (segmentation), about 14.9 hours in total   | ₹0 (free tier)           |
+| Datasets                      | Br35H, Brain MRI Images for Brain Tumor Detection, Brain Tumor Classification (MRI), Cheng dataset, BraTS 2020, BraTS-Africa (all public) | ₹0                       |
+| Software                      | Python, PyTorch, FastAPI, SQLite, React, vtk.js and all other libraries (open source)                                                     | ₹0                       |
+| Development and testing       | Team members' own computers; GitHub repository and GitHub Actions CI                                                                      | ₹0                       |
+| Deployment                    | One backend process on an ordinary computer or server; no GPU or paid database required                                                   | Hardware or hosting only |
+| **Total project expenditure** |                                                                                                                                           | **₹0**                   |
 
-The small deployed models keep running costs low. VNet needs 0.98 GB of GPU memory at inference and 0.0375 seconds per volume on a T4, and a whole case takes about 4 seconds on a CPU. A deployment therefore does not need a dedicated GPU server, which is the main running cost of medical imaging AI.
+The deployed models keep running costs low. SegResNet needs 2.91 GB of GPU memory at inference and about 1 second per case on a T4 without TTA; on the CPU of the development machine, segmentation takes about 84 seconds per case. A deployment can therefore run without a dedicated GPU server, the main running cost of medical imaging AI, at the price of slower segmentation.
 
 ## Chapter 8: Conclusion
 
@@ -1095,18 +1100,18 @@ NeuroScan AI combined a controlled benchmark of deep learning architectures for 
 
 In two dimensions, nine backbones were compared under one protocol: label-aware perceptual-hash deduplication and group-aware splitting before training, an equal optimisation budget, five-fold cross-validation with fold ensembles, bootstrap confidence intervals, Holm-corrected McNemar tests, calibration, efficiency and shortcut audits. Deduplication removed 63.57% of the detection images and 18.84% of the classification images, and no test image was near a development image. On 171 detection test images, CoAtNet-0, EfficientNetB0 and ViT-B/16 reached 99.42% accuracy, and no model differed significantly from any other. The 45-image classification test set could not rank the models. Models retrained on background-only images still beat chance, which shows that public collections carry label information outside the brain.
 
-In three dimensions, six networks trained with the same budget on BraTS 2020 placed the CNNs ahead of the transformers. UNet reached a mean Dice of 0.8199, and VNet reached 0.7965 with 1.40 million parameters at a third of UNet's latency. Enhancing-tumour segmentation of low-grade gliomas was the weakest result of every model.
+In three dimensions, nnU-Net, SegResNet and Swin UNETR-v2 were trained at native resolution on BraTS 2020 and combined in a region-adaptive hybrid ensemble. SegResNet alone reached the best internal mean Dice of 0.8717 and matched the ensemble on 60 external BraTS-Africa cases (0.7967 against 0.7966); every model lost 0.047 to 0.075 Dice externally. The disagreement between the networks detected poorly segmented cases with an AUC of 0.993 internally and 0.870 externally. Enhancing-tumour segmentation of low-grade gliomas was the weakest result of every model.
 
-EfficientNetB0 and VNet were deployed in a FastAPI and React application. It accepts four-sequence NIfTI uploads, processes a case in seconds, shows the result in a linked multi-planar and 3D viewer, and produces PDF and CSV reports. It is protected by secure sessions, optional two-factor authentication, per-user isolation and validated uploads, and is covered by 100 automated tests. The project produced two research manuscripts for _Engineering Applications of Artificial Intelligence_.
+EfficientNetB0 and SegResNet were deployed in a FastAPI and React application. It accepts four-sequence NIfTI uploads, processes a case in about a second per model on a GPU or within minutes on a CPU, shows the result in a linked multi-planar and 3D viewer, and produces PDF and CSV reports. It is protected by secure sessions, optional two-factor authentication, per-user isolation and validated uploads, and is covered by 103 automated tests. The project produced two research manuscripts for _Engineering Applications of Artificial Intelligence_.
 
-**Limitations.** The 2D images are public slices of unknown sequence without patient identifiers, so grouping is only a proxy for a patient-level split. No external validation set was available. Each model was trained once per fold or seed. The web pipeline applies 2D models to one slice of a volume, and its accuracy on NIfTI uploads has not been measured. The system has no clinical validation.
+**Limitations.** The 2D images are public slices of unknown sequence without patient identifiers, so grouping is only a proxy for a patient-level split. No external validation set was available for the 2D tasks; the 3D models were validated externally on BraTS-Africa, which shares the BraTS preprocessing. Each model was trained once per fold or seed. The web pipeline applies 2D models to one slice of a volume, and its accuracy on NIfTI uploads has not been measured. The system has no clinical validation.
 
 **Future work.**
 
 - Split by patient where identifiers exist, and repeat the shortcut test after removing image borders.
 - Train detection and classification on 3D multi-sequence data, so that the deployed models see the same input as the application.
-- Repeat the segmentation benchmark over several seeds with pretrained transformer encoders and higher resolution.
-- Apply the notebooks' calibration, thresholds and post-processing in the backend, and report physical volumes using voxel spacing.
+- Repeat the segmentation study over several seeds and external cohorts with raw clinical preprocessing, and show the member-disagreement signal in the application.
+- Apply the 2D notebooks' calibration and thresholds in the backend, and add test-time augmentation to segmentation when a GPU is available.
 - Add DICOM support and validate on external, institutional data before any clinical use.
 
 ## Chapter 9: References
@@ -1229,65 +1234,40 @@ EfficientNetB0 and VNet were deployed in a FastAPI and React application. It acc
 
 [57] S. Bakas _et al._, "Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the BRATS challenge," arXiv:1811.02629, 2018.
 
+[58] M. Adewole _et al._, "The BraTS-Africa dataset: Expanding the brain tumor segmentation data to capture African populations," _Radiology: Artificial Intelligence_, vol. 7, no. 4, p. e240528, 2025, doi: 10.1148/ryai.240528.
+
+[59] A. Myronenko, "3D MRI brain tumor segmentation using autoencoder regularization," in _Brainlesion: Glioma, Multiple Sclerosis, Stroke and Traumatic Brain Injuries (BrainLes 2018)_, LNCS vol. 11384, 2019, pp. 311–320, doi: 10.1007/978-3-030-11726-9_28.
+
+[60] Y. He, V. Nath, D. Yang, Y. Tang, A. Myronenko, and D. Xu, "SwinUNETR-V2: Stronger Swin transformers with stagewise convolutions for 3D medical image segmentation," in _Medical Image Computing and Computer Assisted Intervention (MICCAI 2023)_, LNCS vol. 14223, 2023, pp. 416–426, doi: 10.1007/978-3-031-43901-8_40.
+
+[61] K. Vinogradova, A. Dibrov, and G. Myers, "Towards interpretable semantic segmentation via gradient-weighted class activation mapping (student abstract)," _Proceedings of the AAAI Conference on Artificial Intelligence_, vol. 34, no. 10, pp. 13943–13944, 2020, doi: 10.1609/aaai.v34i10.7244.
+
 ## Appendix A: Sample Code
 
 **APPENDIX A – Sample Code**
 
 The complete source code is available at https://github.com/parthmital/NeuroScan-AI. The listings below are taken unchanged from the repository.
 
-**A.1 VNet3D segmentation network** (`Backend/neuroscan/inference/networks.py`)
+**A.1 SegResNet segmentation network** (`Backend/neuroscan/inference/networks.py`)
 
 ```python
-class ResBlock(nn.Module):
-    def __init__(self, in_ch: int, out_ch: int, n_convs: int) -> None:
-        super().__init__()
-        layers = []
-        ch = in_ch
-        for _ in range(n_convs):
-            layers += [
-                nn.Conv3d(ch, out_ch, 3, padding=1, bias=False),
-                nn.InstanceNorm3d(out_ch, affine=True),
-                nn.PReLU(out_ch),
-            ]
-            ch = out_ch
-        self.convs = nn.Sequential(*layers)
-        self.proj = nn.Conv3d(in_ch, out_ch, 1, bias=False) if in_ch != out_ch else nn.Identity()
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.convs(x) + self.proj(x)  # type: ignore[no-any-return]
+from monai.networks.nets.segresnet_ds import SegResNetDS
 
 
-class VNet3D(nn.Module):
-    """Four-channel (FLAIR, T1, T1CE, T2) input, three-channel (WT, TC, ET) output."""
+def segresnet() -> nn.Module:
+    """SegResNet as built in the segmentation notebook (`volume_lib.build_model`).
 
-    def __init__(self) -> None:
-        super().__init__()
-        self.e1 = ResBlock(4, 16, 1)
-        self.d1 = nn.Conv3d(16, 16, 2, stride=2, bias=False)
-        self.e2 = ResBlock(16, 32, 1)
-        self.d2 = nn.Conv3d(32, 32, 2, stride=2, bias=False)
-        self.e3 = ResBlock(32, 64, 2)
-        self.d3 = nn.Conv3d(64, 64, 2, stride=2, bias=False)
-        self.b = ResBlock(64, 128, 2)
-        self.u3 = nn.ConvTranspose3d(128, 64, 2, 2)
-        self.r3 = ResBlock(128, 64, 2)
-        self.u2 = nn.ConvTranspose3d(64, 32, 2, 2)
-        self.r2 = ResBlock(64, 32, 1)
-        self.u1 = nn.ConvTranspose3d(32, 16, 2, 2)
-        self.r1 = ResBlock(32, 16, 1)
-        self.out = nn.Conv3d(16, 3, 1)
-        self.ds2 = nn.Conv3d(32, 3, 1)
-        self.ds3 = nn.Conv3d(64, 3, 1)
-
-    def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        e1 = self.e1(x)
-        e2 = self.e2(self.d1(e1))
-        e3 = self.e3(self.d2(e2))
-        b = self.b(self.d3(e3))
-        d3 = self.r3(torch.cat([self.u3(b), e3], dim=1))
-        d2 = self.r2(torch.cat([self.u2(d3), e2], dim=1))
-        d1 = self.r1(torch.cat([self.u1(d2), e1], dim=1))
-        return self.out(d1), self.ds2(d2), self.ds3(d3)
+    Four-channel (FLAIR, T1, T1CE, T2) input, three-channel (WT, TC, ET) logits; in eval mode it
+    returns only the full-resolution output, without the deep-supervision heads.
+    """
+    return SegResNetDS(
+        init_filters=32,
+        in_channels=4,
+        out_channels=3,
+        norm="instance",
+        blocks_down=(1, 2, 2, 4),
+        dsdepth=3,
+    )
 ```
 
 **A.2 Preprocessing, detection, classification and segmentation** (`Backend/neuroscan/inference/processor.py`)
@@ -1326,42 +1306,64 @@ class VNet3D(nn.Module):
         )
 
     @staticmethod
-    def _preprocess_3d(path: Path) -> np.ndarray:
-        data, _ = volumes.load_first_volume(path)
-        brain = data != 0
-        if brain.any():
-            data[brain] = (data[brain] - float(data[brain].mean())) / (
-                float(data[brain].std()) + 1e-8
-            )
-        resized = torch.nn.functional.interpolate(
-            torch.from_numpy(data)[None, None],
-            size=SEG_SIZE,
-            mode="trilinear",
-            align_corners=False,
-        )
-        return resized.squeeze().numpy().astype(np.float32)
+    def _preprocess_3d(modality_paths: Mapping[str, Path]) -> tuple[np.ndarray, tuple[slice, ...]]:
+        """Crop the co-registered sequences to the brain and z-score each over its brain voxels.
+
+        Same as the notebook's `preprocess_case`: no resampling, so the model sees the native grid
+        (1 mm in BraTS). Returns the (4, D, H, W) image and the crop box in the native grid.
+        """
+        data = [volumes.load_first_volume(modality_paths[m])[0] for m in SEGMENTATION_CHANNELS]
+        if len({d.shape for d in data}) != 1:
+            raise ValueError("The four sequences must share one voxel grid (co-registered)")
+        brain = np.any(np.stack(data) != 0, axis=0)
+        coords = np.argwhere(brain) if brain.any() else np.argwhere(np.ones_like(brain))
+        low, high = coords.min(0), coords.max(0) + 1
+        box = tuple(slice(int(a), int(b)) for a, b in zip(low, high, strict=True))
+        cropped = []
+        for volume in data:
+            volume = volume[box].copy()
+            inside = volume != 0
+            if inside.any():
+                volume[inside] = (volume[inside] - float(volume[inside].mean())) / (
+                    float(volume[inside].std()) + 1e-8
+                )
+            cropped.append(volume)
+        return np.stack(cropped).astype(np.float32), box
 
     def segment(self, modality_paths: Mapping[str, Path], mask_path: Path) -> Volumes:
         """Segment WT/TC/ET, save a label mask (1=WT, 2=TC, 3=ET) in FLAIR space, return volumes."""
-        if self.segmentation_model is None:
+        model = self.segmentation_model
+        if model is None:
             raise RuntimeError("Segmentation model not loaded")
-        stacked = np.stack([self._preprocess_3d(modality_paths[m]) for m in SEGMENTATION_CHANNELS])
-        with torch.no_grad():
-            output = self.segmentation_model(torch.from_numpy(stacked)[None].to(self.device))[0]
-            regions = torch.sigmoid(output).cpu().numpy()[0] > 0.5
-        wt, tc, et = (float(regions[i].sum() / 1e3) for i in range(3))
+        image, box = self._preprocess_3d(modality_paths)
 
-        labels = np.zeros(SEG_SIZE, dtype=np.uint8)
-        for label, region in enumerate(regions, start=1):
-            labels[region] = label
+        def predictor(x: torch.Tensor) -> torch.Tensor:
+            with torch.autocast("cuda", dtype=torch.float16, enabled=x.is_cuda):
+                return model(x).float()  # type: ignore[no-any-return]
+
+        with torch.no_grad():
+            logits = sliding_window_inference(
+                torch.from_numpy(image)[None].to(self.device),
+                (SEG_WINDOW,) * 3,
+                2,
+                predictor,
+                overlap=SEG_OVERLAP,
+                mode="gaussian",
+            )
+            wt, tc, et = (torch.sigmoid(logits[0]) > 0.5).cpu().numpy()
+        # BraTS label hierarchy (ET inside TC inside WT) after removing a small ET prediction.
+        if int(et.sum()) < ET_MIN_VOXELS:
+            et = np.zeros_like(et)
+        tc |= et
+        wt |= tc
+
         reference, affine = volumes.load_first_volume(modality_paths["flair"])
-        resized = torch.nn.functional.interpolate(
-            torch.from_numpy(labels.astype(np.float32))[None, None],
-            size=reference.shape,
-            mode="nearest",
-        )
-        volumes.save_mask(resized.squeeze().numpy().astype(np.uint8), affine, mask_path)
-        return Volumes(wt=wt, tc=tc, et=et)
+        labels = np.zeros(reference.shape, dtype=np.uint8)
+        for label, region in enumerate((wt, tc, et), start=1):
+            labels[box][region] = label
+        volumes.save_mask(labels, affine, mask_path)
+        voxel_cm3 = float(np.prod(volumes.geometry(modality_paths["flair"])[1])) / 1e3
+        return Volumes(*(float(region.sum()) * voxel_cm3 for region in (wt, tc, et)))
 ```
 
 **A.3 Background processing of one scan** (`Backend/neuroscan/scans/pipeline.py`)

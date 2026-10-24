@@ -4,9 +4,9 @@ NeuroScan AI is a full-stack web application and research repository for brain t
 
 1. **Detection**: an EfficientNet-B0 decides whether a tumour is present.
 2. **Classification**: a second EfficientNet-B0 labels the tumour as glioma, meningioma or pituitary.
-3. **Segmentation**: a 3D VNet outlines the Whole Tumour (WT), Tumour Core (TC) and Enhancing Tumour (ET) when all four modalities (FLAIR, T1, T1CE, T2) are uploaded.
+3. **Segmentation**: a 3D SegResNet outlines the Whole Tumour (WT), Tumour Core (TC) and Enhancing Tumour (ET) when all four modalities (FLAIR, T1, T1CE, T2) are uploaded.
 
-The React frontend shows the results in a multi-planar viewer: linked axial, coronal and sagittal views with the segmentation overlay, plus a 3D volume rendering. The repository also holds, under [`Materials/`](Materials/), the three Kaggle notebooks that trained the deployed models while benchmarking nine 2D backbones for detection, the same nine for classification and six 3D segmentation networks (the segmentation notebook has since been rewritten as a hybrid CNN-transformer ensemble with external validation and is awaiting its Kaggle run), their downloaded outputs, and the LaTeX sources of the two related papers.
+The React frontend shows the results in a multi-planar viewer: linked axial, coronal and sagittal views with the segmentation overlay, plus a 3D volume rendering. The repository also holds, under [`Materials/`](Materials/), the three Kaggle notebooks that trained the deployed models while benchmarking nine 2D backbones for detection, the same nine for classification, and three 3D segmentation networks with a region-adaptive hybrid CNN-transformer ensemble validated on an external cohort, their downloaded outputs, and the LaTeX sources of the two related papers.
 
 No clinical validation is recorded in this repository. Treat every output as a research result, not a diagnosis.
 
@@ -77,15 +77,15 @@ These steps start the backend on `127.0.0.1:8000` and the frontend on `localhost
 
 ### Steps
 
-1. **Place the three model weight files.** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. Each research notebook exports its checkpoint to `weights/deploy/` in its outputs folder, and the backend reads them from there by default (override with the variables in [Configuration](#configuration)):
+1. **Place the three model weight files.** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. The two 2D notebooks export their checkpoints to `weights/deploy/` in their outputs folders; the segmentation checkpoint is the notebook's `weights/segresnet/segresnet_seed42.pth`, copied unchanged to `weights/deploy/SegResNet.pth` (its SHA-256 is in `weights/deploy/metadata.json`). The backend reads them from there by default (override with the variables in [Configuration](#configuration)):
 
    | File                                                                     | Size (notebook log) | Used for         |
    | ------------------------------------------------------------------------ | ------------------- | ---------------- |
    | `Materials/Notebooks/binary-detection/weights/deploy/EfficientNetB0.pth` | 16.3 MB             | Tumour detection |
    | `Materials/Notebooks/classification/weights/deploy/EfficientNetB0.pth`   | 16.3 MB             | Tumour type      |
-   | `Materials/Notebooks/segmentation/weights/deploy/VNet.pth`               | 5.6 MB              | 3D segmentation  |
+   | `Materials/Notebooks/segmentation/weights/deploy/SegResNet.pth`          | 79.7 MB             | 3D segmentation  |
 
-   No download location is recorded in the repository. Run the notebook on Kaggle and copy its `weights/deploy/` folder, or obtain the files from the project maintainer. The backend loads them with `torch.load(weights_only=True)`, so a weights file cannot run code. Without them the app still starts: missing detection or classification weights disable uploads, and a missing segmentation file skips segmentation.
+   No download location is recorded in the repository. Run the notebooks on Kaggle and copy their `weights/deploy/` folders (for segmentation, copy `weights/segresnet/segresnet_seed42.pth` to `weights/deploy/SegResNet.pth`), or obtain the files from the project maintainer. The backend loads them with `torch.load(weights_only=True)`, so a weights file cannot run code. Without them the app still starts: missing detection or classification weights disable uploads, and a missing segmentation file skips segmentation.
 
 2. **Set up and start everything.**
 
@@ -111,7 +111,7 @@ flowchart LR
     Q --> P[BrainProcessor<br/>neuroscan.inference]
     P --> M1[EfficientNet-B0<br/>detection]
     P --> M2[EfficientNet-B0<br/>classification]
-    P --> M3[VNet3D<br/>segmentation]
+    P --> M3[SegResNet<br/>segmentation]
     B --> DB[(SQLite + Alembic migrations)]
     Q --> DB
     B --> FS[uploads/scan-id/<br/>flair.nii ... segmentation.nii]
@@ -134,12 +134,12 @@ The worker ([`neuroscan/scans/pipeline.py`](Backend/neuroscan/scans/pipeline.py)
 4. Picks one representative file (flair first, then t1ce, t2, t1), takes the **middle axial slice** (the first frame of a 4D series), rescales it to 0-255 and converts it to a 3-channel image.
 5. **Detection:** crops the brain with an OpenCV threshold and contour, resizes to 224 x 224, applies ImageNet normalisation and runs the detection model. `sigmoid(output) > 0.5` means a tumour is present.
 6. **Classification:** runs the classification model on the same slice and takes the softmax argmax over `glioma`, `meningioma`, `pituitary`. The class is reported only if detection found a tumour; otherwise the result says `No Tumour Detected` with confidence `1 - P(tumour)`.
-7. **Segmentation** (only when all four modalities are present): z-scores each volume over non-zero voxels, resizes it to 128 x 128 x 128, runs VNet, thresholds each output channel at 0.5, and saves `segmentation.nii` resized back to the FLAIR volume's shape (label 1 = WT, 2 = TC, 3 = ET, later labels overwriting earlier ones). A segmentation failure is logged and leaves the volumes at `0.0`.
+7. **Segmentation** (only when all four modalities are present, on one voxel grid): crops the four volumes to the bounding box of the brain (any non-zero voxel), z-scores each over its non-zero voxels at native resolution, runs SegResNet as a Gaussian-weighted sliding window of 128 x 128 x 128 voxels with half overlap, thresholds each output channel at 0.5, removes an ET prediction smaller than 800 voxels, enforces ET inside TC inside WT, and saves `segmentation.nii` on the FLAIR grid (label 1 = WT, 2 = TC, 3 = ET). A segmentation failure, including sequences of different shapes, is logged and leaves the volumes at `0.0`.
 8. Marks the scan `completed`. Any other failure marks it `failed` with a generic message; the details go only to the server log. Failed scans can be retried from the scan page.
 
-The brain crop in step 5 is the same function the 2D notebooks train and evaluate with (`crop_to_brain`). The backend does not read the notebooks' `metadata.json`: it applies no temperature scaling, uses the fixed 0.5 detection threshold, and segments without the test-time augmentation, region hierarchy and enhancing-tumour size filter the segmentation notebook uses for its reported scores.
+The brain crop in step 5 is the same function the 2D notebooks train and evaluate with (`crop_to_brain`). The backend does not read the notebooks' `metadata.json`: it applies no temperature scaling and uses the fixed 0.5 detection threshold. Segmentation follows the notebook's preprocessing, sliding window, region hierarchy and validated ET size filter, but skips its 8-flip test-time augmentation, which would make CPU inference eight times slower; the notebook's reported scores include it.
 
-The reported volumes (`wtVolume`, `tcVolume`, `etVolume`, `tumorVolume`) are the number of voxels above 0.5 in the 128^3 grid divided by 1,000. They are not scaled by the scan's voxel spacing, even though the frontend labels them as cubic centimetres.
+The reported volumes (`wtVolume`, `tcVolume`, `etVolume`, `tumorVolume`) are voxel counts times the FLAIR voxel volume from the NIfTI header, in cubic centimetres. The model was trained on co-registered, skull-stripped 1 mm BraTS volumes, so inputs prepared differently give less reliable masks and volumes.
 
 ### Frontend pages
 
@@ -161,19 +161,21 @@ Routes are defined in [`Frontend/src/App.tsx`](Frontend/src/App.tsx). Everything
 
 Pinned in [`Backend/requirements.txt`](Backend/requirements.txt) (runtime) and [`Backend/requirements-dev.txt`](Backend/requirements-dev.txt) (tooling).
 
-| Package                                              | Version                    | Role in this project                                                                |
-| ---------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------- |
-| FastAPI, Starlette, Uvicorn                          | 0.141.1, 1.6.0, 0.53.0     | HTTP API, middleware, ASGI server                                                   |
-| SQLModel, SQLAlchemy                                 | 0.0.42, 2.0.54             | Tables (`User`, `Scan`) and sessions                                                |
-| Alembic                                              | 1.20.0                     | Versioned schema migrations, applied at start-up                                    |
-| Pydantic, email-validator                            | 2.13.5, 2.3.0              | Request validation and settings                                                     |
-| PyJWT                                                | 2.15.0                     | HS256 session tokens (replaces `python-jose`, which pulled in a vulnerable `ecdsa`) |
-| bcrypt                                               | 5.0.0                      | Password hashing (cost 12)                                                          |
-| PyOTP, qrcode, cryptography                          | 2.10.0, 8.2, 50.0.1        | TOTP two-factor auth, enrolment QR code, Fernet encryption of TOTP secrets          |
-| reportlab                                            | 5.0.1                      | PDF reports                                                                         |
-| PyTorch, torchvision                                 | 2.14.0, 0.29.0             | The three models                                                                    |
-| nibabel, NumPy, OpenCV, Pillow                       | see file                   | NIfTI I/O, arrays, cropping and image encoding                                      |
-| pytest, ruff, mypy, import-linter, bandit, pip-audit | see `requirements-dev.txt` | Tests, lint and format, strict types, architecture contracts, security checks       |
+| Package                                              | Version                    | Role in this project                                                                         |
+| ---------------------------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------- |
+| FastAPI, Starlette, Uvicorn                          | 0.143.3, 1.8.0, 0.54.0     | HTTP API, middleware, ASGI server                                                            |
+| SQLModel, SQLAlchemy                                 | 0.0.48, 2.0.55             | Tables (`User`, `Scan`) and sessions                                                         |
+| Alembic                                              | 1.20.0                     | Versioned schema migrations, applied at start-up                                             |
+| Pydantic, email-validator                            | 2.14.1, 2.3.0              | Request validation and settings                                                              |
+| PyJWT                                                | 2.15.1                     | HS256 session tokens (replaces `python-jose`, which pulled in a vulnerable `ecdsa`)          |
+| bcrypt                                               | 5.0.0                      | Password hashing (cost 12)                                                                   |
+| PyOTP, qrcode, cryptography                          | 2.10.0, 8.2, 50.0.2        | TOTP two-factor auth, enrolment QR code, Fernet encryption of TOTP secrets                   |
+| reportlab                                            | 5.0.1                      | PDF reports                                                                                  |
+| PyTorch, torchvision                                 | 2.14.1, 0.29.1             | The three models                                                                             |
+| MONAI                                                | 1.6.1                      | SegResNet definition and sliding-window inference, the version the weights were trained with |
+| nibabel, NumPy, OpenCV, Pillow                       | see file                   | NIfTI I/O, arrays, cropping and image encoding                                               |
+| pytest, ruff, mypy, import-linter, bandit, pip-audit | see `requirements-dev.txt` | Tests, lint and format, strict types, architecture contracts, security checks                |
+| httpx2                                               | 2.16.0                     | HTTP client behind Starlette's `TestClient` in the tests                                     |
 
 ### Frontend
 
@@ -181,20 +183,20 @@ Ranges from [`Frontend/package.json`](Frontend/package.json); exact versions are
 
 | Package                                                 | Version range   | Role                                                      |
 | ------------------------------------------------------- | --------------- | --------------------------------------------------------- |
-| React, React DOM                                        | ^19.3.0         | UI                                                        |
+| React, React DOM                                        | ^19.3.1         | UI                                                        |
 | TypeScript (strict mode)                                | ~6.0.3          | Type checking                                             |
-| Vite with `@vitejs/plugin-react-swc`                    | ^8.3.1          | Dev server with `/api` proxy, production build            |
-| vite-plugin-glsl                                        | ^1.6.1          | Loads the `.glsl` shaders that vtk.js imports             |
+| Vite with `@vitejs/plugin-react-swc`                    | ^8.3.4          | Dev server with `/api` proxy, production build            |
+| vite-plugin-glsl                                        | ^1.6.2          | Loads the `.glsl` shaders that vtk.js imports             |
 | React Router DOM                                        | ^7.18.4         | Client-side routing                                       |
-| TanStack React Query                                    | ^5.103.1        | Scan queries, polling while processing, mutations         |
+| TanStack React Query                                    | ^5.104.3        | Scan queries, polling while processing, mutations         |
 | Tailwind CSS 4, Radix UI primitives                     | see file        | Styling and accessible components in `src/components/ui/` |
-| @kitware/vtk.js, nifti-reader-js                        | ^37.3.0, ^0.8.0 | Volume parsing and 3D rendering in the viewer             |
+| @kitware/vtk.js, nifti-reader-js                        | ^37.4.2, ^0.8.0 | Volume parsing and 3D rendering in the viewer             |
 | Recharts, sonner, lucide-react                          | see file        | Chart, toasts, icons                                      |
 | Vitest, Testing Library, jsdom, ESLint, Prettier, jscpd | see file        | Tests, lint, format, duplicate detection                  |
 
 ### Research notebooks
 
-The notebooks ran on Kaggle with 2x Tesla T4 GPUs, Python 3.13.15, PyTorch 2.11.0+cu128 and CUDA 12.8 (`metrics/run_summary.json`). The two 2D notebooks use torchvision 0.26.0, timm 1.0.29 (CoAtNet-0 only), imagehash, OpenCV, scikit-image, SciPy and scikit-learn; the segmentation notebook's recorded run used plain PyTorch, nibabel, SciPy and scikit-learn; the rewritten notebook also installs MONAI 1.6.1 and einops on Kaggle. [`Materials/Notebooks/README.md`](Materials/Notebooks/README.md) has the details.
+The notebooks ran on Kaggle with 2x Tesla T4 GPUs, Python 3.13.15, PyTorch 2.11.0+cu128 and CUDA 12.8 (`metrics/run_summary.json`). The two 2D notebooks use torchvision 0.26.0, timm 1.0.29 (CoAtNet-0 only), imagehash, OpenCV, scikit-image, SciPy and scikit-learn; the segmentation notebook uses MONAI 1.6.1 (installed on Kaggle with einops), nibabel, SciPy and scikit-learn. The backend pins the same MONAI version to build SegResNet and run the sliding window. [`Materials/Notebooks/README.md`](Materials/Notebooks/README.md) has the details.
 
 ## Repository structure
 
@@ -400,13 +402,13 @@ curl.exe -b cookies.txt -H "X-Requested-With: NeuroScan" `
 
 ## Research notebooks and results
 
-Each research task has one Kaggle notebook that trains and evaluates every architecture of the task with the same code, split and optimisation budget, and exports the checkpoint the web app loads. All three were executed on Kaggle (2x Tesla T4) and their outputs are in `Materials/Notebooks/<task>/`. [`Materials/Notebooks/README.md`](Materials/Notebooks/README.md) walks through every cell group with all metrics and plots; the summary below comes from each `metrics/summary_table.csv` and `weights/deploy/metadata.json`.
+Each research task has one Kaggle notebook that trains and evaluates every architecture of the task with the same code and split. The 2D notebooks export the checkpoint the web app loads; the web app's segmentation checkpoint is copied from the segmentation run. All three were executed on Kaggle (2x Tesla T4) and their outputs are in `Materials/Notebooks/<task>/`. [`Materials/Notebooks/README.md`](Materials/Notebooks/README.md) walks through every cell group with all metrics and plots; the summary below comes from each `metrics/summary_table.csv` and `weights/deploy/metadata.json`.
 
-| Task                                           | Notebook                                                               | Protocol                                                                                                                                                                                                                                     | Test result                                                                                                                                                                                                 | Deployed checkpoint                               |
-| ---------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| Detection (tumour vs tumour-negative, 2D)      | [`binary-detection.ipynb`](Materials/Notebooks/binary-detection.ipynb) | 9 backbones x 5 folds; 3,253 images, 1,185 after perceptual-hash deduplication; group-aware split with 171 held-out test images                                                                                                              | Fold-ensemble accuracy 0.9942 (95% CI 0.9825 to 1.0000) for CoAtNet-0, EfficientNetB0 and ViT-B/16; all Holm-corrected McNemar p = 1.0; only VGG16 and MobileNetV3-Large (0.9708) separable from the leader | EfficientNetB0, fold 4: fold test accuracy 0.9766 |
-| Classification (glioma, meningioma, pituitary) | [`classification.ipynb`](Materials/Notebooks/classification.ipynb)     | 9 backbones x 5 folds; 5,828 images, 4,730 after deduplication and label-noise exclusion; 45 held-out test images (1 glioma, 13 meningioma, 31 pituitary)                                                                                    | Six models 1.0000 (45 of 45), VGG16, EfficientNetB0 and MobileNetV3-Large 0.9778; no model separable from the leader                                                                                        | EfficientNetB0, fold 0: fold test accuracy 0.9778 |
-| Segmentation (WT, TC, ET, 3D BraTS 2020)       | [`segmentation.ipynb`](Materials/Notebooks/segmentation.ipynb)         | Recorded run of the previous version: 6 networks, 50 epochs, one seed; 369 cases split 257/56/56 by grade; native-resolution metrics with 8-flip TTA. The current notebook (hybrid ensemble, BraTS-Africa external set) has not been run yet | Mean Dice UNet 0.8199, nnU-Net 0.8192, VNet 0.7965, Swin UNETR 0.7462, TransBTS 0.7291, UNETR 0.7056; CNN ensemble 0.8178                                                                                   | VNet, seed 42: test mean Dice 0.7965              |
+| Task                                           | Notebook                                                               | Protocol                                                                                                                                                                                                                                        | Test result                                                                                                                                                                                                         | Deployed checkpoint                                             |
+| ---------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Detection (tumour vs tumour-negative, 2D)      | [`binary-detection.ipynb`](Materials/Notebooks/binary-detection.ipynb) | 9 backbones x 5 folds; 3,253 images, 1,185 after perceptual-hash deduplication; group-aware split with 171 held-out test images                                                                                                                 | Fold-ensemble accuracy 0.9942 (95% CI 0.9825 to 1.0000) for CoAtNet-0, EfficientNetB0 and ViT-B/16; all Holm-corrected McNemar p = 1.0; only VGG16 and MobileNetV3-Large (0.9708) separable from the leader         | EfficientNetB0, fold 4: fold test accuracy 0.9766               |
+| Classification (glioma, meningioma, pituitary) | [`classification.ipynb`](Materials/Notebooks/classification.ipynb)     | 9 backbones x 5 folds; 5,828 images, 4,730 after deduplication and label-noise exclusion; 45 held-out test images (1 glioma, 13 meningioma, 31 pituitary)                                                                                       | Six models 1.0000 (45 of 45), VGG16, EfficientNetB0 and MobileNetV3-Large 0.9778; no model separable from the leader                                                                                                | EfficientNetB0, fold 0: fold test accuracy 0.9778               |
+| Segmentation (WT, TC, ET, 3D BraTS 2020)       | [`segmentation.ipynb`](Materials/Notebooks/segmentation.ipynb)         | nnU-Net, SegResNet and Swin UNETR (MONAI), one seed; native 1 mm, 128^3 patches; BraTS 2020 split 257/56/56 by grade; region-adaptive ensemble tuned on validation; 60 BraTS-Africa cases as external test; per-patient metrics with 8-flip TTA | Internal mean Dice: SegResNet 0.8717, proposed ensemble 0.8530, CNN mean 0.8512, nnU-Net 0.8404, Swin UNETR 0.8360. External: CNN mean 0.8005, SegResNet 0.7967, proposed 0.7966, Swin UNETR 0.7888, nnU-Net 0.7765 | SegResNet, seed 42: internal 0.8717, external 0.7967 (with TTA) |
 
 Points to keep in mind:
 
@@ -414,16 +416,17 @@ Points to keep in mind:
 - **Curation is fast at this scale only.** Decoding, hashing and cropping took 39 s for 3,253 detection images and 68 s for 5,828 classification images on four CPU cores (`logs/notebook.log`), about 83 and 86 images per second. The hash was not timed on its own, and the pairwise distance matrix grows with the square of the pool size.
 - **The classification test set cannot rank the models.** Grouping at Hamming distance 8 joined 1,431 images into one group, so only 45 images (one glioma) fell into the held-out test set and every model scores 44 or 45 of 45.
 - **Background-only shortcut tests are positive.** Models retrained on images with the head masked out still beat the majority-class rate (Holm-corrected) for 7 of 9 detection backbones (EfficientNetB0 0.7778 against 0.6257) and all 9 classification backbones (EfficientNetB0 0.8889 against 0.6889).
-- **The web app does not reproduce the notebook evaluation exactly.** The notebooks train and test on 2D JPEG slices from public datasets; the backend takes the middle axial slice of an uploaded NIfTI volume. The crop is identical, but the backend ignores the exported temperature and threshold and segments without TTA, region hierarchy or ET size filtering. Accuracy of the full web pipeline on NIfTI uploads is `Not measured in the current repository.`
+- **The proposed segmentation ensemble does not beat its best member.** SegResNet alone is significantly better internally (Holm-corrected Wilcoxon p = 0.018) and equal externally; the ensemble beats nnU-Net and Swin UNETR internally. The disagreement between the members is the strongest result: it flags cases with mean Dice below 0.80 with AUROC 0.99 internally and 0.87 externally.
+- **The web app does not reproduce the notebook evaluation exactly.** The notebooks train and test on 2D JPEG slices from public datasets; the backend takes the middle axial slice of an uploaded NIfTI volume. The crop is identical, but the backend ignores the exported temperature and threshold, and segments with SegResNet alone and without TTA. Accuracy of the full web pipeline on NIfTI uploads is `Not measured in the current repository.`
 
 ## Papers and presentation materials
 
 [`Materials/Research Papers/`](Materials/Research%20Papers/) contains two LaTeX paper projects in the Elsevier CAS single-column format (`cas-sc`) for _Engineering Applications of Artificial Intelligence_, both rewritten from the notebook outputs above:
 
-| Folder                                                                                                      | Paper                                                                                                                                                                                                                  | Files                                                                                                                                                                              |
-| ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Standardised_Comparison_of_Convolutional_and_Transformer_Backbones_for_Brain_Tumour_Image_Classification/` | Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication: A Comparative Study Using Advanced Deep Learning Models (nine-backbone benchmark for 2D detection and subtype classification) | `main.tex`, `supplementary.tex`, `preamble.tex`, `refs.bib`, `highlights.tex`, `graphical_abstract.tex`, `main.pdf`, `supplementary.pdf`, `README_Overleaf.md`, CAS template files |
-| `A_Comprehensive_Benchmark_of_Three-Dimensional_Segmentation_Architectures_for_Brain_Tumour_Segmentation/`  | Six-network 3D segmentation benchmark on BraTS 2020                                                                                                                                                                    | `main.tex`, `refs.bib`, `highlights.tex`, `graphical_abstract.tex`, `main.pdf`, `README_Overleaf.md`, CAS template files                                                           |
+| Folder                                                                                                      | Paper                                                                                                                                                                                                                    | Files                                                                                                                                                                              |
+| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Standardised_Comparison_of_Convolutional_and_Transformer_Backbones_for_Brain_Tumour_Image_Classification/` | Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication: A Comparative Study Using Advanced Deep Learning Models (nine-backbone benchmark for 2D detection and subtype classification)   | `main.tex`, `supplementary.tex`, `preamble.tex`, `refs.bib`, `highlights.tex`, `graphical_abstract.tex`, `main.pdf`, `supplementary.pdf`, `README_Overleaf.md`, CAS template files |
+| `Region-Adaptive_CNN-Transformer_Ensembles_for_Brain_Tumour_Segmentation/`                                  | Region-Adaptive CNN-Transformer Ensembles for Brain Tumour Segmentation with External Validation and Disagreement-Based Quality Control (nnU-Net, SegResNet and Swin UNETR on BraTS 2020, external test on BraTS-Africa) | `main.tex`, `refs.bib`, `highlights.tex`, `graphical_abstract.tex`, `main.pdf`, `README_Overleaf.md`, CAS template files                                                           |
 
 The papers include the notebook plots directly from `Materials/Notebooks/<task>/plots/` through `\graphicspath`, so they compile in place without copied figures. Every notebook plot is used except the two dataset overview plots (`01_dataset_overview.png`) of the classification paper, whose counts are in its provenance table; each figure and table is set directly after the paragraph that first cites it, and citations, cross-references, DOIs and URLs are links. Each `README_Overleaf.md` says where to upload the plots for Overleaf and which output file each table comes from. The classification paper has its supplementary material as a separate document, `supplementary.tex`, which shares `preamble.tex` with `main.tex`; the two cross-reference each other through the `xr-hyper` package, so references such as "Supplementary F3" are numbered and link into the other PDF. The supplement extends the paper: it has no author block, abstract or reference list, only section headings and figures and tables whose captions carry every detail.
 
@@ -438,15 +441,15 @@ npm run papers -- Standardised  # folders whose name contains "Standardised" (ca
 
 CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs all of these on every push and pull request, plus a gitleaks scan of the full Git history.
 
-| Check                     | Command                                                                                   | Result when this README was written                                              |
-| ------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| Backend tests             | `pytest` (in `Backend/`)                                                                  | 61 passed; they use a fake inference engine, so no weights are needed            |
-| Backend lint and format   | `ruff check neuroscan tests main.py`, `ruff format --check ...`                           | Clean                                                                            |
-| Backend types             | `mypy` (strict)                                                                           | Clean                                                                            |
-| Architecture contracts    | `lint-imports`                                                                            | 3 contracts kept                                                                 |
-| Backend security          | `bandit -q -r neuroscan main.py`, `pip-audit -r requirements.txt -r requirements-dev.txt` | No findings                                                                      |
-| Everything frontend       | `npm run check` (in `Frontend/`)                                                          | Strict typecheck, lint, Prettier, jscpd (0 clones), 39 tests, and build all pass |
-| Frontend dependency audit | `npm audit`                                                                               | 0 vulnerabilities                                                                |
+| Check                     | Command                                                                                   | Result when this README was written                                                              |
+| ------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Backend tests             | `pytest` (in `Backend/`)                                                                  | 64 passed; a fake inference engine and a stand-in segmentation network, so no weights are needed |
+| Backend lint and format   | `ruff check neuroscan tests main.py`, `ruff format --check ...`                           | Clean                                                                                            |
+| Backend types             | `mypy` (strict)                                                                           | Clean                                                                                            |
+| Architecture contracts    | `lint-imports`                                                                            | 3 contracts kept                                                                                 |
+| Backend security          | `bandit -q -r neuroscan main.py`, `pip-audit -r requirements.txt -r requirements-dev.txt` | No findings                                                                                      |
+| Everything frontend       | `npm run check` (in `Frontend/`)                                                          | Strict typecheck, lint, Prettier, jscpd (0 clones), 39 tests, and build all pass                 |
+| Frontend dependency audit | `npm audit`                                                                               | 0 vulnerabilities                                                                                |
 
 From the repository root, `black .` and `npm run format` produce the same output CI checks. Prettier is pinned to the same exact version in the root `package.json` and `Frontend/package.json`, so after `npm install` at the root (`npm run dev` does this automatically), `npm run format` and `npx prettier . --write` both use that version and match CI. The CI `format` job fails if the two pins differ and checks the whole repository with `npm run format:check`; `.prettierignore` keeps lockfiles untouched. `npm install` in `Frontend/` also sets `core.hooksPath` to `.githooks`, whose pre-commit hook rejects staged frontend files that fail the CI Prettier check. In addition, black uses ruff's 100-character line length from the root `pyproject.toml`, and `.gitattributes` checks files out with LF so Prettier does not rewrite line endings on Windows.
 
@@ -472,8 +475,8 @@ From the repository root, `black .` and `npm run format` produce the same output
 ## Known limitations
 
 - **Detection and classification use a single 2D slice** (the middle slice of one modality), not the whole volume. The models were trained on 2D JPEG slices of unknown MRI sequence, so their notebook scores do not transfer directly to this input.
-- **The notebook calibration and post-processing are not applied.** The exported temperature, detection threshold and ET size filter in each `metadata.json` are not read by the backend.
-- **Volumes are voxel counts at 128^3 divided by 1,000**, not physical volumes.
+- **The 2D calibration is not applied, and segmentation runs without TTA.** The backend does not read the exported temperature and detection threshold in the 2D `metadata.json` files; it hard-codes the segmentation ET size filter (800 voxels) from the segmentation run.
+- **Segmentation expects BraTS-style input**: four co-registered, skull-stripped sequences on one grid, ideally 1 mm isotropic. It is slow on a CPU (83.5 s for one BraTS case on an Intel Core i7-9750H).
 - **DICOM is not supported**; convert to NIfTI first.
 - **One backend process.** The job queue and rate limiter are in memory and SQLite has one writer. See `ARCHITECTURE.md` for what to change before running several instances.
 - **No email service**, so there is no self-service password reset; operators use the recovery CLI.
@@ -486,18 +489,18 @@ Keep `.env` out of Git (it is already ignored) and rotate `JWT_SECRET` and `DATA
 
 ## Project metrics
 
-| Metric                    | Value                                                                                                                     | Source                                                  |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| API routes                | 23                                                                                                                        | `Backend/neuroscan/api/`                                |
-| Database tables           | 2 (`user`, `scan`), 2 migrations                                                                                          | `Backend/neuroscan/models.py`, `migrations/versions/`   |
-| Frontend routes           | 9 including the 404 page                                                                                                  | `Frontend/src/App.tsx`                                  |
-| Backend tests             | 61                                                                                                                        | `Backend/tests/`                                        |
-| Frontend tests            | 39                                                                                                                        | `Frontend/src/test/`                                    |
-| Research notebooks        | 3 (detection, classification, segmentation), each with executed outputs                                                   | `Materials/Notebooks/*.ipynb`                           |
-| Deployed model parameters | Detection and classification: EfficientNet-B0 (4,008,829 and 4,011,391); segmentation: VNet 1,398,761                     | `metrics/run_metrics.csv`, `metrics/model_profiles.csv` |
-| Session lifetime          | 30 minutes by default                                                                                                     | `ACCESS_TOKEN_EXPIRE_MINUTES`                           |
-| Ports                     | 8000 (API, localhost only), 8080 (Vite dev)                                                                               | `scripts/dev.mjs`, `vite.config.ts`                     |
-| Processing time per scan  | About 4 seconds for one four-modality BraTS 2020 case on the development machine (CPU, no CUDA), measured once end to end | Local end-to-end run                                    |
+| Metric                    | Value                                                                                                                                                                                        | Source                                                  |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| API routes                | 23                                                                                                                                                                                           | `Backend/neuroscan/api/`                                |
+| Database tables           | 2 (`user`, `scan`), 2 migrations                                                                                                                                                             | `Backend/neuroscan/models.py`, `migrations/versions/`   |
+| Frontend routes           | 9 including the 404 page                                                                                                                                                                     | `Frontend/src/App.tsx`                                  |
+| Backend tests             | 64                                                                                                                                                                                           | `Backend/tests/`                                        |
+| Frontend tests            | 39                                                                                                                                                                                           | `Frontend/src/test/`                                    |
+| Research notebooks        | 3 (detection, classification, segmentation), each with executed outputs                                                                                                                      | `Materials/Notebooks/*.ipynb`                           |
+| Deployed model parameters | Detection and classification: EfficientNet-B0 (4,008,829 and 4,011,391); segmentation: SegResNet 19,917,353                                                                                  | `metrics/run_metrics.csv`, `metrics/model_profiles.csv` |
+| Session lifetime          | 30 minutes by default                                                                                                                                                                        | `ACCESS_TOKEN_EXPIRE_MINUTES`                           |
+| Ports                     | 8000 (API, localhost only), 8080 (Vite dev)                                                                                                                                                  | `scripts/dev.mjs`, `vite.config.ts`                     |
+| Processing time per scan  | Segmentation step: 83.5 s for `Materials/Input/BraTS20_Training_001` on an Intel Core i7-9750H (CPU only), measured once; end to end with SegResNet: Not measured in the current repository. | Local run of `BrainProcessor.segment`                   |
 
 ## Contributing
 
@@ -506,7 +509,7 @@ Keep `.env` out of Git (it is already ignored) and rotate `JWT_SECRET` and `DATA
 - Keep API response shapes in `Backend/neuroscan/schemas.py` and `Frontend/src/lib/types.ts` in sync.
 - Schema changes need a new Alembic migration; never edit an applied one.
 - Do not commit `.pth`, `.db`, `.nii` or `.nii.gz` files; `.gitignore` already excludes them. Install the pre-commit hook with `pre-commit install`.
-- Changing `VNet3D` or the EfficientNet head in `neuroscan/inference/networks.py` breaks loading of the existing weight files.
+- Changing `segresnet()` or the EfficientNet head in `neuroscan/inference/networks.py`, or the `monai` pin in `Backend/requirements.txt`, can break loading of the existing weight files; `tests/test_inference.py` checks the SegResNet layout against the checkpoint's parameter count.
 - Before opening a pull request, run the checks in [Testing and code quality](#testing-and-code-quality).
 
 No licence file is present in the repository.

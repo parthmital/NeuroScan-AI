@@ -1,0 +1,19 @@
+set,model,region,inside,chance,enrichment
+External (BraTS-Africa),SegResNet,ET,0.7575,0.0629,18.8509
+External (BraTS-Africa),SegResNet,TC,0.2933,0.0689,4.2493
+External (BraTS-Africa),SegResNet,WT,0.9609,0.1572,8.3837
+External (BraTS-Africa),Swin UNETR,ET,0.0824,0.0629,1.0635
+External (BraTS-Africa),Swin UNETR,TC,0.1248,0.0689,1.485
+External (BraTS-Africa),Swin UNETR,WT,0.1942,0.1572,1.2721
+External (BraTS-Africa),nnU-Net,ET,0.432,0.0629,7.6359
+External (BraTS-Africa),nnU-Net,TC,0.8804,0.0689,22.1771
+External (BraTS-Africa),nnU-Net,WT,0.9767,0.1572,8.6528
+Internal test (BraTS 2020),SegResNet,ET,0.5737,0.0387,15.8793
+Internal test (BraTS 2020),SegResNet,TC,0.1937,0.0522,5.1605
+Internal test (BraTS 2020),SegResNet,WT,0.9709,0.1145,10.3954
+Internal test (BraTS 2020),Swin UNETR,ET,0.0737,0.0387,1.6779
+Internal test (BraTS 2020),Swin UNETR,TC,0.085,0.0522,1.4985
+Internal test (BraTS 2020),Swin UNETR,WT,0.1604,0.1145,1.4756
+Internal test (BraTS 2020),nnU-Net,ET,0.2435,0.0387,6.4189
+Internal test (BraTS 2020),nnU-Net,TC,0.828,0.0522,22.6209
+Internal test (BraTS 2020),nnU-Net,WT,0.9382,0.1145,9.8973

@@ -4,6 +4,7 @@ bcrypt==5.0.0
 cryptography==50.0.2
 email-validator==2.3.0
 fastapi==0.143.3
+monai==1.6.1
 nibabel==5.4.2
 numpy==2.4.6
 opencv-python-headless==5.0.0.93

@@ -1,30 +1,33 @@
 {
-	"img_size": 128,
-	"epochs": 50,
-	"effective_batch": 4,
-	"grad_clip": 1.0,
+	"patch": 128,
+	"source": 160,
+	"epochs": {
+		"nnU-Net": 60,
+		"SegResNet": 60,
+		"Swin UNETR": 30
+	},
+	"iters_per_epoch": 250,
+	"batch": 2,
+	"fg_probability": 0.33,
+	"val_every": 5,
+	"sw_overlap": 0.5,
 	"deterministic": false,
 	"tta": true,
-	"early_stop_patience": null,
 	"et_candidates": [0, 50, 100, 200, 300, 500, 800],
 	"loader_workers": 1,
-	"latency_iters": 20,
-	"images_path": "/tmp/neuroscan-seg-cache/images.npy",
-	"labels_path": "/tmp/neuroscan-seg-cache/labels.npy",
+	"latency_iters": 4,
+	"cache_dir": "/tmp/neuroscan-seg-cache/cases",
+	"fg_path": "/tmp/neuroscan-seg-cache/fg_coords.npz",
 	"case_table": "/kaggle/working/metrics/cases.csv",
 	"runs_dir": "/kaggle/working/metrics/runs",
 	"weights_dir": "/kaggle/working/weights",
 	"probs_dir": "/kaggle/working/predictions",
 	"log_dir": "/kaggle/working/logs",
 	"claims_dir": "/tmp/neuroscan-seg-cache/claims",
-	"deadline": 1791352909.968284,
+	"deadline": 1792876602.1499426,
 	"jobs": [
 		{
-			"model": "UNETR",
-			"seed": 42
-		},
-		{
-			"model": "TransBTS",
+			"model": "Swin UNETR",
 			"seed": 42
 		},
 		{
@@ -32,15 +35,7 @@
 			"seed": 42
 		},
 		{
-			"model": "Swin UNETR",
-			"seed": 42
-		},
-		{
-			"model": "UNet",
-			"seed": 42
-		},
-		{
-			"model": "VNet",
+			"model": "SegResNet",
 			"seed": 42
 		}
 	]

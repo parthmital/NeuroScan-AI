@@ -1,0 +1,25 @@
+,,BraTS 2020 HGG,BraTS 2020 LGG,BraTS-Africa
+volume_cm3_WT,count,293.0,76.0,60.0
+volume_cm3_WT,mean,96.44,111.54,161.36
+volume_cm3_WT,std,53.78,76.72,92.28
+volume_cm3_WT,min,7.28,17.08,1.03
+volume_cm3_WT,25%,52.48,48.37,85.76
+volume_cm3_WT,50%,91.13,86.32,163.75
+volume_cm3_WT,75%,138.05,171.58,232.14
+volume_cm3_WT,max,256.88,361.78,394.41
+volume_cm3_TC,count,293.0,76.0,60.0
+volume_cm3_TC,mean,37.66,57.85,61.68
+volume_cm3_TC,std,29.26,49.66,58.32
+volume_cm3_TC,min,0.56,0.83,0.49
+volume_cm3_TC,25%,14.25,14.07,11.44
+volume_cm3_TC,50%,32.54,44.59,39.81
+volume_cm3_TC,75%,56.56,90.23,112.17
+volume_cm3_TC,max,126.72,190.19,228.44
+volume_cm3_ET,count,293.0,76.0,60.0
+volume_cm3_ET,mean,23.39,5.46,36.32
+volume_cm3_ET,std,18.5,13.53,30.98
+volume_cm3_ET,min,0.11,0.0,0.49
+volume_cm3_ET,25%,8.99,0.0,10.62
+volume_cm3_ET,50%,19.46,0.82,28.43
+volume_cm3_ET,75%,32.37,3.93,63.64
+volume_cm3_ET,max,111.25,89.55,122.36

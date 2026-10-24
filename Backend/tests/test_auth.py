@@ -191,6 +191,7 @@ def test_unsafe_request_without_csrf_header_is_rejected(
 )
 def test_forged_or_expired_tokens_rejected(user_client: TestClient, forge) -> None:  # type: ignore[no-untyped-def]
     secret = user_client.app.state.settings.jwt_secret  # type: ignore[attr-defined]
+    user_client.cookies.clear()  # the forged token must be the only session cookie sent
     user_client.cookies.set(SESSION_COOKIE, forge(secret, datetime.now(UTC)), path="/api")
     assert user_client.get("/api/auth/me").status_code == 401
 
@@ -214,6 +215,7 @@ def test_password_change_requires_current_password_and_revokes_old_sessions(
     good = {"currentPassword": PASSWORD, "newPassword": "a-brand-new-passphrase"}
     assert user_client.post("/api/auth/password", json=good).status_code == 200
     assert user_client.get("/api/auth/me").status_code == 200
+    user_client.cookies.clear()  # send only the revoked token, not beside the new one
     user_client.cookies.set(SESSION_COOKIE, old, path="/api")
     assert user_client.get("/api/auth/me").status_code == 401
     user_client.cookies.clear()

@@ -29,7 +29,9 @@ class Settings(BaseModel):
     classification_weights: Path = (
         NOTEBOOKS_DIR / "classification" / "weights" / "deploy" / "EfficientNetB0.pth"
     )
-    segmentation_weights: Path = NOTEBOOKS_DIR / "segmentation" / "weights" / "deploy" / "VNet.pth"
+    segmentation_weights: Path = (
+        NOTEBOOKS_DIR / "segmentation" / "weights" / "deploy" / "SegResNet.pth"
+    )
     cors_origins: list[str] = []
     access_token_expire_minutes: int = Field(default=30, ge=1, le=24 * 60)
     cookie_secure: bool = True

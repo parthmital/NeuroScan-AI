@@ -113,8 +113,8 @@ def test_relative_paths_resolve_against_backend_folder(
 ) -> None:
     from neuroscan.config import BACKEND_DIR
 
-    settings = make_settings(segmentation_weights="Segmentation/VNet.pth")
-    assert settings.segmentation_weights == BACKEND_DIR / "Segmentation" / "VNet.pth"
+    settings = make_settings(segmentation_weights="Segmentation/SegResNet.pth")
+    assert settings.segmentation_weights == BACKEND_DIR / "Segmentation" / "SegResNet.pth"
 
 
 def test_production_is_the_default_environment(

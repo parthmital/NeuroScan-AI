@@ -1,0 +1,13 @@
+model,dropped,drop_WT,drop_TC,drop_ET
+nnU-Net,flair,0.5945,0.4389,0.4128
+nnU-Net,t1,0.014,0.0587,0.0504
+nnU-Net,t1ce,0.0225,0.3048,0.6388
+nnU-Net,t2,0.0853,0.0788,0.0427
+SegResNet,flair,0.2448,0.0981,0.0865
+SegResNet,t1,0.0078,0.0284,0.04
+SegResNet,t1ce,0.0401,0.388,0.7554
+SegResNet,t2,0.0238,0.018,-0.0129
+Swin UNETR,flair,0.3611,0.1186,0.1037
+Swin UNETR,t1,0.0097,0.0461,0.0495
+Swin UNETR,t1ce,0.0135,0.3211,0.692
+Swin UNETR,t2,0.0372,0.0468,-0.0145

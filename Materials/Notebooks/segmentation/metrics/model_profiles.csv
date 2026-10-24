@@ -1,7 +1,4 @@
-model,family,parameters_m,gflops_per_volume,optimizer,lr,weight_decay,warmup_epochs,micro_batch,checkpointing,ds_weights
-UNet,CNN,5.604361,907.035017216,sgd,0.01,3e-05,0,2,False,"(1.0, 0.5, 0.25)"
-nnU-Net,CNN,16.548108,956.295020544,sgd,0.01,3e-05,0,2,False,"(1.0, 0.5, 0.25, 0.125)"
-VNet,CNN,1.398761,149.917007872,sgd,0.01,3e-05,0,2,False,"(1.0, 0.5, 0.25)"
-UNETR,Transformer,137.596579,1761.741897728,adamw,0.0001,1e-05,3,2,True,"(1.0,)"
-Swin UNETR,Transformer,10.520901,797.069960448,adamw,0.0001,1e-05,3,1,True,"(1.0,)"
-TransBTS,Hybrid,35.805449,996.155588608,adamw,0.0001,1e-05,3,2,False,"(1.0, 0.5, 0.25)"
+model,family,parameters_m,gflops_per_patch,optimizer,lr,weight_decay,warmup_epochs,grad_clip,micro_batch,ds_weights,cam_layer
+nnU-Net,CNN,31.422313,968.107753472,sgd,0.01,3e-05,0,12.0,2,"(1.0, 0.5, 0.25)",upsamples.2
+SegResNet,CNN,19.917353,1218.15171072,adamw,0.0002,1e-05,2,1.0,2,"(1.0, 0.5, 0.25)",up_layers.0.blocks
+Swin UNETR,Transformer,72.767301,1665.592878336,adamw,0.0001,1e-05,2,1.0,1,"(1.0,)",decoder3

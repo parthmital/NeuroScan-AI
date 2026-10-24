@@ -9,19 +9,25 @@ import cv2
 import numpy as np
 import torch
 import torch.nn as nn
+from monai.inferers.utils import sliding_window_inference
 from PIL import Image
 from torchvision import transforms
 
 from neuroscan.inference import volumes
-from neuroscan.inference.networks import VNet3D, efficientnet_b0_head
+from neuroscan.inference.networks import efficientnet_b0_head, segresnet
 
 logger = logging.getLogger(__name__)
 
 IMG_SIZE = (224, 224)
-SEG_SIZE = (128, 128, 128)
 CLASSES: list[str] = ["glioma", "meningioma", "pituitary"]
 # Order of input channels the segmentation network was trained with.
 SEGMENTATION_CHANNELS = ("flair", "t1", "t1ce", "t2")
+# Sliding-window inference as in the segmentation notebook: 128^3 windows, half overlap.
+SEG_WINDOW = 128
+SEG_OVERLAP = 0.5
+# Smallest ET prediction kept, tuned on the validation cases for SegResNet
+# (Materials/Notebooks/segmentation/metrics/runs/segresnet_seed42/summary.json).
+ET_MIN_VOXELS = 800
 
 _NORMALISE = transforms.Compose(
     [
@@ -41,7 +47,7 @@ class Classification:
 
 @dataclass(frozen=True)
 class Volumes:
-    """Tumour sub-region volumes in cm^3 (voxel count / 1000 on the resampled 128^3 grid)."""
+    """Tumour sub-region volumes in cm^3 (voxel count x FLAIR voxel volume in mm^3 / 1000)."""
 
     wt: float
     tc: float
@@ -61,7 +67,7 @@ class BrainProcessor:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.detection_model: nn.Module | None = None
         self.classification_model: nn.Module | None = None
-        self.segmentation_model: VNet3D | None = None
+        self.segmentation_model: nn.Module | None = None
 
     @property
     def ready(self) -> bool:
@@ -76,7 +82,7 @@ class BrainProcessor:
                 lambda: efficientnet_b0_head(len(CLASSES)),
                 classification,
             ),
-            ("segmentation_model", VNet3D, segmentation),
+            ("segmentation_model", segresnet, segmentation),
         )
         for attribute, factory, path in specs:
             try:
@@ -120,20 +126,29 @@ class BrainProcessor:
         )
 
     @staticmethod
-    def _preprocess_3d(path: Path) -> np.ndarray:
-        data, _ = volumes.load_first_volume(path)
-        brain = data != 0
-        if brain.any():
-            data[brain] = (data[brain] - float(data[brain].mean())) / (
-                float(data[brain].std()) + 1e-8
-            )
-        resized = torch.nn.functional.interpolate(
-            torch.from_numpy(data)[None, None],
-            size=SEG_SIZE,
-            mode="trilinear",
-            align_corners=False,
-        )
-        return resized.squeeze().numpy().astype(np.float32)
+    def _preprocess_3d(modality_paths: Mapping[str, Path]) -> tuple[np.ndarray, tuple[slice, ...]]:
+        """Crop the co-registered sequences to the brain and z-score each over its brain voxels.
+
+        Same as the notebook's `preprocess_case`: no resampling, so the model sees the native grid
+        (1 mm in BraTS). Returns the (4, D, H, W) image and the crop box in the native grid.
+        """
+        data = [volumes.load_first_volume(modality_paths[m])[0] for m in SEGMENTATION_CHANNELS]
+        if len({d.shape for d in data}) != 1:
+            raise ValueError("The four sequences must share one voxel grid (co-registered)")
+        brain = np.any(np.stack(data) != 0, axis=0)
+        coords = np.argwhere(brain) if brain.any() else np.argwhere(np.ones_like(brain))
+        low, high = coords.min(0), coords.max(0) + 1
+        box = tuple(slice(int(a), int(b)) for a, b in zip(low, high, strict=True))
+        cropped = []
+        for volume in data:
+            volume = volume[box].copy()
+            inside = volume != 0
+            if inside.any():
+                volume[inside] = (volume[inside] - float(volume[inside].mean())) / (
+                    float(volume[inside].std()) + 1e-8
+                )
+            cropped.append(volume)
+        return np.stack(cropped).astype(np.float32), box
 
     @property
     def can_segment(self) -> bool:
@@ -141,22 +156,35 @@ class BrainProcessor:
 
     def segment(self, modality_paths: Mapping[str, Path], mask_path: Path) -> Volumes:
         """Segment WT/TC/ET, save a label mask (1=WT, 2=TC, 3=ET) in FLAIR space, return volumes."""
-        if self.segmentation_model is None:
+        model = self.segmentation_model
+        if model is None:
             raise RuntimeError("Segmentation model not loaded")
-        stacked = np.stack([self._preprocess_3d(modality_paths[m]) for m in SEGMENTATION_CHANNELS])
-        with torch.no_grad():
-            output = self.segmentation_model(torch.from_numpy(stacked)[None].to(self.device))[0]
-            regions = torch.sigmoid(output).cpu().numpy()[0] > 0.5
-        wt, tc, et = (float(regions[i].sum() / 1e3) for i in range(3))
+        image, box = self._preprocess_3d(modality_paths)
 
-        labels = np.zeros(SEG_SIZE, dtype=np.uint8)
-        for label, region in enumerate(regions, start=1):
-            labels[region] = label
+        def predictor(x: torch.Tensor) -> torch.Tensor:
+            with torch.autocast("cuda", dtype=torch.float16, enabled=x.is_cuda):
+                return model(x).float()  # type: ignore[no-any-return]
+
+        with torch.no_grad():
+            logits = sliding_window_inference(
+                torch.from_numpy(image)[None].to(self.device),
+                (SEG_WINDOW,) * 3,
+                2,
+                predictor,
+                overlap=SEG_OVERLAP,
+                mode="gaussian",
+            )
+            wt, tc, et = (torch.sigmoid(logits[0]) > 0.5).cpu().numpy()
+        # BraTS label hierarchy (ET inside TC inside WT) after removing a small ET prediction.
+        if int(et.sum()) < ET_MIN_VOXELS:
+            et = np.zeros_like(et)
+        tc |= et
+        wt |= tc
+
         reference, affine = volumes.load_first_volume(modality_paths["flair"])
-        resized = torch.nn.functional.interpolate(
-            torch.from_numpy(labels.astype(np.float32))[None, None],
-            size=reference.shape,
-            mode="nearest",
-        )
-        volumes.save_mask(resized.squeeze().numpy().astype(np.uint8), affine, mask_path)
-        return Volumes(wt=wt, tc=tc, et=et)
+        labels = np.zeros(reference.shape, dtype=np.uint8)
+        for label, region in enumerate((wt, tc, et), start=1):
+            labels[box][region] = label
+        volumes.save_mask(labels, affine, mask_path)
+        voxel_cm3 = float(np.prod(volumes.geometry(modality_paths["flair"])[1])) / 1e3
+        return Volumes(*(float(region.sum()) * voxel_cm3 for region in (wt, tc, et)))

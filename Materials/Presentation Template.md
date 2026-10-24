@@ -26,9 +26,9 @@ Dr. Biji C. L.
 
 Associate Professor Grade 2, SCOPE
 
-Based on two research manuscripts: a leakage-controlled benchmark of 2D backbones for detection and subtype classification, and a benchmark of 3D segmentation architectures on BraTS 2020
+Based on two research manuscripts: a leakage-controlled benchmark of 2D backbones for detection and subtype classification, and a region-adaptive CNN-transformer ensemble for 3D segmentation with external validation
 
-> Speaker notes: Introduce the team and the guide. The project has two research outputs and one product: a 2D classification benchmark, a 3D segmentation benchmark, and the NeuroScan AI web application that deploys the models those benchmarks selected.
+> Speaker notes: Introduce the team and the guide. The project has two research outputs and one product: a 2D classification benchmark, a 3D segmentation study with external validation, and the NeuroScan AI web application that deploys the models those studies selected.
 
 ## Slide 2
 
@@ -56,11 +56,11 @@ Benchmark nine ImageNet-pretrained CNN, transformer and hybrid backbones for tum
 
 **2. Segment in 3D**
 
-Benchmark six 3D architectures for whole tumour, tumour core and enhancing tumour segmentation on BraTS 2020 under one training budget (Paper 2).
+Fuse two 3D CNNs and a transformer per tumour region for whole tumour, tumour core and enhancing tumour, and test them on BraTS 2020 and on external BraTS-Africa cases (Paper 2).
 
 **3. Deploy**
 
-Serve the most efficient models, EfficientNetB0 and VNet, in a secure web application with a linked multi-planar and 3D viewer and PDF and CSV reports.
+Serve the most efficient models, EfficientNetB0 and SegResNet, in a secure web application with a linked multi-planar and 3D viewer and PDF and CSV reports.
 
 **Motivation.** MRI is the main non-invasive modality for characterising brain tumours [3], which are classified by cell of origin and molecular features [4]. Manual reading is slow and varies between and within readers [5], and reliable automation can support faster, more consistent assessment [6, 7].
 
@@ -80,17 +80,17 @@ Serve the most efficient models, EfficientNetB0 and VNet, in a secure web applic
 
 **Result: 99.42%** detection accuracy of CoAtNet-0, EfficientNetB0 and ViT‑B/16 on 171 test images (95% CI 98.25 to 100%); no pair of models differs significantly; background-only models beat the majority-class rate for 7 of 9 detection and 9 of 9 subtype backbones
 
-**Paper 2: 3D segmentation on BraTS 2020**
+**Paper 2: 3D segmentation with external validation**
 
-- Six networks implemented from scratch: UNet, nnU-Net-style, VNet, UNETR, Swin UNETR and TransBTS
-- 369 cases in a grade-stratified 257 / 56 / 56 split; 50 epochs and 3,250 optimiser steps per model
-- Native-resolution evaluation with eight-flip test-time augmentation, bootstrap CIs, Wilcoxon tests with Holm correction and results by tumour grade
+- nnU-Net and SegResNet (CNNs) and Swin UNETR-v2 (transformer) at native 1 mm resolution [10–12]
+- Region-adaptive ensemble: one weight vector and threshold per region, chosen on 56 validation cases
+- 56 internal BraTS 2020 test cases and 60 external BraTS-Africa cases [13]; member disagreement tested as a quality-control signal
 
-**Result: 0.8199** mean Dice of UNet (95% CI 0.7826 to 0.8533); VNet 0.7965 with 1.40 M parameters; transformer-based models 0.7056 to 0.7462; every pairwise difference significant
+**Result: 0.993** AUC of member disagreement for flagging failed cases internally (0.870 externally); the ensemble (Dice 0.8530) beats two members but not SegResNet alone (0.8717)
 
-**Deployment.** EfficientNetB0 (detection and classification) and VNet (segmentation) run in a FastAPI and React application; 61 backend and 39 frontend automated tests pass.
+**Deployment.** EfficientNetB0 (detection and classification) and SegResNet (segmentation) run in a FastAPI and React application; 64 backend and 39 frontend automated tests pass.
 
-> Speaker notes: One problem, two controlled benchmarks, one deployed system. The headline accuracy is measured after deduplication, and the shortcut audit qualifies it.
+> Speaker notes: One problem, two controlled studies, one deployed system. The 2D headline accuracy is measured after deduplication and qualified by the shortcut audit; in 3D the honest result is that the ensemble does not beat SegResNet, while the disagreement between its members is a strong quality signal.
 
 ## Slide 5
 
@@ -100,17 +100,17 @@ Serve the most efficient models, EfficientNetB0 and VNet, in a secure web applic
 
 | Study                                                   | Task and data                                        | Method                                                                    | Reported result             | Limitation addressed here                        |
 | ------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------- | --------------------------- | ------------------------------------------------ |
-| Zacharaki et al., 2009 [10]                             | Glioma vs metastasis, glioma grade; 102 tumours      | Shape, intensity and texture features; SVM with feature elimination       | 85% and 88% (leave-one-out) | Hand-crafted features transfer poorly [11, 12]   |
-| Cheng et al., 2015 [13]                                 | Three-class subtype; 3,064 T1CE slices, 233 patients | Augmented tumour ROI, ring partition; intensity, GLCM, bag-of-words + SVM | Up to 91.28%                | Needs a tumour ROI; features redesigned per task |
-| Seetha and Raja, 2018 [14]                              | Tumour vs non-tumour; Radiopaedia, BRATS 2015        | ImageNet-pretrained CNN, last layer trained                               | 97.5% (training)            | No held-out estimate                             |
-| Talo et al., 2019 [15]                                  | Normal vs abnormal; 613 MR images                    | ResNet34 transfer learning [16, 17]                                       | 100% (five-fold)            | One small collection                             |
-| Deepak and Ameer, 2019 [18]; Ghassemi et al., 2020 [19] | Three-class subtype; figshare 3,064 slices           | GoogLeNet features + classifiers; CNN pretrained as a GAN discriminator   | 98% mean (Deepak)           | One architecture each                            |
-| Rehman et al., 2020 [20]; Noreen et al., 2020 [21]      | Three-class subtype; figshare 3,064 slices           | Fine-tuned VGG16 [22]; Inception-v3 [23] and DenseNet201 [24] features    | 98.69%; 99.34% and 99.51%   | No deduplication, CIs or tests                   |
-| Khan et al., 2020 [25]                                  | Tumour classification; BraTS 2015, 2017, 2018        | VGG16 and VGG19 features, ELM-based selection                             | 97.8%, 96.9%, 92.5%         | Multi-stage tuned pipeline                       |
-| Tummala et al., 2022 [26]; Asiri et al., 2024 [27]      | Three-class (3,064); four-class (2,870)              | ViT ensemble [28]; Swin Transformer [29]                                  | 98.7%; 97%                  | No CNN baseline under one protocol               |
-| 3D CNNs [30–33]                                         | 3D medical segmentation                              | U-Net, 3D U-Net, V-Net, self-configuring nnU-Net                          | Strong CNN baselines        | Compared under different pipelines               |
-| 3D transformers [34–37]                                 | 3D brain tumour segmentation                         | UNETR, Swin UNETR, TransBTS, TransUNet                                    | Long-range context          | Data-hungry from scratch [38]                    |
-| Kapoor and Narayanan, 2023 [8]; Fateh et al., 2026 [39] | Reliability of ML results; BRISC curation            | Leakage audit across 17 fields; duplicates removed before splitting       | Leakage inflates scores     | No architecture benchmark                        |
+| Zacharaki et al., 2009 [14]                             | Glioma vs metastasis, glioma grade; 102 tumours      | Shape, intensity and texture features; SVM with feature elimination       | 85% and 88% (leave-one-out) | Hand-crafted features transfer poorly [15, 16]   |
+| Cheng et al., 2015 [17]                                 | Three-class subtype; 3,064 T1CE slices, 233 patients | Augmented tumour ROI, ring partition; intensity, GLCM, bag-of-words + SVM | Up to 91.28%                | Needs a tumour ROI; features redesigned per task |
+| Seetha and Raja, 2018 [18]                              | Tumour vs non-tumour; Radiopaedia, BRATS 2015        | ImageNet-pretrained CNN, last layer trained                               | 97.5% (training)            | No held-out estimate                             |
+| Talo et al., 2019 [19]                                  | Normal vs abnormal; 613 MR images                    | ResNet34 transfer learning [20, 21]                                       | 100% (five-fold)            | One small collection                             |
+| Deepak and Ameer, 2019 [22]; Ghassemi et al., 2020 [23] | Three-class subtype; figshare 3,064 slices           | GoogLeNet features + classifiers; CNN pretrained as a GAN discriminator   | 98% mean (Deepak)           | One architecture each                            |
+| Rehman et al., 2020 [24]; Noreen et al., 2020 [25]      | Three-class subtype; figshare 3,064 slices           | Fine-tuned VGG16 [26]; Inception-v3 [27] and DenseNet201 [28] features    | 98.69%; 99.34% and 99.51%   | No deduplication, CIs or tests                   |
+| Khan et al., 2020 [29]                                  | Tumour classification; BraTS 2015, 2017, 2018        | VGG16 and VGG19 features, ELM-based selection                             | 97.8%, 96.9%, 92.5%         | Multi-stage tuned pipeline                       |
+| Tummala et al., 2022 [30]; Asiri et al., 2024 [31]      | Three-class (3,064); four-class (2,870)              | ViT ensemble [32]; Swin Transformer [33]                                  | 98.7%; 97%                  | No CNN baseline under one protocol               |
+| 3D CNNs [10, 11, 34, 35]                                | 3D medical segmentation                              | U-Net, 3D U-Net, SegResNet, self-configuring nnU-Net                      | Strong CNN baselines        | Mostly tested on internal splits                 |
+| 3D transformers [12, 36–39]                             | 3D brain tumour segmentation                         | UNETR, Swin UNETR (v2), TransBTS, TransUNet                               | Long-range context          | Fused with CNNs by plain averaging [40]          |
+| Kapoor and Narayanan, 2023 [8]; Fateh et al., 2026 [41] | Reliability of ML results; BRISC curation            | Leakage audit across 17 fields; duplicates removed before splitting       | Leakage inflates scores     | No architecture benchmark                        |
 
 > Speaker notes: Early work used hand-crafted features; transfer learning pushed reported accuracy to 97 to 100%, but each study uses its own data, split and single model. Figures are as reported by each study; the figshare three-class studies are subtype classification, not detection.
 
@@ -118,11 +118,11 @@ Serve the most efficient models, EfficientNetB0 and VNet, in a secure web applic
 
 **Title:** Research Gap
 
-1. **No controlled comparison.** Most studies test two or three models with their own data, splits and budgets [40, 41]. **Addressed by:** Nine backbones and six 3D networks, one code path, identical splits, equal optimiser steps.
-2. **Data leakage.** Combined public collections hold exact and near-duplicate images that are rarely removed before splitting [8, 9, 39]. **Addressed by:** Label-aware perceptual-hash deduplication, similarity groups, group-aware split and a leakage audit.
+1. **No controlled comparison.** Most studies test two or three models with their own data, splits and budgets [42, 43]. **Addressed by:** Nine 2D backbones and three 3D networks, each set under one code path and identical splits.
+2. **Data leakage.** Combined public collections hold exact and near-duplicate images that are rarely removed before splitting [8, 9, 41]. **Addressed by:** Label-aware perceptual-hash deduplication, similarity groups, group-aware split and a leakage audit.
 3. **Single-run leaderboards.** Results are quoted from one run, without confidence intervals, tests, per-class metrics or calibration. **Addressed by:** Five-fold CV, fold ensembles, bootstrap CIs, McNemar and Wilcoxon tests with Holm correction, ECE, per-grade results.
-4. **Shortcuts unchecked.** Models can exploit borders, hospital markers or scanner cues instead of pathology [42–44]. **Addressed by:** Grad-CAM, occlusion, head and background masking, and background-only retraining.
-5. **Transformer cost in 3D.** Transformers need large data, distillation or modified attention [38, 45, 46], and their cost is rarely reported. **Addressed by:** Parameters, GFLOPs, latency, training time and memory measured for every model.
+4. **Shortcuts unchecked.** Models can exploit borders, hospital markers or scanner cues instead of pathology [44–46]. **Addressed by:** Grad-CAM, occlusion, head and background masking, and background-only retraining.
+5. **No external check in 3D.** 3D results are mostly internal, models degrade on new populations and scanners [45], and per-model uncertainty is a weak error signal [47]. **Addressed by:** External BraTS-Africa test set, per-region fusion, and member disagreement as a quality check.
 6. **No path to use.** Benchmarked models are rarely turned into tools that accept MRI volumes and protect patient data. **Addressed by:** A secure web application with a multi-planar and 3D viewer and reports.
 
 > Speaker notes: Each gap on the left is answered by a specific design decision on the right; these decisions are the contributions of the two papers.
@@ -136,7 +136,7 @@ Serve the most efficient models, EfficientNetB0 and VNet, in a secure web applic
 1. Benchmark nine 2D backbones for tumour detection and subtype classification with identical splits and an equal number of optimiser steps.
 2. Remove leakage before splitting through label-aware perceptual-hash deduplication, similarity grouping and a group-aware split, verified by a leakage audit.
 3. Evaluate with five-fold cross-validation, fold ensembles, bootstrap CIs, Holm-corrected McNemar tests, calibration, efficiency and shortcut audits.
-4. Implement six 3D segmentation networks from scratch and compare them on BraTS 2020 per case, region, tumour grade and computational cost.
+4. Fuse two 3D CNNs and a transformer per tumour region on BraTS 2020, and test every model internally, externally on BraTS-Africa, for failure detection and for cost.
 5. Deploy the most efficient models in a secure, tested web application with a multi-planar and 3D viewer and reports.
 
 - **SDG 3:** Good Health and Well-being; **SDG 9:** Industry, Innovation and Infrastructure
@@ -150,8 +150,8 @@ Serve the most efficient models, EfficientNetB0 and VNet, in a secure web applic
 **Title:** Framework/Architecture/Block Diagram
 
 > Diagram, research lane 1 (2D): 2D MRI collections (Br35H, Chakrabarty; Bhuvaji, Cheng) → curation (brain crop, perceptual-hash deduplication) → group-aware split (five folds, held-out test, leakage audit) → 9 backbones × 5 folds, two tasks, equal optimiser steps → evaluation (ensembles, CIs, McNemar, shortcut audit) → checkpoints.
-> Diagram, research lane 2 (3D): BraTS 2020 (369 cases, four sequences) → preprocessing (foreground z-score, 128³ resampling) → stratified split 257 / 56 / 56 by grade → 6 3D networks, 3,250 optimiser steps each → evaluation (native grid, eight-flip TTA, Wilcoxon) → checkpoints.
-> Diagram, application: Browser (React, vtk.js) → reverse proxy (same origin, HttpOnly session cookie) → FastAPI (23 routes) → PipelineRunner (one background worker) → BrainProcessor (EfficientNetB0 detection on the middle axial slice, EfficientNetB0 classification, VNet segmentation at 128³ into WT, TC and ET). The backend and the worker use SQLite with Alembic migrations and a per-scan upload store; results return to the user as probabilities, volumes, linked views and PDF and CSV reports.
+> Diagram, research lane 2 (3D): BraTS 2020 and BraTS-Africa (369 + 60 cases, four sequences) → preprocessing (brain crop, foreground z-score, native 1 mm) → split 257 / 56 / 56 by grade plus 60 external cases → three networks and a per-region fusion → evaluation (internal, external, Wilcoxon, quality control) → checkpoints.
+> Diagram, application: Browser (React, vtk.js) → reverse proxy (same origin, HttpOnly session cookie) → FastAPI (23 routes) → PipelineRunner (one background worker) → BrainProcessor (EfficientNetB0 detection on the middle axial slice, EfficientNetB0 classification, SegResNet segmentation with 128³ sliding windows into WT, TC and ET). The backend and the worker use SQLite with Alembic migrations and a per-scan upload store; results return to the user as probabilities, volumes, linked views and PDF and CSV reports.
 
 > Speaker notes: Top: the two research pipelines that produced the checkpoints. Bottom: the application that loads them. The application only reads the exported checkpoints; training stays in the notebooks.
 
@@ -174,7 +174,7 @@ Serve the most efficient models, EfficientNetB0 and VNet, in a secure web applic
 
 - **Data curation:** brain crop, perceptual-hash deduplication, label-noise exclusion, group split
 - **2D benchmark:** 9 backbones × 5 folds plus a background-only run; 54 runs per task
-- **3D benchmark:** six networks, 3,250 steps each, eight-flip TTA, Dice, HD95, Wilcoxon
+- **3D study:** three networks, per-region fusion, internal and external tests, disagreement QC
 - **Inference engine:** BrainProcessor with safe weight loading, the training crop and the mask in FLAIR space
 - **Backend and pipeline:** FastAPI (23 routes), one worker, SQLite in WAL mode, Alembic
 - **Security:** bcrypt, revocable JWT cookies, CSRF header, lockout, rate limits, TOTP
@@ -194,16 +194,16 @@ Serve the most efficient models, EfficientNetB0 and VNet, in a secure web applic
 
 > Diagram (pipeline, left to right):
 
-- **1. Brain crop:** greyscale, 5×5 Gaussian, threshold 45, largest contour [47]
-- **2. Perceptual hash:** 64-bit pHash [48] and a 64×64 thumbnail per image
-- **3. Deduplicate:** same label, Hamming ≤ 5 [49]: keep one; cross-label NCC ≥ 0.98 [50]: drop both
+- **1. Brain crop:** greyscale, 5×5 Gaussian, threshold 45, largest contour [48]
+- **2. Perceptual hash:** 64-bit pHash [49] and a 64×64 thumbnail per image
+- **3. Deduplicate:** same label, Hamming ≤ 5 [50]: keep one; cross-label NCC ≥ 0.98 [51]: drop both
 - **4. Group:** Hamming ≤ 8 or NCC ≥ 0.98: 821 and 1,867 groups as a patient proxy
-- **5. Split and audit:** stratified group k-fold [51, 52]: 15% test, five folds; no test image near development
+- **5. Split and audit:** stratified group k-fold [52, 53]: 15% test, five folds; no test image near development
 
 | Task      | Sources                          | Images        | After deduplication | Dev.  | Test |
 | --------- | -------------------------------- | ------------- | ------------------- | ----- | ---- |
-| Detection | Br35H [53], Chakrabarty [54]     | 3,000 + 253   | 1,185 (−63.57%)     | 1,014 | 171  |
-| Subtype   | Bhuvaji [55], Cheng [13, 56, 57] | 2,764 + 3,064 | 4,730 (−18.84%)     | 4,685 | 45   |
+| Detection | Br35H [54], Chakrabarty [55]     | 3,000 + 253   | 1,185 (−63.57%)     | 1,014 | 171  |
+| Subtype   | Bhuvaji [56], Cheng [17, 57, 58] | 2,764 + 3,064 | 4,730 (−18.84%)     | 4,685 | 45   |
 
 > Image: `detection-samples-crop-mask.png`. Left half of binary-detection/plots/02_samples_crop_mask.png.
 > Caption: Original image, brain crop used for training, and head mask used by the attention audit
@@ -220,6 +220,7 @@ Serve the most efficient models, EfficientNetB0 and VNet, in a secure web applic
 
 - Eight of 31 cross-label pairs in the subtype pool were label noise; the detection pool had none.
 - One subtype group held 1,431 images, so the subtype test set has only 45 images (1 glioma, 13 meningioma, 31 pituitary).
+- The all-pairs search grows with the square of the pool; multi-index hashing [59] would scale it to larger collections.
 
 > Speaker notes: Deduplication removed 63.57% of the detection pool, mostly Br35H copies, and 18.84% of the subtype pool. The brain crop is the same one the application applies. Grouping by similarity is a proxy for patient-level splitting because no source records patient identifiers.
 
@@ -231,33 +232,33 @@ Serve the most efficient models, EfficientNetB0 and VNet, in a secure web applic
 
 | Backbone                   | Family      | Params (M) | GFLOPs | Latency (ms) | Images/s |
 | -------------------------- | ----------- | ---------- | ------ | ------------ | -------- |
-| ResNet50 [16]              | CNN         | 23.51      | 8.17   | 9.57         | 777      |
-| VGG16 [22]                 | CNN         | 134.26     | 30.93  | 7.72         | 387      |
-| DenseNet121 [24]           | CNN         | 6.95       | 5.67   | 23.58        | 657      |
-| EfficientNetB0 [58]        | CNN         | 4.01       | 0.77   | 13.13        | 1,393    |
-| MobileNetV3-Large [59, 60] | CNN         | 4.20       | 0.43   | 10.55        | 2,301    |
-| InceptionV3 [23]           | CNN         | 21.79      | 11.42  | 17.63        | 512      |
-| ViT-B/16 [28, 61]          | Transformer | 85.80      | 22.54  | 10.95        | 272      |
-| Swin-Base [29]             | Transformer | 86.74      | 30.86  | 36.29        | 198      |
-| CoAtNet-0 [62]             | Hybrid      | 26.67      | 8.42   | 16.53        | 513      |
+| ResNet50 [20]              | CNN         | 23.51      | 8.17   | 9.57         | 777      |
+| VGG16 [26]                 | CNN         | 134.26     | 30.93  | 7.72         | 387      |
+| DenseNet121 [28]           | CNN         | 6.95       | 5.67   | 23.58        | 657      |
+| EfficientNetB0 [60]        | CNN         | 4.01       | 0.77   | 13.13        | 1,393    |
+| MobileNetV3-Large [61, 62] | CNN         | 4.20       | 0.43   | 10.55        | 2,301    |
+| InceptionV3 [27]           | CNN         | 21.79      | 11.42  | 17.63        | 512      |
+| ViT-B/16 [32, 63]          | Transformer | 85.80      | 22.54  | 10.95        | 272      |
+| Swin-Base [33]             | Transformer | 86.74      | 30.86  | 36.29        | 198      |
+| CoAtNet-0 [64]             | Hybrid      | 26.67      | 8.42   | 16.53        | 513      |
 
-CNNs stack learned convolutional filters [63, 64]; transformers relate all image patches through self-attention. All models are ImageNet-pretrained [65, 66] torchvision or timm models in PyTorch [67], with a one-output (detection) or three-output (subtype) head.
+CNNs stack learned convolutional filters [65, 66]; transformers relate all image patches through self-attention. All models are ImageNet-pretrained [67, 68] torchvision or timm models in PyTorch [69], with a one-output (detection) or three-output (subtype) head.
 
 Cost was measured on one Tesla T4 in half precision: latency at batch size 1, throughput at batch size 32. **It spans a factor of about 72** (0.43 to 30.93 GFLOPs) while detection accuracy spans 2.34 points, and latency does not follow size: VGG16 (134 M parameters) takes 7.7 ms, DenseNet121 (6.95 M) 23.6 ms.
 
 **Identical training: 54 runs per task**
 
-- AdamW [68], learning rate 3×10⁻⁴, weight decay 0.01
+- AdamW [70], learning rate 3×10⁻⁴, weight decay 0.01
 - 20 epochs; effective batch 64 by gradient accumulation, so every model takes the same optimiser steps
-- One-epoch warm-up and cosine decay [69]; half precision [70]; gradient clipping at 1.0 [71]
-- Flip, ±10° rotation, ±20% brightness and contrast; checkpoint at the lowest validation log-loss [72]
+- One-epoch warm-up and cosine decay [71]; half precision [72]; gradient clipping at 1.0 [73]
+- Flip, ±10° rotation, ±20% brightness and contrast; checkpoint at the lowest validation log-loss [74]
 
 **Evaluation protocol**
 
-- Temperature scaling [73] and Youden threshold [74] fitted on each validation fold
+- Temperature scaling [75] and Youden threshold [76] fitted on each validation fold
 - Five fold models averaged into one fold-ensemble prediction per test image
-- Accuracy, macro F1, AUC [75, 76], MCC [77, 78] and ECE with 15 bins [79]
-- Bootstrap 95% CIs from 2,000 resamples [80]; exact McNemar tests [81], Holm-corrected over 36 pairs [82]
+- Accuracy, macro F1, AUC [77, 78], MCC [79, 80] and ECE with 15 bins [81]
+- Bootstrap 95% CIs from 2,000 resamples [82]; exact McNemar tests [83], Holm-corrected over 36 pairs [84]
 
 > Speaker notes: Every row of every results table differs only in the architecture. Two Tesla T4 GPUs on Kaggle, PyTorch 2.11.0. Each backbone was also trained once on fold 0 with the head set to zero for the shortcut test, giving 54 runs per task, all completed. EfficientNetB0, shaded, is the deployed model.
 
@@ -316,9 +317,9 @@ The single subtype error is a meningioma predicted as glioma; with one glioma am
 
 **Where the models look**
 
-- Grad-CAM [83]: correct tumour predictions peak on the lesion; a missed temporal lesion peaks at the lower border
-- ViT-B/16 attention rollout [84] puts 42.1% of its weight outside the head on tumour-negative images
-- Occlusion sensitivity [85] outside the head: 0.7% to 19.4% (detection)
+- Grad-CAM [85]: correct tumour predictions peak on the lesion; a missed temporal lesion peaks at the lower border
+- ViT-B/16 attention rollout [86] puts 42.1% of its weight outside the head on tumour-negative images
+- Occlusion sensitivity [87] outside the head: 0.7% to 19.4% (detection)
 
 > Chart (bar): Shortcut test: accuracy (%) of models trained and tested on background-only images
 
@@ -338,9 +339,9 @@ The single subtype error is a meningioma predicted as glioma; with one glioma am
 
 **Masking and shortcut findings**
 
-- Head-only inputs (Otsu head mask [86]) keep 93.7% to 96.8% (detection) and 94.2% to 99.6% (subtype) accuracy
+- Head-only inputs (Otsu head mask [88]) keep 93.7% to 96.8% (detection) and 94.2% to 99.6% (subtype) accuracy
 - Without the head: 44.4% to 53.3% (detection; InceptionV3 65.7%) and 11.6% to 33.8% (subtype)
-- Retrained on background only, 7 of 9 detection and 9 of 9 subtype backbones beat the majority-class rate (binomial test, Holm) [42]; grey bars are not significant
+- Retrained on background only, 7 of 9 detection and 9 of 9 subtype backbones beat the majority-class rate (binomial test, Holm) [44]; grey bars are not significant
 - **Borders and framing carry label information, so high accuracy on these collections does not prove that pathology was learned.**
 
 > Speaker notes: Models trained on full images depend on the head, but the data do not stop them from using the background. Swin-Base reaches 83.0% detection accuracy without seeing any brain; subtype background-only models reach up to 97.8%.
@@ -349,112 +350,109 @@ The single subtype error is a meningioma predicted as glioma; with one glioma am
 
 > Section label: Experiments and Results: Paper 2 (3D).
 
-**Title:** BraTS 2020 Data and 3D Architectures
+**Title:** Data, Networks and Region-Adaptive Fusion
 
-> Image: `Notebooks\segmentation\plots\02_modalities_and_masks.png`. One BraTS 2020 case: the four sequences and the three nested regions.
+> Image: `Notebooks\segmentation\plots\02_modalities_and_masks.png`. One BraTS 2020 case and one BraTS-Africa case: four sequences and three regions.
 
-- BraTS 2020 [2, 87, 88]: 369 cases (293 HGG, 76 LGG) with FLAIR, T1, T1CE and T2
-- Labels 1, 2 and 4 give nested regions: WT (all labels), TC (1 and 4), ET (4)
-- Median ET volume 0.82 cm³ in LGG vs 19.46 cm³ in HGG; 27 of 76 LGG cases have no ET
-- Foreground z-score per sequence; 240×240×155 resampled to 128³ (trilinear; masks nearest); flips, intensity scale 0.9 to 1.1 and shift ±0.1
-- Grade-stratified split with seed 42: 257 training, 56 validation, 56 test (44 HGG, 12 LGG)
+- BraTS 2020 [2, 89]: 369 cases (293 HGG, 76 LGG); split 257 / 56 / 56 by grade
+- BraTS-Africa [13]: 60 external cases, never used for training or selection
+- Nested regions: WT (all labels), TC (core and ET), ET; 27 of 76 LGG cases have no ET
+- Brain crop and foreground z-score at native 1 mm; 128³ patches, one third on tumour; rotation, scaling, mirroring, noise, brightness, contrast and gamma
+- Gaussian 128³ sliding windows with eight-flip TTA; ET size filter tuned on validation
 
-| Model              | Type        | Design                                         | Params (M) | GFLOPs  |
-| ------------------ | ----------- | ---------------------------------------------- | ---------- | ------- |
-| UNet [30, 31]      | CNN         | Four levels, 32 to 256 channels, LeakyReLU     | 5.60       | 907.0   |
-| nnU-Net-style [33] | CNN         | Five stages, 32 to 320 channels                | 16.55      | 956.3   |
-| VNet [32]          | CNN         | Residual blocks, 16 to 128 channels, PReLU     | 1.40       | 149.9   |
-| UNETR [34]         | Transformer | ViT-Base on 16³ patches: 512 tokens            | 137.60     | 1,761.7 |
-| Swin UNETR [35]    | Transformer | Swin encoder, 2³ patches, 7³ windows           | 10.52      | 797.1   |
-| TransBTS [36]      | Hybrid      | CNN encoder, 4 transformer layers on 8³ tokens | 35.81      | 996.2   |
+| Network                | Type        | Design (MONAI 1.6.1)                      | Params (M) | Epochs |
+| ---------------------- | ----------- | ----------------------------------------- | ---------- | ------ |
+| nnU-Net [10]           | CNN         | Residual DynUNet, 6 stages, 32 to 320 ch. | 31.42      | 60     |
+| SegResNet [11]         | CNN         | SegResNetDS, 32 filters, blocks 1-2-2-4   | 19.92      | 60     |
+| Swin UNETR-v2 [12, 37] | Transformer | Swin encoder, feature size 48             | 72.77      | 30     |
 
-**Identical budget: 50 epochs, effective batch 4, 3,250 optimiser steps**
+**Region-adaptive hybrid ensemble**
 
-- Loss per region: soft Dice plus binary cross-entropy, with deep supervision in UNet, nnU-Net-style, VNet and TransBTS
-- CNNs: SGD with Nesterov momentum 0.99, learning rate 0.01, polynomial decay (power 0.9)
-- Transformer-based models: AdamW, learning rate 10⁻⁴, three-epoch warm-up, cosine decay
-- Half precision, clipping at 1.0; gradient checkpointing for UNETR and Swin UNETR
-- Checkpoint at the best validation mean Dice; 515 minutes of training on two Tesla T4 GPUs
+- For each region, a convex weight vector over the three networks (0.1 grid) and a threshold (0.3 to 0.7) maximise validation Dice
+- Selected: WT 0.4 nnU-Net + 0.6 SegResNet (threshold 0.4); TC 0.4 / 0.5 / 0.1 Swin (0.3); ET 0.5 / 0.5 (0.4)
+- Ablations: each network, mean of all, mean of the CNNs, the weights at threshold 0.5
+- Soft Dice plus cross-entropy with deep supervision; 528 minutes of training on two Tesla T4 GPUs
 
-> Speaker notes: All six networks are implemented from scratch in one notebook and take the same four-channel 128³ input. VNet, shaded, is the deployed model; its module names match the application's network class, so its weights load unchanged.
+> Speaker notes: The search gave the transformer weight only for the tumour core. SegResNet, shaded, is the deployed model; the web application loads its checkpoint with the same MONAI version and runs it without TTA.
 
 ## Slide 15
 
 > Section label: Experiments and Results: Paper 2 (3D).
 
-**Title:** 3D Segmentation Test Results
+**Title:** Internal and External Results
 
-| Model         | Type        | Mean Dice [95% CI]      | WT     | TC     | ET     | HD95 TC (mm) | ET sens. |
-| ------------- | ----------- | ----------------------- | ------ | ------ | ------ | ------------ | -------- |
-| UNet          | CNN         | 0.8199 [0.7826, 0.8533] | 0.9012 | 0.8300 | 0.7286 | 3.24         | 0.8486   |
-| nnU-Net-style | CNN         | 0.8192 [0.7837, 0.8511] | 0.9002 | 0.8309 | 0.7264 | 3.46         | 0.8538   |
-| VNet          | CNN         | 0.7965 [0.7497, 0.8340] | 0.8865 | 0.7972 | 0.7058 | 4.18         | 0.8278   |
-| Swin UNETR    | Transformer | 0.7462 [0.7134, 0.7772] | 0.8714 | 0.7495 | 0.6176 | 6.70         | 0.9407   |
-| TransBTS      | Hybrid      | 0.7291 [0.6876, 0.7661] | 0.8743 | 0.7488 | 0.5642 | 6.58         | 0.9475   |
-| UNETR         | Transformer | 0.7056 [0.6700, 0.7384] | 0.8758 | 0.6692 | 0.5720 | 11.29        | 0.9520   |
+| Model             | Internal mean Dice [95% CI] | WT     | TC     | ET     | External mean Dice [95% CI] |
+| ----------------- | --------------------------- | ------ | ------ | ------ | --------------------------- |
+| nnU-Net           | 0.8404 [0.8008, 0.8760]     | 0.9139 | 0.8493 | 0.7580 | 0.7765 [0.7224, 0.8203]     |
+| SegResNet         | 0.8717 [0.8389, 0.8987]     | 0.9264 | 0.8791 | 0.8095 | 0.7967 [0.7417, 0.8400]     |
+| Swin UNETR-v2     | 0.8360 [0.7923, 0.8742]     | 0.9162 | 0.8427 | 0.7490 | 0.7888 [0.7355, 0.8325]     |
+| CNN mean          | 0.8512 [0.8150, 0.8838]     | 0.9225 | 0.8630 | 0.7680 | 0.8005 [0.7484, 0.8419]     |
+| Mean of all three | 0.8494 [0.8115, 0.8834]     | 0.9213 | 0.8601 | 0.7669 | 0.7971 [0.7456, 0.8400]     |
+| Proposed ensemble | 0.8530 [0.8204, 0.8836]     | 0.9256 | 0.8639 | 0.7694 | 0.7966 [0.7430, 0.8391]     |
 
-56 test cases at native resolution with eight-flip TTA and validation-tuned ET filtering; HD95 is the median over cases.
+56 internal BraTS 2020 and 60 external BraTS-Africa test cases, eight-flip TTA; bootstrap CIs [82].
 
-**What decides the ranking**
+**Statistical comparison**
 
-- WT is easy for every model (Dice 0.8714 to 0.9012); TC and ET separate them
-- Transformer-based models are more sensitive but over-segment; specificity exceeds 0.997 for all
-- All 15 Wilcoxon pairs are significant after Holm; UNet and nnU-Net-style differ by a median 0.0023 (p = 0.042)
+- Wilcoxon tests with Holm correction [84, 90]: the ensemble beats nnU-Net (p = 0.0001) and Swin UNETR (p = 0.007) internally
+- **SegResNet alone beats the ensemble internally (p = 0.018) and equals it externally**
+- Every model loses 0.047 to 0.075 Dice externally, mostly in TC
 
-> Image: `Notebooks\segmentation\plots\08_qualitative_comparison.png`. Median HGG case (top) and hardest LGG case (bottom): reference and every model on FLAIR at the slice with the largest reference tumour.
+> Image: `Notebooks\segmentation\plots\11_qualitative_comparison.png`. Median and lowest internal and external cases: reference, the three networks and the proposed ensemble on FLAIR.
 
 **Qualitative comparison**
 
-- Top: median HGG case; every model recovers the tumour (mean Dice 0.790 to 0.869)
-- Bottom: hardest LGG case, whose reference has no enhancing tumour; the transformer-based models add ET and fall to mean Dice 0.329 to 0.347
+- Rows: median and lowest internal case, median and lowest external case
+- Lowest internal case: SegResNet 0.878, the other models 0.542 to 0.569
+- Lowest external case: a small tumour that every model misses (Dice 0)
 - Overlay: WT green, TC yellow, ET red
 
-> Speaker notes: UNet leads VNet by a median 0.0119 Dice and every transformer-based model by 0.0738 to 0.1139. Best validation Dice: UNet 0.7845 (epoch 45), nnU-Net-style 0.7824 (50), VNet 0.7598 (44), Swin UNETR 0.7235 (33), TransBTS 0.7102 (45), UNETR 0.6960 (39).
+> Speaker notes: Best validation Dice: nnU-Net 0.8415 (epoch 55), SegResNet 0.8390 (50), Swin UNETR 0.8191 (30). The ensemble has the highest sensitivity in every region, from thresholds below 0.5, but not the highest Dice. Swin UNETR loses the least externally (0.047) and SegResNet the most (0.075).
 
 ## Slide 16
 
 > Section label: Experiments and Results: Paper 2 (3D).
 
-**Title:** Tumour Grade, Ensembles and Efficiency
+**Title:** Tumour Grade, Quality Control and Efficiency
 
-> Chart (column): Enhancing-tumour Dice by tumour grade
+> Chart (column): Enhancing-tumour Dice by tumour grade (internal)
 
-| Category      | HGG (44 cases) | LGG (12 cases) |
-| ------------- | -------------- | -------------- |
-| UNet          | 0.8117         | 0.4237         |
-| nnU-Net-style | 0.8124         | 0.4112         |
-| VNet          | 0.7923         | 0.3885         |
-| Swin UNETR    | 0.7262         | 0.2193         |
-| TransBTS      | 0.674          | 0.1613         |
-| UNETR         | 0.6773         | 0.1857         |
+| Category   | HGG (44 cases) | LGG (12 cases) |
+| ---------- | -------------- | -------------- |
+| nnU-Net    | 0.8531         | 0.4089         |
+| SegResNet  | 0.8715         | 0.5822         |
+| Swin UNETR | 0.8529         | 0.3681         |
+| CNN mean   | 0.8622         | 0.4223         |
+| Proposed   | 0.8648         | 0.4197         |
 
-> Chart (bubble, area proportional to parameters): Mean Dice vs latency per volume (bubble area: parameters)
+> Chart (bubble, area proportional to parameters): Internal mean Dice vs latency with TTA (bubble area: parameters)
 
-| Model         | Latency per volume (s, no TTA) | Mean Dice | Parameters (M) |
-| ------------- | ------------------------------ | --------- | -------------- |
-| UNet          | 0.1076                         | 0.8199    | 5.6            |
-| nnU-Net-style | 0.1112                         | 0.8192    | 16.55          |
-| VNet          | 0.0375                         | 0.7965    | 1.4            |
-| UNETR         | 0.2094                         | 0.7056    | 137.6          |
-| Swin UNETR    | 0.4893                         | 0.7462    | 10.52          |
-| TransBTS      | 0.1291                         | 0.7291    | 35.81          |
+| Model      | Latency per case with TTA (s) | Mean Dice | Parameters (M) |
+| ---------- | ----------------------------- | --------- | -------------- |
+| nnU-Net    | 8.2                           | 0.8404    | 31.42          |
+| SegResNet  | 8.08                          | 0.8717    | 19.92          |
+| Swin UNETR | 31.92                         | 0.836     | 72.77          |
+| CNN mean   | 16.28                         | 0.8512    | 51.34          |
+| Proposed   | 48.2                          | 0.853     | 124.11         |
 
-**Tumour grade**
+**Disagreement flags failures**
 
-- LGG mean Dice 0.5616 to 0.6624 vs HGG 0.7434 to 0.8632; WT Dice is slightly higher on LGG
-- One false-positive ET voxel on a case without ET gives that case an ET Dice of 0
+- 1 minus the mean pairwise Dice of the three networks' masks; failure: mean Dice below 0.80
+- AUC 0.993 internal, 0.870 external [77]; Spearman −0.80 and −0.82 [91]
+- TTA spread: AUC 0.716 and 0.791 [92–94]
 
-**Ensembles and uncertainty**
+**Explanations, scored**
 
-- CNN ensemble 0.8178 and six-model ensemble 0.7991: neither beats UNet alone
-- TTA uncertainty vs Dice: Spearman −0.30 to −0.40 (p ≤ 0.023) for CNNs; not significant for the transformer-based models
+- Seg-Grad-CAM [85, 95]: CNN maps 4 to 23 times enriched in the tumour; Swin UNETR 1.1 to 1.7 times
+- Dropping FLAIR hurts WT, dropping T1CE hurts TC and ET, for every network
+- Slice-wise Dice differs from per-patient 3D Dice [96]
 
-**VNet: the efficiency choice**
+**SegResNet: the efficiency choice**
 
-- 97% of the UNet Dice with 1.40 M parameters, 149.9 GFLOPs and 0.53 training hours
-- 0.0375 s per volume (UNet 0.1076 s) and 0.98 GB at inference; best Dice per parameter (0.5694) and per training hour (1.4939)
+- Smallest network (19.92 M) and fastest: 1.01 s per case, 8.08 s with TTA on a T4
+- The ensemble needs all three networks: 124.11 M parameters, 48.20 s with TTA, six times SegResNet, for a lower internal Dice
 
-> Speaker notes: Swin UNETR is the slowest model (0.4893 s per volume, 5.29 training hours) despite 10.52 M parameters, because its first stage attends over 64³ tokens. TTA multiplies latency by about eight for every model. In the bubble chart, navy marks CNNs, brick transformers and teal the hybrid.
+> Speaker notes: LGG cases are the weak spot of every model, because many have no enhancing tumour; SegResNet's internal lead comes mostly from them. Disagreement cannot flag a tumour that all networks miss. In the bubble chart, navy marks the CNNs, brick the transformer and teal the ensembles.
 
 ## Slide 17
 
@@ -462,9 +460,9 @@ The single subtype error is a meningioma predicted as glioma; with one glioma am
 
 1. **Cost decides in 2D.** All nine backbones reach 97.08% to 99.42% detection accuracy with no significant difference; EfficientNetB0 matches the leaders with 4.01 M parameters and 0.77 GFLOPs.
 2. **Leakage and shortcuts are real.** Deduplication removed 63.57% and 18.84% of the images, and background-only models still beat chance: public 2D collections carry non-anatomical label cues.
-3. **CNNs lead in 3D.** UNet (0.8199) and nnU-Net-style (0.8192) lead, every CNN beats every from-scratch transformer-based model, and VNet gives 97% of the UNet Dice at about a third of its latency.
-4. **The weak spot is known.** Whole-tumour Dice is 0.87 to 0.90 for every model, but LGG enhancing-tumour Dice is 0.16 to 0.42, a bias that must be disclosed to users.
-5. **From benchmark to tool.** NeuroScan AI deploys EfficientNetB0 and VNet in a secure, tested application; it is a research prototype, not a diagnostic device.
+3. **Fusion does not beat SegResNet in 3D.** The region-adaptive ensemble (0.8530 internal, 0.7966 external) beats two of its networks but not SegResNet alone (0.8717, 0.7967), at six times its cost.
+4. **Disagreement is the useful product.** Disagreement between the networks flags failed cases with AUC 0.993 internally and 0.870 externally; every model loses 0.047 to 0.075 Dice on BraTS-Africa, and LGG ET Dice is 0.37 to 0.58.
+5. **From benchmark to tool.** NeuroScan AI deploys EfficientNetB0 and SegResNet in a secure, tested application; it is a research prototype, not a diagnostic device.
 
 **Future work**
 
@@ -472,17 +470,17 @@ The single subtype error is a meningioma predicted as glioma; with one glioma am
 - Grouping that keeps every subtype in the test set
 - Standardise image borders, then repeat the shortcut test
 - 3D multi-sequence detection and classification
-- Several seeds and cross-validation for the 3D benchmark
-- Pretrained transformer encoders; higher-resolution or patch-based training
-- Grade-aware ET post-processing for LGG cases
+- Several seeds and cross-validated fusion for the 3D study
+- More external cohorts with raw clinical preprocessing
+- Show member disagreement in the application; grade-aware ET post-processing
 - Calibration on larger held-out sets; DICOM input and physical volumes in the application
 
 **Recommendation**
 
-- Highest 3D accuracy: UNet; limited compute and deployment: VNet (3D) and EfficientNetB0 (2D)
-- Revisit transformers with pretraining, larger datasets or higher-resolution training
+- Deploy SegResNet (3D) and EfficientNetB0 (2D); use a second, different network to measure disagreement rather than to fuse
+- Validate externally before trusting an internal ranking: it changed on BraTS-Africa
 
-> Speaker notes: Recommendation: UNet for the highest accuracy; VNet and EfficientNetB0 for deployment with limited compute. Transformers should be revisited with pretraining, more data or higher resolution.
+> Speaker notes: Recommendation: SegResNet and EfficientNetB0 for deployment; in 3D, an architecturally different second network is most useful as a disagreement check. External validation changed the 3D ranking.
 
 ## Slide 18
 
@@ -494,7 +492,7 @@ The single subtype error is a meningioma predicted as glioma; with one glioma am
 
 **Manuscript 1**
 
-**“Standardised Comparison of Convolutional and Transformer Backbones for Brain Tumour Magnetic Resonance Image Classification under Perceptual-Hash Deduplication”**
+**“Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication: A Comparative Study Using Advanced Deep Learning Models”**
 
 P. Mital, V. Lawand, Biji C. L., M. A. Dar and G. P. Doss C.
 
@@ -502,7 +500,7 @@ P. Mital, V. Lawand, Biji C. L., M. A. Dar and G. P. Doss C.
 
 **Manuscript 2**
 
-**“A Comprehensive Benchmark of Three-Dimensional Segmentation Architectures for Brain Tumour Segmentation”**
+**“Region-Adaptive CNN-Transformer Ensembles for Brain Tumour Segmentation with External Validation and Disagreement-Based Quality Control”**
 
 P. Mital, V. Lawand and Biji C. L.
 
@@ -510,7 +508,7 @@ P. Mital, V. Lawand and Biji C. L.
 
 **Others**
 
-- Open-source NeuroScan AI web application (TRL 4) with 61 backend and 39 frontend automated tests
+- Open-source NeuroScan AI web application (TRL 4) with 64 backend and 39 frontend automated tests
 - Research notebooks with all outputs: splits, per-run metrics, plots and the trained checkpoints
 - Repository: https://github.com/parthmital/NeuroScan-AI
 
@@ -529,91 +527,99 @@ P. Mital, V. Lawand and Biji C. L.
 - [7] J. De Fauw et al., “Clinically applicable deep learning for diagnosis and referral in retinal disease,” _Nature Medicine_, vol. 24, no. 9, pp. 1342–1350, 2018.
 - [8] S. Kapoor and A. Narayanan, “Leakage and the reproducibility crisis in machine-learning-based science,” _Patterns_, vol. 4, no. 9, Art. no. 100804, 2023.
 - [9] M. Roberts et al., “Common pitfalls and recommendations for using machine learning to detect and prognosticate for COVID-19 using chest radiographs and CT scans,” _Nature Machine Intelligence_, vol. 3, no. 3, pp. 199–217, 2021.
-- [10] E. I. Zacharaki et al., “Classification of brain tumor type and grade using MRI texture and shape in a machine learning scheme,” _Magnetic Resonance in Medicine_, vol. 62, no. 6, pp. 1609–1618, 2009.
-- [11] N. Gordillo, E. Montseny, and P. Sobrevilla, “State of the art survey on MRI brain tumor segmentation,” _Magnetic Resonance Imaging_, vol. 31, no. 8, pp. 1426–1438, 2013.
-- [12] G. Litjens et al., “A survey on deep learning in medical image analysis,” _Medical Image Analysis_, vol. 42, pp. 60–88, 2017.
-- [13] J. Cheng et al., “Enhanced performance of brain tumor classification via tumor region augmentation and partition,” _PLoS ONE_, vol. 10, no. 10, Art. no. e0140381, 2015.
-- [14] J. Seetha and S. S. Raja, “Brain tumor classification using convolutional neural networks,” _Biomedical and Pharmacology Journal_, vol. 11, no. 3, pp. 1457–1461, 2018.
-- [15] M. Talo, U. B. Baloglu, Ö. Yıldırım, and U. R. Acharya, “Application of deep transfer learning for automated brain abnormality classification using MR images,” _Cognitive Systems Research_, vol. 54, pp. 176–188, 2019.
-- [16] K. He, X. Zhang, S. Ren, and J. Sun, “Deep residual learning for image recognition,” in _Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR)_, 2016, pp. 770–778.
-- [17] A. Krizhevsky, I. Sutskever, and G. E. Hinton, “ImageNet classification with deep convolutional neural networks,” _Communications of the ACM_, vol. 60, no. 6, pp. 84–90, 2017.
-- [18] S. Deepak and P. M. Ameer, “Brain tumor classification using deep CNN features via transfer learning,” _Computers in Biology and Medicine_, vol. 111, Art. no. 103345, 2019.
-- [19] N. Ghassemi, A. Shoeibi, and M. Rouhani, “Deep neural network with generative adversarial networks pre-training for brain tumor classification based on MR images,” _Biomedical Signal Processing and Control_, vol. 57, Art. no. 101678, 2020.
-- [20] A. Rehman, S. Naz, M. I. Razzak, F. Akram, and M. Imran, “A deep learning-based framework for automatic brain tumors classification using transfer learning,” _Circuits, Systems, and Signal Processing_, vol. 39, no. 2, pp. 757–775, 2020.
-- [21] N. Noreen, S. Palaniappan, A. Qayyum, I. Ahmad, M. Imran, and M. Shoaib, “A deep learning model based on concatenation approach for the diagnosis of brain tumor,” _IEEE Access_, vol. 8, pp. 55135–55144, 2020.
-- [22] K. Simonyan and A. Zisserman, “Very deep convolutional networks for large-scale image recognition,” in _Proc. International Conference on Learning Representations (ICLR)_, 2015.
-- [23] C. Szegedy, V. Vanhoucke, S. Ioffe, J. Shlens, and Z. Wojna, “Rethinking the inception architecture for computer vision,” in _Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR)_, 2016, pp. 2818–2826.
-- [24] G. Huang, Z. Liu, L. van der Maaten, and K. Q. Weinberger, “Densely connected convolutional networks,” in _Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR)_, 2017, pp. 2261–2269.
-- [25] M. A. Khan et al., “Multimodal brain tumor classification using deep learning and robust feature selection: A machine learning application for radiologists,” _Diagnostics_, vol. 10, no. 8, Art. no. 565, 2020.
-- [26] S. Tummala, S. Kadry, S. A. C. Bukhari, and H. T. Rauf, “Classification of brain tumor from magnetic resonance imaging using vision transformers ensembling,” _Current Oncology_, vol. 29, no. 10, pp. 7498–7511, 2022.
-- [27] A. A. Asiri et al., “Advancing brain tumor detection: Harnessing the Swin Transformer's power for accurate classification and performance analysis,” _PeerJ Computer Science_, vol. 10, Art. no. e1867, 2024.
-- [28] A. Dosovitskiy et al., “An image is worth 16x16 words: Transformers for image recognition at scale,” in _Proc. International Conference on Learning Representations (ICLR)_, 2021.
-- [29] Z. Liu et al., “Swin transformer: Hierarchical vision transformer using shifted windows,” in _Proc. IEEE/CVF International Conference on Computer Vision (ICCV)_, 2021, pp. 9992–10002.
-- [30] O. Ronneberger, P. Fischer, and T. Brox, “U-Net: Convolutional networks for biomedical image segmentation,” in _Medical Image Computing and Computer-Assisted Intervention (MICCAI 2015)_, 2015, pp. 234–241.
-- [31] Ö. Çiçek, A. Abdulkadir, S. S. Lienkamp, T. Brox, and O. Ronneberger, “3D U-Net: Learning dense volumetric segmentation from sparse annotation,” in _Medical Image Computing and Computer-Assisted Intervention (MICCAI 2016)_, 2016, pp. 424–432.
-- [32] F. Milletari, N. Navab, and S.-A. Ahmadi, “V-Net: Fully convolutional neural networks for volumetric medical image segmentation,” in _Proc. Fourth International Conference on 3D Vision (3DV)_, 2016, pp. 565–571.
-- [33] F. Isensee, P. F. Jaeger, S. A. A. Kohl, J. Petersen, and K. H. Maier-Hein, “nnU-Net: A self-configuring method for deep learning-based biomedical image segmentation,” _Nature Methods_, vol. 18, no. 2, pp. 203–211, 2021.
-- [34] A. Hatamizadeh et al., “UNETR: Transformers for 3D medical image segmentation,” in _Proc. IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)_, 2022, pp. 1748–1758.
-- [35] A. Hatamizadeh, V. Nath, Y. Tang, D. Yang, H. R. Roth, and D. Xu, “Swin UNETR: Swin transformers for semantic segmentation of brain tumors in MRI images,” in _Brainlesion: Glioma, Multiple Sclerosis, Stroke and Traumatic Brain Injuries (BrainLes 2021)_, 2022, pp. 272–284.
-- [36] W. Wang, C. Chen, M. Ding, H. Yu, S. Zha, and J. Li, “TransBTS: Multimodal brain tumor segmentation using transformer,” in _Medical Image Computing and Computer Assisted Intervention (MICCAI 2021)_, 2021, pp. 109–119.
-- [37] J. Chen et al., “TransUNet: Rethinking the U-Net architecture design for medical image segmentation through the lens of transformers,” _Medical Image Analysis_, vol. 97, Art. no. 103280, 2024.
-- [38] H. Touvron, M. Cord, M. Douze, F. Massa, A. Sablayrolles, and H. Jégou, “Training data-efficient image transformers and distillation through attention,” in _Proc. 38th International Conference on Machine Learning (ICML)_, 2021, pp. 10347–10357.
-- [39] A. Fateh et al., “BRISC: Annotated dataset for brain tumor segmentation and classification,” _Scientific Data_, vol. 13, Art. no. 361, 2026.
-- [40] S. Khan, M. Naseer, M. Hayat, S. W. Zamir, F. S. Khan, and M. Shah, “Transformers in vision: A survey,” _ACM Computing Surveys_, vol. 54, no. 10s, pp. 1–41, 2022.
-- [41] F. Shamshad et al., “Transformers in medical imaging: A survey,” _Medical Image Analysis_, vol. 88, Art. no. 102802, 2023.
-- [42] R. Geirhos et al., “Shortcut learning in deep neural networks,” _Nature Machine Intelligence_, vol. 2, no. 11, pp. 665–673, 2020.
+- [10] F. Isensee, P. F. Jaeger, S. A. A. Kohl, J. Petersen, and K. H. Maier-Hein, “nnU-Net: A self-configuring method for deep learning-based biomedical image segmentation,” _Nature Methods_, vol. 18, no. 2, pp. 203–211, 2021.
+- [11] A. Myronenko, “3D MRI brain tumor segmentation using autoencoder regularization,” in _Brainlesion: Glioma, Multiple Sclerosis, Stroke and Traumatic Brain Injuries (BrainLes 2018)_, 2019, pp. 311–320.
+- [12] Y. He, V. Nath, D. Yang, Y. Tang, A. Myronenko, and D. Xu, “SwinUNETR-V2: Stronger Swin transformers with stagewise convolutions for 3D medical image segmentation,” in _Medical Image Computing and Computer Assisted Intervention (MICCAI 2023)_, 2023, pp. 416–426.
+- [13] M. Adewole et al., “The BraTS-Africa dataset: Expanding the brain tumor segmentation data to capture African populations,” _Radiology: Artificial Intelligence_, vol. 7, no. 4, Art. no. e240528, 2025.
+- [14] E. I. Zacharaki et al., “Classification of brain tumor type and grade using MRI texture and shape in a machine learning scheme,” _Magnetic Resonance in Medicine_, vol. 62, no. 6, pp. 1609–1618, 2009.
+- [15] N. Gordillo, E. Montseny, and P. Sobrevilla, “State of the art survey on MRI brain tumor segmentation,” _Magnetic Resonance Imaging_, vol. 31, no. 8, pp. 1426–1438, 2013.
+- [16] G. Litjens et al., “A survey on deep learning in medical image analysis,” _Medical Image Analysis_, vol. 42, pp. 60–88, 2017.
+- [17] J. Cheng et al., “Enhanced performance of brain tumor classification via tumor region augmentation and partition,” _PLoS ONE_, vol. 10, no. 10, Art. no. e0140381, 2015.
+- [18] J. Seetha and S. S. Raja, “Brain tumor classification using convolutional neural networks,” _Biomedical and Pharmacology Journal_, vol. 11, no. 3, pp. 1457–1461, 2018.
+- [19] M. Talo, U. B. Baloglu, Ö. Yıldırım, and U. R. Acharya, “Application of deep transfer learning for automated brain abnormality classification using MR images,” _Cognitive Systems Research_, vol. 54, pp. 176–188, 2019.
+- [20] K. He, X. Zhang, S. Ren, and J. Sun, “Deep residual learning for image recognition,” in _Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR)_, 2016, pp. 770–778.
+- [21] A. Krizhevsky, I. Sutskever, and G. E. Hinton, “ImageNet classification with deep convolutional neural networks,” _Communications of the ACM_, vol. 60, no. 6, pp. 84–90, 2017.
+- [22] S. Deepak and P. M. Ameer, “Brain tumor classification using deep CNN features via transfer learning,” _Computers in Biology and Medicine_, vol. 111, Art. no. 103345, 2019.
+- [23] N. Ghassemi, A. Shoeibi, and M. Rouhani, “Deep neural network with generative adversarial networks pre-training for brain tumor classification based on MR images,” _Biomedical Signal Processing and Control_, vol. 57, Art. no. 101678, 2020.
+- [24] A. Rehman, S. Naz, M. I. Razzak, F. Akram, and M. Imran, “A deep learning-based framework for automatic brain tumors classification using transfer learning,” _Circuits, Systems, and Signal Processing_, vol. 39, no. 2, pp. 757–775, 2020.
+- [25] N. Noreen, S. Palaniappan, A. Qayyum, I. Ahmad, M. Imran, and M. Shoaib, “A deep learning model based on concatenation approach for the diagnosis of brain tumor,” _IEEE Access_, vol. 8, pp. 55135–55144, 2020.
+- [26] K. Simonyan and A. Zisserman, “Very deep convolutional networks for large-scale image recognition,” in _Proc. International Conference on Learning Representations (ICLR)_, 2015.
+- [27] C. Szegedy, V. Vanhoucke, S. Ioffe, J. Shlens, and Z. Wojna, “Rethinking the inception architecture for computer vision,” in _Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR)_, 2016, pp. 2818–2826.
+- [28] G. Huang, Z. Liu, L. van der Maaten, and K. Q. Weinberger, “Densely connected convolutional networks,” in _Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR)_, 2017, pp. 2261–2269.
+- [29] M. A. Khan et al., “Multimodal brain tumor classification using deep learning and robust feature selection: A machine learning application for radiologists,” _Diagnostics_, vol. 10, no. 8, Art. no. 565, 2020.
+- [30] S. Tummala, S. Kadry, S. A. C. Bukhari, and H. T. Rauf, “Classification of brain tumor from magnetic resonance imaging using vision transformers ensembling,” _Current Oncology_, vol. 29, no. 10, pp. 7498–7511, 2022.
+- [31] A. A. Asiri et al., “Advancing brain tumor detection: Harnessing the Swin Transformer's power for accurate classification and performance analysis,” _PeerJ Computer Science_, vol. 10, Art. no. e1867, 2024.
+- [32] A. Dosovitskiy et al., “An image is worth 16x16 words: Transformers for image recognition at scale,” in _Proc. International Conference on Learning Representations (ICLR)_, 2021.
+- [33] Z. Liu et al., “Swin transformer: Hierarchical vision transformer using shifted windows,” in _Proc. IEEE/CVF International Conference on Computer Vision (ICCV)_, 2021, pp. 9992–10002.
+- [34] O. Ronneberger, P. Fischer, and T. Brox, “U-Net: Convolutional networks for biomedical image segmentation,” in _Medical Image Computing and Computer-Assisted Intervention (MICCAI 2015)_, 2015, pp. 234–241.
+- [35] Ö. Çiçek, A. Abdulkadir, S. S. Lienkamp, T. Brox, and O. Ronneberger, “3D U-Net: Learning dense volumetric segmentation from sparse annotation,” in _Medical Image Computing and Computer-Assisted Intervention (MICCAI 2016)_, 2016, pp. 424–432.
+- [36] A. Hatamizadeh et al., “UNETR: Transformers for 3D medical image segmentation,” in _Proc. IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)_, 2022, pp. 1748–1758.
+- [37] A. Hatamizadeh, V. Nath, Y. Tang, D. Yang, H. R. Roth, and D. Xu, “Swin UNETR: Swin transformers for semantic segmentation of brain tumors in MRI images,” in _Brainlesion: Glioma, Multiple Sclerosis, Stroke and Traumatic Brain Injuries (BrainLes 2021)_, 2022, pp. 272–284.
+- [38] W. Wang, C. Chen, M. Ding, H. Yu, S. Zha, and J. Li, “TransBTS: Multimodal brain tumor segmentation using transformer,” in _Medical Image Computing and Computer Assisted Intervention (MICCAI 2021)_, 2021, pp. 109–119.
+- [39] J. Chen et al., “TransUNet: Rethinking the U-Net architecture design for medical image segmentation through the lens of transformers,” _Medical Image Analysis_, vol. 97, Art. no. 103280, 2024.
+- [40] K. Kamnitsas et al., “Ensembles of multiple models and architectures for robust brain tumour segmentation,” in _Brainlesion: Glioma, Multiple Sclerosis, Stroke and Traumatic Brain Injuries (BrainLes 2017)_, 2018, pp. 450–462.
+- [41] A. Fateh et al., “BRISC: Annotated dataset for brain tumor segmentation and classification,” _Scientific Data_, vol. 13, Art. no. 361, 2026.
+- [42] S. Khan, M. Naseer, M. Hayat, S. W. Zamir, F. S. Khan, and M. Shah, “Transformers in vision: A survey,” _ACM Computing Surveys_, vol. 54, no. 10s, pp. 1–41, 2022.
+- [43] F. Shamshad et al., “Transformers in medical imaging: A survey,” _Medical Image Analysis_, vol. 88, Art. no. 102802, 2023.
+- [44] R. Geirhos et al., “Shortcut learning in deep neural networks,” _Nature Machine Intelligence_, vol. 2, no. 11, pp. 665–673, 2020.
+- [45] J. R. Zech, M. A. Badgeley, M. Liu, A. B. Costa, J. J. Titano, and E. K. Oermann, “Variable generalization performance of a deep learning model to detect pneumonia in chest radiographs: A cross-sectional study,” _PLOS Medicine_, vol. 15, no. 11, Art. no. e1002683, 2018.
+- [46] A. J. DeGrave, J. D. Janizek, and S.-I. Lee, “AI for radiographic COVID-19 detection selects shortcuts over signal,” _Nature Machine Intelligence_, vol. 3, no. 7, pp. 610–619, 2021.
+- [47] A. Jungo and M. Reyes, “Assessing reliability and challenges of uncertainty estimations for medical image segmentation,” in _Medical Image Computing and Computer Assisted Intervention (MICCAI 2019)_, 2019, pp. 48–56.
 
-> Speaker notes: IEEE-style references, numbered in order of first citation in this deck; all 88 references cited by the two manuscripts are included.
+> Speaker notes: IEEE-style references, numbered in order of first citation in this deck; all 96 references cited by the two manuscripts are included.
 
 ## Slide 20
 
 **Title:** References (2/2)
 
-- [43] J. R. Zech, M. A. Badgeley, M. Liu, A. B. Costa, J. J. Titano, and E. K. Oermann, “Variable generalization performance of a deep learning model to detect pneumonia in chest radiographs: A cross-sectional study,” _PLOS Medicine_, vol. 15, no. 11, Art. no. e1002683, 2018.
-- [44] A. J. DeGrave, J. D. Janizek, and S.-I. Lee, “AI for radiographic COVID-19 detection selects shortcuts over signal,” _Nature Machine Intelligence_, vol. 3, no. 7, pp. 610–619, 2021.
-- [45] J. M. J. Valanarasu, P. Oza, I. Hacihaliloglu, and V. M. Patel, “Medical transformer: Gated axial-attention for medical image segmentation,” in _Medical Image Computing and Computer Assisted Intervention (MICCAI 2021)_, 2021, pp. 36–46.
-- [46] H. Cao et al., “Swin-Unet: Unet-like pure transformer for medical image segmentation,” in _Computer Vision – ECCV 2022 Workshops_, 2023, pp. 205–218.
-- [47] S. Suzuki and K. Abe, “Topological structural analysis of digitized binary images by border following,” _Computer Vision, Graphics, and Image Processing_, vol. 30, no. 1, pp. 32–46, 1985.
-- [48] V. Monga and B. L. Evans, “Perceptual image hashing via feature points: Performance evaluation and tradeoffs,” _IEEE Transactions on Image Processing_, vol. 15, no. 11, pp. 3452–3465, 2006.
-- [49] R. W. Hamming, “Error detecting and error correcting codes,” _Bell System Technical Journal_, vol. 29, no. 2, pp. 147–160, 1950.
-- [50] B. Zitová and J. Flusser, “Image registration methods: A survey,” _Image and Vision Computing_, vol. 21, no. 11, pp. 977–1000, 2003.
-- [51] F. Pedregosa et al., “Scikit-learn: Machine learning in Python,” _Journal of Machine Learning Research_, vol. 12, no. 85, pp. 2825–2830, 2011.
-- [52] M. Stone, “Cross-validatory choice and assessment of statistical predictions,” _Journal of the Royal Statistical Society: Series B (Methodological)_, vol. 36, no. 2, pp. 111–133, 1974.
-- [53] A. Hamada, “Br35H :: Brain tumor detection 2020,” IEEE DataPort, 2025.
-- [54] N. Chakrabarty, “Brain MRI images for brain tumor detection,” Kaggle dataset, version 1, 2019.
-- [55] S. Bhuvaji, A. Kadam, P. Bhumkar, S. Dedge, and S. Kanchan, “Brain tumor classification (MRI),” Kaggle dataset, 2020.
-- [56] J. Cheng, “Brain tumor dataset,” figshare, version 5, 2017.
-- [57] MoundirB, “Jun Cheng brain tumor MRI dataset JPG,” Kaggle dataset, version 1, 2025.
-- [58] M. Tan and Q. Le, “EfficientNet: Rethinking model scaling for convolutional neural networks,” in _Proc. 36th International Conference on Machine Learning (ICML)_, 2019, pp. 6105–6114.
-- [59] A. Howard et al., “Searching for MobileNetV3,” in _Proc. IEEE/CVF International Conference on Computer Vision (ICCV)_, 2019, pp. 1314–1324.
-- [60] M. Sandler, A. Howard, M. Zhu, A. Zhmoginov, and L.-C. Chen, “MobileNetV2: Inverted residuals and linear bottlenecks,” in _Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)_, 2018, pp. 4510–4520.
-- [61] A. Vaswani et al., “Attention is all you need,” in _Advances in Neural Information Processing Systems (NeurIPS) 30_, 2017.
-- [62] Z. Dai, H. Liu, Q. V. Le, and M. Tan, “CoAtNet: Marrying convolution and attention for all data sizes,” in _Advances in Neural Information Processing Systems (NeurIPS)_, 2021, pp. 3965–3977.
-- [63] Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, “Gradient-based learning applied to document recognition,” _Proceedings of the IEEE_, vol. 86, no. 11, pp. 2278–2324, 1998.
-- [64] Y. LeCun, Y. Bengio, and G. Hinton, “Deep learning,” _Nature_, vol. 521, no. 7553, pp. 436–444, 2015.
-- [65] J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, and L. Fei-Fei, “ImageNet: A large-scale hierarchical image database,” in _Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR)_, 2009, pp. 248–255.
-- [66] O. Russakovsky et al., “ImageNet large scale visual recognition challenge,” _International Journal of Computer Vision_, vol. 115, no. 3, pp. 211–252, 2015.
-- [67] A. Paszke et al., “PyTorch: An imperative style, high-performance deep learning library,” in _Advances in Neural Information Processing Systems (NeurIPS) 32_, 2019.
-- [68] I. Loshchilov and F. Hutter, “Decoupled weight decay regularization,” in _Proc. International Conference on Learning Representations (ICLR)_, 2019.
-- [69] I. Loshchilov and F. Hutter, “SGDR: Stochastic gradient descent with warm restarts,” in _Proc. International Conference on Learning Representations (ICLR)_, 2017.
-- [70] P. Micikevicius et al., “Mixed precision training,” in _Proc. International Conference on Learning Representations (ICLR)_, 2018.
-- [71] R. Pascanu, T. Mikolov, and Y. Bengio, “On the difficulty of training recurrent neural networks,” in _Proc. 30th International Conference on Machine Learning (ICML)_, 2013, pp. 1310–1318.
-- [72] T. Gneiting and A. E. Raftery, “Strictly proper scoring rules, prediction, and estimation,” _Journal of the American Statistical Association_, vol. 102, no. 477, pp. 359–378, 2007.
-- [73] C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, “On calibration of modern neural networks,” in _Proc. 34th International Conference on Machine Learning (ICML)_, 2017, pp. 1321–1330.
-- [74] W. J. Youden, “Index for rating diagnostic tests,” _Cancer_, vol. 3, no. 1, pp. 32–35, 1950.
-- [75] J. A. Hanley and B. J. McNeil, “The meaning and use of the area under a receiver operating characteristic (ROC) curve,” _Radiology_, vol. 143, no. 1, pp. 29–36, 1982.
-- [76] T. Fawcett, “An introduction to ROC analysis,” _Pattern Recognition Letters_, vol. 27, no. 8, pp. 861–874, 2006.
-- [77] B. W. Matthews, “Comparison of the predicted and observed secondary structure of T4 phage lysozyme,” _Biochimica et Biophysica Acta (BBA) – Protein Structure_, vol. 405, no. 2, pp. 442–451, 1975.
-- [78] D. Chicco and G. Jurman, “The advantages of the Matthews correlation coefficient (MCC) over F1 score and accuracy in binary classification evaluation,” _BMC Genomics_, vol. 21, Art. no. 6, 2020.
-- [79] M. Pakdaman Naeini, G. Cooper, and M. Hauskrecht, “Obtaining well calibrated probabilities using Bayesian binning,” in _Proc. AAAI Conference on Artificial Intelligence 29(1)_, 2015.
-- [80] B. Efron, “Bootstrap methods: Another look at the jackknife,” _The Annals of Statistics_, vol. 7, no. 1, pp. 1–26, 1979.
-- [81] Q. McNemar, “Note on the sampling error of the difference between correlated proportions or percentages,” _Psychometrika_, vol. 12, no. 2, pp. 153–157, 1947.
-- [82] S. Holm, “A simple sequentially rejective multiple test procedure,” _Scandinavian Journal of Statistics_, vol. 6, no. 2, pp. 65–70, 1979.
-- [83] R. R. Selvaraju, M. Cogswell, A. Das, R. Vedantam, D. Parikh, and D. Batra, “Grad-CAM: Visual explanations from deep networks via gradient-based localization,” in _Proc. IEEE International Conference on Computer Vision (ICCV)_, 2017, pp. 618–626.
-- [84] S. Abnar and W. Zuidema, “Quantifying attention flow in transformers,” in _Proc. 58th Annual Meeting of the Association for Computational Linguistics (ACL)_, 2020, pp. 4190–4197.
-- [85] M. D. Zeiler and R. Fergus, “Visualizing and understanding convolutional networks,” in _Computer Vision – ECCV 2014_, 2014, pp. 818–833.
-- [86] N. Otsu, “A threshold selection method from gray-level histograms,” _IEEE Transactions on Systems, Man, and Cybernetics_, vol. 9, no. 1, pp. 62–66, 1979.
-- [87] B. H. Menze et al., “The multimodal brain tumor image segmentation benchmark (BRATS),” _IEEE Transactions on Medical Imaging_, vol. 34, no. 10, pp. 1993–2024, 2015.
-- [88] S. Bakas et al., “Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the BRATS challenge,” arXiv:1811.02629, 2018.
+- [48] S. Suzuki and K. Abe, “Topological structural analysis of digitized binary images by border following,” _Computer Vision, Graphics, and Image Processing_, vol. 30, no. 1, pp. 32–46, 1985.
+- [49] V. Monga and B. L. Evans, “Perceptual image hashing via feature points: Performance evaluation and tradeoffs,” _IEEE Transactions on Image Processing_, vol. 15, no. 11, pp. 3452–3465, 2006.
+- [50] R. W. Hamming, “Error detecting and error correcting codes,” _Bell System Technical Journal_, vol. 29, no. 2, pp. 147–160, 1950.
+- [51] B. Zitová and J. Flusser, “Image registration methods: A survey,” _Image and Vision Computing_, vol. 21, no. 11, pp. 977–1000, 2003.
+- [52] F. Pedregosa et al., “Scikit-learn: Machine learning in Python,” _Journal of Machine Learning Research_, vol. 12, no. 85, pp. 2825–2830, 2011.
+- [53] M. Stone, “Cross-validatory choice and assessment of statistical predictions,” _Journal of the Royal Statistical Society: Series B (Methodological)_, vol. 36, no. 2, pp. 111–133, 1974.
+- [54] A. Hamada, “Br35H :: Brain tumor detection 2020,” IEEE DataPort, also available at https://www.kaggle.com/datasets/ahmedhamada0/brain-tumor-detection, 2025.
+- [55] N. Chakrabarty, “Brain MRI images for brain tumor detection,” Kaggle dataset, version 1, 2019.
+- [56] S. Bhuvaji, A. Kadam, P. Bhumkar, S. Dedge, and S. Kanchan, “Brain tumor classification (MRI),” Kaggle dataset, 2020.
+- [57] J. Cheng, “Brain tumor dataset,” figshare, version 5, 2017.
+- [58] MoundirB, “Jun Cheng brain tumor MRI dataset JPG,” Kaggle dataset, version 1, 2025.
+- [59] M. Norouzi, A. Punjani, and D. J. Fleet, “Fast exact search in Hamming space with multi-index hashing,” _IEEE Transactions on Pattern Analysis and Machine Intelligence_, vol. 36, no. 6, pp. 1107–1119, 2014.
+- [60] M. Tan and Q. Le, “EfficientNet: Rethinking model scaling for convolutional neural networks,” in _Proc. 36th International Conference on Machine Learning (ICML)_, 2019, pp. 6105–6114.
+- [61] A. Howard et al., “Searching for MobileNetV3,” in _Proc. IEEE/CVF International Conference on Computer Vision (ICCV)_, 2019, pp. 1314–1324.
+- [62] M. Sandler, A. Howard, M. Zhu, A. Zhmoginov, and L.-C. Chen, “MobileNetV2: Inverted residuals and linear bottlenecks,” in _Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)_, 2018, pp. 4510–4520.
+- [63] A. Vaswani et al., “Attention is all you need,” in _Advances in Neural Information Processing Systems (NeurIPS) 30_, 2017.
+- [64] Z. Dai, H. Liu, Q. V. Le, and M. Tan, “CoAtNet: Marrying convolution and attention for all data sizes,” in _Advances in Neural Information Processing Systems (NeurIPS)_, 2021, pp. 3965–3977.
+- [65] Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, “Gradient-based learning applied to document recognition,” _Proceedings of the IEEE_, vol. 86, no. 11, pp. 2278–2324, 1998.
+- [66] Y. LeCun, Y. Bengio, and G. Hinton, “Deep learning,” _Nature_, vol. 521, no. 7553, pp. 436–444, 2015.
+- [67] J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, and L. Fei-Fei, “ImageNet: A large-scale hierarchical image database,” in _Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR)_, 2009, pp. 248–255.
+- [68] O. Russakovsky et al., “ImageNet large scale visual recognition challenge,” _International Journal of Computer Vision_, vol. 115, no. 3, pp. 211–252, 2015.
+- [69] A. Paszke et al., “PyTorch: An imperative style, high-performance deep learning library,” in _Advances in Neural Information Processing Systems (NeurIPS) 32_, 2019.
+- [70] I. Loshchilov and F. Hutter, “Decoupled weight decay regularization,” in _Proc. International Conference on Learning Representations (ICLR)_, 2019.
+- [71] I. Loshchilov and F. Hutter, “SGDR: Stochastic gradient descent with warm restarts,” in _Proc. International Conference on Learning Representations (ICLR)_, 2017.
+- [72] P. Micikevicius et al., “Mixed precision training,” in _Proc. International Conference on Learning Representations (ICLR)_, 2018.
+- [73] R. Pascanu, T. Mikolov, and Y. Bengio, “On the difficulty of training recurrent neural networks,” in _Proc. 30th International Conference on Machine Learning (ICML)_, 2013, pp. 1310–1318.
+- [74] T. Gneiting and A. E. Raftery, “Strictly proper scoring rules, prediction, and estimation,” _Journal of the American Statistical Association_, vol. 102, no. 477, pp. 359–378, 2007.
+- [75] C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, “On calibration of modern neural networks,” in _Proc. 34th International Conference on Machine Learning (ICML)_, 2017, pp. 1321–1330.
+- [76] W. J. Youden, “Index for rating diagnostic tests,” _Cancer_, vol. 3, no. 1, pp. 32–35, 1950.
+- [77] J. A. Hanley and B. J. McNeil, “The meaning and use of the area under a receiver operating characteristic (ROC) curve,” _Radiology_, vol. 143, no. 1, pp. 29–36, 1982.
+- [78] T. Fawcett, “An introduction to ROC analysis,” _Pattern Recognition Letters_, vol. 27, no. 8, pp. 861–874, 2006.
+- [79] B. W. Matthews, “Comparison of the predicted and observed secondary structure of T4 phage lysozyme,” _Biochimica et Biophysica Acta (BBA) – Protein Structure_, vol. 405, no. 2, pp. 442–451, 1975.
+- [80] D. Chicco and G. Jurman, “The advantages of the Matthews correlation coefficient (MCC) over F1 score and accuracy in binary classification evaluation,” _BMC Genomics_, vol. 21, Art. no. 6, 2020.
+- [81] M. Pakdaman Naeini, G. Cooper, and M. Hauskrecht, “Obtaining well calibrated probabilities using Bayesian binning,” in _Proc. AAAI Conference on Artificial Intelligence 29(1)_, 2015.
+- [82] B. Efron, “Bootstrap methods: Another look at the jackknife,” _The Annals of Statistics_, vol. 7, no. 1, pp. 1–26, 1979.
+- [83] Q. McNemar, “Note on the sampling error of the difference between correlated proportions or percentages,” _Psychometrika_, vol. 12, no. 2, pp. 153–157, 1947.
+- [84] S. Holm, “A simple sequentially rejective multiple test procedure,” _Scandinavian Journal of Statistics_, vol. 6, no. 2, pp. 65–70, 1979.
+- [85] R. R. Selvaraju, M. Cogswell, A. Das, R. Vedantam, D. Parikh, and D. Batra, “Grad-CAM: Visual explanations from deep networks via gradient-based localization,” in _Proc. IEEE International Conference on Computer Vision (ICCV)_, 2017, pp. 618–626.
+- [86] S. Abnar and W. Zuidema, “Quantifying attention flow in transformers,” in _Proc. 58th Annual Meeting of the Association for Computational Linguistics (ACL)_, 2020, pp. 4190–4197.
+- [87] M. D. Zeiler and R. Fergus, “Visualizing and understanding convolutional networks,” in _Computer Vision – ECCV 2014_, 2014, pp. 818–833.
+- [88] N. Otsu, “A threshold selection method from gray-level histograms,” _IEEE Transactions on Systems, Man, and Cybernetics_, vol. 9, no. 1, pp. 62–66, 1979.
+- [89] B. H. Menze et al., “The multimodal brain tumor image segmentation benchmark (BRATS),” _IEEE Transactions on Medical Imaging_, vol. 34, no. 10, pp. 1993–2024, 2015.
+- [90] F. Wilcoxon, “Individual comparisons by ranking methods,” _Biometrics Bulletin_, vol. 1, no. 6, pp. 80–83, 1945.
+- [91] C. Spearman, “The proof and measurement of association between two things,” _The American Journal of Psychology_, vol. 15, no. 1, pp. 72–101, 1904.
+- [92] G. Wang, W. Li, M. Aertsen, J. Deprest, S. Ourselin, and T. Vercauteren, “Aleatoric uncertainty estimation with test-time augmentation for medical image segmentation with convolutional neural networks,” _Neurocomputing_, vol. 338, pp. 34–45, 2019.
+- [93] A. G. Roy, S. Conjeti, N. Navab, and C. Wachinger, “Bayesian QuickNAT: Model uncertainty in deep whole-brain segmentation for structure-wise quality control,” _NeuroImage_, vol. 195, pp. 11–22, 2019.
+- [94] A. Mehrtash, W. M. Wells, C. M. Tempany, P. Abolmaesumi, and T. Kapur, “Confidence calibration and predictive uncertainty estimation for deep medical image segmentation,” _IEEE Transactions on Medical Imaging_, vol. 39, no. 12, pp. 3868–3878, 2020.
+- [95] K. Vinogradova, A. Dibrov, and G. Myers, “Towards interpretable semantic segmentation via gradient-weighted class activation mapping (student abstract),” _Proceedings of the AAAI Conference on Artificial Intelligence_, vol. 34, no. 10, pp. 13943–13944, 2020.
+- [96] L. Maier-Hein et al., “Metrics reloaded: Recommendations for image analysis validation,” _Nature Methods_, vol. 21, no. 2, pp. 195–212, 2024.
 
-> Speaker notes: IEEE-style references, numbered in order of first citation in this deck; all 88 references cited by the two manuscripts are included.
+> Speaker notes: IEEE-style references, numbered in order of first citation in this deck; all 96 references cited by the two manuscripts are included.

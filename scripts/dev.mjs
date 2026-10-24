@@ -45,7 +45,7 @@ const WEIGHTS = {
 		"uploads stay disabled",
 	],
 	SEGMENTATION_WEIGHTS: [
-		"../Materials/Notebooks/segmentation/weights/deploy/VNet.pth",
+		"../Materials/Notebooks/segmentation/weights/deploy/SegResNet.pth",
 		"scans are processed without segmentation",
 	],
 };

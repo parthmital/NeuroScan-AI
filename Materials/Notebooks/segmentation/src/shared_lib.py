@@ -5,13 +5,17 @@ Each notebook writes this file to /kaggle/working/src; training runs in one subp
 and the notebook turns the workers' status files into live progress bars.
 """
 
+import faulthandler
 import json
 import os
+import subprocess
 import sys
 import time
 from pathlib import Path
 
 import numpy as np
+
+STALL_SECONDS = 1800  # no new status or event for this long counts as a possible hang
 
 
 def read_json(path, default=None):
@@ -29,8 +33,6 @@ def write_json(path, data):
 
 
 def launch_workers(script, config_path, log_dir, gpu_count):
-    import subprocess
-
     processes = []
     for gpu in range(gpu_count):
         env = os.environ.copy()
@@ -39,6 +41,7 @@ def launch_workers(script, config_path, log_dir, gpu_count):
             PYTHONUNBUFFERED="1",
             CUBLAS_WORKSPACE_CONFIG=":4096:8",
             OMP_NUM_THREADS=str(max(1, (os.cpu_count() or 2) // gpu_count)),
+            PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True",
         )
         log = open(Path(log_dir) / f"worker_gpu{gpu}.log", "a")
         command = [sys.executable, str(script), "--config", str(config_path), "--gpu", str(gpu)]
@@ -48,8 +51,32 @@ def launch_workers(script, config_path, log_dir, gpu_count):
     return processes
 
 
-def monitor_workers(processes, log_dir, total_jobs, finished_jobs, poll_seconds=3):
-    """Live progress: one bar for all jobs, one bar per GPU, epoch lines as they arrive."""
+def log_tail(log_dir, gpu, lines=40):
+    path = Path(log_dir) / f"worker_gpu{gpu}.log"
+    return (
+        "\n".join(path.read_text(errors="replace").splitlines()[-lines:]) if path.exists() else ""
+    )
+
+
+def stop_workers(processes, timeout=60):
+    for process, _ in processes:
+        if process.poll() is None:
+            process.terminate()
+    for process, _ in processes:
+        try:
+            process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait(timeout=timeout)
+
+
+def monitor_workers(
+    processes, log_dir, total_jobs, finished_jobs, poll_seconds=3, heartbeat_seconds=300
+):
+    """Live progress: one bar for all jobs, one bar per GPU, epoch lines as they arrive, and a status
+    line per GPU every `heartbeat_seconds` (the bars are widgets, which the log of a saved Kaggle run
+    does not show). Warns when a worker reports nothing for STALL_SECONDS, and as soon as a worker
+    exits with an error stops the others and raises with the end of its log."""
     from tqdm.auto import tqdm
 
     log_dir = Path(log_dir)
@@ -61,6 +88,9 @@ def monitor_workers(processes, log_dir, total_jobs, finished_jobs, poll_seconds=
     ]
     offsets = [0] * len(processes)
     current_job = [None] * len(processes)
+    last_heartbeat = time.time()
+    last_change = [time.time()] * len(processes)
+    stamps = [None] * len(processes)
     while True:
         for gpu, bar in enumerate(bars):
             status = read_json(log_dir / f"status_gpu{gpu}.json", {})
@@ -74,29 +104,57 @@ def monitor_workers(processes, log_dir, total_jobs, finished_jobs, poll_seconds=
                 bar.refresh()
             events = log_dir / f"events_gpu{gpu}.jsonl"
             if events.exists():
-                with open(events) as handle:
+                with open(events, "rb") as handle:
                     handle.seek(offsets[gpu])
-                    for line in handle:
-                        tqdm.write(json.loads(line)["message"])
-                    offsets[gpu] = handle.tell()
+                    data = handle.read()
+                complete = data[: data.rfind(b"\n") + 1]  # a line still being written waits
+                for line in complete.splitlines():
+                    tqdm.write(json.loads(line)["message"])
+                offsets[gpu] += len(complete)
+        for gpu, (process, _) in enumerate(processes):
+            stamp = tuple(
+                path.stat().st_mtime if path.exists() else 0
+                for path in (log_dir / f"status_gpu{gpu}.json", log_dir / f"events_gpu{gpu}.jsonl")
+            )
+            if stamp != stamps[gpu] or process.poll() is not None:
+                stamps[gpu], last_change[gpu] = stamp, time.time()
+            elif time.time() - last_change[gpu] >= STALL_SECONDS:
+                last_change[gpu] = time.time()
+                tqdm.write(
+                    f"WARNING GPU {gpu} worker: no progress for {STALL_SECONDS // 60} min; end of its log:\n{log_tail(log_dir, gpu)}"
+                )
+        if time.time() - last_heartbeat >= heartbeat_seconds:
+            last_heartbeat = time.time()
+            for gpu in range(len(processes)):
+                status = read_json(log_dir / f"status_gpu{gpu}.json", {})
+                if status.get("job"):
+                    tqdm.write(
+                        f"[GPU {gpu}] {status['job']}: step {status.get('step', 0)}/{status.get('total', '?')} {status.get('postfix', {})}"
+                    )
         done = finished_jobs()
         overall.update(done - overall.n)
-        if all(process.poll() is not None for process, _ in processes):
+        failed = [
+            gpu for gpu, (process, _) in enumerate(processes) if process.poll() not in (None, 0)
+        ]
+        if failed or all(process.poll() is not None for process, _ in processes):
             break
         time.sleep(poll_seconds)
     for bar in bars:
         bar.close()
     overall.close()
-    failures = []
-    for gpu, (process, log) in enumerate(processes):
+    if failed:
+        tqdm.write(f"GPU {failed} worker failed; stopping the other workers")
+        stop_workers(processes)
+    for _, log in processes:
         log.close()
-        if process.returncode != 0:
-            tail = (log_dir / f"worker_gpu{gpu}.log").read_text().splitlines()[-40:]
-            failures.append(
-                f"GPU {gpu} worker exited with {process.returncode}:\n" + "\n".join(tail)
+    if failed:
+        raise RuntimeError(
+            "\n\n".join(
+                f"GPU {gpu} worker exited with {processes[gpu][0].returncode}:\n{log_tail(log_dir, gpu)}"
+                for gpu in failed
             )
-    if failures:
-        raise RuntimeError("\n\n".join(failures))
+            + "\n\nFinished runs and per-epoch checkpoints are in /kaggle/working; set RESUME_DIR to this version's output to continue."
+        )
 
 
 class Reporter:
@@ -109,6 +167,7 @@ class Reporter:
 
     def status(self, **fields):
         write_json(self.status_path, fields)
+        faulthandler.dump_traceback_later(STALL_SECONDS, repeat=True)  # re-armed by every report
 
     def event(self, message, **fields):
         with open(self.events_path, "a") as handle:
@@ -119,6 +178,7 @@ class Reporter:
                 + "\n"
             )
         print(message, flush=True)
+        faulthandler.dump_traceback_later(STALL_SECONDS, repeat=True)
 
 
 def holm(p_values):

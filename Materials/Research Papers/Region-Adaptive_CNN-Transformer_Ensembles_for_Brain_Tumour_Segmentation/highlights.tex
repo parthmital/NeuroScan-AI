@@ -1,0 +1,18 @@
+% !TeX root = highlights.tex
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\pagenumbering{gobble}
+
+\begin{document}
+
+\section*{Highlights}
+
+\begin{itemize}
+\item Per-region weights and thresholds fuse nnU-Net, SegResNet and Swin UNETR-v2.
+\item Tested on 56 internal BraTS 2020 and 60 external BraTS-Africa patients.
+\item The ensemble beats two members but not SegResNet alone (Dice 0.8530 vs 0.8717).
+\item Member disagreement flags failing cases: AUROC 0.993 internal, 0.870 external.
+\item Scored Seg-Grad-CAM shows near-chance attribution for the transformer.
+\end{itemize}
+
+\end{document}

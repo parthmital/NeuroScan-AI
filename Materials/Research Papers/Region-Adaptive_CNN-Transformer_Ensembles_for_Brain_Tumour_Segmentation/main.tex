@@ -1,0 +1,775 @@
+% The CAS front matter prints the corresponding-author and e-mail notes as footnotes
+% without a mark, which hyperref cannot anchor; the paper has no other footnotes.
+\PassOptionsToPackage{hyperfootnotes=false}{hyperref}
+\documentclass[a4paper,fleqn]{cas-sc}
+% Elsevier CAS single-column class (cas-sc.cls, cas-common.sty and cas-model2-names.bst,
+% version 2.4, are in this folder). The class loads hyperref, booktabs, multirow and array.
+\usepackage[authoryear]{natbib}
+\usepackage{tabularx}
+% allow line breaks at hyphens inside \url (long dataset slugs)
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\-}
+% Figures are the notebook plots: figures/segmentation/plots/<file>.png when uploaded with
+% the project (Overleaf), otherwise read in place from Materials/Notebooks/segmentation/plots/.
+\graphicspath{{figures/}{../../Notebooks/}}
+% DOIs in the reference list link to https://doi.org (the .bst default is dx.doi.org)
+\newcommand*{\doi}[1]{\href{https://doi.org/#1}{\path{#1}}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.08}
+\emergencystretch=2em
+% One plot at [#1 of] the text width, but never taller than #2 of the text height.
+\newcommand{\plot}[3][1]{\includegraphics[width=#1\linewidth,height=#2\textheight,keepaspectratio]{#3}}
+% Figures and tables are not floats: each is set exactly where it is written, right after
+% the paragraph that first cites it, with the cas-sc caption style. A page may end short
+% when the next figure or table does not fit on it.
+\makeatletter
+\ExplSyntaxOn
+\NewDocumentEnvironment { herefigure } { }
+  {
+    \par \addvspace { \intextsep } \noindent
+    \begin{minipage}{\linewidth}
+    \__reset_fig:
+    \dim_set:Nn \l_fig_width_dim { \linewidth }
+    \cs_set_eq:NN \@makecaption \__make_fig_caption:nn
+    \def \@captype { figure }
+    \centering \sffamily \small
+  }
+  { \end{minipage} \par \addvspace { \intextsep } }
+\NewDocumentEnvironment { heretable } { }
+  {
+    \par \addvspace { \intextsep } \noindent
+    \begin{minipage}{\linewidth}
+    \__reset_tbl:
+    \dim_set:Nn \l_tbl_width_dim { \linewidth }
+    \csgdef { tblwidth } { \dim_use:N \l_tbl_width_dim }
+    \cs_set_eq:NN \@makecaption \__make_tbl_caption:nn
+    \def \@captype { table }
+    \centering \sffamily \small
+  }
+  { \end{minipage} \par \addvspace { \intextsep } }
+% cas-common.sty prints an empty "ORCID(s):" footnote when no author has an ORCID iD.
+\RenewDocumentCommand \printorcid { }
+  {
+    \seq_if_empty:NF \g_stm_orcid_seq
+      {
+        \group_begin:
+          \tex_let:D \thefootnote \relax \footnotetext
+            { \raggedright \textsc{orcid}(s):\c_space_token \seq_use:Nn \g_stm_orcid_seq { ;~ } }
+        \group_end:
+      }
+  }
+% cas-common.sty sets the keywords box inside a zero-width box with no stretch, which TeX
+% reports as a 117pt overfull box at \maketitle. Same environment with \hss added, so the
+% output is unchanged and the warning is gone.
+\RenewDocumentEnvironment { Abstract } { o }
+  {
+    \group_begin:
+    \IfNoValueTF { #1 } { }
+    { \tex_gdef:D \abstractname { #1 } }
+    \parindent \z@
+    \box_if_empty:NTF \g_stm_key_box
+    { \leftskip = .35 \textwidth }
+    {
+      \dim_gset:Nn \l_tmpa_dim { \box_ht:N \g_stm_key_box }
+      \dim_gadd:Nn \l_tmpa_dim { \box_dp:N \g_stm_key_box }
+      \leftskip .35\textwidth
+      \hspace*{-.35 \textwidth }
+      \noindent\hbox_to_wd:nn { \z@ } { \box \g_stm_key_box \hss }
+      \skip_vertical:n { - \l_tmpa_dim }
+    }
+    \noindent \abstractname \par
+    \skip_vertical:n { -4pt}
+    \noindent \rule{.65\textwidth}{.2pt}\par \footnotesize
+    \ignorespaces \everypar { \parindent=1.5em }
+  }
+  { \par \group_end: }
+\ExplSyntaxOff
+\makeatother
+\raggedbottom
+\raggedbottom
+% PDF bookmarks carry the section numbers; the reference list is an unnumbered section, which
+% hyperref does not bookmark by itself.
+\hypersetup{bookmarksnumbered=true}
+\apptocmd{\bibsection}{\pdfbookmark[1]{References}{references}}{}{}
+\hypersetup{
+  pdftitle={Region-Adaptive CNN-Transformer Ensembles for Brain Tumour Segmentation with External Validation and Disagreement-Based Quality Control},
+  pdfauthor={Parth Mital, Ved Lawand, Biji C. L.},
+}
+
+\begin{document}
+% The Elsevier sample file sets \let\WriteBookmarks\relax, which makes hyperref's XeTeX
+% driver (Tectonic) drop every PDF bookmark, so it is not set here.
+
+\shorttitle{Region-adaptive CNN-transformer ensembles for brain tumour segmentation}
+\shortauthors{P. Mital et al.}
+
+\title[mode=title]{Region-Adaptive CNN-Transformer Ensembles for Brain Tumour Segmentation with External Validation and Disagreement-Based Quality Control}
+
+\author[1]{Parth Mital}
+\cormark[1]
+\ead{parth.mital2023@vitstudent.ac.in}
+\author[1]{Ved Lawand}
+\ead{ved.lawand2023@vitstudent.ac.in}
+\author[1]{Biji C. L.}
+\ead{biji.cl@vit.ac.in}
+
+\affiliation[1]{organization={School of Computer Science and Engineering, Vellore Institute of Technology},
+  city={Vellore},
+  country={India}}
+
+\cortext[1]{Corresponding author}
+
+% Outside the environment: cas-sc reads the abstract body as an argument and would print it.
+\pdfbookmark[1]{Abstract}{abstract}
+\begin{abstract}
+Convolutional and transformer networks for brain tumour segmentation make different errors, but ensembles usually average them with one weight for every tumour region and are rarely tested outside their training population. The contribution to artificial intelligence is a region-adaptive hybrid ensemble of nnU-Net, SegResNet and Swin UNETR-v2 that selects one convex weight vector and one decision threshold per tumour region on validation cases, plus a quality-control signal from the disagreement between its members. The engineering application is a segmentation service that must flag unreliable cases for review. All networks were trained at native resolution on 257 Brain Tumour Segmentation (BraTS) 2020 cases, selected on 56, and tested on 56 internal and 60 external BraTS-Africa cases. The ensemble reached a mean Dice of 0.8530 (95\% confidence interval 0.8204--0.8836) internally and 0.7966 externally. It beat nnU-Net and Swin UNETR internally (Holm-corrected Wilcoxon $p<0.01$) but not SegResNet alone, which scored 0.8717 internally ($p=0.018$ in its favour) and 0.7967 externally. Every model lost 0.047 to 0.075 Dice externally, mostly in the tumour core. Disagreement between the members detected cases with mean Dice below 0.80 with an area under the receiver operating characteristic curve of 0.993 internally and 0.870 externally, against 0.716 and 0.791 for test-time-augmentation spread. Seg-Grad-CAM attribution was 4 to 23 times enriched in the tumour for the convolutional networks but near chance for Swin UNETR; dropping sequences confirmed reliance on FLAIR for the whole tumour and on T1CE for the core. The disagreement between architectures proved more useful than their fusion.
+\end{abstract}
+
+\begin{keywords}
+\pdfbookmark[1]{Keywords}{keywords}
+Brain tumour segmentation \sep Ensemble learning \sep External validation \sep Quality control \sep Explainability \sep BraTS
+\end{keywords}
+
+\pdfbookmark[1]{Region-Adaptive CNN-Transformer Ensembles for Brain Tumour Segmentation with External Validation and Disagreement-Based Quality Control}{title}
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+Gliomas are the most common malignant primary brain tumours, and their extent on magnetic resonance imaging (MRI) guides surgery, radiotherapy planning and follow-up \citep{bakas2017}. The Brain Tumour Segmentation (BraTS) benchmark provides four co-registered MRI sequences per patient, T1-weighted (T1), contrast-enhanced T1 (T1CE), T2-weighted (T2) and fluid-attenuated inversion recovery (FLAIR), with expert labels for three nested regions: whole tumour (WT), tumour core (TC) and enhancing tumour (ET) \citep{menze2015,bakas2017}. Manual delineation is slow and varies between raters, so automatic three-dimensional (3D) segmentation is a practical engineering need.
+
+Two families of networks dominate the field. Convolutional encoder-decoders, from the 3D U-Net \citep{ronneberger2015,cicek2016} to SegResNet \citep{myronenko2019} and the self-configuring nnU-Net \citep{isensee2021}, remain strong baselines. Transformer-based networks such as UNETR \citep{hatamizadeh2022unetr}, Swin UNETR \citep{hatamizadeh2022swin}, Swin UNETR-v2 \citep{he2023}, TransBTS \citep{wang2021} and TransUNet \citep{chen2024} model long-range context. The two families tend to make different errors, which is the usual argument for ensembles \citep{kamnitsas2018}. Three practical questions are less often answered. First, the regions differ in size, contrast and difficulty, so a single fusion weight and threshold for all of them may waste complementary information. Second, most results are internal: models trained and tested on cases from the same centres can degrade on other populations and scanners \citep{zech2018}. Third, a deployed service needs to know when a prediction is likely wrong, and the usual per-model uncertainty signals are only weakly related to segmentation error \citep{jungo2019,mehrtash2020}.
+
+This study addresses these questions with one controlled experiment and makes four contributions. (i) A region-adaptive hybrid ensemble of two convolutional networks (nnU-Net and SegResNet) and one transformer (Swin UNETR-v2) chooses a convex weight vector and a threshold separately for WT, TC and ET on validation cases only, and is compared with every member and with three ablations by paired, multiplicity-corrected tests. (ii) Every model is validated internally on 56 held-out BraTS 2020 patients and externally on 60 BraTS-Africa patients from Sub-Saharan Africa \citep{adewole2025}, which were never used for training or selection. (iii) The disagreement between the members is evaluated as a per-case quality-control signal against test-time-augmentation (TTA) spread. (iv) The members are examined with 3D Seg-Grad-CAM \citep{selvaraju2017,vinogradova2020}, scored quantitatively, and with a sequence-drop ablation. The results are reported as found: the ensemble does not beat its best member, while the disagreement signal is the most useful product of the hybrid design.
+
+Section~\ref{sec:related} reviews related work, Section~\ref{sec:methods} describes the data, networks, fusion and evaluation, Section~\ref{sec:results} presents and discusses the results, Section~\ref{sec:limitations} lists limitations, Section~\ref{sec:ethics} discusses ethical implications and Section~\ref{sec:conclusion} concludes.
+
+\section{Related Work}
+\label{sec:related}
+
+\textbf{Networks.} The U-Net encoder-decoder with skip connections \citep{ronneberger2015} and its volumetric version \citep{cicek2016} underlie most brain tumour segmentation methods. SegResNet won BraTS 2018 with a residual encoder, a light decoder and a variational auto-encoder branch for regularisation \citep{myronenko2019}. nnU-Net configures preprocessing, architecture and training from the dataset itself and has been a leading baseline across many tasks \citep{isensee2021}. Transformer encoders were introduced to 3D medical segmentation by UNETR \citep{hatamizadeh2022unetr}; Swin UNETR uses shifted-window attention for BraTS \citep{hatamizadeh2022swin}, and Swin UNETR-v2 adds stagewise convolutions to it \citep{he2023}. Hybrids place attention at the bottleneck of a convolutional network \citep{wang2021,chen2024}.
+
+\textbf{Ensembles.} Ensembles of multiple models and architectures were shown to make brain tumour segmentation more robust by \citet{kamnitsas2018}, who averaged the probabilities of their members with equal weights. Ensembles are also standard in BraTS challenge entries. The region-adaptive fusion studied here differs in two ways: the weights and the decision threshold are chosen separately for each region, and the transformer member is free to receive zero weight, so the search can also return a pure CNN ensemble.
+
+\textbf{Uncertainty and quality control.} Test-time augmentation provides a per-voxel spread that is related to error \citep{wang2019tta}. \citet{jungo2019} found that the reliability of uncertainty estimates for segmentation varies widely between methods, and \citet{mehrtash2020} showed that ensembles improve calibration and that segment-level uncertainty can predict segment quality. \citet{roy2019} used agreement between Monte Carlo samples for structure-wise quality control in brain segmentation. Disagreement between architecturally different members has received less attention as a quality signal, and its behaviour under population shift is rarely measured.
+
+\textbf{Explainability and evaluation.} Grad-CAM weights activation maps by gradients of a class score \citep{selvaraju2017}; Seg-Grad-CAM applies it to segmentation by using the sum of the logits over a target region \citep{vinogradova2020}. Visual saliency maps are hard to judge on their own, so they are scored here by how much of their mass falls inside the tumour. On evaluation, \citet{maierhein2024} recommend choosing metrics and aggregation to match the task; in particular, averaging Dice over tumour-containing slices is a different measurement from per-patient 3D Dice, and the two must not be compared directly.
+
+\section{Materials and Methods}
+\label{sec:methods}
+
+\subsection{Datasets}
+\label{sec:data}
+
+\textbf{BraTS 2020.} The 369 training cases of BraTS 2020 \citep{menze2015,bakas2017} were used from the Kaggle distribution \url{https://www.kaggle.com/datasets/awsaf49/brats20-dataset-training-validation}: 293 high-grade (HGG) and 76 low-grade gliomas (LGG), each with four sequences and a reference mask. The labels are necrotic and non-enhancing core (1), oedema (2) and enhancing tumour (4), converted into WT (all labels), TC (labels 1 and 4) and ET (label 4).
+
+\textbf{BraTS-Africa.} The 60 labelled training cases of the BraTS 2023 Sub-Saharan Africa challenge \citep{adewole2025} were used from \url{https://www.kaggle.com/datasets/aiocta/brats2023-ssa-training-dataset}. They were acquired in Sub-Saharan African centres and share the BraTS annotation protocol and preprocessing (co-registration, skull stripping, 1~mm resampling), with ET as label 3. No grade is recorded. These cases served only as an external test set.
+
+All 429 cases have a $240\times 240\times 155$ grid at $1\times 1\times 1$~mm. Table~\ref{tab:volumes} compares the reference volumes of the cohorts. BraTS-Africa tumours are larger on average (median WT 163.75 against 91.13~cm$^3$ for HGG) and, like HGG, always contain ET, whereas 27 of the 76 LGG cases (35.5\%) have none.
+
+\begin{heretable}
+\centering
+\caption{Reference region volumes in cm$^3$ by cohort (293 BraTS 2020 HGG, 76 BraTS 2020 LGG and 60 BraTS-Africa cases).}
+\label{tab:volumes}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+Region & Cohort & Mean & SD & Min & Median & Max \\
+\midrule
+\multirow{3}{*}{WT} & HGG & 96.44 & 53.78 & 7.28 & 91.13 & 256.88 \\
+ & LGG & 111.54 & 76.72 & 17.08 & 86.32 & 361.78 \\
+ & BraTS-Africa & 161.36 & 92.28 & 1.03 & 163.75 & 394.41 \\
+\multirow{3}{*}{TC} & HGG & 37.66 & 29.26 & 0.56 & 32.54 & 126.72 \\
+ & LGG & 57.85 & 49.66 & 0.83 & 44.59 & 190.19 \\
+ & BraTS-Africa & 61.68 & 58.32 & 0.49 & 39.81 & 228.44 \\
+\multirow{3}{*}{ET} & HGG & 23.39 & 18.50 & 0.11 & 19.46 & 111.25 \\
+ & LGG & 5.46 & 13.53 & 0.00 & 0.82 & 89.55 \\
+ & BraTS-Africa & 36.32 & 30.98 & 0.49 & 28.43 & 122.36 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+The volume distributions are plotted in Figure~\ref{fig:volumes}, and one case of each dataset is shown in Figure~\ref{fig:modalities}.
+
+\begin{herefigure}
+\centering
+\plot{0.26}{segmentation/plots/01_region_volumes.png}
+\caption{Reference WT, TC and ET volumes by cohort.}
+\label{fig:volumes}
+\end{herefigure}
+
+\begin{herefigure}
+\centering
+\plot{0.42}{segmentation/plots/02_modalities_and_masks.png}
+\caption{One BraTS 2020 case and one BraTS-Africa case: the four MRI sequences and the three nested reference regions.}
+\label{fig:modalities}
+\end{herefigure}
+
+\subsection{Split and Preprocessing}
+\label{sec:split}
+
+The BraTS 2020 cases were split by grade into 257 training, 56 validation and 56 test cases (Table~\ref{tab:split}); all 60 BraTS-Africa cases form the external set. Every choice in this study (checkpoints, ET size filters, fusion weights and thresholds) was made on the 56 validation cases; the test and external cases were used only for the final evaluation.
+
+\begin{heretable}
+\centering
+\caption{Roles of the 429 cases.}
+\label{tab:split}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc@{}}
+\toprule
+Role & HGG & LGG & BraTS-Africa & Total \\
+\midrule
+Training & 204 & 53 & 0 & 257 \\
+Validation & 45 & 11 & 0 & 56 \\
+Internal test & 44 & 12 & 0 & 56 \\
+External test & 0 & 0 & 60 & 60 \\
+\textbf{Total} & \textbf{293} & \textbf{76} & \textbf{60} & \textbf{429} \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+Each case was cropped to the bounding box of its brain (voxels that are non-zero in any sequence), giving crops of $137.4\times 169.9\times 138.1$ voxels on average, and each sequence was z-scored over its non-zero voxels. There was no resampling, so the networks see the native 1~mm grid. The crop left 22 reference voxels outside it in two cases (4 in a training case and 18 in a validation case) and none in any test or external case, so all reported metrics equal those on the native grid. Training used $128^3$ patches cut from a $160^3$ cube around a centre chosen on a tumour voxel with probability 0.33 and uniformly otherwise. Augmentation on the GPU followed nnU-Net practice: rotation up to 30 degrees and scaling between 0.7 and 1.4 (each with probability 0.2), mirroring along every axis, Gaussian noise, and brightness, contrast and gamma changes (Figure~\ref{fig:augmentation}).
+
+\begin{herefigure}
+\centering
+\plot{0.36}{segmentation/plots/03_augmentation.png}
+\caption{A tumour-centred training cube, its centre crop and three draws of the augmentation.}
+\label{fig:augmentation}
+\end{herefigure}
+
+\subsection{Ensemble Members}
+\label{sec:members}
+
+Three members were chosen to pair two strong convolutional networks with one transformer, using the MONAI 1.6.1 implementations. All take the four sequences (FLAIR, T1, T1CE, T2) as channels and output three sigmoid logits per voxel, one per region (Table~\ref{tab:members}).
+
+\textbf{nnU-Net.} A residual six-stage DynUNet in the nnU-Net configuration \citep{isensee2021}, with 32, 64, 128, 256, 320 and 320 channels, instance normalisation and deep supervision at two decoder stages. This is a fixed nnU-Net-style network, not the self-configuring nnU-Net pipeline.
+
+\textbf{SegResNet.} The deep-supervision variant of SegResNet \citep{myronenko2019} as used in MONAI Auto3DSeg, with 32 initial filters, encoder blocks 1, 2, 2 and 4, instance normalisation and three supervised decoder outputs.
+
+\textbf{Swin UNETR-v2.} Swin UNETR \citep{hatamizadeh2022swin} with the stagewise convolutions of version 2 \citep{he2023}, a feature size of 48 and gradient checkpointing.
+
+\begin{heretable}
+\centering
+\caption{Ensemble members and training recipes. GFLOPs are for one $128^3$ patch; DS are the deep-supervision weights; the micro-batch is the number of patches per forward pass.}
+\label{tab:members}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
+\toprule
+Member & Family & Params (M) & GFLOPs & Optimiser & LR & Micro-batch & DS \\
+\midrule
+nnU-Net & CNN & 31.42 & 968.1 & SGD & $10^{-2}$ & 2 & 1, 0.5, 0.25 \\
+SegResNet & CNN & 19.92 & 1218.2 & AdamW & $2\times 10^{-4}$ & 2 & 1, 0.5, 0.25 \\
+Swin UNETR-v2 & Transformer & 72.77 & 1665.6 & AdamW & $10^{-4}$ & 1 & 1 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\subsection{Training}
+\label{sec:training}
+
+The loss for each region was the sum of a soft Dice loss and binary cross-entropy, applied to the main output and to each deep-supervision output with the weights in Table~\ref{tab:members}. nnU-Net used SGD with Nesterov momentum, weight decay $3\times 10^{-5}$, polynomial learning-rate decay and gradient clipping at 12; the other two used AdamW with weight decay $10^{-5}$, a two-epoch warm-up, cosine decay and clipping at 1. Each optimiser step used two patches (Swin UNETR accumulated two micro-batches of one). An epoch had 250 steps; the convolutional networks trained for 60 epochs (15,000 steps) and Swin UNETR, whose steps cost about three times as much, for 30 epochs (7,500 steps), so that both GPUs finished at about the same time. Training used half-precision autocasting. Every five epochs the validation cases were segmented with sliding windows, and the checkpoint with the best validation mean Dice was kept. One seed (42) was used, without deterministic kernels.
+
+Training ran on Kaggle with two NVIDIA Tesla T4 GPUs (one worker per GPU), four CPU cores and 33.7~GB of memory, with Python 3.13.15, PyTorch 2.11.0, CUDA 12.8 and MONAI 1.6.1. All three runs finished in 528.3 minutes; the whole experiment took 547.9 minutes.
+
+\subsection{Inference and Post-processing}
+\label{sec:inference}
+
+Each case was segmented with Gaussian-weighted sliding windows of $128^3$ voxels with an overlap of 0.5, averaging the sigmoid probabilities over the eight combinations of axis flips (TTA). For a single member, regions were thresholded at 0.5. The BraTS label hierarchy was then enforced (ET inside TC inside WT) and an ET prediction smaller than a minimum size was removed; the size was chosen on the validation cases from 0, 50, 100, 200, 300, 500 and 800 voxels, separately for each member and each ensemble.
+
+\subsection{Region-Adaptive Hybrid Ensemble}
+\label{sec:fusion}
+
+Let $p_{m,r}(x)\in[0,1]$ be the TTA probability of member $m\in\{1,\dots,M\}$ for region $r\in\{\mathrm{WT},\mathrm{TC},\mathrm{ET}\}$ at voxel $x$. For each region the ensemble forms a convex combination and thresholds it:
+\begin{equation}
+\hat{y}_r(x)=\mathbb{1}\!\left[\sum_{m=1}^{M} w_{r,m}\,p_{m,r}(x)>\tau_r\right],\qquad w_{r,m}\geq 0,\quad \sum_{m=1}^{M}w_{r,m}=1.
+\label{eq:fusion}
+\end{equation}
+For each region separately, the pair $(\mathbf{w}_r,\tau_r)$ maximises the mean Dice of region $r$ over the 56 validation cases, searched exhaustively over the 66 weight vectors of a grid with step 0.1 on the simplex (plus the exact equal-weight vector) and the thresholds 0.3, 0.4, 0.5, 0.6 and 0.7. The hierarchy and the ET size filter are applied after fusion. A member can receive zero weight, so the search can reduce to a single network or a CNN-only ensemble when the validation data favour it.
+
+Three ablations isolate the parts of Equation~\ref{eq:fusion}: the mean of all members (equal weights, threshold 0.5), the mean of the two CNNs, and the region-adaptive weights with a fixed threshold of 0.5 (searched with $\tau_r=0.5$).
+
+\subsection{Evaluation}
+\label{sec:evaluation}
+
+\textbf{Metrics.} For every case and region the Dice coefficient (1 when prediction and reference are both empty), the 95th-percentile Hausdorff distance (HD95) in millimetres (0 when both are empty and the BraTS value of 373.13~mm when only one is), and voxel-wise sensitivity and specificity were computed on the native grid. The mean Dice of a case is the average over its three regions. Model-level Dice is the mean over cases with a percentile bootstrap 95\% confidence interval (CI) from 2,000 resamples \citep{efron1979}; HD95 is summarised by its median.
+
+\textbf{Statistics.} The proposed ensemble was compared with each member and each ablation by Wilcoxon signed-rank tests on per-case mean Dice \citep{wilcoxon1945}, with the Holm correction \citep{holm1979} applied separately within the internal and the external set, and with a bootstrap CI of the mean paired difference.
+
+\textbf{Slice-wise protocol.} To show how aggregation changes the numbers \citep{maierhein2024}, every model was also scored over the axial slices that contain the reference region, both as the mean Dice over those slices and as a Dice pooled over them.
+
+\textbf{Quality control.} Two per-case signals were compared. The TTA spread is the voxel-wise standard deviation over the eight flips, averaged inside the predicted WT and over the members. The architectural disagreement is
+\begin{equation}
+D=1-\frac{1}{3}\sum_{r}\frac{2}{M(M-1)}\sum_{m<m'}\mathrm{Dice}\!\left(\hat{y}_{m,r},\hat{y}_{m',r}\right),
+\label{eq:disagreement}
+\end{equation}
+the mean pairwise dissimilarity of the members' post-processed masks. A case with a proposed-ensemble mean Dice below 0.80 counts as a failure. Each signal was assessed by its Spearman correlation with per-case mean Dice \citep{spearman1904} and by its area under the receiver operating characteristic curve (AUROC) for detecting failures \citep{hanley1982}.
+
+\textbf{Explainability.} For every internal and external test case, a $128^3$ crop centred on the reference tumour was passed through each member, and Seg-Grad-CAM \citep{vinogradova2020} was computed for each region at a decoder stage at one quarter of the input resolution (nnU-Net: the third upsampling block; SegResNet: the first decoder stage; Swin UNETR: \texttt{decoder3}), with the target restricted to the voxels the member assigns to that region. Each map was scored by the share of its mass inside the reference region dilated by five voxels, divided by the share of the crop that this dilated region occupies (the enrichment over chance). Regions absent from the reference were skipped. Separately, every internal test case was re-segmented with one sequence at a time replaced by its brain mean, without TTA, and the drop in Dice was recorded.
+
+\textbf{Efficiency.} Latency per case was measured on one T4 over the median test crop ($136\times 170\times 139$ voxels) with half precision, with and without TTA. An ensemble costs the sum of the members it uses.
+
+\section{Results and Discussion}
+\label{sec:results}
+
+\subsection{Training and Model Selection}
+\label{sec:selection}
+
+Table~\ref{tab:selection} lists the selected checkpoints. nnU-Net reached the highest validation Dice, 0.8415, at epoch 55, SegResNet 0.8390 at epoch 50 and Swin UNETR 0.8191 at its last epoch, 30, which suggests that it was still improving. Training throughput was 2.24 to 2.28 patches per second for nnU-Net, 2.19 to 2.23 for SegResNet and 0.62 to 0.63 for Swin UNETR. No run was cut short by the time budget.
+
+\begin{heretable}
+\centering
+\caption{Training and model selection. The validation Dice uses sliding windows without TTA; the ET filter was tuned on the validation cases with TTA.}
+\label{tab:selection}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc@{}}
+\toprule
+Member & Steps & Train (h) & Peak memory (GB) & Best epoch & Best validation Dice & ET filter (voxels) \\
+\midrule
+nnU-Net & 15,000 & 3.69 & 5.69 & 55 & 0.8415 & 500 \\
+SegResNet & 15,000 & 3.77 & 6.02 & 50 & 0.8390 & 800 \\
+Swin UNETR & 7,500 & 6.65 & 8.67 & 30 & 0.8191 & 500 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+The training curves are shown in Figure~\ref{fig:curves}.
+
+\begin{herefigure}
+\centering
+\plot{0.5}{segmentation/plots/04_training_curves.png}
+\caption{Training loss, validation Dice per region and training throughput of each member.}
+\label{fig:curves}
+\end{herefigure}
+
+\subsection{Selected Fusion}
+\label{sec:fusion-results}
+
+The search returned an almost CNN-only ensemble (Table~\ref{tab:fusion}): SegResNet and nnU-Net share the weight for WT and ET, and Swin UNETR receives 0.1 only for TC. The selected thresholds are all below 0.5 (0.4, 0.3 and 0.4), which favours sensitivity. On the validation cases the fusion beat the mean ensemble and the best single member for every region, by 0.0038 (WT), 0.0097 (TC) and 0.0045 (ET) Dice over the best member. The validation curves in Figure~\ref{fig:fusion} are flat around the optimum, so these gains are small compared with the variation between cases.
+
+\begin{heretable}
+\centering
+\caption{Region-adaptive weights and thresholds selected on the 56 validation cases, with the validation Dice of the selected fusion, of the same weights at threshold 0.5, of the mean ensemble and of the best single member.}
+\label{tab:fusion}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{Weight} & & \multicolumn{4}{c}{Validation Dice} \\
+\cmidrule(lr){2-4}\cmidrule(l){6-9}
+Region & nnU-Net & SegResNet & Swin & $\tau_r$ & Proposed & $\tau=0.5$ & Mean & Best member \\
+\midrule
+WT & 0.4 & 0.6 & 0.0 & 0.4 & 0.8951 & 0.8935 & 0.8879 & 0.8913 (SegResNet) \\
+TC & 0.4 & 0.5 & 0.1 & 0.3 & 0.8552 & 0.8490 & 0.8413 & 0.8455 (nnU-Net) \\
+ET & 0.5 & 0.5 & 0.0 & 0.4 & 0.7974 & 0.7963 & 0.7916 & 0.7929 (nnU-Net) \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\plot{0.26}{segmentation/plots/05_fusion_search.png}
+\caption{Left: the selected weights per region. Right: validation Dice against the threshold for the selected weights and for the mean ensemble.}
+\label{fig:fusion}
+\end{herefigure}
+
+\subsection{Internal Test Results}
+\label{sec:internal}
+
+Table~\ref{tab:internal} reports the 56 internal test cases. SegResNet alone achieved the highest mean Dice, 0.8717 (95\% CI 0.8389--0.8987), and the highest Dice in every region (WT 0.9264, TC 0.8791, ET 0.8095). The proposed ensemble reached 0.8530 (0.8204--0.8836), the best of the four ensembles, ahead of nnU-Net (0.8404) and Swin UNETR (0.8360). It had the highest sensitivity of all models for every region (0.9345, 0.9122 and 0.8727), as expected from its thresholds below 0.5, and the smallest per-case spread of TC Dice (SD 0.1797). Boundary errors were small for every model, with median HD95 between 1.57 and 3.39~mm, and specificity was 0.9992 or higher.
+
+\begin{heretable}
+\centering
+\caption{Internal test results on 56 BraTS 2020 cases with TTA. Dice is the mean over cases, with a bootstrap 95\% CI for the mean over regions; HD95 is the median over cases in millimetres; sensitivity is the mean over cases.}
+\label{tab:internal}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccccc@{}}
+\toprule
+ & & \multicolumn{3}{c}{Dice} & \multicolumn{3}{c}{HD95 (mm)} & \multicolumn{3}{c}{Sensitivity} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(l){9-11}
+Model & Mean Dice [95\% CI] & WT & TC & ET & WT & TC & ET & WT & TC & ET \\
+\midrule
+nnU-Net & 0.8404 [0.8008, 0.8760] & 0.9139 & 0.8493 & 0.7580 & 3.39 & 3.00 & 2.34 & 0.9110 & 0.8838 & 0.8611 \\
+SegResNet & 0.8717 [0.8389, 0.8987] & 0.9264 & 0.8791 & 0.8095 & 3.08 & 2.64 & 1.57 & 0.9280 & 0.8900 & 0.8400 \\
+Swin UNETR & 0.8360 [0.7923, 0.8742] & 0.9162 & 0.8427 & 0.7490 & 3.00 & 3.00 & 2.24 & 0.9151 & 0.8688 & 0.8562 \\
+CNN mean & 0.8512 [0.8150, 0.8838] & 0.9225 & 0.8630 & 0.7680 & 3.39 & 2.53 & 2.24 & 0.9192 & 0.8858 & 0.8580 \\
+Mean (all) & 0.8494 [0.8115, 0.8834] & 0.9213 & 0.8601 & 0.7669 & 3.24 & 2.91 & 2.24 & 0.9176 & 0.8816 & 0.8589 \\
+Weights, $\tau=0.5$ & 0.8488 [0.8121, 0.8819] & 0.9260 & 0.8563 & 0.7640 & 3.32 & 2.91 & 2.24 & 0.9248 & 0.8854 & 0.8599 \\
+Proposed & 0.8530 [0.8204, 0.8836] & 0.9256 & 0.8639 & 0.7694 & 3.27 & 2.83 & 2.19 & 0.9345 & 0.9122 & 0.8727 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\subsection{External Validation}
+\label{sec:external}
+
+On the 60 BraTS-Africa cases (Table~\ref{tab:external}) the ranking compressed: the CNN mean ensemble scored 0.8005, SegResNet 0.7967, the proposed ensemble 0.7966, the mean of all members 0.7971, Swin UNETR 0.7888 and nnU-Net 0.7765, with largely overlapping CIs. The proposed ensemble had the highest external ET Dice (0.7411) and the highest sensitivity for every region. External ET sensitivity fell to between 0.6140 and 0.6970 for every model, so the main external error is missed enhancing tumour.
+
+\begin{heretable}
+\centering
+\caption{External test results on 60 BraTS-Africa cases with the models, weights, thresholds and ET filters chosen on BraTS 2020 validation cases. Columns as in Table~\ref{tab:internal}.}
+\label{tab:external}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccccc@{}}
+\toprule
+ & & \multicolumn{3}{c}{Dice} & \multicolumn{3}{c}{HD95 (mm)} & \multicolumn{3}{c}{Sensitivity} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(l){9-11}
+Model & Mean Dice [95\% CI] & WT & TC & ET & WT & TC & ET & WT & TC & ET \\
+\midrule
+nnU-Net & 0.7765 [0.7224, 0.8203] & 0.8892 & 0.7241 & 0.7162 & 5.05 & 8.70 & 5.92 & 0.8836 & 0.8172 & 0.6679 \\
+SegResNet & 0.7967 [0.7417, 0.8400] & 0.9005 & 0.7798 & 0.7099 & 3.16 & 5.57 & 4.79 & 0.9168 & 0.8705 & 0.6140 \\
+Swin UNETR & 0.7888 [0.7355, 0.8325] & 0.9012 & 0.7292 & 0.7361 & 3.93 & 6.77 & 4.58 & 0.9012 & 0.8416 & 0.6970 \\
+CNN mean & 0.8005 [0.7484, 0.8419] & 0.9000 & 0.7686 & 0.7328 & 4.06 & 5.39 & 4.74 & 0.9016 & 0.8483 & 0.6411 \\
+Mean (all) & 0.7971 [0.7456, 0.8400] & 0.9021 & 0.7553 & 0.7340 & 3.61 & 5.24 & 4.53 & 0.9029 & 0.8505 & 0.6690 \\
+Weights, $\tau=0.5$ & 0.7872 [0.7327, 0.8304] & 0.9002 & 0.7441 & 0.7174 & 3.46 & 7.60 & 5.24 & 0.9078 & 0.8306 & 0.6586 \\
+Proposed & 0.7966 [0.7430, 0.8391] & 0.8979 & 0.7507 & 0.7411 & 3.53 & 6.52 & 5.00 & 0.9185 & 0.8998 & 0.6883 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+Table~\ref{tab:gap} gives the generalisation gap. Every model lost between 0.0471 and 0.0750 mean Dice. WT was the most stable region (losses of 0.0150 to 0.0277) and TC the least (0.0944 to 0.1252). Swin UNETR lost the least overall (0.0471) and almost nothing on ET (0.0129), whereas SegResNet, the best internal model, lost the most (0.0750, with 0.0996 on ET). Figure~\ref{fig:gap} shows the same pattern for every region.
+
+\begin{heretable}
+\centering
+\caption{Generalisation gap: external minus internal Dice.}
+\label{tab:gap}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc@{}}
+\toprule
+Model & Mean & WT & TC & ET \\
+\midrule
+nnU-Net & $-0.0639$ & $-0.0248$ & $-0.1252$ & $-0.0417$ \\
+SegResNet & $-0.0750$ & $-0.0260$ & $-0.0994$ & $-0.0996$ \\
+Swin UNETR & $-0.0471$ & $-0.0150$ & $-0.1135$ & $-0.0129$ \\
+CNN mean & $-0.0507$ & $-0.0225$ & $-0.0944$ & $-0.0351$ \\
+Mean (all) & $-0.0523$ & $-0.0192$ & $-0.1048$ & $-0.0329$ \\
+Weights, $\tau=0.5$ & $-0.0616$ & $-0.0258$ & $-0.1123$ & $-0.0466$ \\
+Proposed & $-0.0564$ & $-0.0277$ & $-0.1132$ & $-0.0284$ \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\plot{0.22}{segmentation/plots/07_internal_vs_external.png}
+\caption{Internal and external Dice of every model, as the mean over regions and per region.}
+\label{fig:gap}
+\end{herefigure}
+
+\subsection{Statistical Comparison}
+\label{sec:stats}
+
+Table~\ref{tab:wilcoxon} and Figure~\ref{fig:paired} compare the proposed ensemble with every alternative. Internally it is significantly better than nnU-Net (mean paired difference 0.0126, Holm $p=0.0001$) and Swin UNETR (0.0170, $p=0.007$), not significantly different from the three other ensembles, and significantly worse than SegResNet alone ($-0.0187$, $p=0.018$). Externally the only significant difference is against nnU-Net (0.0201, $p=0.0001$); against SegResNet the mean difference is $-0.0002$. The region-adaptive fusion therefore does not justify its cost over SegResNet in this setting.
+
+\begin{heretable}
+\centering
+\caption{Proposed ensemble against each comparator: mean paired difference in per-case mean Dice (proposed minus comparator) with its bootstrap 95\% CI, and Wilcoxon signed-rank tests, Holm-corrected within each set.}
+\label{tab:wilcoxon}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccc@{}}
+\toprule
+Set & Comparator & Mean difference & 95\% CI & Holm $p$ \\
+\midrule
+\multirow{6}{*}{Internal} & nnU-Net & 0.0126 & [0.0040, 0.0276] & 0.0001 \\
+ & SegResNet & $-0.0187$ & [$-0.0443$, 0.0035] & 0.0177 \\
+ & Swin UNETR & 0.0170 & [0.0041, 0.0364] & 0.0069 \\
+ & CNN mean & 0.0018 & [$-0.0064$, 0.0143] & 0.0643 \\
+ & Mean (all) & 0.0035 & [$-0.0061$, 0.0184] & 0.3837 \\
+ & Weights, $\tau=0.5$ & 0.0042 & [$-0.0017$, 0.0144] & 0.3837 \\
+\midrule
+\multirow{6}{*}{External} & nnU-Net & 0.0201 & [0.0099, 0.0320] & 0.0001 \\
+ & SegResNet & $-0.0002$ & [$-0.0117$, 0.0113] & 1.0000 \\
+ & Swin UNETR & 0.0078 & [$-0.0021$, 0.0192] & 1.0000 \\
+ & CNN mean & $-0.0039$ & [$-0.0155$, 0.0069] & 1.0000 \\
+ & Mean (all) & $-0.0006$ & [$-0.0059$, 0.0045] & 1.0000 \\
+ & Weights, $\tau=0.5$ & 0.0093 & [0.0006, 0.0199] & 1.0000 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\plot{0.3}{segmentation/plots/06_paired_differences.png}
+\caption{Mean paired Dice difference between the proposed ensemble and each comparator, with bootstrap 95\% CIs and Holm-corrected $p$-values, internally (left) and externally (right).}
+\label{fig:paired}
+\end{herefigure}
+
+The Wilcoxon test and the bootstrap CI of the mean can disagree, as for SegResNet internally, where the CI of the mean difference includes zero but the signed ranks favour SegResNet: the ensemble is slightly worse on most cases, with a few large exceptions in its favour.
+
+\subsection{Results by Tumour Grade}
+\label{sec:grade}
+
+Table~\ref{tab:grade} splits the internal test cases by grade. On the 44 HGG cases every model reached a mean Dice of 0.8858 to 0.9067. On the 12 LGG cases every model dropped to 0.6532 to 0.7432, mainly through ET Dice (0.3681 to 0.5822), because many LGG cases have no ET and a single false-positive ET region gives such a case an ET Dice of zero. SegResNet's internal lead comes mostly from LGG cases (LGG ET Dice 0.5822 against 0.4197 for the proposed ensemble); on HGG it leads by 0.0055.
+
+\begin{heretable}
+\centering
+\caption{Internal test Dice by grade (44 HGG, 12 LGG cases), with the bootstrap 95\% CI of the mean Dice.}
+\label{tab:grade}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+Model & Grade & WT & TC & ET & Mean Dice & 95\% CI \\
+\midrule
+\multirow{2}{*}{nnU-Net} & HGG & 0.9147 & 0.8989 & 0.8531 & 0.8889 & [0.8531, 0.9154] \\
+ & LGG & 0.9110 & 0.6675 & 0.4089 & 0.6625 & [0.6068, 0.7232] \\
+\multirow{2}{*}{SegResNet} & HGG & 0.9250 & 0.9237 & 0.8715 & 0.9067 & [0.8906, 0.9221] \\
+ & LGG & 0.9317 & 0.7157 & 0.5822 & 0.7432 & [0.6465, 0.8298] \\
+\multirow{2}{*}{Swin UNETR} & HGG & 0.9132 & 0.8913 & 0.8529 & 0.8858 & [0.8467, 0.9146] \\
+ & LGG & 0.9270 & 0.6645 & 0.3681 & 0.6532 & [0.5833, 0.7237] \\
+\multirow{2}{*}{CNN mean} & HGG & 0.9211 & 0.9106 & 0.8622 & 0.8980 & [0.8669, 0.9212] \\
+ & LGG & 0.9277 & 0.6886 & 0.4223 & 0.6796 & [0.6257, 0.7375] \\
+\multirow{2}{*}{Mean (all)} & HGG & 0.9189 & 0.9068 & 0.8613 & 0.8957 & [0.8616, 0.9207] \\
+ & LGG & 0.9298 & 0.6889 & 0.4210 & 0.6799 & [0.6243, 0.7392] \\
+\multirow{2}{*}{Weights, $\tau=0.5$} & HGG & 0.9247 & 0.9063 & 0.8589 & 0.8967 & [0.8671, 0.9198] \\
+ & LGG & 0.9308 & 0.6730 & 0.4159 & 0.6732 & [0.6211, 0.7306] \\
+\multirow{2}{*}{Proposed} & HGG & 0.9245 & 0.9142 & 0.8648 & 0.9012 & [0.8825, 0.9189] \\
+ & LGG & 0.9297 & 0.6793 & 0.4197 & 0.6762 & [0.6250, 0.7320] \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+Per-grade Dice is plotted in Figure~\ref{fig:grade} and the per-case distributions of every model in Figure~\ref{fig:distributions}.
+
+\begin{herefigure}
+\centering
+\plot{0.28}{segmentation/plots/09_dice_by_grade.png}
+\caption{Internal test Dice per region for HGG and LGG cases.}
+\label{fig:grade}
+\end{herefigure}
+
+\begin{herefigure}
+\centering
+\plot{0.42}{segmentation/plots/10_per_case_distributions.png}
+\caption{Per-case Dice and HD95 for every region, member and ensemble, internally and externally.}
+\label{fig:distributions}
+\end{herefigure}
+
+Figure~\ref{fig:qualitative} shows the internal and external cases with the median and the lowest proposed-ensemble Dice. On the worst internal case (BraTS20\_Training\_335) SegResNet scored 0.878 while the other members and the ensemble scored 0.542 to 0.569, which illustrates how fusion can dilute the best member. On the worst external case (BraTS-SSA-00215-000), a small tumour, every model predicted nothing and scored 0.
+
+\begin{herefigure}
+\centering
+\plot{0.5}{segmentation/plots/11_qualitative_comparison.png}
+\caption{Internal and external cases with the median and the lowest proposed-ensemble Dice: reference, members and proposed ensemble on FLAIR at the axial slice with the largest reference tumour (oedema-only WT green, TC yellow, ET red).}
+\label{fig:qualitative}
+\end{herefigure}
+
+\subsection{Slice-wise and Per-patient Protocols}
+\label{sec:protocol}
+
+Table~\ref{tab:protocol} scores the same predictions in three ways. The slice-wise mean is lower than per-patient 3D Dice for WT and TC, because small tumour sections at the edges of the tumour count as much as central ones, while the Dice pooled over tumour-containing slices is higher than 3D Dice for every model, region and set, because false positives on tumour-free slices are not counted. For the proposed ensemble internally the three protocols give WT Dice of 0.9256, 0.8443 and 0.9316. Numbers reported under different protocols, and on different splits, are therefore not comparable, as recommended by \citet{maierhein2024}.
+
+\begin{heretable}
+\centering
+\caption{Per-patient 3D Dice against the mean Dice over tumour-containing axial slices (slice mean) and the Dice pooled over those slices (pooled).}
+\label{tab:protocol}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccccccccc@{}}
+\toprule
+ & & \multicolumn{3}{c}{WT} & \multicolumn{3}{c}{TC} & \multicolumn{3}{c}{ET} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(l){9-11}
+Set & Model & 3D & Slice mean & Pooled & 3D & Slice mean & Pooled & 3D & Slice mean & Pooled \\
+\midrule
+\multirow{4}{*}{Internal} & nnU-Net & 0.9139 & 0.8246 & 0.9209 & 0.8493 & 0.7667 & 0.8698 & 0.7580 & 0.7543 & 0.8626 \\
+ & SegResNet & 0.9264 & 0.8424 & 0.9317 & 0.8791 & 0.7897 & 0.8864 & 0.8095 & 0.7639 & 0.8740 \\
+ & Swin UNETR & 0.9162 & 0.8218 & 0.9197 & 0.8427 & 0.7557 & 0.8616 & 0.7490 & 0.7511 & 0.8584 \\
+ & Proposed & 0.9256 & 0.8443 & 0.9316 & 0.8639 & 0.7883 & 0.8856 & 0.7694 & 0.7683 & 0.8704 \\
+\midrule
+\multirow{4}{*}{External} & nnU-Net & 0.8892 & 0.8168 & 0.9217 & 0.7241 & 0.6975 & 0.8234 & 0.7162 & 0.6420 & 0.7758 \\
+ & SegResNet & 0.9005 & 0.8520 & 0.9324 & 0.7798 & 0.7591 & 0.8747 & 0.7099 & 0.6166 & 0.7599 \\
+ & Swin UNETR & 0.9012 & 0.8337 & 0.9308 & 0.7292 & 0.7160 & 0.8365 & 0.7361 & 0.6771 & 0.7938 \\
+ & Proposed & 0.8979 & 0.8495 & 0.9312 & 0.7507 & 0.7502 & 0.8611 & 0.7411 & 0.6637 & 0.7919 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\subsection{Quality Control}
+\label{sec:qc}
+
+Architectural disagreement (Equation~\ref{eq:disagreement}) was strongly related to failure in both sets (Table~\ref{tab:qc}, Figure~\ref{fig:qc}). Internally its Spearman correlation with the proposed ensemble's per-case Dice was $-0.80$ and it separated the 14 failures from the other 42 cases with an AUROC of 0.993; externally the correlation was $-0.82$ and the AUROC 0.870 for 18 failures in 60 cases. TTA spread was weaker in both sets (AUROC 0.716 and 0.791). The external drop in AUROC comes partly from failures with low disagreement: the case that every model missed completely has a disagreement of only about 0.22, because the members agree on an almost empty prediction.
+
+\begin{heretable}
+\centering
+\caption{Per-case quality-control signals against the proposed ensemble's mean Dice. Failures are cases with mean Dice below 0.80.}
+\label{tab:qc}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+Set & Signal & Cases & Failures & Spearman $\rho$ & $p$ & AUROC \\
+\midrule
+\multirow{2}{*}{Internal} & Disagreement & 56 & 14 & $-0.8018$ & $1.1\times 10^{-13}$ & 0.9932 \\
+ & TTA spread & 56 & 14 & $-0.3894$ & 0.0030 & 0.7160 \\
+\multirow{2}{*}{External} & Disagreement & 60 & 18 & $-0.8163$ & $1.9\times 10^{-15}$ & 0.8704 \\
+ & TTA spread & 60 & 18 & $-0.6096$ & $2.4\times 10^{-7}$ & 0.7910 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\plot{0.42}{segmentation/plots/12_quality_control.png}
+\caption{Per-case proposed-ensemble mean Dice against architectural disagreement (top) and TTA spread (bottom), internally (left) and externally (right). Red points are failures; the dashed line is the failure threshold of 0.80.}
+\label{fig:qc}
+\end{herefigure}
+
+\subsection{Explainability}
+\label{sec:xai}
+
+Figure~\ref{fig:cam} shows the Seg-Grad-CAM maps of the median internal case. The nnU-Net and Swin UNETR maps concentrate on and around the tumour; the SegResNet map for TC is diffuse, with a grid pattern over the whole crop. Table~\ref{tab:cam} scores all 1,035 maps of the internal and external test cases. The CNN maps were strongly enriched in the tumour region, 5.2 to 22.6 times chance internally and 4.2 to 22.2 times externally, with SegResNet's TC maps the weakest of the CNN maps (inside share 0.19 and 0.29). The Swin UNETR maps were enriched only 1.06 to 1.68 times: although they look focused in the median case, most of their mass lies outside the dilated tumour.
+
+\begin{herefigure}
+\centering
+\plot{0.5}{segmentation/plots/13_gradcam_test.png}
+\caption{Seg-Grad-CAM maps of each member and region for the internal case with the median proposed-ensemble Dice (BraTS20\_Training\_084), on FLAIR, with the reference region outlined in white.}
+\label{fig:cam}
+\end{herefigure}
+
+\begin{heretable}
+\centering
+\caption{Seg-Grad-CAM attribution: share of the map inside the reference region dilated by five voxels, the share expected by chance, and their ratio (enrichment), averaged over cases.}
+\label{tab:cam}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llcccccc@{}}
+\toprule
+ & & \multicolumn{3}{c}{Internal} & \multicolumn{3}{c}{External} \\
+\cmidrule(lr){3-5}\cmidrule(l){6-8}
+Member & Region & Inside & Chance & Enrichment & Inside & Chance & Enrichment \\
+\midrule
+\multirow{3}{*}{nnU-Net} & WT & 0.9382 & 0.1145 & 9.90 & 0.9767 & 0.1572 & 8.65 \\
+ & TC & 0.8280 & 0.0522 & 22.62 & 0.8804 & 0.0689 & 22.18 \\
+ & ET & 0.2435 & 0.0387 & 6.42 & 0.4320 & 0.0629 & 7.64 \\
+\multirow{3}{*}{SegResNet} & WT & 0.9709 & 0.1145 & 10.40 & 0.9609 & 0.1572 & 8.38 \\
+ & TC & 0.1937 & 0.0522 & 5.16 & 0.2933 & 0.0689 & 4.25 \\
+ & ET & 0.5737 & 0.0387 & 15.88 & 0.7575 & 0.0629 & 18.85 \\
+\multirow{3}{*}{Swin UNETR} & WT & 0.1604 & 0.1145 & 1.48 & 0.1942 & 0.1572 & 1.27 \\
+ & TC & 0.0850 & 0.0522 & 1.50 & 0.1248 & 0.0689 & 1.49 \\
+ & ET & 0.0737 & 0.0387 & 1.68 & 0.0824 & 0.0629 & 1.06 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+The external median case is shown in Figure~\ref{fig:cam-external} and the attribution scores of all cases in Figure~\ref{fig:cam-scores}.
+
+\begin{herefigure}
+\centering
+\plot{0.5}{segmentation/plots/13_gradcam_external.png}
+\caption{Seg-Grad-CAM maps for the external case with the median proposed-ensemble Dice (BraTS-SSA-00044-000).}
+\label{fig:cam-external}
+\end{herefigure}
+
+\begin{herefigure}
+\centering
+\plot{0.26}{segmentation/plots/14_gradcam_attribution.png}
+\caption{Seg-Grad-CAM attribution inside the tumour against chance, per member, region and set.}
+\label{fig:cam-scores}
+\end{herefigure}
+
+The sequence-drop ablation (Table~\ref{tab:ablation}, Figure~\ref{fig:ablation}) agrees with radiological practice for every member: removing FLAIR hurts WT most (Dice drops of 0.24 to 0.59) and removing T1CE hurts TC and ET most (0.30 to 0.39 and 0.64 to 0.76), while T1 and T2 matter little. nnU-Net depends on FLAIR far more than the others, losing 0.41 to 0.59 Dice in every region without it.
+
+\begin{heretable}
+\centering
+\caption{Drop in internal test Dice when one sequence is replaced by its brain mean (no TTA). Negative values are small improvements.}
+\label{tab:ablation}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{nnU-Net} & \multicolumn{3}{c}{SegResNet} & \multicolumn{3}{c}{Swin UNETR} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(l){8-10}
+Dropped & WT & TC & ET & WT & TC & ET & WT & TC & ET \\
+\midrule
+FLAIR & 0.5945 & 0.4389 & 0.4128 & 0.2448 & 0.0981 & 0.0865 & 0.3611 & 0.1186 & 0.1037 \\
+T1 & 0.0140 & 0.0587 & 0.0504 & 0.0078 & 0.0284 & 0.0400 & 0.0097 & 0.0461 & 0.0495 \\
+T1CE & 0.0225 & 0.3048 & 0.6388 & 0.0401 & 0.3880 & 0.7554 & 0.0135 & 0.3211 & 0.6920 \\
+T2 & 0.0853 & 0.0788 & 0.0427 & 0.0238 & 0.0180 & $-0.0129$ & 0.0372 & 0.0468 & $-0.0145$ \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\plot{0.24}{segmentation/plots/15_sequence_drop.png}
+\caption{Dice drop per member when one MRI sequence is removed, per region.}
+\label{fig:ablation}
+\end{herefigure}
+
+\subsection{Computational Cost}
+\label{sec:efficiency}
+
+Table~\ref{tab:efficiency} and Figure~\ref{fig:latency} compare cost. SegResNet is the smallest member (19.92 million parameters) and, with nnU-Net, the fastest (1.01~s per case without TTA and 8.08~s with it, on one T4). Swin UNETR needs 3.6 times the parameters, 1.8 times the training time, about 2.9 times the inference memory and four times the latency of SegResNet. Because Swin UNETR keeps a weight of 0.1 for TC, the proposed ensemble needs all three members: 124.11 million parameters and 48.20~s per case with TTA, six times SegResNet, for a lower internal and an equal external Dice.
+
+\begin{heretable}
+\centering
+\caption{Computational cost on one Tesla T4: parameters, training time, peak inference memory, latency per case over the median test crop with half precision. Ensembles cost the sum of the members they use.}
+\label{tab:efficiency}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc@{}}
+\toprule
+Model & Params (M) & Train (h) & Memory (GB) & Latency (s) & TTA latency (s) & Dice, int. / ext. \\
+\midrule
+nnU-Net & 31.42 & 3.69 & 3.15 & 1.03 & 8.20 & 0.8404 / 0.7765 \\
+SegResNet & 19.92 & 3.77 & 2.91 & 1.01 & 8.08 & 0.8717 / 0.7967 \\
+Swin UNETR & 72.77 & 6.65 & 8.58 & 3.99 & 31.92 & 0.8360 / 0.7888 \\
+CNN mean & 51.34 & 7.46 & -- & 2.04 & 16.28 & 0.8512 / 0.8005 \\
+Proposed & 124.11 & 14.11 & -- & 6.03 & 48.20 & 0.8530 / 0.7966 \\
+\bottomrule
+\end{tabular*}
+\end{heretable}
+
+\begin{herefigure}
+\centering
+\plot{0.3}{segmentation/plots/16_dice_vs_latency.png}
+\caption{Mean Dice against latency per case with TTA, internally and externally.}
+\label{fig:latency}
+\end{herefigure}
+
+\subsection{Discussion}
+\label{sec:discussion}
+
+\textbf{Fusion.} The validation search behaved as designed: it found small gains per region and gave the weaker transformer almost no weight. These gains did not transfer to the test sets. The most likely reason is that 56 validation cases cannot resolve differences of 0.004 to 0.010 Dice, so the selected weights and thresholds partly fit validation noise; with one seed per member, part of the difference between the members is also seed variance rather than architecture. The thresholds below 0.5 raised sensitivity on every region and both sets, which may be useful when missing tumour is costlier than over-segmentation, but did not raise Dice. Within the ensembles the differences were not significant, so neither region-adaptive weighting nor threshold tuning can be recommended over a plain CNN mean on these data.
+
+\textbf{Generalisation.} All models lost Dice on BraTS-Africa, mostly in the tumour core and, through missed enhancement, in ET sensitivity. Swin UNETR generalised best (smallest gap) and SegResNet worst, so internal ranking was a poor guide to external ranking, and the ensemble's external ET Dice was the best of all models. The cohorts differ in tumour size and in acquisition; because BraTS-Africa shares the BraTS annotation and preprocessing protocol, these results measure population and scanner shift, not protocol shift.
+
+\textbf{Quality control.} The most useful product of combining architectures is their disagreement. Without any extra training it detected failing cases far better than TTA spread, internally and externally, in line with the stronger quality signals of ensembles reported by \citet{mehrtash2020}. It cannot detect a failure that all members share, such as the completely missed external tumour, so it should be combined with other checks, for example on the predicted volume.
+
+\textbf{Explanations.} The CNN maps were tumour-focused and quantitatively enriched; the Swin UNETR maps at the chosen decoder stage were not, even though they looked plausible in the example case, and SegResNet's TC maps were diffuse. Visual inspection alone would have missed both observations, which supports scoring saliency maps rather than only showing them. The sequence-drop ablation is a model-agnostic check and gave the expected FLAIR and T1CE dependence for all members.
+
+\section{Limitations and Future Work}
+\label{sec:limitations}
+
+Every member was trained once with one seed, so the seed-to-seed variance of members and ensembles is unknown, and some of the observed differences may not repeat. The fusion parameters and ET filters were selected on 56 validation cases, and the internal test set has only 12 LGG cases. The external set has 60 cases from one population and shares the BraTS preprocessing, so it does not test raw clinical scans. Swin UNETR received half the epochs of the convolutional networks and peaked at its last epoch, so it may have been undertrained. Seg-Grad-CAM was computed at one decoder stage per network, and a different stage may give a different picture for Swin UNETR. Future work should repeat the study over several seeds and with cross-validated fusion, add further external cohorts with raw preprocessing, combine disagreement with volume-based checks for quality control, and evaluate the quality-control signal in a reader study.
+
+\section{Ethical Implications}
+\label{sec:ethics}
+
+Automatic segmentation may support but must not replace clinical judgement. Missed tumour can delay treatment, and over-segmentation can lead to unnecessary intervention. This study shows that performance falls for low-grade gliomas without enhancing tumour and for a population outside the training data, and that every model can miss a small tumour completely; such limits must be disclosed to users, and a per-case quality signal such as architectural disagreement should be shown with every prediction. BraTS 2020 comes mainly from North American and European centres, and the external results show that the models do not transfer without loss to patients in Sub-Saharan Africa, a population under-represented in public data \citep{adewole2025}. The code and outputs are released for research only and are not cleared for clinical use.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+A region-adaptive hybrid ensemble of nnU-Net, SegResNet and Swin UNETR-v2 was trained at native resolution on BraTS 2020 and tested internally and on an external Sub-Saharan African cohort. The ensemble reached a mean Dice of 0.8530 internally and 0.7966 externally and beat two of its members, but not SegResNet alone (0.8717 and 0.7967), at six times its cost. Every model lost 0.047 to 0.075 Dice externally, mostly in the tumour core. The disagreement between the architectures detected failing cases with an AUROC of 0.993 internally and 0.870 externally, much better than test-time-augmentation spread, and quantitative Seg-Grad-CAM scores revealed weak attribution in the transformer that visual inspection did not. For a deployed service, a single SegResNet is the efficient choice for segmentation, and running a second, architecturally different network to measure disagreement is the more valuable use of an ensemble.
+
+\section*{Declaration of competing interest}
+\pdfbookmark[1]{Declaration of competing interest}{competing-interest}
+
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgements}
+\pdfbookmark[1]{Acknowledgements}{acknowledgements}
+
+This research was conducted using Kaggle's GPU resources.
+
+\section*{Data availability}
+\pdfbookmark[1]{Data availability}{data-availability}
+
+The BraTS 2020 and BraTS-Africa data are publicly available (Section~\ref{sec:data}). The notebook, the role of every case, the per-run histories, the per-case internal and external metrics, the fusion parameters and all figures are available at the repository given in \ref{app:code}.
+
+\appendix
+
+\section{Code Repository}
+\label{app:code}
+
+The notebook that performs preprocessing, training, fusion, evaluation and figure generation, together with its outputs (the role of every case, per-run histories and summaries, per-case metrics, quality-control and attribution tables, and plots), is available at \url{https://github.com/parthmital/NeuroScan-AI}, in the folder \texttt{Materials/Notebooks}.
+
+\bibliographystyle{cas-model2-names}
+\bibliography{refs}
+
+\end{document}

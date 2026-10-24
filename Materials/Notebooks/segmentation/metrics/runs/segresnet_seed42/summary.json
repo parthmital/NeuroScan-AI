@@ -1,0 +1,41 @@
+{
+	"run_id": "segresnet_seed42",
+	"model": "SegResNet",
+	"family": "CNN",
+	"seed": 42,
+	"parameters": 19917353,
+	"micro_batch": 2,
+	"accumulation": 1,
+	"optimizer_steps": 15000,
+	"epochs_run": 60,
+	"truncated": false,
+	"patches_seen": 30000,
+	"best_epoch": 50,
+	"best_val_dice": 0.8389606001696978,
+	"et_min_voxels": 800,
+	"et_tuning": {
+		"0": 0.788970834526455,
+		"50": 0.788970834526455,
+		"100": 0.788970834526455,
+		"200": 0.8068279773835979,
+		"300": 0.8068279773835979,
+		"500": 0.8068279773835979,
+		"800": 0.8100535331118739
+	},
+	"train_seconds": 13574.367889140996,
+	"predict_seconds": {
+		"val": 432.92297101700024,
+		"test": 445.75352700200165,
+		"external": 426.2721554260024
+	},
+	"peak_train_memory_gb": 6.022972928,
+	"peak_inference_memory_gb": 2.908004864,
+	"latency_shape": "136x170x139",
+	"latency_s": 1.0121630857502169,
+	"latency_s_sd": 0.0010371216002785495,
+	"latency_tta_s": 8.076137433999975,
+	"latency_tta_s_sd": 0.007480670999939321,
+	"test_dice_mean": 0.8716882663471404,
+	"external_dice_mean": 0.7967159006185437,
+	"gpu": "Tesla T4"
+}
