@@ -58,7 +58,7 @@
       {
         \group_begin:
           \tex_let:D \thefootnote \relax \footnotetext
-            { \raggedright \textsc{orcid}(s):\c_space_token \seq_use:Nn \g_stm_orcid_seq { ;~ } }
+            { \raggedright \textsc{orcid}(s):\c_space_token \seq_use:Nn \g_stm_orcid_seq { ,~ } }
         \group_end:
       }
   }
@@ -92,7 +92,7 @@
   { \par \group_end: }
 \ExplSyntaxOff
 % hyperref leaves \Hy@href@page at 0 after the first link into the other PDF, so every
-% later one in the same paragraph warns "Invalid page number (0)"; treat 0 as unset again.
+% later one in the same paragraph warns "Invalid page number (0)", so treat 0 as unset again.
 \def\Hy@zero@page{0}
 \pretocmd{\Hy@MakeRemoteAction}
   {\ifx\Hy@href@page\Hy@zero@page\let\Hy@href@page\@empty\fi}{}

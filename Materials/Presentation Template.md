@@ -32,13 +32,13 @@ Based on two research manuscripts: a leakage-controlled benchmark of 2D backbone
 
 ## Slide 2
 
-> The guide's approval mail for Review 3 has not been received yet. When it arrives, replace the template's sample mail image with a screenshot of it and keep the line below.
+> The slide shows the guide's approval mail for Review 3 (`Materials/Approval.png`).
 
 **Title:** Approval Mail From Guide
 
 All the above aspects are addressed and updated by the project team.
 
-> Speaker notes: Replace the sample image with the guide's approval mail before the review.
+> Speaker notes: The guide approved Review 3 by mail: the presentation and demonstration were approved, the report and meetings were rated satisfied, and the Turnitin similarity was 5%.
 
 ## Slide 3
 

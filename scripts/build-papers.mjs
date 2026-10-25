@@ -1,6 +1,6 @@
 // `npm run papers [-- <filter>]`: compile the LaTeX paper projects in Materials/Research Papers
-// with Tectonic. Each project builds main.tex (and supplementary.tex when present), or every
-// .tex file when it has no main.tex.
+// with Tectonic. Each project builds main.tex (and supplementary.tex when present) and its
+// main-*.tex variants, or every .tex file when it has no main.tex.
 // <filter> keeps only project folders whose name contains it (case-insensitive).
 // Uses only Node built-ins.
 
@@ -61,10 +61,18 @@ for (const project of projects) {
 	// main, supplementary, then main again so both sides resolve.
 	const linked =
 		texFiles.includes("main.tex") && texFiles.includes("supplementary.tex");
+	// main-<variant>.tex wrappers build the anonymised and no-references variants of main.tex,
+	// paired with supplementary-<variant>.tex in the same order when it exists.
+	const variants = texFiles
+		.filter((file) => /^main-.+\.tex$/.test(file))
+		.flatMap((file) => {
+			const supplement = file.replace(/^main/, "supplementary");
+			return texFiles.includes(supplement) ? [file, supplement, file] : [file];
+		});
 	const targets = linked
-		? ["main.tex", "supplementary.tex", "main.tex"]
+		? ["main.tex", "supplementary.tex", "main.tex", ...variants]
 		: texFiles.includes("main.tex")
-			? ["main.tex"]
+			? ["main.tex", ...variants]
 			: texFiles.filter((file) => file !== "preamble.tex");
 	const args = linked ? ["--keep-intermediates"] : [];
 	for (const tex of targets) {

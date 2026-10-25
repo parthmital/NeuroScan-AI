@@ -1,5 +1,5 @@
 % The CAS front matter prints the corresponding-author and e-mail notes as footnotes
-% without a mark, which hyperref cannot anchor; the papers have no other footnotes.
+% without a mark, which hyperref cannot anchor, and the papers have no other footnotes.
 \PassOptionsToPackage{hyperfootnotes=false}{hyperref}
 % xr-hyper must be loaded before hyperref, which the class loads.
 \RequirePackage{xr-hyper}
@@ -9,9 +9,15 @@
 \input{preamble}
 % Numbers of supplementary items (S1, S2, ...) come from supplementary.aux, and references
 % to them link into supplementary.pdf. Compile main, supplementary, then main again.
+% Variants: main-anonymised.tex (no author details, for submission, paired with
+% supplementary-anonymised.tex) and main-no-references.tex (no reference list, for
+% similarity checks) and main-title-page.tex (separate title page, for double-anonymised
+% review) define \Anonymised, \NoReferences or \TitlePage before reading this file. \Variant
+% is the file-name suffix of the supplement to link to.
+\providecommand\Variant{}
 % Import only the other document's labels: its \bibcite entries would clash with ours.
 \makeatletter
-\begingroup\let\bibcite\@gobbletwo\externaldocument{supplementary}\endgroup
+\begingroup\let\bibcite\@gobbletwo\externaldocument{supplementary\Variant}\endgroup
 \makeatother
 % Right-hand panel (class distribution) of a task's 03_deduplication.png plot: the 2234 px
 % wide plot is saved at 150 dpi, and its right panel starts 1118 px (537 bp) from the left.
@@ -27,19 +33,26 @@
 \definecolor{fcMag}{HTML}{C2178F}
 \hypersetup{
   pdftitle={Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication: A Comparative Study Using Advanced Deep Learning Models},
-  pdfauthor={Parth Mital, Ved Lawand, Biji C. L., Muzaffar Ahamad Dar, George Priya Doss C.},
 }
+\ifdefined\Anonymised\else
+\hypersetup{pdfauthor={Parth Mital, Ved Lawand, Biji C. L., Muzaffar Ahamad Dar, George Priya Doss C.}}
+\fi
 % The reference list is an unnumbered section, which hyperref does not bookmark by itself.
 \apptocmd{\bibsection}{\pdfbookmark[1]{References}{references}}{}{}
+
 
 \begin{document}
 % The Elsevier sample file sets \let\WriteBookmarks\relax, which makes hyperref's XeTeX
 % driver (Tectonic) drop every PDF bookmark, so it is not set here.
 
 \shorttitle{Brain tumour MR image classification with perceptual-hash deduplication}
-\shortauthors{P. Mital et al.}
 
 \title[mode=title]{Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication: A Comparative Study Using Advanced Deep Learning Models}
+
+\ifdefined\Anonymised
+\shortauthors{Anonymous}
+\else
+\shortauthors{P. Mital et al.}
 
 \author[1]{Parth Mital}
 \author[1]{Ved Lawand}
@@ -59,6 +72,7 @@
   country={India}}
 
 \cortext[1]{Corresponding author}
+\fi
 
 \begin{abstract}
 Magnetic resonance imaging (MRI) is the standard investigation for brain tumours, but published deep learning accuracies are difficult to compare because studies differ in data, splitting and evaluation, and near-duplicate images from shared public sources leak between training and test partitions. The contribution to artificial intelligence is a controlled evaluation protocol: label-aware perceptual-hash deduplication before splitting, a group-aware split into five cross-validation folds and a held-out test set, an equal number of optimiser steps for every model, temperature scaling, fold ensembles with bootstrap confidence intervals and Holm-corrected McNemar tests, and attention and background-only shortcut audits. The engineering application is the selection of a deployable tumour detector and subtype classifier. Nine ImageNet-pretrained convolutional, transformer and hybrid backbones were benchmarked on binary detection and three-way subtype classification. Deduplication reduced the binary detection pool from 3,253 to 1,185 images and the subtype classification pool from 5,828 to 4,730, and curation ran at about 85 images per second on four CPU cores. On 171 binary detection test images, CoAtNet-0, EfficientNetB0 and ViT-B/16 reached 99.42\% accuracy (95\% confidence interval 98.25--100\%), and no pair of models differed significantly. The subtype classification grouping left only 45 test images, on which six models were error-free, so they cannot rank the models. Models retrained with the head masked out still exceeded the majority-class rate for 7 of 9 binary detection and all 9 subtype classification backbones, reaching 83.04\% and 97.78\% accuracy, so these public collections carry label information outside the brain. EfficientNetB0 matched the binary detection leaders with 4.01 million parameters.
@@ -71,6 +85,17 @@ Brain tumour MRI \sep deep learning \sep perceptual hashing \sep shortcut learni
 
 \pdfbookmark[1]{Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication: A Comparative Study Using Advanced Deep Learning Models}{title}
 \maketitle
+
+% The title page ends here, with the corresponding author's contact details, and
+% main-title-page.tex closes the document.
+\ifdefined\TitlePage
+\section*{Corresponding author}
+\pdfbookmark[1]{Corresponding author}{corresponding-author}
+\noindent Biji C. L.\\
+School of Computer Science and Engineering, Vellore Institute of Technology, Vellore 632014, Tamil Nadu, India\\
+E-mail: \href{mailto:biji.cl@vit.ac.in}{biji.cl@vit.ac.in}\\
+Phone: +91 94461 71877
+\expandafter\endinput\fi
 
 \section{Introduction}
 \label{sec:intro}
@@ -667,9 +692,14 @@ All datasets used in this study are publicly available:
 \item Brain Tumor Classification (MRI): \url{https://doi.org/10.34740/KAGGLE/DSV/1183165}
 \item Brain tumor dataset of Cheng: \url{https://doi.org/10.6084/m9.figshare.1512427.v5}, in the JPEG conversion used here at\newline \url{https://www.kaggle.com/datasets/moundir8/jun-cheng-brain-tumor-mri-dataset-jpg}
 \end{itemize}
-The notebooks for both tasks, which perform deduplication, splitting, training, evaluation and figure generation, are available with their outputs (the split of every image, per-run metrics, plots and the trained checkpoints) at \url{https://github.com/parthmital/NeuroScan-AI}, in the folder \texttt{Materials/Notebooks}.
+The notebooks for both tasks, which perform deduplication, splitting, training, evaluation and figure generation, are available with their outputs (the split of every image, per-run metrics, plots and the trained checkpoints) at \ifdefined\Anonymised a public repository, withheld for anonymous review\else\url{https://github.com/parthmital/NeuroScan-AI}, in the folder \texttt{Materials/Notebooks}\fi.
 
 \bibliographystyle{cas-model2-names}
+% Without the reference list the entries are still read, inside a discarded box, so the
+% citations keep their author-year text.
+\ifdefined\NoReferences
+\renewenvironment{thebibliography}[1]{\setbox0=\vbox\bgroup\list{}{}}{\endlist\egroup}
+\fi
 \bibliography{refs}
 
 \end{document}

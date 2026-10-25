@@ -3,12 +3,13 @@
 \documentclass[a4paper,fleqn]{cas-sc}
 % Supplementary material of main.tex, compiled as its own PDF. It extends the paper: only
 % section headings, figures and tables, with every detail in the captions, and no author
-% block, abstract or reference list. It shares preamble.tex with the paper; references to
+% block, abstract or reference list. It shares preamble.tex with the paper, and references to
 % the paper's sections, figures and tables come from main.aux.
 \input{preamble}
 % Import only the other document's labels: its \bibcite entries would clash with ours.
+\providecommand\Variant{}
 \makeatletter
-\begingroup\let\bibcite\@gobbletwo\externaldocument{main}\endgroup
+\begingroup\let\bibcite\@gobbletwo\externaldocument{main\Variant}\endgroup
 \makeatother
 % Two task panels side by side.
 \newcommand{\sidepanels}[3]{%
@@ -24,7 +25,7 @@
 \caption{Grad-CAM maps of #2 on its most confident correct (green titles) and most confident wrong (red titles) test predictions, from the fold with the lowest validation loss, in the layout of Figure~\ref{fig:gradcam} of the paper. T: true class. P: predicted class and probability.}
 \label{fig:gradcam-#1}
 \end{herefigure}}
-% Sections are numbered S1, S2, ...; figures and tables print as "Supplementary F1: ..." and
+% Sections are numbered S1, S2, ..., and figures and tables print as "Supplementary F1: ..." and
 % "Supplementary T1: ...", and the paper refers to them as "Supplementary F1" (\supp).
 \renewcommand{\thesection}{S\arabic{section}}
 \renewcommand{\thefigure}{F\arabic{figure}}
@@ -34,7 +35,7 @@
 \renewcommand{\theHsection}{S\arabic{section}}
 \renewcommand{\theHfigure}{SF\arabic{figure}}
 \renewcommand{\theHtable}{ST\arabic{table}}
-% cas-common.sty sets a table's label on its own line above the caption text; here it runs
+% cas-common.sty sets a table's label on its own line above the caption text, but here it runs
 % into the caption as "Supplementary T1: ...", like the figure captions.
 \makeatletter
 \ExplSyntaxOn
@@ -58,15 +59,17 @@
 \makeatother
 \hypersetup{
   pdftitle={Supplementary Material: Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication},
-  pdfauthor={Parth Mital, Ved Lawand, Biji C. L., Muzaffar Ahamad Dar, George Priya Doss C.},
 }
+\ifdefined\Anonymised\else
+\hypersetup{pdfauthor={Parth Mital, Ved Lawand, Biji C. L., Muzaffar Ahamad Dar, George Priya Doss C.}}
+\fi
 
 \begin{document}
 % \let\WriteBookmarks\relax (Elsevier sample file) would drop every PDF bookmark under
 % Tectonic's XeTeX driver, so it is not set here.
 
 \shorttitle{Supplementary material: brain tumour MR image classification with perceptual-hash deduplication}
-\shortauthors{P. Mital et al.}
+\ifdefined\Anonymised\shortauthors{Anonymous}\else\shortauthors{P. Mital et al.}\fi
 
 \title[mode=title]{Supplementary Material: Brain Tumour Magnetic Resonance Image Classification with Perceptual-Hash Deduplication}
 
