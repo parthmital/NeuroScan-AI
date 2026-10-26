@@ -61,6 +61,7 @@ PDF and CSV reports for completed scans, with "Export All".
 - [Security notes](#security-notes)
 - [Project metrics](#project-metrics)
 - [Contributing](#contributing)
+- [Documentation](#documentation)
 
 ## Quick start
 
@@ -203,9 +204,7 @@ The notebooks ran on Kaggle with 2x Tesla T4 GPUs, Python 3.13.15, PyTorch 2.11.
 ```text
 NeuroScan-AI/
 |-- README.md               Setup, configuration and API (this file)
-|-- ARCHITECTURE.md         Module map, dependency rules, design decisions
-|-- DESIGN.md               Frontend design system
-|-- SECURITY.md             Vulnerability reporting, threat model, controls, residual risks
+|-- AGENTS.md, ARCHITECTURE.md, DESIGN.md, SECURITY.md, RESEARCH.md, EXPLAINER.md   See Documentation
 |-- .env.example              Every backend setting, with how to generate secrets
 |-- .github/                  CI workflow (SHA-pinned actions) and Dependabot
 |-- .pre-commit-config.yaml   gitleaks secret scan before each commit
@@ -234,9 +233,10 @@ NeuroScan-AI/
 |   |   `-- <task>/           metrics/, plots/, logs/, predictions/, src/, weights/ (incl. deploy/)
 |   |-- Research Papers/      Two LaTeX paper projects (main.tex, highlights, graphical abstract; one with supplementary.tex)
 |   |-- Screenshots/          UI screenshots used in this README
-|   |-- Presentation.pptx     Review 3 deck (20 slides, both papers), built from a copy of the template
+|   |-- Presentation.pptx, Presentation.pdf   Review 3 deck (24 slides, both papers), built from a copy of the template
 |   |-- Presentation Template.pptx, Presentation Template.md   VIT review template and the deck's slide-by-slide content
-|   |-- Report.docx           Project report (55 pages, all chapters, figures and diagrams), built from a copy of the template
+|   |-- Approval.png          The guide's approval e-mail, shown in the deck
+|   |-- Report.docx, Report.pdf   Project report (57 pages in the PDF, all chapters, figures and diagrams), built from a copy of the template
 |   `-- Report Template.docx, Report Template.md               VIT report template and the report's section-by-section content
 `-- Frontend/
     |-- vite.config.ts        Port 8080, /api proxy, security headers for preview
@@ -513,3 +513,15 @@ Keep `.env` out of Git (it is already ignored) and rotate `JWT_SECRET` and `DATA
 - Before opening a pull request, run the checks in [Testing and code quality](#testing-and-code-quality).
 
 No licence file is present in the repository.
+
+## Documentation
+
+| File                                                             | Answers                                                                        |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [`AGENTS.md`](AGENTS.md)                                         | What must an agent know in every task here?                                    |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md)                             | How is the code organised, and why?                                            |
+| [`DESIGN.md`](DESIGN.md)                                         | How does the UI look and behave?                                               |
+| [`SECURITY.md`](SECURITY.md)                                     | How is it protected, and what is at risk?                                      |
+| [`RESEARCH.md`](RESEARCH.md)                                     | What was evaluated before choosing models, data, references and tools?         |
+| [`EXPLAINER.md`](EXPLAINER.md)                                   | How does the whole project work, explained from zero for interviews and demos? |
+| [`Materials/Notebooks/README.md`](Materials/Notebooks/README.md) | What does each notebook cell group do, and what did it measure?                |

@@ -1,5 +1,7 @@
 # Research Notes
 
+Purpose: dated evidence behind technology, model, data and reference decisions. Read when: choosing or revisiting a library, model, dataset, journal or citation.
+
 ## References for the backbone benchmark paper (2026-10-17)
 
 **Brief.** Find peer-reviewed sources for every architectural, methodological and background claim in `Materials/Research Papers/Standardised_Comparison_of_Convolutional_and_Transformer_Backbones_for_Brain_Tumour_Image_Classification/main.tex`, and check whether its two preprint citations have peer-reviewed versions.

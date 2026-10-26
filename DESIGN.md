@@ -1,5 +1,7 @@
 # Design
 
+Purpose: how the UI looks and behaves. Read when: changing any user-facing UI.
+
 The design system and UI decisions of the NeuroScan AI frontend (`Frontend/src/`). Every value here is taken from the code; when the code changes, update this file in the same commit. Setup is in the [README](README.md), module boundaries in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Contents

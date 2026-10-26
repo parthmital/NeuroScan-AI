@@ -1,5 +1,8 @@
 # Architecture
 
+Purpose: how the code is organised and why. Read when: adding a module, moving code, or changing dependencies between parts.
+Last verified: 2026-10-27.
+
 NeuroScan AI is one deployable web application (a FastAPI backend and a React single-page app) plus self-contained Kaggle research notebooks. This document says where code lives, which way dependencies may point, and when the design should change.
 
 | Document                        | Owns                                                    |
@@ -8,6 +11,9 @@ NeuroScan AI is one deployable web application (a FastAPI backend and a React si
 | ARCHITECTURE.md                 | Module map, dependency rules, decisions, growth signals |
 | [DESIGN.md](DESIGN.md)          | Frontend design system and UI decisions                 |
 | [SECURITY.md](SECURITY.md)      | Threat model, controls, review results, residual risks  |
+| [RESEARCH.md](RESEARCH.md)      | Evidence behind model, data, reference and tool choices |
+| [AGENTS.md](AGENTS.md)          | Commands, conventions and gotchas for every agent task  |
+| [EXPLAINER.md](EXPLAINER.md)    | Whole-project explanation for human readers             |
 | `Materials/Notebooks/README.md` | Notebook walkthroughs and results                       |
 
 ## Module map
@@ -113,13 +119,13 @@ All of these run in CI.
 
 ## Current fit
 
-Re-evaluated on 2 October 2026 at commit `0a5a530`. The modular monolith still fits: one deployment, 3,436 lines in 30 backend files (`Backend/neuroscan/`) and 7,960 lines in 67 frontend files (`Frontend/src/` without tests), and every boundary check passes (3 import contracts kept, 0 frontend clones, strict mypy and TypeScript clean). No restructuring was needed in this pass.
+Re-evaluated on 27 October 2026 at commit `1642d2e`. The modular monolith still fits: one deployment, 3,444 lines in 30 backend files (`Backend/neuroscan/`) and 8,300 lines in 70 frontend files (`Frontend/src/` without tests), and every boundary check passes (3 import contracts kept, 0 frontend clones, strict mypy and TypeScript clean). No restructuring was needed in this pass.
 
 Files to split the next time they change, because each now mixes several jobs:
 
 | File                                                 | Lines | Mix                                                       | Split into                                                                 |
 | ---------------------------------------------------- | ----- | --------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `Backend/neuroscan/scans/exports.py`                 | 786   | CSV export, PDF layout and canvas, clinical findings text | `scans/exports/csv.py` and `scans/exports/pdf.py`                          |
+| `Backend/neuroscan/scans/exports.py`                 | 794   | CSV export, PDF layout and canvas, clinical findings text | `scans/exports/csv.py` and `scans/exports/pdf.py`                          |
 | `Frontend/src/components/scan/viewer/SliceView.tsx`  | 646   | Canvas drawing, pointer tools, keyboard, pane chrome      | Drawing helpers next to `slicing.ts`; the component keeps state and events |
 | `Frontend/src/components/scan/viewer/VolumeView.tsx` | 565   | vtk.js scene setup, render presets, input handling        | A scene module without React; the component keeps lifecycle                |
 | `Frontend/src/components/scan/viewer/ScanViewer.tsx` | 543   | Pane layout, tool state, measurements, capture            | Keep layout; move tool and measurement state into a hook                   |

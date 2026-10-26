@@ -1,5 +1,7 @@
 # Security
 
+Purpose: how this project is protected and what risk remains. Read when: touching authentication, input handling, secrets, dependencies, CI, or infrastructure.
+
 The security posture of NeuroScan AI: how to report a problem, what the application protects and how, which checks run, and what risk remains. Setup is in the [README](README.md); module boundaries are in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 NeuroScan AI handles patient health information (MRI volumes, patient names and IDs). It has no recorded clinical validation and is not a medical device; treat its output as research results.
