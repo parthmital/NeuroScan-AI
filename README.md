@@ -204,7 +204,7 @@ The notebooks ran on Kaggle with 2x Tesla T4 GPUs, Python 3.13.15, PyTorch 2.11.
 ```text
 NeuroScan-AI/
 |-- README.md               Setup, configuration and API (this file)
-|-- AGENTS.md, ARCHITECTURE.md, DESIGN.md, SECURITY.md, RESEARCH.md, EXPLAINER.md   See Documentation
+|-- AGENTS.md, ARCHITECTURE.md, DESIGN.md, SECURITY.md, RESEARCH.md   See Documentation
 |-- .env.example              Every backend setting, with how to generate secrets
 |-- .github/                  CI workflow (SHA-pinned actions) and Dependabot
 |-- .pre-commit-config.yaml   gitleaks secret scan before each commit
@@ -516,12 +516,11 @@ No licence file is present in the repository.
 
 ## Documentation
 
-| File                                                             | Answers                                                                        |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| [`AGENTS.md`](AGENTS.md)                                         | What must an agent know in every task here?                                    |
-| [`ARCHITECTURE.md`](ARCHITECTURE.md)                             | How is the code organised, and why?                                            |
-| [`DESIGN.md`](DESIGN.md)                                         | How does the UI look and behave?                                               |
-| [`SECURITY.md`](SECURITY.md)                                     | How is it protected, and what is at risk?                                      |
-| [`RESEARCH.md`](RESEARCH.md)                                     | What was evaluated before choosing models, data, references and tools?         |
-| [`EXPLAINER.md`](EXPLAINER.md)                                   | How does the whole project work, explained from zero for interviews and demos? |
-| [`Materials/Notebooks/README.md`](Materials/Notebooks/README.md) | What does each notebook cell group do, and what did it measure?                |
+| File                                                             | Answers                                                                |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [`AGENTS.md`](AGENTS.md)                                         | What must an agent know in every task here?                            |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md)                             | How is the code organised, and why?                                    |
+| [`DESIGN.md`](DESIGN.md)                                         | How does the UI look and behave?                                       |
+| [`SECURITY.md`](SECURITY.md)                                     | How is it protected, and what is at risk?                              |
+| [`RESEARCH.md`](RESEARCH.md)                                     | What was evaluated before choosing models, data, references and tools? |
+| [`Materials/Notebooks/README.md`](Materials/Notebooks/README.md) | What does each notebook cell group do, and what did it measure?        |

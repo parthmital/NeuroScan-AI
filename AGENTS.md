@@ -42,4 +42,3 @@ Last verified: 2026-10-27.
 - `SECURITY.md`: before touching auth, uploads, secrets, dependencies or CI.
 - `RESEARCH.md`: before revisiting a model, dataset, library or paper reference.
 - `Materials/Notebooks/README.md`: every notebook cell group and result.
-- `EXPLAINER.md`: human-oriented explanation of the whole project; not needed for coding tasks.

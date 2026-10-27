@@ -13,7 +13,6 @@ NeuroScan AI is one deployable web application (a FastAPI backend and a React si
 | [SECURITY.md](SECURITY.md)      | Threat model, controls, review results, residual risks  |
 | [RESEARCH.md](RESEARCH.md)      | Evidence behind model, data, reference and tool choices |
 | [AGENTS.md](AGENTS.md)          | Commands, conventions and gotchas for every agent task  |
-| [EXPLAINER.md](EXPLAINER.md)    | Whole-project explanation for human readers             |
 | `Materials/Notebooks/README.md` | Notebook walkthroughs and results                       |
 
 ## Module map
