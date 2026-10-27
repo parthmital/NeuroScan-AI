@@ -4,7 +4,7 @@
 
 import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
 import { styleText } from "node:util";
@@ -33,19 +33,28 @@ const READY_TIMEOUT_MS = 120_000;
 const MIN_PYTHON = [3, 11];
 const MIN_NODE_MAJOR = 22;
 const SHUTDOWN_GRACE_MS = 5000;
-// Model weights cannot be fetched automatically (see README); warn instead of failing.
-// Default paths match Backend/neuroscan/config.py and are relative to Backend/.
+// Missing model weights are downloaded from the GitHub release and checked against these
+// SHA-256 hashes; a failed download only warns. Default paths match Backend/neuroscan/config.py
+// and are relative to Backend/.
+const WEIGHTS_RELEASE_API =
+	"https://api.github.com/repos/parthmital/NeuroScan-AI/releases/tags/weights-v1";
 const WEIGHTS = {
 	DETECTION_WEIGHTS: [
 		"../Materials/Notebooks/binary-detection/weights/deploy/EfficientNetB0.pth",
+		"detection-EfficientNetB0.pth",
+		"4f96026e699e1a47e45c85739e06057ee49bfa0177d9a4139ba71084dfcda4ae",
 		"uploads stay disabled",
 	],
 	CLASSIFICATION_WEIGHTS: [
 		"../Materials/Notebooks/classification/weights/deploy/EfficientNetB0.pth",
+		"classification-EfficientNetB0.pth",
+		"91d194416f730f5833e8394948021cf13053f69e5f4e28eb0e00118ee13e19c6",
 		"uploads stay disabled",
 	],
 	SEGMENTATION_WEIGHTS: [
 		"../Materials/Notebooks/segmentation/weights/deploy/SegResNet.pth",
+		"segmentation-SegResNet.pth",
+		"32ca41857843d1518a531e3ebba02c041a517593eae4d961ff1cb22bcdf14cf6",
 		"scans are processed without segmentation",
 	],
 };
@@ -208,15 +217,68 @@ function setUpEnvFile() {
 	writeFileSync(ENV_FILE, `${lines.join("\n")}\n`);
 }
 
-function checkWeights() {
+// Optional token (GH_TOKEN, GITHUB_TOKEN or the gh CLI login) for a higher API rate limit.
+function githubToken() {
+	const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
+	if (token) return token;
+	const result = spawnSync("gh", ["auth", "token"], { encoding: "utf8" });
+	return result.status === 0 ? result.stdout.trim() : undefined;
+}
+
+async function githubFetch(url, accept, token) {
+	const response = await fetch(url, {
+		headers: {
+			Accept: accept,
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+		},
+	});
+	if (!response.ok) throw new Error(`HTTP ${response.status}`);
+	return response;
+}
+
+async function downloadWeights(asset, expectedHash, weightsPath, release) {
+	const assetInfo = release.assets.find(({ name }) => name === asset);
+	if (!assetInfo) throw new Error("asset not in the release");
+	const response = await githubFetch(
+		assetInfo.url,
+		"application/octet-stream",
+		release.token,
+	);
+	const data = Buffer.from(await response.arrayBuffer());
+	const actualHash = createHash("sha256").update(data).digest("hex");
+	if (actualHash !== expectedHash) {
+		throw new Error(`SHA-256 mismatch (got ${actualHash})`);
+	}
+	mkdirSync(path.dirname(weightsPath), { recursive: true });
+	writeFileSync(weightsPath, data);
+}
+
+async function setUpWeights() {
 	const envText = readFileSync(ENV_FILE, "utf8");
-	for (const [name, [defaultPath, effect]] of Object.entries(WEIGHTS)) {
+	let release;
+	for (const [name, [defaultPath, asset, hash, effect]] of Object.entries(
+		WEIGHTS,
+	)) {
 		const overridden =
 			process.env[name] || new RegExp(`^${name}=\\S`, "m").test(envText);
 		const weightsPath = path.join(BACKEND, defaultPath);
-		if (!overridden && !existsSync(weightsPath)) {
+		if (overridden || existsSync(weightsPath)) continue;
+		const relative = path.relative(ROOT, weightsPath);
+		log(`Downloading model weights to ${relative}...`);
+		try {
+			if (!release) {
+				const token = githubToken();
+				const response = await githubFetch(
+					WEIGHTS_RELEASE_API,
+					"application/vnd.github+json",
+					token,
+				);
+				release = { ...(await response.json()), token };
+			}
+			await downloadWeights(asset, hash, weightsPath, release);
+		} catch (error) {
 			warn(
-				`Model weights missing: ${path.relative(ROOT, weightsPath)}; ${effect} until it exists.`,
+				`Could not download ${asset} (${error.message}); ${effect} until ${relative} exists.`,
 			);
 		}
 	}
@@ -459,7 +521,7 @@ setUpPython();
 setUpFrontend();
 setUpRootTools();
 setUpEnvFile();
-checkWeights();
+await setUpWeights();
 
 if (IS_WIN) {
 	startInWindows();

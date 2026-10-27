@@ -78,15 +78,15 @@ These steps start the backend on `127.0.0.1:8000` and the frontend on `localhost
 
 ### Steps
 
-1. **Place the three model weight files.** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. The two 2D notebooks export their checkpoints to `weights/deploy/` in their outputs folders; the segmentation checkpoint is the notebook's `weights/segresnet/segresnet_seed42.pth`, copied unchanged to `weights/deploy/SegResNet.pth` (its SHA-256 is in `weights/deploy/metadata.json`). The backend reads them from there by default (override with the variables in [Configuration](#configuration)):
+1. **Model weights (automatic).** The root [`.gitignore`](.gitignore) excludes `*.pth`, so a fresh clone does **not** contain them. They are hosted as assets of the [`weights-v1` GitHub release](https://github.com/parthmital/NeuroScan-AI/releases/tag/weights-v1), and `npm run dev` downloads any missing file and checks its SHA-256 before saving it. No account is needed; if `GH_TOKEN`, `GITHUB_TOKEN` or a [GitHub CLI](https://cli.github.com/) login is available it is used for a higher API rate limit. The backend reads them from these paths by default (override with the variables in [Configuration](#configuration)):
 
-   | File                                                                     | Size (notebook log) | Used for         |
-   | ------------------------------------------------------------------------ | ------------------- | ---------------- |
-   | `Materials/Notebooks/binary-detection/weights/deploy/EfficientNetB0.pth` | 16.3 MB             | Tumour detection |
-   | `Materials/Notebooks/classification/weights/deploy/EfficientNetB0.pth`   | 16.3 MB             | Tumour type      |
-   | `Materials/Notebooks/segmentation/weights/deploy/SegResNet.pth`          | 79.7 MB             | 3D segmentation  |
+   | File                                                                     | Release asset                       | Size    | Used for         |
+   | ------------------------------------------------------------------------ | ----------------------------------- | ------- | ---------------- |
+   | `Materials/Notebooks/binary-detection/weights/deploy/EfficientNetB0.pth` | `detection-EfficientNetB0.pth`      | 16.3 MB | Tumour detection |
+   | `Materials/Notebooks/classification/weights/deploy/EfficientNetB0.pth`   | `classification-EfficientNetB0.pth` | 16.3 MB | Tumour type      |
+   | `Materials/Notebooks/segmentation/weights/deploy/SegResNet.pth`          | `segmentation-SegResNet.pth`        | 79.7 MB | 3D segmentation  |
 
-   No download location is recorded in the repository. Run the notebooks on Kaggle and copy their `weights/deploy/` folders (for segmentation, copy `weights/segresnet/segresnet_seed42.pth` to `weights/deploy/SegResNet.pth`), or obtain the files from the project maintainer. The backend loads them with `torch.load(weights_only=True)`, so a weights file cannot run code. Without them the app still starts: missing detection or classification weights disable uploads, and a missing segmentation file skips segmentation.
+   To place them by hand, download the assets, rename them to the paths above and compare against the release's `SHA256SUMS`. They are the notebooks' exported checkpoints (segmentation is `weights/segresnet/segresnet_seed42.pth` unchanged). The backend loads them with `torch.load(weights_only=True)`, so a weights file cannot run code. Without them the app still starts: missing detection or classification weights disable uploads, and a missing segmentation file skips segmentation.
 
 2. **Set up and start everything.**
 
@@ -203,50 +203,52 @@ The notebooks ran on Kaggle with 2x Tesla T4 GPUs, Python 3.13.15, PyTorch 2.11.
 
 ```text
 NeuroScan-AI/
-|-- README.md               Setup, configuration and API (this file)
-|-- AGENTS.md, ARCHITECTURE.md, DESIGN.md, SECURITY.md, RESEARCH.md   See Documentation
-|-- .env.example              Every backend setting, with how to generate secrets
-|-- .github/                  CI workflow (SHA-pinned actions) and Dependabot
-|-- .pre-commit-config.yaml   gitleaks secret scan before each commit
-|-- .gitattributes            LF line endings on every OS, matching Prettier
-|-- pyproject.toml            black settings matching ruff, for `black .` from the root
-|-- package.json              `npm run dev`: sets up and starts backend and frontend; `npm run papers`: builds the papers
-|-- scripts/dev.mjs           The setup and launch script behind `npm run dev`
-|-- scripts/build-papers.mjs  Compiles the LaTeX papers with Tectonic (`npm run papers`)
+|-- README.md
+|-- AGENTS.md, ARCHITECTURE.md, DESIGN.md, SECURITY.md, RESEARCH.md
+|-- .env.example
+|-- .github/
+|-- .pre-commit-config.yaml
+|-- .gitattributes
+|-- pyproject.toml
+|-- package.json
+|-- scripts/
+|   |-- dev.mjs
+|   `-- build-papers.mjs
 |-- Backend/
-|   |-- main.py               ASGI entry point (uvicorn main:app)
-|   |-- neuroscan/            Application package (see ARCHITECTURE.md)
-|   |   |-- app.py            Application factory: middleware, routers, lifespan
-|   |   |-- config.py         Settings from the environment, validated at start-up
-|   |   |-- api/              Routers (auth, scans, health), dependencies, middleware
-|   |   |-- scans/            File storage, background pipeline, CSV/PDF exports
-|   |   |-- inference/        Networks, NIfTI handling, BrainProcessor
-|   |   |-- security/         Passwords, tokens, TOTP, rate limiting
-|   |   |-- migrations/       Alembic environment and versioned migrations
-|   |   `-- cli.py            Operator commands: reset password, unlock, disable 2FA
-|   |-- tests/                pytest suite (no model weights needed)
-|   |-- pyproject.toml        ruff, mypy, pytest and import-linter configuration
-|   `-- requirements*.txt     Pinned runtime and development dependencies
-|-- Materials/                Everything that is not the application
-|   |-- Notebooks/            3 Kaggle notebooks, their downloaded outputs, README with all results
+|   |-- main.py
+|   |-- neuroscan/
+|   |   |-- app.py
+|   |   |-- config.py
+|   |   |-- api/
+|   |   |-- scans/
+|   |   |-- inference/
+|   |   |-- security/
+|   |   |-- migrations/
+|   |   `-- cli.py
+|   |-- tests/
+|   |-- pyproject.toml
+|   `-- requirements*.txt
+|-- Materials/
+|   |-- Notebooks/
 |   |   |-- binary-detection.ipynb, classification.ipynb, segmentation.ipynb
-|   |   `-- <task>/           metrics/, plots/, logs/, predictions/, src/, weights/ (incl. deploy/)
-|   |-- Research Papers/      Two LaTeX paper projects (main.tex, highlights, graphical abstract; one with supplementary.tex)
-|   |-- Screenshots/          UI screenshots used in this README
-|   |-- Presentation.pptx, Presentation.pdf   Review 3 deck (24 slides, both papers), built from a copy of the template
-|   |-- Presentation Template.pptx, Presentation Template.md   VIT review template and the deck's slide-by-slide content
-|   |-- Approval.png          The guide's approval e-mail, shown in the deck
-|   |-- Report.docx, Report.pdf   Project report (57 pages in the PDF, all chapters, figures and diagrams), built from a copy of the template
-|   `-- Report Template.docx, Report Template.md               VIT report template and the report's section-by-section content
+|   |   `-- <task>/
+|   |       `-- metrics/, plots/, logs/, predictions/, src/, weights/deploy/
+|   |-- Research Papers/
+|   |-- Screenshots/
+|   |-- Presentation.pptx, Presentation.pdf
+|   |-- Presentation Template.pptx, Presentation Template.md
+|   |-- Approval.png
+|   |-- Report.docx, Report.pdf
+|   `-- Report Template.docx, Report Template.md
 `-- Frontend/
-    |-- vite.config.ts        Port 8080, /api proxy, security headers for preview
+    |-- vite.config.ts
     `-- src/
-        |-- App.tsx           Routes, lazy loading, ProtectedRoute
-        |-- pages/            Route pages listed above
-        |-- components/       auth, dashboard, layout, scan, settings, upload, ui
-        |-- hooks/            use-scans, use-overlay-colors, use-report-download
-        |-- lib/              api.ts (the only HTTP client), types, formatting helpers
-        `-- test/             Vitest tests
+        |-- App.tsx
+        |-- pages/
+        |-- components/
+        |-- hooks/
+        |-- lib/
+        `-- test/
 ```
 
 Runtime data (`Backend/neuroscan.db`, `Backend/uploads/`, `.env`) is Git-ignored, and so are model weights (`*.pth`), Kaggle's duplicate notebook copies (`__notebook__.ipynb`), text logs (`*.log`), `*.npy` files, `Materials/Input/` and `Materials/tectonic.exe`.
@@ -279,7 +281,7 @@ See [Quick start](#quick-start). [`scripts/dev.mjs`](scripts/dev.mjs) uses only 
 
 - Creates `.venv` with Python 3.11 (or a newer Python 3 if 3.11 is missing) when it does not exist.
 - Installs `Backend/requirements-dev.txt` (the runtime `requirements.txt` plus test, lint and `black[jupyter]` tooling) into `.venv` and runs `npm ci` in `Frontend/` and at the root (pinned Prettier) only when those files or the matching `package-lock.json` changed since the last install, tracked by SHA-256 stamps in `.venv/`, `Frontend/node_modules/` and `node_modules/`.
-- Creates a development `.env` with random secrets if there is none, and warns about missing model weights.
+- Creates a development `.env` with random secrets if there is none, and downloads missing model weights from the `weights-v1` release, verifying their SHA-256 (it warns and continues if a download fails).
 - Keeps the pip and npm download caches in `.cache/` (Git-ignored) unless `PIP_CACHE_DIR` or `npm_config_cache` is already set.
 - Starts `uvicorn main:app --reload --host 127.0.0.1 --port 8000 --log-config log-config.dev.json` in `Backend/` (the log config gives the reloader the same readable format as the app) and `npm run dev` in `Frontend/`.
 - On Windows, runs each service in its own PowerShell window that stays open after a crash so its log remains readable. `Ctrl+C`, `Ctrl+Break` or closing the launching terminal closes both windows and their process trees; closing both windows ends the launcher.

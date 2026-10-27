@@ -27,7 +27,7 @@ Last verified: 2026-10-27.
 
 ## Gotchas
 
-- **Weights missing after clone**: `*.pth` is Git-ignored. Copy the notebooks' `weights/deploy/` files; the app starts without them but disables uploads or segmentation.
+- **Weights missing after clone**: `*.pth` is Git-ignored. `npm run dev` downloads them from the `weights-v1` GitHub release and verifies the SHA-256 hashes in `scripts/dev.mjs`; new weights need a new release and updated hashes. Without them the app starts but disables uploads or segmentation.
 - **SegResNet fails to load**: `networks.segresnet()` and the `monai` pin must match the checkpoint. `tests/test_inference.py` guards the layout.
 - **Modality detection disagrees between UI and API**: the order lives in `scans/storage.py` and `components/upload/DropZone.tsx`. Change both.
 - **Supplementary references show `??`**: the classification paper's `main.tex` and `supplementary.tex` read each other's `.aux`. Build with `npm run papers -- Standardised`.
