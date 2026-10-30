@@ -1,9 +1,9 @@
 # Runtime dependencies, pinned. Upgrade deliberately (Dependabot opens PRs) and re-run the tests.
-alembic==1.20.0
+alembic==1.20.1
 bcrypt==5.0.0
 cryptography==50.0.2
 email-validator==2.3.0
-fastapi==0.143.3
+fastapi==0.162.0
 monai==1.6.1
 nibabel==5.4.2
 numpy==2.4.6
@@ -15,10 +15,10 @@ PyOTP==2.10.0
 python-dotenv==1.2.4
 python-multipart==0.0.32
 qrcode==8.2
-reportlab==5.0.1
+reportlab==5.1.0
 SQLAlchemy==2.0.55
 sqlmodel==0.0.48
-starlette==1.8.0
+starlette==1.9.0
 torch==2.14.1
 torchvision==0.29.1
 uvicorn[standard]==0.54.0
